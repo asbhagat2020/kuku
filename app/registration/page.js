@@ -97,6 +97,7 @@ export default function Home() {
               className="w-full p-3 border border-gray-300 bg-gray-100 rounded-lg"
               required
               disabled={!isOtpSent} // Disable input until OTP is sent
+              
             />
           </div>
 
@@ -109,7 +110,7 @@ export default function Home() {
                 onChange={handleCheckboxChange}
                 className="mr-2"
               />
-              <p className="text-gray-700">I agree with KUKU Terms of Service, Privacy Policy, and Default Notification Settings.</p>
+              <p className=" text-black text-sm font-normal font-karla leading-none">I agree with KUKU Terms of Service, Privacy Policy, and Default Notification Settings.</p>
             </label>
           </div>
 
@@ -168,7 +169,7 @@ export default function Home() {
         </div>
 
         {/* Login */}
-        <p className="mt-6">
+        <p className="mt-6 text-center text-[#999999] text-base font-normal font-karla leading-[18.40px]">
         Already have an account? {" "}
           <a href="/login" className="text-pink-600">
           Login

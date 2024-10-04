@@ -114,7 +114,7 @@ export default function Account() {
                 onChange={handleCheckboxChange}
                 className="mr-2"
               />
-              <span className="text-gray-700 font-karla">
+              <span className=" text-black text-sm font-normal font-karla leading-none">
                 By clicking here, Kuku lets you disclose your full name, but your Kuku username will be visible to all.
               </span>
             </label>

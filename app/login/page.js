@@ -108,7 +108,7 @@ export default function Login() {
                 onChange={handleCheckboxChange}
                 className="mr-2"
               />
-              <span className="text-gray-700 font-karla">Stay signed in</span>
+              <span className=" text-black text-sm font-normal font-karla leading-none">Stay signed in</span>
             </label>
           </div>
 
@@ -150,7 +150,7 @@ export default function Login() {
         </div>
 
         {/* Sign Up */}
-        <p className="mt-6 font-karla">
+        <p className="mt-6 text-center text-[#999999] text-base font-normal font-karla leading-[18.40px]">
           Don’t have an account?{" "}
           <a href="/registration" className="text-pink-600 font-karla">
             Sign up
