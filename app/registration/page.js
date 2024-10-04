@@ -1,8 +1,9 @@
 "use client"; // Ensure Client-Side rendering
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import Link from "next/link";
 
-export default function Login() {
+export default function Home() {
   const [emailOrPhone, setEmailOrPhone] = useState("");
   const [otp, setOtp] = useState("");
   const [isChecked, setIsChecked] = useState(false);
@@ -62,15 +63,15 @@ export default function Login() {
           <div className="text-black text-3xl font-['Palanquin Dark'] font-bold">KUKU</div>
         </div>
 
-        <div className="text-black text-xl font-karla font-bold mb-6">
-          Please sign in to continue
+        <div className="text-black text-xl font-Karla font-bold mb-6">
+          Create your account
         </div>
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="w-full max-w-md">
           {/* Email or Phone Number */}
           <div className="mb-4">
-            <label className="text-black text-base font-karla font-bold mb-2 block">
+            <label className="text-black text-base font-Karla font-bold mb-2 block">
               Email or Phone Number
             </label>
             <input
@@ -100,7 +101,7 @@ export default function Login() {
           </div>
 
           {/* Checkbox */}
-          <div className="flex flex-col items-start h-1 mb-6">
+          <div className="flex flex-col items-start h-1 mb-12">
             <label className="flex items-center cursor-pointer">
               <input
                 type="checkbox"
@@ -108,22 +109,39 @@ export default function Login() {
                 onChange={handleCheckboxChange}
                 className="mr-2"
               />
-              <span className="text-gray-700 font-karla">Stay signed in</span>
+              <p className="text-gray-700">I agree with KUKU Terms of Service, Privacy Policy, and Default Notification Settings.</p>
             </label>
           </div>
 
           {/* Submit Button */}
-          <button
-            type="submit"
-            className="w-full p-3 bg-yellow-400 text-black font-semibold font-karla rounded-lg"
-          >
-            {isOtpSent ? "Continue" : "Send OTP"}
-          </button>
+          {isOtpSent ? (
+            // Only wrap the button in Link when OTP is sent and user clicks "Register"
+            <Link href="/account">
+              <button
+                type="submit"
+                className="w-full p-3 bg-yellow-400 text-black font-semibold rounded-lg"
+              >
+                Register
+              </button>
+            </Link>
+          ) : (
+            // If OTP is not sent, just handle OTP send
+            <button
+              type="submit"
+              className="w-full p-3 bg-yellow-400 text-black font-semibold rounded-lg"
+            >
+              Send OTP
+            </button>
+          )}
 
           {/* Timer Display */}
           {isOtpSent && (
             <div className="mt-2 text-gray-600">
-              {timer > 0 ? `Resend OTP in ${Math.floor(timer / 60)}:${timer % 60 < 10 ? '0' : ''}${timer % 60}` : "You can resend the OTP now."}
+              {timer > 0
+                ? `Resend OTP in ${Math.floor(timer / 60)}:${
+                    timer % 60 < 10 ? "0" : ""
+                  }${timer % 60}`
+                : "You can resend the OTP now."}
             </div>
           )}
         </form>
@@ -133,27 +151,27 @@ export default function Login() {
           {/* Google Login */}
           <button className="w-full flex items-center justify-center p-3 bg-gray-100 border border-gray-300 rounded-lg mb-4">
             <img src="/devicon_google.png" alt="Google" className="h-5 w-5 mr-3" />
-            <span className="text-gray-800 font-bold font-karla ">Sign in with Google</span>
+            <span className="text-gray-800 font-bold ">Sign in with Google</span>
           </button>
 
           {/* Facebook Login */}
           <button className="w-full flex items-center justify-center p-3 bg-gray-100 border border-gray-300 rounded-lg mb-4">
             <img src="/devicon_facebook.svg" alt="Facebook" className="h-5 w-5 mr-3" />
-            <span className="text-gray-800 font-bold font-karla">Continue with Facebook</span>
+            <span className="text-gray-800 font-bold">Continue with Facebook</span>
           </button>
 
           {/* Apple Login */}
           <button className="w-full flex items-center justify-center p-3 bg-gray-100 border border-gray-300 rounded-lg">
             <img src="/ic_round-apple.svg" alt="Apple" className="h-5 w-5 mr-3" />
-            <span className="text-gray-800 font-bold font-karla">Continue with Apple</span>
+            <span className="text-gray-800 font-bold">Continue with Apple</span>
           </button>
         </div>
 
-        {/* Sign Up */}
-        <p className="mt-6 font-karla">
-          Don’t have an account?{" "}
-          <a href="/registration" className="text-pink-600 font-karla">
-            Sign up
+        {/* Login */}
+        <p className="mt-6">
+        Already have an account? {" "}
+          <a href="/login" className="text-pink-600">
+          Login
           </a>
         </p>
       </div>
