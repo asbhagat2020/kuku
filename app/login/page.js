@@ -74,11 +74,11 @@ export default function Login() {
               Email or Phone Number
             </label>
             <input
+            className="w-full p-3 border border-gray-300 bg-gray-100 rounded-lg text-center text-black text-sm font-normal font-karla leading-none"
               type="text"
               placeholder="Enter your e-mail or phone number"
               value={emailOrPhone}
               onChange={(e) => setEmailOrPhone(e.target.value)}
-              className="w-full p-3 border border-gray-300 bg-gray-100 rounded-lg"
               required
             />
           </div>
@@ -93,7 +93,7 @@ export default function Login() {
               placeholder="Enter the OTP received"
               value={otp}
               onChange={(e) => setOtp(e.target.value)}
-              className="w-full p-3 border border-gray-300 bg-gray-100 rounded-lg"
+              className="w-full p-3 border border-gray-300 bg-gray-100 rounded-lg text-center text-black text-sm font-normal font-karla leading-none"
               required
               disabled={!isOtpSent} // Disable input until OTP is sent
             />

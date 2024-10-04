@@ -79,7 +79,7 @@ export default function Home() {
               placeholder="Enter your e-mail or phone number"
               value={emailOrPhone}
               onChange={(e) => setEmailOrPhone(e.target.value)}
-              className="w-full p-3 border border-gray-300 bg-gray-100 rounded-lg"
+              className="w-full p-3 border border-gray-300 bg-gray-100 rounded-lg text-center text-black text-sm font-normal font-karla leading-none"
               required
             />
           </div>
@@ -94,7 +94,7 @@ export default function Home() {
               placeholder="Enter the OTP received"
               value={otp}
               onChange={(e) => setOtp(e.target.value)}
-              className="w-full p-3 border border-gray-300 bg-gray-100 rounded-lg"
+              className="w-full p-3 border border-gray-300 bg-gray-100 rounded-lg text-center text-black text-sm font-normal font-karla leading-none"
               required
               disabled={!isOtpSent} // Disable input until OTP is sent
               
