@@ -74,7 +74,7 @@ export default function Login() {
               Email or Phone Number
             </label>
             <input
-            className="w-full p-3 border border-gray-300 bg-gray-100 rounded-lg text-center text-black text-sm font-normal font-karla leading-none"
+            className="w-full p-3 border border-gray-300 bg-gray-100 rounded-lg text-start text-black text-sm font-normal font-karla leading-none"
               type="text"
               placeholder="Enter your e-mail or phone number"
               value={emailOrPhone}
@@ -93,14 +93,20 @@ export default function Login() {
               placeholder="Enter the OTP received"
               value={otp}
               onChange={(e) => setOtp(e.target.value)}
-              className="w-full p-3 border border-gray-300 bg-gray-100 rounded-lg text-center text-black text-sm font-normal font-karla leading-none"
+              className="w-full p-3 border border-gray-300 bg-gray-100 rounded-lg text-start text-black text-sm font-normal font-karla leading-none"
               required
               disabled={!isOtpSent} // Disable input until OTP is sent
             />
           </div>
+           {/* Timer Display */}
+           {isOtpSent && (
+            <div className="mt-1 text-[#e4086f] text-sm font-normal font-karla underline leading-none ">
+              {timer > 0 ? `Resend OTP in ${Math.floor(timer / 60)}:${timer % 60 < 10 ? '0' : ''}${timer % 60}` : "You can resend the OTP now."}
+            </div>
+          )}
 
           {/* Checkbox */}
-          <div className="flex flex-col items-start h-1 mb-6">
+          <div className="flex flex-col items-start h-1 mt-2 mb-6">
             <label className="flex items-center cursor-pointer">
               <input
                 type="checkbox"
@@ -112,20 +118,14 @@ export default function Login() {
             </label>
           </div>
 
-          {/* Submit Button */}
-          <button
-            type="submit"
-            className="w-full p-3 bg-yellow-400 text-black font-semibold font-karla rounded-lg"
-          >
-            {isOtpSent ? "Continue" : "Send OTP"}
-          </button>
-
-          {/* Timer Display */}
-          {isOtpSent && (
-            <div className="mt-2 text-gray-600">
-              {timer > 0 ? `Resend OTP in ${Math.floor(timer / 60)}:${timer % 60 < 10 ? '0' : ''}${timer % 60}` : "You can resend the OTP now."}
-            </div>
-          )}
+<button
+  type="submit"
+  className={`w-full p-3 ${isOtpSent && otp === "" ? "bg-yellow-300 cursor-not-allowed opacity-50" : "bg-yellow-400"} text-black font-semibold font-karla rounded-lg`}
+  disabled={isOtpSent && otp === ""} // Disable when OTP is sent but the OTP field is empty
+>
+  {isOtpSent ? "Continue" : "Send OTP"}
+</button>
+        
         </form>
 
         {/* Social Login */}

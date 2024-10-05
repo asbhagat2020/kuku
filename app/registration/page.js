@@ -79,7 +79,7 @@ export default function Home() {
               placeholder="Enter your e-mail or phone number"
               value={emailOrPhone}
               onChange={(e) => setEmailOrPhone(e.target.value)}
-              className="w-full p-3 border border-gray-300 bg-gray-100 rounded-lg text-center text-black text-sm font-normal font-karla leading-none"
+              className="w-full p-3 border border-gray-300 bg-gray-100 rounded-lg text-start text-black text-sm font-normal font-karla leading-none"
               required
             />
           </div>
@@ -94,15 +94,26 @@ export default function Home() {
               placeholder="Enter the OTP received"
               value={otp}
               onChange={(e) => setOtp(e.target.value)}
-              className="w-full p-3 border border-gray-300 bg-gray-100 rounded-lg text-center text-black text-sm font-normal font-karla leading-none"
+              className="w-full p-3 border border-gray-300 bg-gray-100 rounded-lg text-start text-black text-sm font-normal font-karla leading-none"
               required
               disabled={!isOtpSent} // Disable input until OTP is sent
               
             />
           </div>
 
+           {/* Timer Display */}
+           {isOtpSent && (
+            <div className="mt-2 text-[#e4086f] text-sm font-normal font-karla underline leading-none">
+              {timer > 0
+                ? `Resend OTP in ${Math.floor(timer / 60)}:${
+                    timer % 60 < 10 ? "0" : ""
+                  }${timer % 60}`
+                : "You can resend the OTP now."}
+            </div>
+          )}
+
           {/* Checkbox */}
-          <div className="flex flex-col items-start h-1 mb-12">
+          <div className="flex flex-col items-start h-1 mt-2 mb-12">
             <label className="flex items-center cursor-pointer">
               <input
                 type="checkbox"
@@ -115,7 +126,7 @@ export default function Home() {
           </div>
 
           {/* Submit Button */}
-          {isOtpSent ? (
+          {/* {isOtpSent ? (
             // Only wrap the button in Link when OTP is sent and user clicks "Register"
             <Link href="/account">
               <button
@@ -133,18 +144,28 @@ export default function Home() {
             >
               Send OTP
             </button>
-          )}
+          )} */}
 
-          {/* Timer Display */}
-          {isOtpSent && (
-            <div className="mt-2 text-gray-600">
-              {timer > 0
-                ? `Resend OTP in ${Math.floor(timer / 60)}:${
-                    timer % 60 < 10 ? "0" : ""
-                  }${timer % 60}`
-                : "You can resend the OTP now."}
-            </div>
-          )}
+{isOtpSent ? (
+  <Link href={otp ? "/account" : "#"}> {/* Link should only be active when OTP is filled */}
+    <button
+      type="submit"
+      className={`w-full p-3 ${otp === "" ? "bg-yellow-300 cursor-not-allowed opacity-50" : "bg-yellow-400"} text-black font-semibold rounded-lg`}
+      disabled={otp === ""} // Disable when OTP is not filled
+    >
+      Register
+    </button>
+  </Link>
+) : (
+  <button
+    type="submit"
+    className="w-full p-3 bg-yellow-400 rounded-lg text-[#070707] text-xl font-normal font-karla leading-[23px]"
+  >
+    Send OTP
+  </button>
+)}
+
+         
         </form>
 
         {/* Social Login */}

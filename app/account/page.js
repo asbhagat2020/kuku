@@ -56,7 +56,7 @@ export default function Account() {
               placeholder="Enter your Kuku username"
               value={KukuUsername}
               onChange={(e) => setKukuUsername(e.target.value)}
-              className="w-full p-3 border border-gray-300 bg-gray-100 rounded-lg text-center text-black text-sm font-normal font-karla leading-none"
+              className="w-full p-3 border border-gray-300 bg-gray-100 rounded-lg text-start text-black text-sm font-normal font-karla leading-none"
               required
             />
           </div>
@@ -71,7 +71,7 @@ export default function Account() {
               placeholder="Enter your full name"
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
-              className="w-full p-3 border border-gray-300 bg-gray-100 rounded-lg text-center text-black text-sm font-normal font-karla leading-none"
+              className="w-full p-3 border border-gray-300 bg-gray-100 rounded-lg text-start text-black text-sm font-normal font-karla leading-none"
               required
             />
           </div>
@@ -86,7 +86,7 @@ export default function Account() {
               placeholder="Enter a brief description"
               value={Description}
               onChange={(e) => setDescription(e.target.value)}
-              className="w-full p-3 border border-gray-300 bg-gray-100 rounded-lg text-center text-black text-sm font-normal font-karla leading-none"
+              className="w-full p-3 border border-gray-300 bg-gray-100 rounded-lg text-start text-black text-sm font-normal font-karla leading-none"
             />
           </div>
 
@@ -100,7 +100,7 @@ export default function Account() {
               placeholder="Enter your location"
               value={location}
               onChange={(e) => setLocation(e.target.value)}
-              className="w-full p-3 border border-gray-300 bg-gray-100 rounded-lg text-center text-black text-sm font-normal font-karla leading-none"
+              className="w-full p-3 border border-gray-300 bg-gray-100 rounded-lg text-start text-black text-sm font-normal font-karla leading-none"
               required
             />
           </div>
