@@ -1,6 +1,6 @@
 import Image from "next/image";
 import amiriImg from "../public/product-image.png";
-import kukuLogo from "../public/logo.png";
+import kukuLogo from "../public/emojiKuku.png";
 import {
   FaStar,
   FaRegHeart,
