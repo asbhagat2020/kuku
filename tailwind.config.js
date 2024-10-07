@@ -10,6 +10,7 @@ module.exports = {
       fontFamily: {
         karla: ['var(--font-karla)'],
         luckiest: ['var(--font-luckiest-guy)'],
+        palanquin_dark: ['var(--font-palanquin-dark)'],
       },
     },
   },
