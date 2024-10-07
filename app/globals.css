@@ -2,3 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+.carousel-item{
+margin-left: 45px;
+}
+.carousel-item1{
+    margin-left: 49px;
+}
+
