@@ -2,3 +2,39 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Hide the default checkbox */
+.custom-checkbox input {
+    display: none;
+  }
+  
+  /* Create a custom checkbox */
+  .custom-checkbox .checkmark {
+    width: 30px;
+    height: 30px;
+    border: 2px solid #e4086f;
+    border-radius: 4px;
+    display: inline-block;
+    position: relative;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  /* Add tick mark when checked */
+  .custom-checkbox input:checked + .checkmark::after {
+    content: "";
+    position: absolute;
+    width: 8px;
+    height: 18px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    top: 3px;
+    left: 8px;
+    transform: rotate(45deg);
+  }
+  
+  /* Change background color when checked */
+  .custom-checkbox input:checked + .checkmark {
+    background-color: #e4086f;
+  }
+  
+
