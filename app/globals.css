@@ -2,6 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
+
 /* Hide the default checkbox */
 .custom-checkbox input {
     display: none;
@@ -36,5 +37,11 @@
   .custom-checkbox input:checked + .checkmark {
     background-color: #e4086f;
   }
-  
+
+.carousel-item{
+margin-left: 45px;
+}
+.carousel-item1{
+    margin-left: 49px;
+}
 
