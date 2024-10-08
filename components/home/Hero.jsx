@@ -1,7 +1,18 @@
-import Image from 'next/image'
-import React from 'react'
+import Image from 'next/image';
+import React, { useState } from 'react';
+import Popup from './Popup';
 
 const Hero = () => {
+    const [isPopupOpen, setIsPopupOpen] = useState(false);
+
+    const handleSellNowClick = () => {
+        setIsPopupOpen(true);
+    };
+
+    const handleClosePopup = () => {
+        setIsPopupOpen(false);
+    };
+
     return (
         <div className='relative max-w-[1550px] mx-auto h-[1024px] bg-gradient-to-l from-[#F3B202] via-[#F4B202] to-[#EDA702] overflow-hidden pb-5'>
             <div className='absolute top-10 left-0 w-full h-[90%]'>
@@ -11,7 +22,7 @@ const Hero = () => {
                 <Image width={60} height={60} unoptimized src='/star.png' objectFit='cover' />
             </div>
             <div className='absolute top-48 right-[350px]'>
-                <Image width={60} height={60}  unoptimized src='/smile.png' objectFit='cover' />
+                <Image width={60} height={60} unoptimized src='/smile.png' objectFit='cover' />
             </div>
             <div className='absolute top-[500px] left-[380px] w-full h-[90%]'>
                 <Image width={60} height={60} unoptimized src='/flower.png' objectFit='cover' />
@@ -25,21 +36,24 @@ const Hero = () => {
                 </div>
                 <div className="flex justify-center gap-[10px] pt-[100px] z-10">
                     <div className="h-[72px] px-11 py-[15px] bg-[#e4086f] rounded-[22px] justify-start items-center inline-flex">
-                        <button className="text-[#fde504] text-xl font-bold font-karla leading-normal">Sell Now</button>
+                        <button onClick={handleSellNowClick} className="text-[#fde504] text-xl font-bold font-karla leading-normal">Sell Now</button>
                     </div>
                     <div className="h-[72px] px-11 py-[15px] bg-white/50 rounded-[22px] backdrop-blur-xl justify-start items-center inline-flex">
                         <button className="text-white text-xl font-bold font-karla leading-normal">Shop Now</button>
-                        <Image width={30} height={30} src='/right_arrow.png' alt=''/>
+                        <Image width={30} height={30} src='/right_arrow.png' alt='' />
                     </div>
                 </div>
             </div>
 
             {/* Curved bottom */}
             <svg className="absolute bottom-[-1px] left-0 w-full" viewBox="0 0 1550 100" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
-                <path d="M0 100V0C258.333 40 775 60 1550 0V100H0Z" fill="#E4086F"/>
+                <path d="M0 100V0C258.333 40 775 60 1550 0V100H0Z" fill="#E4086F" />
             </svg>
-        </div>
-    )
-}
 
-export default Hero
+            {/* Popup Component */}
+            <Popup isOpen={isPopupOpen} onClose={handleClosePopup} />
+        </div>
+    );
+};
+
+export default Hero;
