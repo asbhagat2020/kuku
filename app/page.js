@@ -7,6 +7,7 @@ import Categories from '@/components/home/Categories'
 import DownloadKuku from '@/components/home/DownloadKuku'
 import Hero from '@/components/home/Hero'
 import MarketPlace from '@/components/home/MarketPlace'
+import Popup from '@/components/home/Popup'
 import Selling from '@/components/home/Selling'
 import StriteSection from '@/components/home/StriteSection'
 import React from 'react'
@@ -16,6 +17,7 @@ const page = () => {
     <>
     <Header/>
     <Hero/>
+    <Popup />
     <MarketPlace/>
     <Selling/>
     <Categories/>
