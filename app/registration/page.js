@@ -60,7 +60,9 @@ export default function Home() {
         {/* Logo Section */}
         <div className="flex items-center gap-2 mb-8">
           <img src="/Group1.svg" alt="KUKU Logo" className="h-14 w-14" />
-          <div className="text-black text-3xl font-['Palanquin Dark'] font-bold">KUKU</div>
+          <div className="text-black text-3xl font-palanquin_dark font-bold">
+            KUKU
+          </div>
         </div>
 
         <div className="text-black text-xl font-Karla font-bold mb-6">
@@ -97,12 +99,11 @@ export default function Home() {
               className="w-full p-3 border border-gray-300 bg-gray-100 rounded-lg text-start text-black text-sm font-normal font-karla leading-none"
               required
               disabled={!isOtpSent} // Disable input until OTP is sent
-              
             />
           </div>
 
-           {/* Timer Display */}
-           {isOtpSent && (
+          {/* Timer Display */}
+          {isOtpSent && (
             <div className="mt-2 text-[#e4086f] text-sm font-normal font-karla underline leading-none">
               {timer > 0
                 ? `Resend OTP in ${Math.floor(timer / 60)}:${
@@ -121,79 +122,81 @@ export default function Home() {
                 onChange={handleCheckboxChange}
                 className="mr-2"
               />
-              <p className=" text-black text-sm font-normal font-karla leading-none">I agree with KUKU Terms of Service, Privacy Policy, and Default Notification Settings.</p>
+              <p className=" text-black text-sm font-normal font-karla leading-none">
+                I agree with KUKU Terms of Service, Privacy Policy, and Default
+                Notification Settings.
+              </p>
             </label>
           </div>
 
-          {/* Submit Button */}
-          {/* {isOtpSent ? (
-            // Only wrap the button in Link when OTP is sent and user clicks "Register"
-            <Link href="/account">
+          {isOtpSent ? (
+            <Link href={otp ? "/account" : "#"}>
+              {" "}
+              {/* Link should only be active when OTP is filled */}
               <button
                 type="submit"
-                className="w-full p-3 bg-yellow-400 text-black font-semibold rounded-lg"
+                className={`w-full p-3 ${
+                  otp === ""
+                    ? "bg-yellow-300 cursor-not-allowed opacity-50"
+                    : "bg-yellow-400"
+                } text-black font-semibold rounded-lg`}
+                disabled={otp === ""} // Disable when OTP is not filled
               >
                 Register
               </button>
             </Link>
           ) : (
-            // If OTP is not sent, just handle OTP send
             <button
               type="submit"
-              className="w-full p-3 bg-yellow-400 text-black font-semibold rounded-lg"
+              className="w-full p-3 bg-yellow-400 rounded-lg text-[#070707] text-xl font-normal font-karla leading-[23px]"
             >
               Send OTP
             </button>
-          )} */}
-
-{isOtpSent ? (
-  <Link href={otp ? "/account" : "#"}> {/* Link should only be active when OTP is filled */}
-    <button
-      type="submit"
-      className={`w-full p-3 ${otp === "" ? "bg-yellow-300 cursor-not-allowed opacity-50" : "bg-yellow-400"} text-black font-semibold rounded-lg`}
-      disabled={otp === ""} // Disable when OTP is not filled
-    >
-      Register
-    </button>
-  </Link>
-) : (
-  <button
-    type="submit"
-    className="w-full p-3 bg-yellow-400 rounded-lg text-[#070707] text-xl font-normal font-karla leading-[23px]"
-  >
-    Send OTP
-  </button>
-)}
-
-         
+          )}
         </form>
 
         {/* Social Login */}
         <div className="w-full max-w-md mt-6">
           {/* Google Login */}
           <button className="w-full flex items-center justify-center p-3 bg-gray-100 border border-gray-300 rounded-lg mb-4">
-            <img src="/devicon_google.png" alt="Google" className="h-5 w-5 mr-3" />
-            <span className="text-gray-800 font-bold ">Sign in with Google</span>
+            <img
+              src="/devicon_google.png"
+              alt="Google"
+              className="h-5 w-5 mr-3"
+            />
+            <span className="text-gray-800 font-bold ">
+              Sign in with Google
+            </span>
           </button>
 
           {/* Facebook Login */}
           <button className="w-full flex items-center justify-center p-3 bg-gray-100 border border-gray-300 rounded-lg mb-4">
-            <img src="/devicon_facebook.svg" alt="Facebook" className="h-5 w-5 mr-3" />
-            <span className="text-gray-800 font-bold">Continue with Facebook</span>
+            <img
+              src="/devicon_facebook.svg"
+              alt="Facebook"
+              className="h-5 w-5 mr-3"
+            />
+            <span className="text-gray-800 font-bold">
+              Continue with Facebook
+            </span>
           </button>
 
           {/* Apple Login */}
           <button className="w-full flex items-center justify-center p-3 bg-gray-100 border border-gray-300 rounded-lg">
-            <img src="/ic_round-apple.svg" alt="Apple" className="h-5 w-5 mr-3" />
+            <img
+              src="/ic_round-apple.svg"
+              alt="Apple"
+              className="h-5 w-5 mr-3"
+            />
             <span className="text-gray-800 font-bold">Continue with Apple</span>
           </button>
         </div>
 
         {/* Login */}
         <p className="mt-6 text-center text-[#999999] text-base font-normal font-karla leading-[18.40px]">
-        Already have an account? {" "}
+          Already have an account?{" "}
           <a href="/login" className="text-pink-600">
-          Login
+            Login
           </a>
         </p>
       </div>

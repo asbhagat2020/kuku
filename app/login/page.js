@@ -59,7 +59,7 @@ export default function Login() {
         {/* Logo Section */}
         <div className="flex items-center gap-2 mb-8">
           <img src="/Group1.svg" alt="KUKU Logo" className="h-14 w-14" />
-          <div className="text-black text-3xl font-['Palanquin Dark'] font-bold">KUKU</div>
+          <div className="text-black text-3xl font-palanquin_dark font-bold">KUKU</div>
         </div>
 
         <div className="text-black text-xl font-karla font-bold mb-6">
