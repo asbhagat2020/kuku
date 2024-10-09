@@ -1,5 +1,6 @@
 "use client";
 
+import Link from 'next/link';
 import { useState } from "react";
 import { Pagination } from "./Pagination"; // Import the Pagination component
 
@@ -232,9 +233,15 @@ export const ImagesComponent = () => {
               </div>
               <div className="flex items-end w-full">
                 <div className="flex w-full">
-                  <button className="w-full px-4 sm:px-10 bg-custom-yellow text-black rounded-2xl">
-                    Buy Now
-                  </button>
+                
+                <Link href="/product" passHref>
+                <button
+        className="bg-[#FDE504] w-[150px] h-[48px] rounded-[1rem] font-medium hover:opacity-80 transition-opacity mr-1"
+      >
+        Buy Now
+      </button>
+    </Link>
+                  
                   <div className="h-10 w-16 flex items-center justify-center bg-white rounded-full text-center ml-4">
                     <img src="handsake_img.jpg" alt="handshake avtar"/>
                   </div>

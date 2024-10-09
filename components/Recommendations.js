@@ -3,6 +3,7 @@
 import { useRef, useState, useEffect } from 'react';
 import { FaRegHandshake } from 'react-icons/fa';
 import { IoHeartOutline } from 'react-icons/io5';
+import Link from 'next/link';
 
 const RecommendationCard = ({ image, price }) => (
   <div className="p-2 w-64 shrink-0 relative">
@@ -17,11 +18,13 @@ const RecommendationCard = ({ image, price }) => (
       </div>
     </div>
     <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex items-center justify-center mb-8">
+    <Link href="/product" passHref>
       <button
         className="bg-[#FDE504] w-[150px] h-[48px] rounded-[1rem] font-medium hover:opacity-80 transition-opacity mr-1"
       >
         Buy Now
       </button>
+     </Link> 
       <div className="flex items-center bg-white rounded-full p-2 shadow-md">
         <FaRegHandshake className="text-black w-5 h-5" />
       </div>
@@ -60,11 +63,13 @@ const Recommendations = () => {
         <h2 className="text-3xl font-bold ml-6 leading-tight tracking-wide font-['Luckiest Guy']">
           You May Also Like
         </h2>
+        <Link href="/selling-page">
         <button
           className="border-2 border-[#E4086F] text-[#E4086F] bg-white opacity-100 hover:opacity-80 transition-opacity w-[150px] h-[60px] rounded-[1rem] font-bold"
         >
           View All
         </button>
+        </Link>
       </div>
 
       {/* Carousel */}

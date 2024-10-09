@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Link from 'next/link';
 
 const ItemList = () => {
   const [formData, setFormData] = useState({
@@ -342,6 +343,7 @@ const ItemList = () => {
             >
               List Now
             </button>
+            <Link href="/">
             <button
               type="button"
               className="px-8 py-3 border border-[#E4086F] text-[#E4086F] text-lg font-semibold hover:bg-[#fce4f4] transition-colors"
@@ -349,6 +351,7 @@ const ItemList = () => {
             >
               Cancel
             </button>
+            </Link>
           </div>
         </form>
       </div>
