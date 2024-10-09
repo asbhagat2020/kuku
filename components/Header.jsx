@@ -1,12 +1,15 @@
+"use client";
 import Image from 'next/image';
 import React, { useState } from 'react';
 import NotificationPanel from './home/NotificationPanel'; // Import the NotificationPanel component
+import { usePathname } from 'next/navigation';
 
 const Header = () => {
   const [isSearchVisible, setIsSearchVisible] = useState(false);
   const [isNotificationVisible, setIsNotificationVisible] = useState(false);
   const [suggestions, setSuggestions] = useState([]);
   const [searchValue, setSearchValue] = useState('');
+  const path = usePathname();
 
   // Notifications data
   const notifications = [
@@ -37,12 +40,12 @@ const Header = () => {
     {
       text: "Offer received",
       time: "12:02 AM",
-      discription:"Great news! Someone has made you an offer. Tap here to check it out"
+      description: "Great news! Someone has made you an offer. Tap here to check it out"
     },
     {
       text: "Offer received",
       time: "12:02 AM",
-      discription:"Great news! Someone has made you an offer. Tap here to check it out"
+      description: "Great news! Someone has made you an offer. Tap here to check it out"
     },
   ];
 
@@ -73,8 +76,15 @@ const Header = () => {
     }
   };
 
+  // Paths where the notification icon should be disabled
+  const disabledNotificationPaths = ['/wishlist', '/cart', '/product'];
+  const isNotificationDisabled = disabledNotificationPaths.includes(path);
+
+  // Determine background color based on the path
+  const isSpecialPath = path === "/listingproduct" || path === "/kukuit" || path === "/renting";
+
   return (
-    <div className="max-w-full px-[70px] py-[23px] h-[108px] bg-[#EDA702]">
+    <div className="max-w-full px-[70px] py-[23px] h-[108px]" style={{ backgroundColor: isSpecialPath ? '#FFF' : '#EDA702' }}>
       <div className='flex justify-between'>
         <div className='flex gap-[60px]'>
           <div className="flex gap-[1rem] items-center">
@@ -134,9 +144,12 @@ const Header = () => {
             </div>
           )}
 
-          <div className='h-[54px] p-[15px] bg-white/40 rounded-[100px] cursor-pointer' onClick={toggleNotifications}>
-            <Image alt='notification icon' width={24} height={24} src='notification.svg' />
-          </div>
+          {/* Conditionally render notification icon */}
+          {!isNotificationDisabled && (
+            <div className='h-[54px] p-[15px] bg-white/40 rounded-[100px] cursor-pointer' onClick={toggleNotifications}>
+              <Image alt='notification icon' width={24} height={24} src='notification.svg' />
+            </div>
+          )}
 
           {/* Cart, Wishlist, Profile Icons */}
           <div className='h-[54px] p-[15px] bg-white/40 rounded-[100px]'>
@@ -157,4 +170,4 @@ const Header = () => {
   );
 };
 
-export default Header;
+export default Header; 
