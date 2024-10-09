@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import Image from "next/image";
 import amiriImg from "../public/product-image.png";
 import kukuLogo from "../public/emojiKuku.png";
@@ -193,19 +194,24 @@ const ProductCard = () => {
               MAKE AN OFFER
             </button>
           </div>
-
-          <button
-            className="mt-4 text-black w-full font-bold flex items-center justify-center"
-            style={{
-              height: "72px",
-              backgroundColor: "#FDE504",
-              borderRadius: "16px",
-            }}
-          >
-            <FaShoppingBag className="mr-2" />
-            ADD TO BAG
-          </button>
+          <Link href="/cart">
+            <button
+              className="mt-4 text-black w-full font-bold flex items-center justify-center"
+              style={{
+                height: "72px",
+                backgroundColor: "#FDE504",
+                borderRadius: "16px",
+              }}
+            >
+              <FaShoppingBag className="mr-2" />
+              ADD TO BAG
+            </button>
+          </Link>
           <div className="flex flex-col mt-2">
+            <div className="text-center font-bold text-black ">
+              Or Rent it for
+            </div>
+
             <button
               onClick={handleOpenRentPopup} // Open rent popup on button click
               className="mt-2 text-black w-full font-bold"
@@ -215,7 +221,6 @@ const ProductCard = () => {
                 borderRadius: "16px",
               }}
             >
-              <span className="block text-sm">Or Rent it for</span>
               AED 70
             </button>
           </div>

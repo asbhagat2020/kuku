@@ -1,4 +1,6 @@
 "use client";
+
+import Link from 'next/link';
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import DownloadKuku from "@/components/home/DownloadKuku";
@@ -88,11 +90,13 @@ export default function Cart() {
                     Remove
                   </span>
                 </button>
+                <Link href="/wishlist">
                 <button className="w-[200px] h-[50px] rounded-[14px] text-black border-2 border-[#0f0f0f] justify-center items-center gap-[8.8px] inline-flex hover:bg-[#c0075f]">
                   <span className="text-[14px] font-bold font-karla uppercase leading-snug">
                     Add to Wishlist
                   </span>
                 </button>
+                </Link>
               </div>
             </div>
 

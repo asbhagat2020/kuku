@@ -1,4 +1,6 @@
 import { useState } from "react";
+
+import Link from 'next/link';
 import Image from "next/image";
 
 const Popup = ({ isOpen, onClose }) => {
@@ -40,6 +42,7 @@ const Popup = ({ isOpen, onClose }) => {
                 We pick up order at your doorstep
               </span>
             </div>
+            <Link href="/listingproduct">
             <button className="w-[292px] h-[52px] mt-4 bg-gradient-to-r from-[#e4086f] to-[#ff489e] rounded-[10px] flex items-center justify-between">
               <div className="flex items-center">
                 <div className="w-[30.86px] h-[30.86px] bg-white rounded-full flex items-center justify-center mr-2" style={{ marginLeft: '8px' }}> 
@@ -50,6 +53,7 @@ const Popup = ({ isOpen, onClose }) => {
                     height={28}
                   />
                 </div>
+                
                 <span className="text-white text-base font-bold text-center" style={{ marginLeft: '6px' }}> 
                   Post Item Myself
                 </span>
@@ -63,6 +67,7 @@ const Popup = ({ isOpen, onClose }) => {
                 />
               </div>
             </button>
+            </Link>
           </div>
 
           {/* Or separator */}
@@ -95,6 +100,7 @@ const Popup = ({ isOpen, onClose }) => {
             <div className="text-[#070707]/30 text-xs font-normal mt-2 mb-2">
               *Ku-Kit is only applicable for minimum 5 items
             </div>
+            <Link href="/kukuit">
             <button className="w-[292px] h-[52px] bg-gradient-to-r from-[#f7d400] to-[#fef200] rounded-[10px] flex items-center justify-between">
               <div className="flex items-center">
                 <div className="w-[30.86px] h-[30.86px] bg-white rounded-full flex items-center justify-center mr-2" style={{ marginLeft: '6px' }}> {/* Reduced by 4px */}
@@ -118,6 +124,7 @@ const Popup = ({ isOpen, onClose }) => {
                 />
               </div>
             </button>
+            </Link>
           </div>
 
           {/* Or separator */}
