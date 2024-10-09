@@ -18,8 +18,8 @@ const DownloadKuku = () => {
                     <Image width={40} height={40} src='/round.svg' />
                     <div className="w-[346px] text-center text-[#fde504] text-[46px] font-normal font-luckiest leading-[55.20px]">Clear your wardrobe and sell now</div>
                 </div>
-                <div>
-                    <Image width={335} height={242} src='/dress_left.png' />
+                <div className='mt-4'>
+                    <Image width={335} height={242} src='/dress_right.png' />
                 </div>
             </div>
             <div className='flex gap-[100px] justify-center pt-[41px]'>
