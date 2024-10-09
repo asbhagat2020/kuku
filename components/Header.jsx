@@ -1,14 +1,58 @@
-import Image from 'next/image'
-import React, { useState } from 'react'
+import Image from 'next/image';
+import React, { useState } from 'react';
+import NotificationPanel from './home/NotificationPanel'; // Import the NotificationPanel component
 
 const Header = () => {
   const [isSearchVisible, setIsSearchVisible] = useState(false);
+  const [isNotificationVisible, setIsNotificationVisible] = useState(false);
   const [suggestions, setSuggestions] = useState([]);
   const [searchValue, setSearchValue] = useState('');
 
+  // Notifications data
+  const notifications = [
+    {
+      text: "A Seller has posted item for your emergency requirement",
+      date: "July 28, 2024 at 07:40 AM",
+    },
+    {
+      text: '"Lulu & Sky - Orange crochet cottage Kurta" Bid placed',
+      date: "July 28, 2024 at 07:40 AM",
+    },
+    {
+      text: '"Lulu & Sky - Orange crochet cottage Kurta" Bid placed',
+      date: "July 28, 2024 at 07:40 AM",
+    },
+    {
+      text: '"Lulu & Sky - Orange crochet cottage Kurta" Bid placed',
+      date: "July 28, 2024 at 07:40 AM",
+    },
+    {
+      text: '"Lulu & Sky - Orange crochet cottage Kurta" Bid placed',
+      date: "July 28, 2024 at 07:40 AM",
+    },
+  ];
+
+  // Offers data
+  const offers = [
+    {
+      text: "Offer received",
+      time: "12:02 AM",
+      discription:"Great news! Someone has made you an offer. Tap here to check it out"
+    },
+    {
+      text: "Offer received",
+      time: "12:02 AM",
+      discription:"Great news! Someone has made you an offer. Tap here to check it out"
+    },
+  ];
+
   const toggleSearch = () => {
     setIsSearchVisible(!isSearchVisible);
-  }
+  };
+
+  const toggleNotifications = () => {
+    setIsNotificationVisible(!isNotificationVisible);
+  };
 
   const handleInputChange = (e) => {
     const value = e.target.value;
@@ -20,14 +64,14 @@ const Header = () => {
         'Jacket',
         'Jeans',
         'Shoes',
-        'Socks'
+        'Socks',
       ].filter(item => item.toLowerCase().includes(value.toLowerCase()));
 
       setSuggestions(mockSuggestions);
     } else {
       setSuggestions([]);
     }
-  }
+  };
 
   return (
     <div className="max-w-full px-[70px] py-[23px] h-[108px] bg-[#EDA702]">
@@ -90,9 +134,11 @@ const Header = () => {
             </div>
           )}
 
-          <div className='h-[54px] p-[15px] bg-white/40 rounded-[100px]'>
+          <div className='h-[54px] p-[15px] bg-white/40 rounded-[100px] cursor-pointer' onClick={toggleNotifications}>
             <Image alt='notification icon' width={24} height={24} src='notification.svg' />
           </div>
+
+          {/* Cart, Wishlist, Profile Icons */}
           <div className='h-[54px] p-[15px] bg-white/40 rounded-[100px]'>
             <Image alt='cart icon' width={24} height={24} src='cart.svg' />
           </div>
@@ -104,8 +150,11 @@ const Header = () => {
           </div>
         </div>
       </div>
+
+      {/* Render NotificationPanel conditionally */}
+      {isNotificationVisible && <NotificationPanel notifications={notifications} offers={offers} />}
     </div>
-  )
-}
+  );
+};
 
 export default Header;

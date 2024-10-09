@@ -1,4 +1,7 @@
 "use client"; // Ensure Client-Side rendering
+import Footer from "@/components/Footer";
+import Header from "@/components/Header";
+import DownloadKuku from "@/components/home/DownloadKuku";
 import { useState } from "react"; // Import useState to track the modal state
 
 export default function Renting() {
@@ -13,6 +16,8 @@ export default function Renting() {
   };
 
   return (
+    <>
+    <Header/>
     <div className="px-[70px] py-[70px]">
       {/* Title Section */}
       <div className="text-[#070707] text-[36.8px] font-normal font-luckiest leading-[44.16px] mb-6">
@@ -189,8 +194,15 @@ export default function Renting() {
       </div>
     </div>
   </div>
+  
 )}
 
  </div>
+ <div>
+ <DownloadKuku/>
+ <Footer/>
+ </div>
+ 
+ </>
   );
 }
