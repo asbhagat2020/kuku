@@ -1,22 +1,30 @@
+"use client";
+
 import React from 'react';
 import ItemList from '@/components/ItemList';
+import Header from '@/components/Header'; 
+import Footer from '@/components/Footer';
 
 const Page = () => {
   const style = {
-    backgroundColor: '#3AD385', // Updated background color
-    minHeight: '100vh', // Changed from height to minHeight for better control
+    backgroundColor: '#3AD385',
+    minHeight: '100vh',
     margin: 0,
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    padding: '20px', // Added padding to prevent overflow
+    padding: '20px',
     flexDirection: 'column',
-    overflow: 'auto', // Added overflow to handle large forms
+    overflow: 'auto',
   };
 
   return (
-    <div style={style}>
-      <ItemList />
+    <div style={{ backgroundColor: '#3AD385', minHeight: '100vh', margin: 0 }}>
+      <Header backgroundColor="#FFF" /> 
+      <div style={style}>
+        <ItemList />
+      </div>
+      <Footer />
     </div>
   );
 };

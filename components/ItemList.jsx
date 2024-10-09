@@ -59,10 +59,11 @@ const ItemList = () => {
         images: [],
       });
 
-      // Hide the success popup after a few seconds
       setTimeout(() => setSuccessPopup(false), 5000); // Popup hides after 5 seconds
     } else {
-      alert("Please fill out all required fields and upload at least one image.");
+      alert(
+        "Please fill out all required fields and upload at least one image."
+      );
     }
   };
 
@@ -73,7 +74,7 @@ const ItemList = () => {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white p-8 rounded-lg text-center shadow-lg max-w-sm">
             <img
-              src="/ChechkNotfi.png" // The tick icon from your image (replace with actual path)
+              src="/ChechkNotfi.png"
               alt="Check Notification"
               className="w-14 h-14 mx-auto mb-4"
             />
@@ -81,7 +82,8 @@ const ItemList = () => {
               Your product listing request has been successfully received
             </h2>
             <p className="text-gray-500 mt-2">
-              Post the approval from our QC team, your product will be visible to other users.
+              Post the approval from our QC team, your product will be visible
+              to other users.
             </p>
           </div>
         </div>
