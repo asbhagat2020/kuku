@@ -1,7 +1,14 @@
-"use client"; // Ensure Client-Side rendering
+"use client";
+import Footer from "@/components/Footer";
+import Header from "@/components/Header";
+import DownloadKuku from "@/components/home/DownloadKuku";
+
+ // Ensure Client-Side rendering
 
 export default function Wishlist() {
   return (
+    <>
+    <Header/>
     <div className="px-[70px] py-[70px]">
       <div className="text-[#070707] text-[36.8px] font-normal font-luckiest Guy leading-[44.16px] mb-6">
         YOUR WISHLIST
@@ -84,5 +91,8 @@ export default function Wishlist() {
         </div>
       </div>
     </div>
+    <DownloadKuku/>
+    <Footer/>
+    </>
   );
 }

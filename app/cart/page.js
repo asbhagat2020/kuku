@@ -1,7 +1,14 @@
-"use client"; // Ensure Client-Side rendering
+"use client";
+import Footer from "@/components/Footer";
+import Header from "@/components/Header";
+import DownloadKuku from "@/components/home/DownloadKuku";
+
+ // Ensure Client-Side rendering
 
 export default function Cart() {
   return (
+    <>
+    <Header/>
     <div className="px-[70px] py-[70px]">
       {" "}
       {/* Reduced padding */}
@@ -186,5 +193,8 @@ export default function Cart() {
         </div>
       </div>
     </div>
+    <DownloadKuku/>
+    <Footer/>
+    </>
   );
 }
