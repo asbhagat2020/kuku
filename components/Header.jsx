@@ -1,14 +1,11 @@
-<<<<<<< Updated upstream
+
 "use client";
 import Image from 'next/image';
 import React, { useState } from 'react';
 import NotificationPanel from './home/NotificationPanel'; // Import the NotificationPanel component
 import { usePathname } from 'next/navigation';
-=======
-import Image from 'next/image'
 import Link from 'next/link';
-import React, { useState } from 'react'
->>>>>>> Stashed changes
+
 
 const Header = () => {
   const [isSearchVisible, setIsSearchVisible] = useState(false);
@@ -175,13 +172,7 @@ const Header = () => {
       {/* Render NotificationPanel conditionally */}
       {isNotificationVisible && <NotificationPanel notifications={notifications} offers={offers} />}
     </div>
-<<<<<<< Updated upstream
   );
 };
-=======
 
-  )
-}
->>>>>>> Stashed changes
-
-export default Header; 
+export default Header;
