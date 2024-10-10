@@ -8,11 +8,12 @@ import { useState } from "react";
 import {
   FaStar,
   FaRegHeart,
-  FaRegHandshake,
+  // FaRegHandshake,
   FaShoppingBag,
   FaArrowLeft,
   FaArrowRight,
 } from "react-icons/fa";
+import { FaHandshake } from 'react-icons/fa';
 
 const ProductCard = () => {
   const [isRentPopupOpen, setRentPopupOpen] = useState(false);
@@ -22,6 +23,9 @@ const ProductCard = () => {
   const [selectedPrice, setSelectedPrice] = useState(null); // State to hold the selected price for the offer
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true); // State to disable/enable the submit button
   const [isModalOpen, setIsModalOpen] = useState(false); // State to control the modal
+  const [currentImageIndex, setCurrentImageIndex] = useState(0); // State to keep track of the current image
+
+  const images = [amiriImg, amiriImg];
 
   const handleOpenModal = () => {
     setIsModalOpen(true);
@@ -74,8 +78,18 @@ const ProductCard = () => {
     handleCloseOfferPopup();
   };
 
+  const handleNextImage = () => {
+    setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length); // Navigate to next image
+  };
+
+  const handlePrevImage = () => {
+    setCurrentImageIndex(
+      (prevIndex) => (prevIndex - 1 + images.length) % images.length
+    ); // Navigate to previous image
+  };
+
   return (
-    <div className="max-w-screen-xl mx-auto pl-1 pr-6">
+    <div className="max-w-screen-xl mx-auto pl-1 pr-6 font-karla">
       {/* Breadcrumbs */}
       <div className="breadcrumb text-gray-500 text-sm mb-3 mt-2">
         <span>Home</span> | <span>Categories</span> | <span>Tshirt</span> |{" "}
@@ -86,33 +100,71 @@ const ProductCard = () => {
 
       <div className="flex flex-col md:flex-row items-start gap-6 relative">
         <div className="w-full md:w-1/2 relative">
+          {/* Display the current image based on index */}
           <Image
-            src={amiriImg}
+            src={images[currentImageIndex]}
             alt="AMIRI Men Oversize T-shirt"
             className="object-cover rounded-md"
             style={{
               width: "100%",
               height: "500px",
               maxWidth: "650px",
+              zIndex: 1, // Current image has a higher z-index
+              position: "relative",
+              transition: "opacity 0.5s ease-in-out", // Smooth transition for fading effect
+            }}
+          />
+          <Image
+            src={images[(currentImageIndex + 1) % images.length]} // Show the next image below
+            alt="AMIRI Men Oversize T-shirt"
+            className="object-cover rounded-md absolute top-0 left-0" // Position on top
+            style={{
+              width: "100%",
+              height: "500px",
+              maxWidth: "650px",
+              zIndex: 0, // Next image has a lower z-index
+              position: "absolute",
+              opacity: 0, // Initially hidden
+              transition: "opacity 0.5s ease-in-out", // Smooth transition for fading effect
             }}
           />
           <button
-            className="absolute left-1 top-1/2 transform -translate-y-1/2 rounded-full p-2 shadow-md"
+            className="absolute left-1 top-1/2 transform -translate-y-1/2 rounded-full p-2 shadow-md z-20"
             style={{
               backgroundColor: "#E5E5E5",
               boxShadow: "inset -20px -6px 24px rgba(209, 209, 209, 0.07)",
               filter: "drop-shadow(0px 10px 44px rgba(0, 0, 0, 0.09))",
             }}
+            onClick={() => {
+              handlePrevImage();
+              // Adjust the opacity of the images on navigation
+              document.querySelector(
+                `img[alt="AMIRI Men Oversize T-shirt"]:nth-child(1)`
+              ).style.opacity = 0;
+              document.querySelector(
+                `img[alt="AMIRI Men Oversize T-shirt"]:nth-child(2)`
+              ).style.opacity = 1;
+            }} // Previous image handler
           >
             <FaArrowLeft className="text-black w-4 h-4" />
           </button>
           <button
-            className="absolute right-1 top-1/2 transform -translate-y-1/2 rounded-full p-2 shadow-md"
+            className="absolute right-1 top-1/2 transform -translate-y-1/2 rounded-full p-2 shadow-md z-20"
             style={{
               backgroundColor: "#E5E5E5",
               boxShadow: "inset -20px -6px 24px rgba(209, 209, 209, 0.07)",
               filter: "drop-shadow(0px 10px 44px rgba(0, 0, 0, 0.09))",
             }}
+            onClick={() => {
+              handleNextImage();
+              // Adjust the opacity of the images on navigation
+              document.querySelector(
+                `img[alt="AMIRI Men Oversize T-shirt"]:nth-child(1)`
+              ).style.opacity = 1;
+              document.querySelector(
+                `img[alt="AMIRI Men Oversize T-shirt"]:nth-child(2)`
+              ).style.opacity = 0;
+            }} // Next image handler
           >
             <FaArrowRight className="text-black w-4 h-4" />
           </button>
@@ -131,13 +183,13 @@ const ProductCard = () => {
         <div className="w-full md:w-1/2 space-y-4">
           <div className="flex space-x-2">
             <span
-              className="inline-block px-4 py-2 text-black rounded-full text-xs font-semibold border border-gray-400 shadow-sm"
+              className="inline-block px-4 py-2 text-black rounded-full text-xs font-semibold border  shadow-sm"
               style={{ backgroundColor: "#E6E6E6" }}
             >
               T-shirt
             </span>
             <span
-              className="inline-block px-4 py-2 text-black rounded-full text-xs font-semibold border border-gray-400 shadow-sm"
+              className="inline-block px-4 py-2 text-black rounded-full text-xs font-semibold border  shadow-sm"
               style={{ backgroundColor: "#E6E6E6" }}
             >
               Men
@@ -177,55 +229,68 @@ const ProductCard = () => {
           </div>
 
           <div className="flex gap-4 mt-4">
-          <Link href="/wishlist">
-            <button
-              className="border-2 text-pink-500 rounded-md px-4 py-3 w-full max-w-[200px] font-bold flex items-center justify-center"
-              style={{ borderColor: "#E4086F", borderRadius: "16px" }}
-            >
-              <FaRegHeart className="mr-2 w-5 h-5" />
-              WISHLIST
-            </button>
-            </Link>
+  <Link href="/wishlist">
+    <button
+      className="border-2 rounded-md  px-6 py-3 flex items-center justify-center font-bold text-pink-500 hover:bg-pink-100 transition-all duration-300"
+      style={{
+        borderColor: "#E4086F",
+        height: "60px", // Set to match the height in the image
+        width: "200px", // Set width to be consistent
+        borderRadius: "16px"
+      }}
+    >
+      <FaRegHeart className="mr-2 w-5 h-5" />
+      WISHLIST
+    </button>
+  </Link>
 
-            <button
-              onClick={handleOpenOfferPopup} // Open offer popup
-              className="border-2 text-green-500 rounded-md px-4 py-3 w-full max-w-[377px] h-20 font-bold flex items-center justify-center"
-              style={{ borderColor: "#30BD75", borderRadius: "16px" }}
-            >
-              <FaRegHandshake className="mr-2 w-5 h-5" />
-              MAKE AN OFFER
-            </button>
-          </div>
-          <Link href="/cart">
-            <button
-              className="mt-4 text-black w-full font-bold flex items-center justify-center"
-              style={{
-                height: "72px",
-                backgroundColor: "#FDE504",
-                borderRadius: "16px",
-              }}
-            >
-              <FaShoppingBag className="mr-2" />
-              ADD TO BAG
-            </button>
-          </Link>
-          <div className="flex flex-col mt-2">
-            <div className="text-center font-bold text-black ">
-              Or Rent it for
-            </div>
+  <button
+  onClick={handleOpenOfferPopup}
+  className="border-2 rounded-md px-6 py-3 flex items-center justify-center font-bold text-green-500 hover:bg-green-100 transition-all duration-300"
+  style={{
+    borderColor: "#30BD75",
+    height: "60px", 
+    width: "377px", 
+    borderRadius: "16px",
+  }}
+>
+  <FaHandshake className="mr-2 w-5 h-5" style={{ fill: "none", stroke: "#30BD75", strokeWidth: "25" }} />
+  MAKE AN OFFER
+</button>
+</div>
 
-            <button
-              onClick={handleOpenRentPopup} // Open rent popup on button click
-              className="mt-2 text-black w-full font-bold"
-              style={{
-                height: "72px",
-                backgroundColor: "#69D3FA",
-                borderRadius: "16px",
-              }}
-            >
-              AED 70
-            </button>
-          </div>
+<Link href="/cart">
+  <button
+    className="mt-4 text-black w-full font-bold flex items-center justify-center hover:bg-yellow-500 transition-all duration-300"
+    style={{
+      height: "72px",
+      backgroundColor: "#FDE504",
+      borderRadius: "16px",
+    }}
+  >
+    <FaShoppingBag className="mr-2" />
+    ADD TO BAG
+  </button>
+</Link>
+
+<div className="flex flex-col mt-2">
+  <div className="text-center font-bold text-black">
+    Or Rent it for
+  </div>
+
+  <button
+    onClick={handleOpenRentPopup}
+    className="mt-2 text-black w-full font-bold hover:bg-blue-300 transition-all duration-300"
+    style={{
+      height: "72px",
+      backgroundColor: "#69D3FA",
+      borderRadius: "16px",
+    }}
+  >
+    AED 70
+  </button>
+</div>
+
 
           <div
             className="mt-10 mb-0.75"
@@ -389,7 +454,7 @@ const ProductCard = () => {
                 <input
                   type="text"
                   placeholder="Enter the custom amount"
-                  className="w-[245px] h-[41px] py-[8.66px] px-[19.93px] bg-white rounded-[6.93px] border border-[#878787] text-[#4C5C6B] text-[14px] font-Karla font-normal placeholder:text-[#B0B0B0] break-words outline-none"
+                  className="w-[245px] h-[41px] py-[8.66px] px-[19.93px] bg-white rounded-[6.93px] border border-[#878787] text-[#4C5C6B] text-[14px] font-karla font-normal placeholder:text-[#B0B0B0] break-words outline-none"
                   onChange={(e) => handlePriceSelection(e.target.value)}
                 />
               </div>
