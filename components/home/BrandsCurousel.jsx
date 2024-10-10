@@ -25,11 +25,14 @@ const BrandCarousel = () => {
         slidesToShow: 6,
         slidesToScroll: 1,
         centerMode: false,
+        autoplay: true,
+        autoplaySpeed: 2000,
+        infinite:true,
         responsive: [
             {
                 breakpoint: 1024,
                 settings: {
-                    slidesToShow: 3,
+                    slidesToShow: 4,
                     slidesToScroll: 1,
                 }
             },
@@ -56,7 +59,7 @@ const BrandCarousel = () => {
                 {products.map((item, index) => (
                     <div key={index}>
                         <div
-                            className={`w-[200px] h-[150px] ml-[-60px] rounded-[20px] group bg-white hover:bg-black transition-all duration-500 flex justify-center items-center`}
+                            className={`w-[200px] h-[150px]  rounded-[20px] group bg-white hover:bg-black transition-all duration-500 flex justify-center items-center`}
                             onMouseEnter={() => setHoveredIndex(index)}
                             onMouseLeave={() => setHoveredIndex(null)}
                         >
