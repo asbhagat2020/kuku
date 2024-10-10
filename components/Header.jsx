@@ -1,7 +1,7 @@
 
 "use client";
 import Image from 'next/image';
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import NotificationPanel from './home/NotificationPanel'; // Import the NotificationPanel component
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
@@ -13,6 +13,8 @@ const Header = () => {
   const [suggestions, setSuggestions] = useState([]);
   const [searchValue, setSearchValue] = useState('');
   const path = usePathname();
+  const panelRef = useRef(null);
+  
 
   // Notifications data
   const notifications = [
@@ -85,6 +87,22 @@ const Header = () => {
 
   // Determine background color based on the path
   const isSpecialPath = path === "/listingproduct" || path === "/kukuit" || path === "/renting";
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (panelRef.current && !panelRef.current.contains(event.target)) {
+        setIsNotificationVisible(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [panelRef]);
+
+
 
   return (
     <div className="max-w-full px-[70px] py-[23px] h-[108px]" style={{ backgroundColor: isSpecialPath ? '#FFF' : '#EDA702' }}>
@@ -170,7 +188,11 @@ const Header = () => {
       </div>
 
       {/* Render NotificationPanel conditionally */}
-      {isNotificationVisible && <NotificationPanel notifications={notifications} offers={offers} />}
+      {isNotificationVisible && (
+        <div ref={panelRef}>
+          <NotificationPanel notifications={notifications} offers={offers} />
+        </div>
+      )}
     </div>
   );
 };
