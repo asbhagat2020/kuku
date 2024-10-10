@@ -39,7 +39,7 @@ const Hero = () => {
                         <button onClick={handleSellNowClick} className="text-[#fde504] text-xl font-bold font-karla leading-normal">Sell Now</button>
                     </div>
                     <div className="h-[72px] px-11 py-[15px] bg-white/50 rounded-[22px] backdrop-blur-xl justify-start items-center inline-flex">
-                        <button className="text-white text-xl font-bold font-karla leading-normal">Shop Now</button>
+                        <button className="text-white text-xl font-bold font-karla leading-normal">Explore</button>
                         <Image width={30} height={30} src='/right_arrow.png' alt='' />
                     </div>
                 </div>

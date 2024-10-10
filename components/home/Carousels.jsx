@@ -160,7 +160,7 @@ const Carousels = () => {
             }
         ],
         afterChange: (current) => {
-            const newProgress = (current / (product.length-4)) * 100
+            const newProgress = (current / (product.length - 4)) * 100
             setProgress(newProgress)
         }
     }
@@ -176,12 +176,10 @@ const Carousels = () => {
                                     <Image alt='' width={24} height={24} src='wishlist.svg' />
                                 </div>
                             </div>
-                            <div className="absolute min-w-[204px] bottom-2 left-4 text-center z-10">
-                                <button className="bg-[#FDE504] text-black/90 py-[20px] px-[57px] rounded-[20px] font-bold font-karla">
-                                    Buy Now
-                                </button>
+                            <div className="absolute min-w-[204px] bottom-4 left-4 text-center z-10 bg-[#fde504] px-[50px] py-[20px] rounded-[20px]">
+                                <button className="text-[#202020] text-base font-bold font-karla leading-tight">Buy Now</button>
                             </div>
-                            <div className="absolute bottom-4 right-5 z-10">
+                            <div className="absolute bottom-6 right-5 z-10">
                                 <div className='h-[54px] p-[15px] bg-white rounded-[100px]'>
                                     <Image alt='' width={24} height={24} src='hand_shake.svg' />
                                 </div>
@@ -211,7 +209,7 @@ const Carousels = () => {
                     style={{
                         height: '100%',
                         backgroundColor: '#E4086F',
-                        borderRadius:"20px"
+                        borderRadius: "20px"
                     }}
                     initial={{ width: 0 }}
                     animate={{ width: `${progress}%` }}

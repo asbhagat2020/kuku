@@ -90,11 +90,15 @@ const CategoryCarousel = () => {
         <div className="flex flex-col overflow-hidden ml-[-20px]">
             <Slider ref={sliderRef} {...settings}>
                 {products.map((item, index) => (
-                    <div key={index}>
+                    <div className='relative' key={index}>
+                        {index !== currentSlide + centerIndex && (
+                            <div className="absolute top-2 left-[-50px] h-[25px] px-2.5 py-[5px] bg-[#e4086f]/10 rounded-[10px] justify-center items-center gap-2.5 inline-flex">
+                                <div className="text-black text-xs font-normal font-karla">Top</div>
+                            </div>
+                        )}
                         <div
-                            className={`w-[300px] h-[386px] ml-[-60px]  bg-white transition-all duration-500 ${
-                                index === currentSlide + centerIndex ? "shadow-lg rounded-[155px]" : "rounded-[20px]"
-                            }`}
+                            className={`w-[300px] h-[386px] ml-[-60px]  bg-white transition-all duration-500 ${index === currentSlide + centerIndex ? "shadow-lg rounded-[155px]" : "rounded-[20px]"
+                                }`}
                         >
                             <Image
                                 src={item.image}

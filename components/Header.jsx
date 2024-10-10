@@ -12,6 +12,7 @@ const Header = () => {
   const [isNotificationVisible, setIsNotificationVisible] = useState(false);
   const [suggestions, setSuggestions] = useState([]);
   const [searchValue, setSearchValue] = useState('');
+  const [isDropdownVisible, setIsDropdownVisible] = useState(false);
   const path = usePathname();
 
   // Notifications data
@@ -59,7 +60,9 @@ const Header = () => {
   const toggleNotifications = () => {
     setIsNotificationVisible(!isNotificationVisible);
   };
-
+  const toggleDropdown = () => {
+    setIsDropdownVisible(!isDropdownVisible);
+  };
   const handleInputChange = (e) => {
     const value = e.target.value;
     setSearchValue(value);
@@ -95,9 +98,9 @@ const Header = () => {
             <h1 className="text-black text-[37px] font-bold font-palanquin_dark leading-[44.40px]">KUKU</h1>
           </Link>
           <div className='lg:flex gap-[30px] items-center hidden'>
-            <Link href='men' className="text-[#fefae5] text-base font-bold font-karla leading-tight">MEN</Link>
-            <Link href='wommen' className="text-[#fefae5] text-base font-bold font-karla leading-tight">WOMEN</Link>
-            <Link href='kids' className="text-[#fefae5] text-base font-bold font-karla leading-tight">KIDS</Link>
+            <Link href='men' className="text-[#fefae5] text-base font-bold font-karla leading-tight hover:text-pink-500">MEN</Link>
+            <Link href='wommen' className="text-[#fefae5] text-base font-bold font-karla leading-tight hover:text-pink-500">WOMEN</Link>
+            <Link href='kids' className="text-[#fefae5] text-base font-bold font-karla leading-tight hover:text-pink-500">KIDS</Link>
           </div>
         </div>
         <div className="flex gap-[10px] items-center">
@@ -106,7 +109,7 @@ const Header = () => {
               <input
                 className='w-full h-full bg-white rounded-lg px-[50px] outline-none'
                 type="search"
-                placeholder="search an item"
+                placeholder="Search an item"
                 autoFocus
                 value={searchValue}
                 onChange={handleInputChange}
@@ -123,10 +126,10 @@ const Header = () => {
                         className="px-4 py-7 cursor-pointer hover:bg-gray-100 font-karla flex justify-between gap-4"
                       >
                         <div className="flex gap-4">
-                          <Image width={24} height={24} src='search_button.svg' />
+                          <Image width={24} height={24} src='search_button.svg' alt='' />
                           <p className="text-[#070707] text-base font-normal font-karla leading-snug tracking-tight">{suggestion}</p>
                         </div>
-                        <Image width={24} height={24} src='arrow-up-right.svg' />
+                        <Image width={24} height={24} src='arrow-up-right.svg' alt='' />
                       </div>
 
                       {/* Conditionally render the line */}
@@ -155,17 +158,38 @@ const Header = () => {
           )}
 
           {/* Cart, Wishlist, Profile Icons */}
+          <Link href='/cart'>
           <div className='h-[54px] p-[15px] bg-white/40 rounded-[100px]'>
             <Image alt='cart icon' width={24} height={24} src='cart.svg' />
-          </div>
+          </div></Link>
+          <Link href='/wishlist'>
           <div className='h-[54px] p-[15px] bg-white/40 rounded-[100px]'>
             <Image alt='wishlist icon' width={24} height={24} src='wishlist.svg' />
-          </div>
+          </div></Link>
           <Link href='/user_profile'>
           <div className='h-[54px] p-[15px] bg-white/40 rounded-[100px]'>
             <Image alt='profile icon' width={24} height={24} src='profile_black.svg' />
           </div>
           </Link>
+          <div className='relative'>
+            <div onClick={toggleDropdown} className='cursor-pointer'>
+              <Image alt='dropdown' width={14} height={14} src='heade_drop_down.svg' />
+            </div>
+
+            {isDropdownVisible && (
+              <div className="absolute p-[26px] right-0 top-[40px] w-[178px] h-[246px] bg-white border border-gray-300 rounded-lg shadow-lg z-10">
+                {/* Dropdown content goes here */}
+                <div className="px-4 py-2 hover:bg-gray-100 cursor-pointer font-karla">Account</div>
+                <div className="px-4  pb-2 hover:bg-gray-100 cursor-pointer font-karla">Your Profile</div>
+                <div className="px-4 pb-2  hover:bg-gray-100 cursor-pointer font-karla">Purchases</div>
+                <div className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla">Wishlist</div>
+                <Link href='/co2'>
+                <div className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla">Co2 Savings</div>
+                </Link>
+                <div className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla">Address List</div>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 

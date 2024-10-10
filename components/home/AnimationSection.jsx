@@ -3,7 +3,10 @@ import React from 'react'
 
 const AnimationSection = () => {
   return (
-    <div className="max-w-[1550px] mx-auto mb-[93px] ">
+    <div className="max-w-[1550px] mx-auto mb-[93px] relative">
+        <div className='absolute top-[-80px] right-[80px]'>
+            <Image src='list_top_image.svg' width={111} height={121} alt=''/>
+        </div>
         <div className='rounded-[20px] mx-[70px] h-[640px] bg-[#FDE504] py-[60px] flex flex-col items-center'>
             <div className='flex mx-[180px] gap-[130px]'>
                 <div className='flex flex-col space-y-[50px] justify-center'>
