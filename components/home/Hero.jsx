@@ -31,7 +31,7 @@ const Hero = () => {
                 <div className="text-center text-[#383838] text-base font-bold font-karla leading-tight">Discover preloved treasures and sell your wardrobe favorites with ease.</div>
             </div>
             <div className='flex flex-col justify-center py-[254px]'>
-                <div className="z-50 flex h-full justify-center items-center w-full">
+                <div className="z-30 flex h-full justify-center items-center w-full">
                     <h1 className="text-center w-[50%] text-[#f0fafe] text-7xl font-normal font-luckiest leading-[75.60px]">Your Sustainable Fashion Marketplace</h1>
                 </div>
                 <div className="flex justify-center gap-[10px] pt-[100px] z-10">
