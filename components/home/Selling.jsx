@@ -8,7 +8,7 @@ const Selling = () => {
     return (
         <div className="min-h-[760px] max-w-[1550px] mx-auto relative bg-white pt-[113px]">
             <Image className='absolute right-[430px] top-[188px]' width={44} height={44} src='/cube.svg' />
-            <div className="w-[1440px] h-[70px] justify-between items-center inline-flex px-[73px] ">
+            <div className="h-[70px] w-full justify-between items-center inline-flex px-[73px] ">
                 <div className='flex gap-4'>
                     <h1 className="text-[#e4086f] text-[46px] font-normal font-luckiest leading-[55.20px]">SEE WHAT’S SELLING</h1>
                     <Image width={73} height={73} src='/Frame.svg' className='mt-[-80px]' alt='' />

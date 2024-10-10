@@ -1,12 +1,18 @@
+
+"use client";
 import Image from 'next/image';
 import React, { useState } from 'react';
 import NotificationPanel from './home/NotificationPanel'; // Import the NotificationPanel component
+import { usePathname } from 'next/navigation';
+import Link from 'next/link';
+
 
 const Header = () => {
   const [isSearchVisible, setIsSearchVisible] = useState(false);
   const [isNotificationVisible, setIsNotificationVisible] = useState(false);
   const [suggestions, setSuggestions] = useState([]);
   const [searchValue, setSearchValue] = useState('');
+  const path = usePathname();
 
   // Notifications data
   const notifications = [
@@ -37,12 +43,12 @@ const Header = () => {
     {
       text: "Offer received",
       time: "12:02 AM",
-      discription:"Great news! Someone has made you an offer. Tap here to check it out"
+      description: "Great news! Someone has made you an offer. Tap here to check it out"
     },
     {
       text: "Offer received",
       time: "12:02 AM",
-      discription:"Great news! Someone has made you an offer. Tap here to check it out"
+      description: "Great news! Someone has made you an offer. Tap here to check it out"
     },
   ];
 
@@ -73,18 +79,25 @@ const Header = () => {
     }
   };
 
+  // Paths where the notification icon should be disabled
+  const disabledNotificationPaths = ['/wishlist', '/cart', '/product'];
+  const isNotificationDisabled = disabledNotificationPaths.includes(path);
+
+  // Determine background color based on the path
+  const isSpecialPath = path === "/listingproduct" || path === "/kukuit" || path === "/renting";
+
   return (
-    <div className="max-w-full px-[70px] py-[23px] h-[108px] bg-[#EDA702]">
+    <div className="max-w-full px-[70px] py-[23px] h-[108px]" style={{ backgroundColor: isSpecialPath ? '#FFF' : '#EDA702' }}>
       <div className='flex justify-between'>
         <div className='flex gap-[60px]'>
-          <div className="flex gap-[1rem] items-center">
-            <Image src='kuku_logo.svg' width={56} height={61} />
+          <Link href='/' className="flex gap-[1rem] items-center">
+            <Image src='kuku_logo.svg' width={56} height={61} alt='' />
             <h1 className="text-black text-[37px] font-bold font-palanquin_dark leading-[44.40px]">KUKU</h1>
-          </div>
-          <div className='flex gap-[30px] items-center'>
-            <p className="text-[#fefae5] text-base font-bold font-karla leading-tight">MEN</p>
-            <p className="text-[#fefae5] text-base font-bold font-karla leading-tight">WOMEN</p>
-            <p className="text-[#fefae5] text-base font-bold font-karla leading-tight">KIDS</p>
+          </Link>
+          <div className='lg:flex gap-[30px] items-center hidden'>
+            <Link href='men' className="text-[#fefae5] text-base font-bold font-karla leading-tight">MEN</Link>
+            <Link href='wommen' className="text-[#fefae5] text-base font-bold font-karla leading-tight">WOMEN</Link>
+            <Link href='kids' className="text-[#fefae5] text-base font-bold font-karla leading-tight">KIDS</Link>
           </div>
         </div>
         <div className="flex gap-[10px] items-center">
@@ -98,7 +111,7 @@ const Header = () => {
                 value={searchValue}
                 onChange={handleInputChange}
               />
-              <div className="absolute left-4 top-1/2 transform -translate-y-1/2">
+              <div onClick={toggleSearch} className="absolute left-4 top-1/2 transform -translate-y-1/2">
                 <Image alt='search icon' width={24} height={24} src='search_button.svg' />
               </div>
 
@@ -134,9 +147,12 @@ const Header = () => {
             </div>
           )}
 
-          <div className='h-[54px] p-[15px] bg-white/40 rounded-[100px] cursor-pointer' onClick={toggleNotifications}>
-            <Image alt='notification icon' width={24} height={24} src='notification.svg' />
-          </div>
+          {/* Conditionally render notification icon */}
+          {!isNotificationDisabled && (
+            <div className='h-[54px] p-[15px] bg-white/40 rounded-[100px] cursor-pointer' onClick={toggleNotifications}>
+              <Image alt='notification icon' width={24} height={24} src='notification.svg' />
+            </div>
+          )}
 
           {/* Cart, Wishlist, Profile Icons */}
           <div className='h-[54px] p-[15px] bg-white/40 rounded-[100px]'>
@@ -145,9 +161,11 @@ const Header = () => {
           <div className='h-[54px] p-[15px] bg-white/40 rounded-[100px]'>
             <Image alt='wishlist icon' width={24} height={24} src='wishlist.svg' />
           </div>
-          <div className='h-[54px] p-[15px] bg-[#393939] rounded-[100px]'>
-            <Image alt='profile icon' width={24} height={24} src='profile.svg' />
+          <Link href='/user_profile'>
+          <div className='h-[54px] p-[15px] bg-white/40 rounded-[100px]'>
+            <Image alt='profile icon' width={24} height={24} src='profile_black.svg' />
           </div>
+          </Link>
         </div>
       </div>
 

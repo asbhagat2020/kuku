@@ -18,7 +18,14 @@ const StriteSection = () => {
     ];
 
     return (
-        <div className="relative max-w-[1550px] mx-auto h-[800px] overflow-hidden">
+        <div className="relative max-w-[1550px] mx-auto h-[800px] overflow-hidden"
+        style={{
+            backgroundImage: "url('/strite_bg.png')",
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat'
+          }}
+        >
             <div className='absolute   left-[450px] right-0 top-[80px] z-10'>
                 <Image unoptimized={true} alt='' width={550} height={576} src='/teenagers.png' />
             </div>
