@@ -2,7 +2,7 @@
 "use client";
 import Image from 'next/image';
 import React, { useState } from 'react';
-import NotificationPanel from './home/NotificationPanel'; // Import the NotificationPanel component
+import NotificationPanel from './home/NotificationPanel'; 
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 
