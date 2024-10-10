@@ -177,6 +177,7 @@ const ProductCard = () => {
           </div>
 
           <div className="flex gap-4 mt-4">
+          <Link href="/wishlist">
             <button
               className="border-2 text-pink-500 rounded-md px-4 py-3 w-full max-w-[200px] font-bold flex items-center justify-center"
               style={{ borderColor: "#E4086F", borderRadius: "16px" }}
@@ -184,6 +185,7 @@ const ProductCard = () => {
               <FaRegHeart className="mr-2 w-5 h-5" />
               WISHLIST
             </button>
+            </Link>
 
             <button
               onClick={handleOpenOfferPopup} // Open offer popup
