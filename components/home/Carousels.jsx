@@ -1,97 +1,3 @@
-// "use client"
-// import Image from 'next/image'
-// import React from 'react'
-// import dynamic from 'next/dynamic'
-
-// const Carousel = dynamic(() => import('react-multi-carousel'), { ssr: false })
-// import 'react-multi-carousel/lib/styles.css'
-
-// const Carousels = () => {
-//     const product = [
-//         { title: "Dress", price: "12 AED", image: "/dress_1.png" },
-//         { title: "Dress", price: "12 AED", image: "/dress_2.png" },
-//         { title: "Dress", price: "12 AED", image: "/dress_3.png" },
-//         { title: "Dress", price: "12 AED", image: "/dress_1.png" },
-//         { title: "Dress", price: "12 AED", image: "/dress_2.png" },
-//         { title: "Dress", price: "12 AED", image: "/dress_3.png" },
-//         { title: "Dress", price: "12 AED", image: "/dress_1.png" },
-//         { title: "Dress", price: "12 AED", image: "/dress_2.png" },
-//         { title: "Dress", price: "12 AED", image: "/dress_3.png" },
-
-//     ]
-
-//     const responsive = {
-//         superLargeDesktop: {
-//             breakpoint: { max: 4000, min: 3000 },
-//             items: 5
-//         },
-//         desktop: {
-//             breakpoint: { max: 3000, min: 1024 },
-//             items: 5
-//         },
-//         tablet: {
-//             breakpoint: { max: 1024, min: 464 },
-//             items: 2
-//         },
-//         mobile: {
-//             breakpoint: { max: 464, min: 0 },
-//             items: 1
-//         }
-//     }
-
-//     return (
-//         <Carousel
-//             responsive={responsive}
-//             swipeable={true}
-//             draggable={true}
-//             showDots={false}
-//             infinite={false}
-//             autoPlay={false}
-//             arrows={false}
-//             keyBoardControl={true}
-//             customTransition="all .5"
-//             transitionDuration={500}
-//             containerClass="carousel-container"
-//             removeArrowOnDeviceType={["tablet", "mobile"]}
-//             dotListClass="custom-dot-list-style"
-//             itemClass="carousel-item"
-
-//         >
-
-//             {product.map((item, index) => (
-//                 <>
-//                     <div key={index} className="min-w-[307px] min-h-[404px] rounded-[20px] relative">
-//                         <div className="absolute top-2 right-2 z-10">
-//                             <div className='h-[54px] p-[15px] bg-white/40 rounded-[100px]'>
-//                                 <Image alt='' width={24} height={24} src='wishlist.svg' />
-//                             </div>
-//                         </div>
-//                         <div className="absolute  min-w-[204px] bottom-2 left-4 text-center z-10">
-//                             <button className="bg-[#FDE504] text-black/90 py-[20px] px-[57px] rounded-[20px] font-bold font-karla">
-//                                 Buy Now
-//                             </button>
-//                         </div>
-//                         <div className="absolute bottom-4 right-5 z-10">
-//                             <div className='h-[54px] p-[15px] bg-white rounded-[100px]'>
-//                                 <Image alt='' width={24} height={24} src='hand_shake.svg' />
-//                             </div>
-//                         </div>
-//                         <Image src={item.image} width={307} height={404} layout="responsive" alt={item.title} />
-
-//                     </div>
-//                     <div className="mt-2">
-//                         <h3 className='font-karla font-bold text-base'>{item.title}</h3>
-//                         <p className='text-black text-[25px] font-bold font-karla leading-[30px]'>{item.price}</p>
-//                     </div>
-//                 </>
-//             ))}
-
-//         </Carousel>
-//     )
-// }
-
-// export default Carousels
-
 "use client"
 import Image from 'next/image'
 import React, { useState, useRef } from 'react'
@@ -105,19 +11,18 @@ const Carousels = () => {
     const sliderRef = useRef(null)
 
     const product = [
-        { title: "Dress", price: "12 AED", image: "/dress_1.png" },
-        { title: "Dress", price: "12 AED", image: "/dress_2.png" },
-        { title: "Dress", price: "12 AED", image: "/dress_3.png" },
-        { title: "Dress", price: "12 AED", image: "/dress_1.png" },
-        { title: "Dress", price: "12 AED", image: "/dress_2.png" },
-        { title: "Dress", price: "12 AED", image: "/dress_3.png" },
-        { title: "Dress", price: "12 AED", image: "/dress_1.png" },
-        { title: "Dress", price: "12 AED", image: "/dress_2.png" },
-        { title: "Dress", price: "12 AED", image: "/dress_3.png" },
-        { title: "Dress", price: "12 AED", image: "/dress_3.png" },
-        { title: "Dress", price: "12 AED", image: "/dress_3.png" },
-        { title: "Dress", price: "12 AED", image: "/dress_3.png" },
-
+        { title: "Dress", price: "12 AED", image: ["/dress_1.png","/dress_2.png","/dress_2.png"] },
+        { title: "Dress", price: "12 AED", image: ["/dress_2.png","/dress_2.png","/dress_2.png"]},
+        { title: "Dress", price: "12 AED", image: ["/dress_3.png","/dress_2.png","/dress_2.png"] },
+        { title: "Dress", price: "12 AED", image: ["/dress_1.png","/dress_2.png","/dress_2.png"] },
+        { title: "Dress", price: "12 AED", image: ["/dress_2.png","/dress_2.png","/dress_2.png"] },
+        { title: "Dress", price: "12 AED", image: ["/dress_2.png","/dress_2.png","/dress_2.png"] },
+        { title: "Dress", price: "12 AED", image: ["/dress_2.png","/dress_2.png","/dress_2.png"] },
+        { title: "Dress", price: "12 AED", image: ["/dress_3.png","/dress_2.png","/dress_2.png"] },
+        { title: "Dress", price: "12 AED", image: ["/dress_1.png","/dress_2.png","/dress_2.png"] },
+        { title: "Dress", price: "12 AED", image: ["/dress_3.png","/dress_2.png","/dress_2.png"] },
+        { title: "Dress", price: "12 AED", image: ["/dress_2.png","/dress_2.png","/dress_2.png"] },
+        { title: "Dress", price: "12 AED", image: ["/dress_1.png","/dress_2.png","/dress_2.png"] },
     ]
 
     const settings = {
@@ -125,10 +30,13 @@ const Carousels = () => {
         infinite: false,
         speed: 500,
         slidesToShow: 4,
-        slidesToScroll: 4,
+        slidesToScroll: 1,
         autoplay: false,
         autoplaySpeed: 3000,
         arrows: false,
+        swipe:true,
+        cssEase: "ease-in-out",
+        touchThreshold: 10,
         responsive: [
             {
                 breakpoint: 1280,
@@ -165,12 +73,47 @@ const Carousels = () => {
         }
     }
 
+    const innerSliderSettings = {
+        dots: true,
+        infinite: true,
+        speed: 500,
+        slidesToShow: 1,
+        slidesToScroll: 1,
+        arrows: true,
+        customPaging: (i) => (
+            <div
+            className={`custom-dot`}
+                style={{
+                    height: "5px",
+                    borderRadius: "20px",
+                    background: "#eee",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    cursor: "pointer",
+                    marginTop: "-100px"
+                }}
+            />
+        ),
+        appendDots: dots => (
+            <div
+                style={{
+                    padding: "15px",
+                    display: "flex",
+                    justifyContent: "center",
+                }}
+            >
+                <ul style={{ display: "flex", gap: "5px" }}> {dots} </ul>
+            </div>
+        )
+    }
+
     return (
-        <div className='pl-[50px]'>
-            <Slider ref={sliderRef} {...settings}>
+        <div className='lg:pl-[50px] pl-5 outline-none'>
+            <Slider ref={sliderRef} {...settings}  >
                 {product.map((item, index) => (
                     <div key={index}>
-                        <div className="w-[307px] h-[404px] rounded-[20px] relative mx-2">
+                        <div className="w-[307px] h-[404px] rounded-[20px] relative mx-2 outline-none">
                             <div className="absolute top-2 right-2 z-10">
                                 <div className='h-[54px] p-[15px] bg-white/40 rounded-[100px]'>
                                     <Image alt='' width={24} height={24} src='wishlist.svg' />
@@ -184,7 +127,19 @@ const Carousels = () => {
                                     <Image alt='' width={24} height={24} src='hand_shake.svg' />
                                 </div>
                             </div>
-                            <Image src={item.image} width={307} height={404} layout="responsive" alt={item.title} />
+                            <Slider {...innerSliderSettings}>
+                                {item.image.map((imgSrc, imgIndex) => (
+                                    <div key={imgIndex}>
+                                        <Image
+                                            src={imgSrc}
+                                            width={307}
+                                            height={404}
+                                            layout="responsive"
+                                            alt={item.title}
+                                        />
+                                    </div>
+                                ))}
+                            </Slider>
                         </div>
                         <div className="mt-2">
                             <h3 className='font-karla font-bold text-base'>{item.title}</h3>
@@ -201,7 +156,6 @@ const Carousels = () => {
                     marginTop: '20px',
                     marginLeft: "70px",
                     marginRight: '70px',
-
                 }}
             >
                 <motion.div

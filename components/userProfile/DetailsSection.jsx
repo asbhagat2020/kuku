@@ -3,13 +3,51 @@ import Image from "next/image";
 import { useState } from "react";
 import ReviewItem from "./ReviewItem";
 import { Chart } from "./Chart";
+import Slider from "react-slick/lib/slider";
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
+const innerSliderSettings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    arrows: true,
+    customPaging: (i) => (
+        <div
+        className={`custom-dot`}
+            style={{
+                height: "5px",
+                borderRadius: "20px",
+                background: "#eee",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                cursor: "pointer",
+                marginTop: "-100px"
+            }}
+        />
+    ),
+    appendDots: dots => (
+        <div
+            style={{
+                padding: "15px",
+                display: "flex",
+                justifyContent: "center",
+            }}
+        >
+            <ul style={{ display: "flex", gap: "5px" }}> {dots} </ul>
+        </div>
+    )
+}
 
 const SellingCards = ({ data }) => (
-    <div className='px-[71px]'>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 relative">
-            {data.map((i) => (
-                <div key={i.id} className='flex flex-col gap-3'>
-                    <div
+
+    <div className='px-[71px] mb-10'>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-4 relative place-items-center">
+            {data.map((item) => (
+                <div key={item.id} className='flex flex-col gap-3'>
+                    {/* <div
                         className="rounded-[20px] shadow h-[404px] w-[307px] relative bg-cover bg-center"
                         style={{ backgroundImage: `url(${i.productImg})` }}
                     >
@@ -28,10 +66,38 @@ const SellingCards = ({ data }) => (
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> */}
+                    <div className="w-[307px] h-[404px] rounded-[20px] relative mx-2 outline-none">
+                            <div className="absolute top-2 right-2 z-10">
+                                <div className='h-[54px] p-[15px] bg-white/40 rounded-[100px]'>
+                                    <Image alt='' width={24} height={24} src='wishlist.svg' />
+                                </div>
+                            </div>
+                            <div className="absolute min-w-[204px] bottom-4 left-4 text-center z-10 bg-[#fde504] px-[50px] py-[20px] rounded-[20px]">
+                                <button className="text-[#202020] text-base font-bold font-karla leading-tight">Buy Now</button>
+                            </div>
+                            <div className="absolute bottom-6 right-5 z-10">
+                                <div className='h-[54px] p-[15px] bg-white rounded-[100px]'>
+                                    <Image alt='' width={24} height={24} src='hand_shake.svg' />
+                                </div>
+                            </div>
+                            <Slider {...innerSliderSettings}>
+                                {item.productImg.map((imgSrc, imgIndex) => (
+                                    <div key={imgIndex}>
+                                        <Image
+                                            src={imgSrc}
+                                            width={307}
+                                            height={404}
+                                            layout="responsive"
+                                            alt={item.title}
+                                        />
+                                    </div>
+                                ))}
+                            </Slider>
+                        </div>
                     <div className="flex flex-col gap-3">
-                        <p className="w-[68px] h-2.5 text-black text-base font-bold font-karla leading-tight">{i.title}</p>
-                        <p className="text-black text-[25px] font-bold font-karla leading-[30px]">{i.price}</p>
+                        <p className="w-[68px] h-2.5 text-black text-base font-bold font-karla leading-tight">{item.title}</p>
+                        <p className="text-black text-[25px] font-bold font-karla leading-[30px]">{item.price}</p>
                     </div>
                 </div>
             ))}
@@ -40,11 +106,11 @@ const SellingCards = ({ data }) => (
 );
 
 const SoldCards = ({ data }) => (
-    <div className='px-[71px]'>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 relative">
+    <div className='px-[71px] mb-10 opacity-50'>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-4 relative place-items-center">
             {data.map((i) => (
                 <div key={i.id} className='flex flex-col gap-3'>
-                    <div
+                    {/* <div
                         className="rounded-[20px] shadow h-[404px] w-[307px] relative bg-cover bg-center"
                         style={{ backgroundImage: `url(${i.productImg})` }}
                     >
@@ -63,7 +129,35 @@ const SoldCards = ({ data }) => (
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> */}
+                      <div className="w-[307px] h-[404px] rounded-[20px] relative mx-2 outline-none">
+                            <div className="absolute top-2 right-2 z-10">
+                                <div className='h-[54px] p-[15px] bg-white/40 rounded-[100px]'>
+                                    <Image alt='' width={24} height={24} src='wishlist.svg' />
+                                </div>
+                            </div>
+                            <div className="absolute min-w-[204px] bottom-4 left-4 text-center z-10 bg-[#fde504] px-[50px] py-[20px] rounded-[20px]">
+                                <button className="text-[#202020] text-base font-bold font-karla leading-tight">Buy Now</button>
+                            </div>
+                            <div className="absolute bottom-6 right-5 z-10">
+                                <div className='h-[54px] p-[15px] bg-white rounded-[100px]'>
+                                    <Image alt='' width={24} height={24} src='hand_shake.svg' />
+                                </div>
+                            </div>
+                            <Slider {...innerSliderSettings}>
+                                {i.productImg.map((imgSrc, imgIndex) => (
+                                    <div key={imgIndex}>
+                                        <Image
+                                            src={imgSrc}
+                                            width={307}
+                                            height={404}
+                                            layout="responsive"
+                                            alt={i.title}
+                                        />
+                                    </div>
+                                ))}
+                            </Slider>
+                        </div>
                     <div className="flex flex-col gap-3">
                         <p className="w-[68px] h-2.5 text-black text-base font-bold font-karla leading-tight">{i.title}</p>
                         <p className="text-black text-[25px] font-bold font-karla leading-[30px]">{i.price}</p>
@@ -75,17 +169,29 @@ const SoldCards = ({ data }) => (
 );
 
 const ReviewCards = ({ data }) => (
-    <div className='px-[71px]'>
+    <div className='px-[20px] lg:px-[71px]'>
         <div className="flex">
             <div className='flex w-full justify-between'>
                 <div className='flex flex-col gap-4'>
-                    <p className="text-center text-neutral-900 text-2xl font-bold font-karla leading-[28.80px]">Customer Reviews</p>
+                    <p className="text-center text-neutral-900 lg:text-2xl font-bold font-karla leading-[28.80px]">Customer Reviews</p>
                     <div className='flex items-center gap-2'>
                         <Image width={26} height={26} src='/rating.svg' alt='' />
                         <p className="text-center text-[#9c9c9c] text-[26.92px] font-normal font-karla leading-loose">{data.rating}</p>
                         <div className='w-2 h-2 rounded-full bg-[#9c9c9c]'></div>
-                        <div className="text-center text-[#9c9c9c] text-[26.92px] font-normal font-karla leading-loose">({data.reviews} Reviews)</div>
+                        <div className="text-center text-[#9c9c9c] lg:text-[26.92px] font-normal font-karla leading-loose">({data.reviews} Reviews)</div>
                     </div>
+                </div>
+                <div className="flex items-center gap-5 relative font-karla font-bold">
+                    <div className="flex gap-2">
+                        <Image unoptimized width={30} height={16} src='/sort.svg' className="" />
+                        <p>Sort by</p>
+                    </div>
+                    <div className="w-5 rotate-90 h-[1px] bg-gray-400"></div>
+                    <div className="flex gap-2">
+                        <Image width={15} height={15} src='/filter.svg' className="" />
+                        <p>Filter</p>
+                    </div>
+                    <div className="w-full h-[1px] bg-gray-400 absolute top-[70px]"></div>
                 </div>
             </div>
         </div>
@@ -99,18 +205,18 @@ const ReviewCards = ({ data }) => (
 );
 
 const StatsCards = ({ data }) => (
-    <div className='bg-[#B25CF3] h-[1818px]'>
-        <div className="w-full px-[71px] h-fit">
+    <div className='bg-[#B25CF3] min-h-[1818px] pb-10'>
+        <div className="w-full px-[20px] lg:px-[71px] h-fit">
             <div className='pt-[120px]'>
-                <div className='w-[630px] flex gap-2 rounded-[57px] py-[10px] px-1 bg-white items-center'>
+                <div className='max-w-[630px] flex gap-2 rounded-[57px] py-[10px] px-1 bg-white items-center'>
                     <div className='rounded-full w-12 h-12 bg-green-500 p-1'>
                         <Image width={40} height={40} src='trend.svg' alt='' />
                     </div>
 
-                    <p className="text-black text-2xl font-medium font-karla leading-normal">Revenue was high up to 16.42% in Last two weeks!</p>
+                    <p className="text-black lg:text-2xl font-medium font-karla leading-normal">Revenue was high up to 16.42% in Last two weeks!</p>
                 </div>
-                <div className='flex pt-[26px] gap-[35px]'>
-                    <div className='w-[50%] relative bg-yellow-400 px-[45px] flex flex-col z-10 justify-center rounded-[20px]'>
+                <div className='flex flex-col lg:flex-row pt-[26px] gap-[35px]'>
+                    <div className='lg:w-[50%] w-full relative bg-yellow-400 px-[45px] flex flex-col z-10 justify-center rounded-[20px]'>
                         {/* <div className='w-full h-full absolute left-0'>
                         <Image width={747} height={373} src='/dashboard_bg.png' alt='' />
                     </div> */}
@@ -125,8 +231,8 @@ const StatsCards = ({ data }) => (
                         </div>
                     </div>
 
-                    <div className='w-[50%] flex flex-col gap-[13px]'>
-                        <div className='flex gap-[13px]'>
+                    <div className='lg:w-[50%] w-full flex flex-col gap-[13px]'>
+                        <div className='flex lg:flex-row flex-col gap-[13px]'>
                             <div className='min-w-[249px] h-[179px]  bg-white rounded-[19.39px] shadow flex p-4'>
                                 <div className='flex flex-col gap-3 w-[60%]'>
                                     <Image src='/sales.svg' alt='' width={42} height={42} />
@@ -152,7 +258,7 @@ const StatsCards = ({ data }) => (
                                 </div>
                             </div>
                         </div>
-                        <div className='flex gap-[15px]'>
+                        <div className='flex lg:flex-row flex-col gap-[15px]'>
                             <div className='min-w-[249px] h-[179px]  bg-white rounded-[19.39px] shadow flex p-4 gap-4'>
                                 <div className='flex flex-col gap-3 w-[60%]'>
                                     <Image src='/add-friend.svg' alt='' width={42} height={42} />
@@ -210,24 +316,25 @@ const StatsCards = ({ data }) => (
 );
 
 export default function DetailsSection() {
+
     const sellingData = [
-        { id: 1, productImg: "/card_image1.png", title: "Dress", price: "AED 120.00" },
-        { id: 2, productImg: "/card_image2.png", title: "Dress", price: "AED 120.00" },
-        { id: 2, productImg: "/card_image3.png", title: "Dress", price: "AED 120.00" },
-        { id: 2, productImg: "/card_image4.png", title: "Dress", price: "AED 120.00" },
-        { id: 2, productImg: "/card_image5.png", title: "Dress", price: "AED 120.00" },
+        { id: 1, productImg: ["/card_image2.png","/card_image2.png","/card_image3.png"], title: "Dress", price: "AED 120.00" },
+        { id: 1, productImg: ["/card_image1.png","/card_image2.png","/card_image3.png"], title: "Dress", price: "AED 120.00" },
+        { id: 1, productImg: ["/card_image3.png","/card_image2.png","/card_image3.png"], title: "Dress", price: "AED 120.00" },
+        { id: 1, productImg: ["/card_image2.png","/card_image2.png","/card_image3.png"], title: "Dress", price: "AED 120.00" },
+        { id: 1, productImg: ["/card_image1.png","/card_image2.png","/card_image3.png"], title: "Dress", price: "AED 120.00" },
+        { id: 1, productImg: ["/card_image3.png","/card_image2.png","/card_image3.png"], title: "Dress", price: "AED 120.00" },
 
     ];
-
     const soldData = [
-        { id: 1, productImg: "/card_image5.png", title: "Sold Dress", price: "AED 100.00" },
-        { id: 2, productImg: "/card_image1.png", title: "Sold Dress", price: "AED 90.00" },
-        { id: 2, productImg: "/card_image3.png", title: "Sold Dress", price: "AED 90.00" },
-        { id: 2, productImg: "/card_image4.png", title: "Sold Dress", price: "AED 90.00" },
-        { id: 2, productImg: "/card_image1.png", title: "Sold Dress", price: "AED 90.00" },
+        { id: 1, productImg: ["/card_image2.png","/card_image2.png","/card_image3.png"], title: "Dress", price: "AED 120.00" },
+        { id: 1, productImg: ["/card_image1.png","/card_image2.png","/card_image3.png"], title: "Dress", price: "AED 120.00" },
+        { id: 1, productImg: ["/card_image3.png","/card_image2.png","/card_image3.png"], title: "Dress", price: "AED 120.00" },
+        { id: 1, productImg: ["/card_image2.png","/card_image2.png","/card_image3.png"], title: "Dress", price: "AED 120.00" },
+        { id: 1, productImg: ["/card_image1.png","/card_image2.png","/card_image3.png"], title: "Dress", price: "AED 120.00" },
+        { id: 1, productImg: ["/card_image3.png","/card_image2.png","/card_image3.png"], title: "Dress", price: "AED 120.00" },
 
     ];
-
     const reviewData = { rating: 4.8, reviews: 27, review: [1, 2, 3] };
 
     const statsData = [
@@ -237,10 +344,10 @@ export default function DetailsSection() {
     ];
 
     const tabs = [
-        { label: "Selling", component: SellingCards, data: sellingData },
-        { label: "Sold", component: SoldCards, data: soldData },
-        { label: "Reviews", component: ReviewCards, data: reviewData },
-        { label: "Stats", component: StatsCards, data: statsData },
+        { label: "Selling", component: SellingCards, data: sellingData, count: "38" },
+        { label: "Sold", component: SoldCards, data: soldData, count: "108" },
+        { label: "Reviews", component: ReviewCards, data: reviewData, count: "27" },
+        { label: "Stats", component: StatsCards, data: statsData, count: "" },
     ];
 
     const [selectedTab, setSelectedTab] = useState(tabs[0]);
@@ -252,10 +359,10 @@ export default function DetailsSection() {
                     {tabs.map((item) => (
                         <li
                             key={item.label}
-                            className={`w-full p-3 text-center cursor-pointer relative text-[#383838] text-2xl font-normal font-karla leading-[28.80px] ${selectedTab.label === item.label ? "border-b-2 border-[#fde504]" : ""}`}
+                            className={`w-full p-3 text-center cursor-pointer relative text-[#383838] lg:text-2xl font-normal font-karla leading-[28.80px] ${selectedTab.label === item.label ? "border-b-[5px] border-[#fde504]" : ""}`}
                             onClick={() => setSelectedTab(item)}
                         >
-                            {item.label}
+                            {item.label}  {item.count ? `(${item.count})` : ''}
                         </li>
                     ))}
                 </ul>

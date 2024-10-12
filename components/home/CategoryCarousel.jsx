@@ -4,6 +4,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
+import { motion } from 'framer-motion'
 
 const CategoryCarousel = () => {
     const [currentSlide, setCurrentSlide] = useState(0);
@@ -24,6 +25,7 @@ const CategoryCarousel = () => {
 
     const settings = {
         dots: false,
+        arrows: false,
         infinite: false,
         speed: 500,
         slidesToShow: 4.5,
@@ -48,7 +50,7 @@ const CategoryCarousel = () => {
             {
                 breakpoint: 768,
                 settings: {
-                    slidesToShow: 2,
+                    slidesToShow: 2.5,
                     slidesToScroll: 1,
                 }
             },
@@ -61,6 +63,9 @@ const CategoryCarousel = () => {
             }
         ],
     };
+    const [isLeftHovered, setIsLeftHovered] = useState(false);
+    const [isRightHovered, setIsRightHovered] = useState(false);
+
 
     useEffect(() => {
         // Update centerIndex when window is resized
@@ -87,17 +92,17 @@ const CategoryCarousel = () => {
     };
 
     return (
-        <div className="flex flex-col overflow-hidden ml-[-20px]">
+        <div className="flex flex-col overflow-hidden px-[20px] md:px-0 md:ml-[-20px]">
             <Slider ref={sliderRef} {...settings}>
                 {products.map((item, index) => (
                     <div className='relative' key={index}>
                         {index !== currentSlide + centerIndex && (
-                            <div className="absolute top-2 left-[-50px] h-[25px] px-2.5 py-[5px] bg-[#e4086f]/10 rounded-[10px] justify-center items-center gap-2.5 inline-flex">
+                            <div className="absolute top-2 left-10 md:left-[-50px] h-[25px] px-2.5 py-[5px] bg-[#e4086f]/10 rounded-[10px] justify-center items-center gap-2.5 inline-flex">
                                 <div className="text-black text-xs font-normal font-karla">Top</div>
                             </div>
                         )}
                         <div
-                            className={`w-[300px] h-[386px] ml-[-60px]  bg-white transition-all duration-500 ${index === currentSlide + centerIndex ? "shadow-lg rounded-[155px]" : "rounded-[20px]"
+                            className={`w-[300px] h-[386px] ml-8 md:ml-[-60px]  bg-white transition-all duration-500 ${index === currentSlide + centerIndex ? "shadow-lg rounded-[155px]" : "rounded-[20px]"
                                 }`}
                         >
                             <Image
@@ -113,23 +118,45 @@ const CategoryCarousel = () => {
                 ))}
             </Slider>
             <div className='flex mt-[76px] justify-center items-center gap-7'>
-                <div
+                <motion.div
+                    whileHover={{
+                        scale: 1.2,
+                        backgroundColor: 'black',
+                    }}
                     className='rounded-full w-[60px] h-[60px] bg-white flex justify-center items-center cursor-pointer'
                     onClick={handlePreviousSlide}
+                    onMouseEnter={() => setIsLeftHovered(true)}
+                    onMouseLeave={() => setIsLeftHovered(false)}
                 >
-                    <Image width={18} height={18} src='/arrow_left.png' alt='Previous' />
-                </div>
+                    <Image
+                        width={18}
+                        height={18}
+                        src={isLeftHovered ? '/arrow_left_white.svg' : '/arrow_left.png'}
+                        alt='Previous'
+                    />
+                </motion.div>
                 <div className="h-[84px] px-[70px] py-[30px] bg-[#f0fafe] rounded-[20px] justify-center items-center gap-2.5 inline-flex">
-                    <div className="text-[#070707] text-xl font-bold font-karla leading-normal">
+                    <div className="text-[#070707] lg:text-xl font-bold font-karla leading-normal">
                         T-SHIRT
                     </div>
                 </div>
-                <div
-                    className='rounded-full w-[60px] h-[60px] bg-black flex justify-center items-center cursor-pointer'
+                <motion.div
+                    whileHover={{
+                        scale: 1.2,
+                        backgroundColor: 'black',
+                    }}
+                    className='rounded-full w-[60px] bg-[#f0fafe] h-[60px] flex justify-center items-center cursor-pointer'
                     onClick={handleNextSlide}
+                    onMouseEnter={() => setIsRightHovered(true)}
+                    onMouseLeave={() => setIsRightHovered(false)}
                 >
-                    <Image width={18} height={18} src='/arrow_right.png' alt='Next' />
-                </div>
+                    <Image
+                        width={18}
+                        height={18}
+                        src={isRightHovered ? '/arrow_right_white.svg' : '/arrow_right_black.svg'}
+                        alt='Next'
+                    />
+                </motion.div>
             </div>
         </div>
     );

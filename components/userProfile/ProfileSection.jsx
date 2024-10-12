@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import React, { useState } from 'react';
 import Modal from './Modal'; // Adjust the import path as needed
+import Link from 'next/link';
 
 const ProfileSection = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -15,39 +16,42 @@ const ProfileSection = () => {
 
     return (
         <div className='max-w-[1550px] mx-auto'>
-            <div className='px-[70px] pt-[28px]'>
+            <div className='lg:px-[70px] px-[20px] pt-[28px]'>
                 <div className='flex  items-center '>
-                    <p className="text-[#6a6a6a] text-base font-normal font-karla underline leading-[17.60px] mr-1.5">Home</p>
+                    <Link href='/'>
+                    <p className="text-[#6a6a6a] text-base font-normal font-karla underline leading-[17.60px] mr-1.5">Home</p></Link>
                     <div className="w-[9px] h-[0px] origin-top-left rotate-90 border border-black mt-[-5px]"></div>
-                    <p className="text-[#6a6a6a] text-base font-normal font-karla underline leading-[17.60px] mr-1.5">Categories</p>
+                    <Link href='/'>
+                    <p className="text-[#6a6a6a] text-base font-normal font-karla underline leading-[17.60px] mr-1.5">Categories</p></Link>
                     <div className="w-[9px] h-[0px] origin-top-left rotate-90 border border-black mt-[-5px]"></div>
-                    <p className="text-[#6a6a6a] text-base font-normal font-karla underline leading-[17.60px] mr-1.5">Tshirt</p>
+                    <Link href='/'>
+                    <p className="text-[#6a6a6a] text-base font-normal font-karla underline leading-[17.60px] mr-1.5">Tshirt</p></Link>
                     <div className="w-[9px] h-[0px] origin-top-left rotate-90 border border-black mt-[-5px] mr-1.5"></div>
-                    <p className="text-[#6a6a6a] text-base font-normal font-karla underline leading-[17.60px]">Tshirt</p>
+                    <p className="text-[#6a6a6a] text-base font-normal font-karla  leading-[17.60px]">Nike Black rounded tshirt</p>
                 </div>
                 <div className='w-[95%] h-[1px]  bg-[#e6e6e6] mt-4'></div>
-                <div className='flex gap-[21px] mt-[103px]'>
-                    <div className='lg:w-1/2 min-h-[302px] rounded-lg shadow relative flex flex-col gap-[80px] '>
+                <div className='flex flex-col lg:flex-row gap-[21px] mt-[103px]'>
+                    <div className='lg:w-1/2 w-full min-h-[302px] rounded-lg shadow relative flex flex-col gap-[80px] '>
                         <Image src="profile_icon.svg" width={155} height={155} layout="" className='absolute left-[49px] top-[-80px]' alt='' />
-                        <div className='flex px-[64px] pt-[93px] gap-[52px] '>
+                        <div className='flex px-[64px] pt-[93px] gap-2 lg:gap-4 xl:gap-[52px] '>
                             <div className='flex flex-col'>
-                                <p className="text-black text-[28px] font-bold font-karla">Rohan</p>
-                                <p className="text-black/40 text-[20px] font-normal font-karla">Kuku1222</p>
+                                <p className="text-black xl:text-[28px] font-bold font-karla">Rohan</p>
+                                <p className="text-black/40 xl:text-[20px] font-normal font-karla">Kuku1222</p>
                             </div>
                             <div className='flex flex-col'>
-                                <p className="text-black text-[28px] font-bold font-karla">53</p>
-                                <p className="text-black text-xl font-normal font-karla leading-normal">Followers</p>
+                                <p className="text-black xl:text-[28px] font-bold font-karla">53</p>
+                                <p className="text-black xl:text-xl font-normal font-karla leading-normal">Followers</p>
                             </div>
                             <div className='flex flex-col'>
-                                <p className="text-black text-[28px] font-bold font-karla">453</p>
-                                <p className="text-black/40 text-[20px] font-normal font-karla">Kuku1222</p>
+                                <p className="text-black xl:text-[28px] font-bold font-karla">453</p>
+                                <p className="text-black xl:text-[20px] font-normal font-karla">Following</p>
                             </div>
                             <div className='flex flex-col'>
                                 <div className='flex gap-[16px]'>
-                                    <p className="text-black text-[28px] font-bold font-karla">4.7</p>
+                                    <p className="text-black xl:text-[28px] font-bold font-karla">4.7</p>
                                     <Image width={23} height={23} src='rating.svg' alt='' />
                                 </div>
-                                <p className="text-black/40 text-[20px] font-normal font-karla">Kuku1222</p>
+                                <p className="text-black xl:text-[20px] font-normal font-karla">Rating</p>
                             </div>
                         </div>
                         <div className='px-[65px] flex gap-6'>
@@ -62,7 +66,7 @@ const ProfileSection = () => {
                             </div>
                         </div>
                     </div>
-                    <div className='lg:w-1/2 min-h-[302px] rounded-lg shadow '>
+                    <div className='lg:w-1/2 w-full min-h-[302px] rounded-lg shadow '>
                         <div className='flex flex-col px-[30px] gap-8 py-8'>
                             <p className="text-black text-base font-bold font-karla leading-tight ">Description</p>
                             <p className="text-[#515151] text-base font-medium font-karla leading-normal">Discover your unique style with our curated collection at my feed. I offer a diverse range of trendy and timeless pieces, from chic dresses and casual wear to statement accessories and footwear.</p>
