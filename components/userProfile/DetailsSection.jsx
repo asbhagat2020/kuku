@@ -183,12 +183,12 @@ const ReviewCards = ({ data }) => (
                 </div>
                 <div className="flex items-center gap-5 relative font-karla font-bold">
                     <div className="flex gap-2">
-                        <Image unoptimized width={30} height={16} src='/sort.svg' className="" />
+                        <Image unoptimized width={30} height={16} src='/sort.svg' className="" alt="" />
                         <p>Sort by</p>
                     </div>
                     <div className="w-5 rotate-90 h-[1px] bg-gray-400"></div>
                     <div className="flex gap-2">
-                        <Image width={15} height={15} src='/filter.svg' className="" />
+                        <Image width={15} height={15} src='/filter.svg' className="" alt=""/>
                         <p>Filter</p>
                     </div>
                     <div className="w-full h-[1px] bg-gray-400 absolute top-[70px]"></div>
