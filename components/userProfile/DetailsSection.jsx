@@ -47,26 +47,6 @@ const SellingCards = ({ data }) => (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-4 relative place-items-center">
             {data.map((item) => (
                 <div key={item.id} className='flex flex-col gap-3'>
-                    {/* <div
-                        className="rounded-[20px] shadow h-[404px] w-[307px] relative bg-cover bg-center"
-                        style={{ backgroundImage: `url(${i.productImg})` }}
-                    >
-                        <div className='p-4 z-20 relative flex flex-col justify-between h-full'>
-                            <div className='flex justify-end'>
-                                <div className='h-[54px] w-[54px] p-[15px] bg-white/40 rounded-[100px]'>
-                                    <Image alt='' width={24} height={24} src='wishlist.svg' />
-                                </div>
-                            </div>
-                            <div className='flex justify-between'>
-                                <div className="w-[204px] h-[60px] px-[57.38px] py-[27.76px] bg-[#fde504] rounded-[20px] justify-center items-center gap-[9.25px] inline-flex">
-                                    <div className="text-[#202020] text-base font-bold font-karla leading-tight">Buy Now</div>
-                                </div>
-                                <div className='h-[54px] p-[15px] bg-white rounded-[100px]'>
-                                    <Image alt='' width={24} height={24} src='hand_shake.svg' />
-                                </div>
-                            </div>
-                        </div>
-                    </div> */}
                     <div className="w-[307px] h-[404px] rounded-[20px] relative mx-2 outline-none">
                             <div className="absolute top-2 right-2 z-10">
                                 <div className='h-[54px] p-[15px] bg-white/40 rounded-[100px]'>
@@ -110,26 +90,6 @@ const SoldCards = ({ data }) => (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-4 relative place-items-center">
             {data.map((i) => (
                 <div key={i.id} className='flex flex-col gap-3'>
-                    {/* <div
-                        className="rounded-[20px] shadow h-[404px] w-[307px] relative bg-cover bg-center"
-                        style={{ backgroundImage: `url(${i.productImg})` }}
-                    >
-                        <div className='p-4 z-20 relative flex flex-col justify-between h-full'>
-                            <div className='flex justify-end'>
-                                <div className='h-[54px] w-[54px] p-[15px] bg-white/40 rounded-[100px]'>
-                                    <Image alt='' width={24} height={24} src='wishlist.svg' />
-                                </div>
-                            </div>
-                            <div className='flex justify-between'>
-                                <div className="w-[204px] h-[60px] px-[57.38px] py-[27.76px] bg-[#fde504] rounded-[20px] justify-center items-center gap-[9.25px] inline-flex">
-                                    <div className="text-[#202020] text-base font-bold font-karla leading-tight">Buy Now</div>
-                                </div>
-                                <div className='h-[54px] p-[15px] bg-white rounded-[100px]'>
-                                    <Image alt='' width={24} height={24} src='hand_shake.svg' />
-                                </div>
-                            </div>
-                        </div>
-                    </div> */}
                       <div className="w-[307px] h-[404px] rounded-[20px] relative mx-2 outline-none">
                             <div className="absolute top-2 right-2 z-10">
                                 <div className='h-[54px] p-[15px] bg-white/40 rounded-[100px]'>
@@ -319,20 +279,20 @@ export default function DetailsSection() {
 
     const sellingData = [
         { id: 1, productImg: ["/card_image2.png","/card_image2.png","/card_image3.png"], title: "Dress", price: "AED 120.00" },
-        { id: 1, productImg: ["/card_image1.png","/card_image2.png","/card_image3.png"], title: "Dress", price: "AED 120.00" },
-        { id: 1, productImg: ["/card_image3.png","/card_image2.png","/card_image3.png"], title: "Dress", price: "AED 120.00" },
-        { id: 1, productImg: ["/card_image2.png","/card_image2.png","/card_image3.png"], title: "Dress", price: "AED 120.00" },
-        { id: 1, productImg: ["/card_image1.png","/card_image2.png","/card_image3.png"], title: "Dress", price: "AED 120.00" },
-        { id: 1, productImg: ["/card_image3.png","/card_image2.png","/card_image3.png"], title: "Dress", price: "AED 120.00" },
+        { id: 2, productImg: ["/card_image1.png","/card_image2.png","/card_image3.png"], title: "Dress", price: "AED 120.00" },
+        { id: 3, productImg: ["/card_image3.png","/card_image2.png","/card_image3.png"], title: "Dress", price: "AED 120.00" },
+        { id: 4, productImg: ["/card_image2.png","/card_image2.png","/card_image3.png"], title: "Dress", price: "AED 120.00" },
+        { id: 5, productImg: ["/card_image1.png","/card_image2.png","/card_image3.png"], title: "Dress", price: "AED 120.00" },
+        { id: 6, productImg: ["/card_image3.png","/card_image2.png","/card_image3.png"], title: "Dress", price: "AED 120.00" },
 
     ];
     const soldData = [
-        { id: 1, productImg: ["/card_image2.png","/card_image2.png","/card_image3.png"], title: "Dress", price: "AED 120.00" },
-        { id: 1, productImg: ["/card_image1.png","/card_image2.png","/card_image3.png"], title: "Dress", price: "AED 120.00" },
-        { id: 1, productImg: ["/card_image3.png","/card_image2.png","/card_image3.png"], title: "Dress", price: "AED 120.00" },
-        { id: 1, productImg: ["/card_image2.png","/card_image2.png","/card_image3.png"], title: "Dress", price: "AED 120.00" },
-        { id: 1, productImg: ["/card_image1.png","/card_image2.png","/card_image3.png"], title: "Dress", price: "AED 120.00" },
-        { id: 1, productImg: ["/card_image3.png","/card_image2.png","/card_image3.png"], title: "Dress", price: "AED 120.00" },
+        { id: 7, productImg: ["/card_image2.png","/card_image2.png","/card_image3.png"], title: "Dress", price: "AED 120.00" },
+        { id: 7, productImg: ["/card_image1.png","/card_image2.png","/card_image3.png"], title: "Dress", price: "AED 120.00" },
+        { id: 8, productImg: ["/card_image3.png","/card_image2.png","/card_image3.png"], title: "Dress", price: "AED 120.00" },
+        { id: 9, productImg: ["/card_image2.png","/card_image2.png","/card_image3.png"], title: "Dress", price: "AED 120.00" },
+        { id: 10, productImg: ["/card_image1.png","/card_image2.png","/card_image3.png"], title: "Dress", price: "AED 120.00" },
+        { id: 11, productImg: ["/card_image3.png","/card_image2.png","/card_image3.png"], title: "Dress", price: "AED 120.00" },
 
     ];
     const reviewData = { rating: 4.8, reviews: 27, review: [1, 2, 3] };
