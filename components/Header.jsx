@@ -207,9 +207,11 @@ const Header = () => {
                 <div className="absolute p-[26px] right-0 top-[40px] w-[178px] h-[246px] bg-white border border-gray-300 rounded-lg shadow-lg z-10">
                   {/* Dropdown content goes here */}
                   <div className="px-4 py-2 hover:bg-gray-100 cursor-pointer font-karla">Account</div>
-                  <div className="px-4  pb-2 hover:bg-gray-100 cursor-pointer font-karla">Your Profile</div>
+                  <Link href='/user_profile'>
+                  <div className="px-4  pb-2 hover:bg-gray-100 cursor-pointer font-karla">Your Profile</div></Link>
                   <div className="px-4 pb-2  hover:bg-gray-100 cursor-pointer font-karla">Purchases</div>
-                  <div className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla">Wishlist</div>
+                  <Link href='/wishlist'>
+                  <div className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla">Wishlist</div></Link>
                   <Link href='/co2'>
                     <div className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla">Co2 Savings</div>
                   </Link>
