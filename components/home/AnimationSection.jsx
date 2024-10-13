@@ -7,17 +7,17 @@ const AnimationSection = () => {
         <div className='absolute top-[-80px] right-[80px]'>
             <Image src='list_top_image.svg' width={111} height={121} alt=''/>
         </div>
-        <div className='rounded-[20px] mx-[70px] h-[640px] bg-[#FDE504] py-[60px] flex flex-col items-center'>
+        <div className='rounded-[20px] mx-5 lg:mx-[70px] lg:h-[640px] bg-[#FDE504] py-[60px] flex flex-col items-center'>
             <div className='flex mx-[180px] gap-[130px]'>
                 <div className='flex flex-col space-y-[50px] justify-center'>
                     <p className='text-[#202020] text-base font-bold font-karla leading-tight'>Step-1</p>
-                    <h1 className='text-[#e4086f] text-[46px] font-normal font-luckiest leading-[55.20px]'>List what you no <br /> longer need</h1>
+                    <h1 className='text-[#e4086f] lg:text-[46px] font-normal font-luckiest lg:leading-[55.20px]'>List what you no <br /> longer need</h1>
                 </div>
                 <div>
                     <Image width={405} height={405} src='/mobile.png' alt=''/>
                 </div>
             </div>
-            <div className='mt-[38px]'>
+            <div className='mt-[38px] mx-7'>
             <Image unoptimized width={1200} height={57} src='/animation_slide_image1.png' alt=''/>
             </div>
         </div>

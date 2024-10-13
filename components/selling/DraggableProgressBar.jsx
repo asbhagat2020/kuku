@@ -29,7 +29,7 @@ const DraggableProgressBar = ({ min = 0, max = 100, step = 1 }) => {
 
   return (
     <div className="w-full max-w-[] mx-auto mt-8">
-      <div className="mb-2 text-center text-lg font-semibold">{value}</div>
+      {/* <div className="mb-2 text-center text-lg font-semibold">{value}</div> */}
       <div
         ref={barRef}
         className="h-[8px] bg-gray-200 cursor-pointer relative z-10 flex items-center"
@@ -40,7 +40,7 @@ const DraggableProgressBar = ({ min = 0, max = 100, step = 1 }) => {
           style={{ width: `${((value - min) / (max - min)) * 100}%` }}
         >
         </div>
-        <Image className='ml-[-2px]' src='pink_eclipse.svg' width={40} height={40} />
+        <Image className='ml-[-2px]' src='pink_eclipse.svg' width={40} height={40} alt='eclipse'/>
       </div>
       <div className='flex justify-between mt-[2px] ml-5'>
       <div className='flex flex-col'>

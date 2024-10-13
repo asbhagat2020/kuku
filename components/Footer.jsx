@@ -80,7 +80,7 @@ const Footer = () => {
                     <p className="text-[#6a6a6a] text-sm font-extrabold font-karla uppercase">
                         Get special offers in our Newsletter
                     </p>
-                    <div className="w-full max-w-md flex flex-col sm:flex-row items-center gap-2 p-2 rounded-[20px] border border-black">
+                    <div className="w-fit max-w-md flex flex-col sm:flex-row items-center gap-2 p-2 rounded-[20px] border border-black">
                         <input
                             required
                             type="email"

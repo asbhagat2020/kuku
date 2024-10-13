@@ -27,12 +27,12 @@ const Hero = () => {
             <div className='absolute top-[500px] left-[380px] w-full h-[90%]'>
                 <Image width={60} height={60} unoptimized src='/flower.png' objectFit='cover' />
             </div>
-            <div className="h-[42px] w-full px-[427px] py-4 bg-gradient-to-r from-[#eda702] via-[#fde504] to-[#eda702] justify-center items-center gap-2.5 inline-flex">
+            <div className="h-[42px] w-full lg:px-[427px] py-4 bg-gradient-to-r from-[#eda702] via-[#fde504] to-[#eda702] justify-center items-center gap-2.5 inline-flex">
                 <div className="text-center text-[#383838] text-base font-bold font-karla leading-tight">Discover preloved treasures and sell your wardrobe favorites with ease.</div>
             </div>
             <div className='flex flex-col justify-center py-[254px]'>
                 <div className="z-30 flex h-full justify-center items-center w-full">
-                    <h1 className="text-center w-[50%] text-[#f0fafe] text-7xl font-normal font-luckiest leading-[75.60px]">Your Sustainable Fashion Marketplace</h1>
+                    <h1 className="text-center w-[50%] text-[#f0fafe] text-3xl lg:text-7xl font-normal font-luckiest lg:leading-[75.60px]">Your Sustainable Fashion Marketplace</h1>
                 </div>
                 <div className="flex justify-center gap-[10px] pt-[100px] z-10">
                     <div className="h-[72px] px-11 py-[15px] bg-[#e4086f] rounded-[22px] justify-start items-center inline-flex">
