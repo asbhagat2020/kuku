@@ -288,19 +288,19 @@ export default function DetailsSection() {
     ];
     const soldData = [
         { id: 7, productImg: ["/card_image2.png","/card_image2.png","/card_image3.png"], title: "Dress", price: "AED 120.00" },
-        { id: 7, productImg: ["/card_image1.png","/card_image2.png","/card_image3.png"], title: "Dress", price: "AED 120.00" },
-        { id: 8, productImg: ["/card_image3.png","/card_image2.png","/card_image3.png"], title: "Dress", price: "AED 120.00" },
-        { id: 9, productImg: ["/card_image2.png","/card_image2.png","/card_image3.png"], title: "Dress", price: "AED 120.00" },
-        { id: 10, productImg: ["/card_image1.png","/card_image2.png","/card_image3.png"], title: "Dress", price: "AED 120.00" },
-        { id: 11, productImg: ["/card_image3.png","/card_image2.png","/card_image3.png"], title: "Dress", price: "AED 120.00" },
+        { id: 8, productImg: ["/card_image1.png","/card_image2.png","/card_image3.png"], title: "Dress", price: "AED 120.00" },
+        { id: 9, productImg: ["/card_image3.png","/card_image2.png","/card_image3.png"], title: "Dress", price: "AED 120.00" },
+        { id: 10, productImg: ["/card_image2.png","/card_image2.png","/card_image3.png"], title: "Dress", price: "AED 120.00" },
+        { id: 11, productImg: ["/card_image1.png","/card_image2.png","/card_image3.png"], title: "Dress", price: "AED 120.00" },
+        { id: 12, productImg: ["/card_image3.png","/card_image2.png","/card_image3.png"], title: "Dress", price: "AED 120.00" },
 
     ];
     const reviewData = { rating: 4.8, reviews: 27, review: [1, 2, 3] };
 
     const statsData = [
-        { id: 1, title: "Total Sales", stat: "1,000" },
-        { id: 2, title: "Total Revenue", stat: "$120,000" },
-        { id: 3, title: "Average Order Value", stat: "$120" },
+        { id: 13, title: "Total Sales", stat: "1,000" },
+        { id: 14, title: "Total Revenue", stat: "$120,000" },
+        { id: 15, title: "Average Order Value", stat: "$120" },
     ];
 
     const tabs = [

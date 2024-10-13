@@ -1,6 +1,8 @@
 "use client"
 import React from 'react'
-import CategoryCarousel from '@/components/home/CategoryCarousel'
+import dynamic from 'next/dynamic';
+const CategoryCarousel = dynamic(() => import('@/components/home/CategoryCarousel'), { ssr: false });
+
 
 
 const Categories = () => {
