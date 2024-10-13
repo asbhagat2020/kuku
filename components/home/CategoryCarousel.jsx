@@ -67,20 +67,20 @@ const CategoryCarousel = () => {
     const [isRightHovered, setIsRightHovered] = useState(false);
 
 
-    // useEffect(() => {
-    //     if (typeof window !== 'undefined') {
-    //         // Update centerIndex when window is resized
-    //         const handleResize = () => {
-    //             const slidesToShow = window.innerWidth < 480 ? 1 : window.innerWidth < 600 ? 2 : window.innerWidth < 1024 ? 3 : 4;
-    //             setCenterIndex(Math.floor(slidesToShow / 2));
-    //         };
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            // Update centerIndex when window is resized
+            const handleResize = () => {
+                const slidesToShow = window.innerWidth < 480 ? 1 : window.innerWidth < 600 ? 2 : window.innerWidth < 1024 ? 3 : 4;
+                setCenterIndex(Math.floor(slidesToShow / 2));
+            };
 
-    //         handleResize(); // Initial call
-    //         window.addEventListener('resize', handleResize);
+            handleResize(); // Initial call
+            window.addEventListener('resize', handleResize);
 
-    //         return () => window.removeEventListener('resize', handleResize);
-    //     }
-    // }, []);
+            return () => window.removeEventListener('resize', handleResize);
+        }
+    }, []);
 
 
     const handlePreviousSlide = () => {

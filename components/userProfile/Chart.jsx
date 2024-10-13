@@ -1,6 +1,7 @@
 "use client"
+import dynamic from 'next/dynamic';
 import React, { useState } from 'react';
-import ReactApexChart from 'react-apexcharts';
+const ReactApexChart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
 export const Chart= () => {
   const [chartData] = useState({
@@ -34,7 +35,8 @@ export const Chart= () => {
       },
       xaxis: {
         categories: ['Week 1', 'Week 2', 'Week 3', 'Week 4','Week 5','Week 6','Week 7']
-      }
+      },
+      ssr:false
     }
   });
 
