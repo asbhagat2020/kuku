@@ -27,6 +27,8 @@ const CustomDateInput = ({ placeholder, name, value, onChange, error }) => {
     </div>
   ));
 
+  CustomInput.displayName = 'CustomInput';
+
   return (
     <div className="w-full sm:w-1/2">
       <DatePicker
