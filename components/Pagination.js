@@ -15,26 +15,30 @@ export const Pagination = ({
     handlePageChange(selectedPage); // Call the passed function to handle page change
   };
 
+  const formatPageNumber = (number) => {
+    return number < 10 ? `Show 0${number}` : `Show ${number}`;
+  };
+
   return (
-    <div className="flex items-center justify-center mt-6 space-x-2">
+    <div className="flex items-center justify-center mt-6 space-x-0">
       {/* Dropdown for page selection */}
       <select
         onChange={handleChange}
-        value={currentPage} // Set the current page as the value
-        className="p-2 border rounded-md text-gray-700"
+        value={currentPage}
+        className="p-2 border rounded-md text-gray-700 mr-2"
       >
         {pageNumbers.map((number) => (
           <option key={number} value={number}>
-            Show {number}
+            {formatPageNumber(number)}
           </option>
         ))}
       </select>
 
       {/* Previous Button */}
       <button
-        onClick={() => handlePrevPage(currentPage - 1)} // Move to previous page
+        onClick={() => handlePrevPage(currentPage - 1)}
         disabled={currentPage === 1}
-        className={`p-2 border rounded-md ${
+        className={`w-8 h-8 p-2 border rounded-l-md flex items-center justify-center ${
           currentPage === 1 ? "text-gray-400 cursor-not-allowed" : "text-black hover:bg-gray-200"
         }`}
       >
@@ -45,9 +49,9 @@ export const Pagination = ({
       {pageNumbers.map((number) => (
         <button
           key={number}
-          onClick={() => handlePageChange(number)} // Move to selected page
-          className={`p-2 border rounded-md ${
-            number === currentPage ? "bg-gray-200 text-black font-bold" : "hover:bg-gray-100"
+          onClick={() => handlePageChange(number)}
+          className={`w-8 h-8 p-2 border flex items-center justify-center ${
+            number === currentPage ? "bg-gray-200 text-black" : "hover:bg-gray-100"
           }`}
         >
           {number}
@@ -56,9 +60,9 @@ export const Pagination = ({
 
       {/* Next Button */}
       <button
-        onClick={() => handleNextPage(currentPage + 1)} // Move to next page
+        onClick={() => handleNextPage(currentPage + 1)}
         disabled={currentPage === totalPages}
-        className={`p-2 border rounded-md ${
+        className={`w-8 h-8 p-2 border rounded-r-md flex items-center justify-center ${
           currentPage === totalPages ? "text-gray-400 cursor-not-allowed" : "text-black hover:bg-gray-200"
         }`}
       >

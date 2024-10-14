@@ -1,88 +1,93 @@
 "use client"; // Ensure this is at the top if you're using a client component
 
-import { useState } from 'react'; // Import useState from React
+import { useState, useEffect, useRef } from 'react';
 import { FiMenu, FiChevronUp, FiChevronDown } from 'react-icons/fi';
 
 export const SideBar = () => {
-  const [isCategoryCollapsed, setIsCategoryCollapsed] = useState(true);
-  const [isPriceCollapsed, setIsPriceCollapsed] = useState(true);
-  const [isSizeCollapsed, setIsSizeCollapsed] = useState(true);
-  const [isConditionCollapsed, setIsConditionCollapsed] = useState(true);
+  const [openDropdown, setOpenDropdown] = useState(null); // Track the open dropdown
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const sidebarRef = useRef(null); // Reference to the sidebar
 
-  const toggleCategoryCollapse = () => setIsCategoryCollapsed(!isCategoryCollapsed);
-  const togglePriceCollapse = () => setIsPriceCollapsed(!isPriceCollapsed);
-  const toggleSizeCollapse = () => setIsSizeCollapsed(!isSizeCollapsed);
-  const toggleConditionCollapse = () => setIsConditionCollapsed(!isConditionCollapsed);
-  const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
+  // Toggles the sidebar when the hamburger menu is clicked
+  const toggleSidebar = () => {
+    setIsSidebarOpen((prev) => !prev); // Toggle the sidebar state
+  };
+
+  // Close sidebar when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
+        setIsSidebarOpen(false);
+      }
+    };
+
+    // Add event listener to detect clicks outside
+    if (isSidebarOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    } else {
+      document.removeEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isSidebarOpen]);
+
+  // Handles dropdown toggling
+  const handleDropdownToggle = (dropdown) => {
+    setOpenDropdown((prev) => (prev === dropdown ? null : dropdown)); // Toggle dropdown state
+  };
 
   return (
     <>
-      {/* Hamburger Icon for Mobile */}
-      <div className="lg:hidden p-4">
-        <button
-          onClick={toggleSidebar}
-          className="text-custom-pink text-3xl focus:outline-none"
-        >
+      {/* Hamburger Icon for Mobile - Sticky */}
+      <div className="lg:hidden fixed top-5 left-0 p-4">
+        <button onClick={toggleSidebar} className="text-custom-pink text-3xl focus:outline-none">
           <FiMenu />
         </button>
       </div>
 
       {/* Sidebar */}
       <div
-        className={`fixed top-0 left-0 h-full w-64 bg-white z-40 transform ${
+        ref={sidebarRef} // Attach the ref to the sidebar
+        className={`fixed lg:sticky top-0 left-0 h-auto lg:h-[calc(100vh-250px)] w-64 bg-white z-40 transform ${
           isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
-        } transition-transform lg:relative lg:translate-x-0 lg:w-80 lg:mt-10 lg:ml-2`}
+        } transition-transform lg:translate-x-0 lg:w-80 lg:mt-10 lg:ml-2 lg:block overflow-y-auto`}
       >
         <div className="p-4 lg:p-0">
-          <h1 className="text-2xl text-custom-pink font-bold">Filter By</h1>
+          <h1 className="text-2xl text-custom-pink font-bold">Filter by</h1>
 
           <div className="mt-4 filter-section flex flex-col space-y-4">
             {/* Category Filter */}
             <div className="filter-section flex flex-col">
               <div
                 className="flex items-center justify-between cursor-pointer"
-                onClick={toggleCategoryCollapse}
-                aria-expanded={!isCategoryCollapsed}
+                onClick={() => handleDropdownToggle('category')}
+                aria-expanded={openDropdown === 'category'}
                 aria-controls="category-options"
               >
                 <label className="font-semibold mb-2">Category</label>
                 <span className="text-gray-500">
-                  {isCategoryCollapsed ? <FiChevronDown /> : <FiChevronUp />}
+                  {openDropdown === 'category' ? <FiChevronUp /> : <FiChevronDown />}
                 </span>
               </div>
-              {!isCategoryCollapsed && (
+              {openDropdown === 'category' && (
                 <div id="category-options" className="flex flex-col space-y-1 mt-2 ml-3">
-                  <div className="flex items-center">
-                    <input
-                      type="checkbox"
-                      id="electronics"
-                      name="category"
-                      value="electronics"
-                      className="mr-2"
-                    />
-                    <label htmlFor="electronics">Electronics</label>
-                  </div>
-                  <div className="flex items-center">
-                    <input
-                      type="checkbox"
-                      id="clothing"
-                      name="category"
-                      value="clothing"
-                      className="mr-2"
-                    />
-                    <label htmlFor="clothing">Clothing</label>
-                  </div>
-                  <div className="flex items-center">
-                    <input
-                      type="checkbox"
-                      id="books"
-                      name="category"
-                      value="books"
-                      className="mr-2"
-                    />
-                    <label htmlFor="books">Books</label>
-                  </div>
+                  {['electronics', 'clothing', 'books'].map((category) => (
+                    <div className="flex items-center" key={category}>
+                      <input
+                        type="checkbox"
+                        id={category}
+                        name="category"
+                        value={category}
+                        className="hidden"
+                      />
+                      <label htmlFor={category} className="flex items-center cursor-pointer">
+                        <span className="custom-checkbox" />
+                        {category.charAt(0).toUpperCase() + category.slice(1)}
+                      </label>
+                    </div>
+                  ))}
                 </div>
               )}
             </div>
@@ -93,47 +98,32 @@ export const SideBar = () => {
             <div className="filter-section flex flex-col">
               <div
                 className="flex items-center justify-between cursor-pointer"
-                onClick={togglePriceCollapse}
-                aria-expanded={!isPriceCollapsed}
+                onClick={() => handleDropdownToggle('price')}
+                aria-expanded={openDropdown === 'price'}
                 aria-controls="price-options"
               >
                 <label className="font-semibold mb-2">Price</label>
                 <span className="text-gray-500">
-                  {isPriceCollapsed ? <FiChevronDown /> : <FiChevronUp />}
+                  {openDropdown === 'price' ? <FiChevronUp /> : <FiChevronDown />}
                 </span>
               </div>
-              {!isPriceCollapsed && (
+              {openDropdown === 'price' && (
                 <div id="price-options" className="flex flex-col space-y-1 mt-2 ml-3">
-                  <div className="flex items-center">
-                    <input
-                      type="checkbox"
-                      id="low"
-                      name="price"
-                      value="low"
-                      className="mr-2"
-                    />
-                    <label htmlFor="low">Low</label>
-                  </div>
-                  <div className="flex items-center">
-                    <input
-                      type="checkbox"
-                      id="medium"
-                      name="price"
-                      value="medium"
-                      className="mr-2"
-                    />
-                    <label htmlFor="medium">Medium</label>
-                  </div>
-                  <div className="flex items-center">
-                    <input
-                      type="checkbox"
-                      id="high"
-                      name="price"
-                      value="high"
-                      className="mr-2"
-                    />
-                    <label htmlFor="high">High</label>
-                  </div>
+                  {['low', 'medium', 'high'].map((price) => (
+                    <div className="flex items-center" key={price}>
+                      <input
+                        type="checkbox"
+                        id={`price-${price}`}
+                        name="price"
+                        value={price}
+                        className="hidden"
+                      />
+                      <label htmlFor={`price-${price}`} className="flex items-center cursor-pointer">
+                        <span className="custom-checkbox" />
+                        {price.charAt(0).toUpperCase() + price.slice(1)}
+                      </label>
+                    </div>
+                  ))}
                 </div>
               )}
             </div>
@@ -144,47 +134,32 @@ export const SideBar = () => {
             <div className="filter-section flex flex-col">
               <div
                 className="flex items-center justify-between cursor-pointer"
-                onClick={toggleSizeCollapse}
-                aria-expanded={!isSizeCollapsed}
+                onClick={() => handleDropdownToggle('size')}
+                aria-expanded={openDropdown === 'size'}
                 aria-controls="size-options"
               >
                 <label className="font-semibold mb-2">Size</label>
                 <span className="text-gray-500">
-                  {isSizeCollapsed ? <FiChevronDown /> : <FiChevronUp />}
+                  {openDropdown === 'size' ? <FiChevronUp /> : <FiChevronDown />}
                 </span>
               </div>
-              {!isSizeCollapsed && (
+              {openDropdown === 'size' && (
                 <div id="size-options" className="flex flex-col space-y-1 mt-2 ml-3">
-                  <div className="flex items-center">
-                    <input
-                      type="checkbox"
-                      id="small"
-                      name="size"
-                      value="small"
-                      className="mr-2"
-                    />
-                    <label htmlFor="small">Small</label>
-                  </div>
-                  <div className="flex items-center">
-                    <input
-                      type="checkbox"
-                      id="medium-size"
-                      name="size"
-                      value="medium"
-                      className="mr-2"
-                    />
-                    <label htmlFor="medium-size">Medium</label>
-                  </div>
-                  <div className="flex items-center">
-                    <input
-                      type="checkbox"
-                      id="large"
-                      name="size"
-                      value="large"
-                      className="mr-2"
-                    />
-                    <label htmlFor="large">Large</label>
-                  </div>
+                  {['small', 'medium', 'large'].map((size) => (
+                    <div className="flex items-center" key={size}>
+                      <input
+                        type="checkbox"
+                        id={`size-${size}`}
+                        name="size"
+                        value={size}
+                        className="hidden"
+                      />
+                      <label htmlFor={`size-${size}`} className="flex items-center cursor-pointer">
+                        <span className="custom-checkbox" />
+                        {size.charAt(0).toUpperCase() + size.slice(1)}
+                      </label>
+                    </div>
+                  ))}
                 </div>
               )}
             </div>
@@ -195,73 +170,78 @@ export const SideBar = () => {
             <div className="filter-section flex flex-col">
               <div
                 className="flex items-center justify-between cursor-pointer"
-                onClick={toggleConditionCollapse}
-                aria-expanded={!isConditionCollapsed}
+                onClick={() => handleDropdownToggle('condition')}
+                aria-expanded={openDropdown === 'condition'}
                 aria-controls="condition-options"
               >
                 <label className="font-semibold mb-2">Condition</label>
                 <span className="text-gray-500">
-                  {isConditionCollapsed ? <FiChevronDown /> : <FiChevronUp />}
+                  {openDropdown === 'condition' ? <FiChevronUp /> : <FiChevronDown />}
                 </span>
               </div>
-              {!isConditionCollapsed && (
+              {openDropdown === 'condition' && (
                 <div id="condition-options" className="flex flex-col space-y-1 mt-2 ml-3">
-                  <div className="flex items-center">
-                    <input
-                      type="checkbox"
-                      id="never-used"
-                      name="condition"
-                      value="never-used"
-                      className="mr-2"
-                    />
-                    <label htmlFor="never-used">Never Used</label>
-                  </div>
-                  <div className="flex items-center">
-                    <input
-                      type="checkbox"
-                      id="used-once"
-                      name="condition"
-                      value="used-once"
-                      className="mr-2"
-                    />
-                    <label htmlFor="used-once">Used Once</label>
-                  </div>
-                  <div className="flex items-center">
-                    <input
-                      type="checkbox"
-                      id="rarely-used"
-                      name="condition"
-                      value="rarely-used"
-                      className="mr-2"
-                    />
-                    <label htmlFor="rarely-used">Rarely Used</label>
-                  </div>
-                  <div className="flex items-center">
-                    <input
-                      type="checkbox"
-                      id="medium-used"
-                      name="condition"
-                      value="medium-used"
-                      className="mr-2"
-                    />
-                    <label htmlFor="medium-used">Medium Used</label>
-                  </div>
-                  <div className="flex items-center">
-                    <input
-                      type="checkbox"
-                      id="well-used"
-                      name="condition"
-                      value="well-used"
-                      className="mr-2"
-                    />
-                    <label htmlFor="well-used">Well Used</label>
-                  </div>
+                  {['never-used', 'used-once', 'rarely-used', 'medium-used', 'well-used'].map(
+                    (condition) => (
+                      <div className="flex items-center" key={condition}>
+                        <input
+                          type="checkbox"
+                          id={`condition-${condition}`}
+                          name="condition"
+                          value={condition}
+                          className="hidden"
+                        />
+                        <label
+                          htmlFor={`condition-${condition}`}
+                          className="flex items-center cursor-pointer"
+                        >
+                          <span className="custom-checkbox" />
+                          {condition.replace(/-/g, ' ').replace(/\b\w/g, (char) => char.toUpperCase())}
+                        </label>
+                      </div>
+                    )
+                  )}
                 </div>
               )}
             </div>
           </div>
         </div>
       </div>
+
+      <style jsx>{`
+        .custom-checkbox {
+          display: inline-block;
+          width: 20px;
+          height: 20px;
+          background-color: white;
+          border: 2px solid #555;
+          border-radius: 4px;
+          position: relative;
+          margin-right: 8px;
+        }
+
+        input[type='checkbox']:checked + label .custom-checkbox {
+          background-color: #e4086f;
+          border-color: #e4086f;
+        }
+
+        .custom-checkbox::after {
+          content: '';
+          position: absolute;
+          top: 3px;
+          left: 7px;
+          width: 5px;
+          height: 10px;
+          border: solid white;
+          border-width: 0 2px 2px 0;
+          transform: rotate(45deg);
+          opacity: 0;
+        }
+
+        input[type='checkbox']:checked + label .custom-checkbox::after {
+          opacity: 1;
+        }
+      `}</style>
     </>
   );
 };
