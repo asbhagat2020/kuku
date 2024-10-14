@@ -1,97 +1,160 @@
+"use client"
 import Image from 'next/image'
 import React from 'react'
-
+import toast from 'react-hot-toast';
+import { useState } from 'react';
+import { usePathname } from 'next/navigation';
+import Link from 'next/link';
 const Footer = () => {
+    const notify = () => toast.success('Suscription request sent');
+    const [email, setEmail] = useState('');
+    const [error, setError] = useState('');
+
+    const validateEmail = (email) => {
+        // Basic email validation regex
+        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return regex.test(email);
+    };
+
+    const handleSubscribe = () => {
+        if (!validateEmail(email)) {
+            setError('Please enter a valid email address.');
+            return;
+        }
+        setError('');
+        // Call your subscription logic or notification here
+        notify();
+    };
     return (
-        <div className='max-w-[1550px] mx-auto h-[500px] bg-[#FDE504] pt-[47px] -z-[50]'>
-            <div className="px-[95px] justify-start items-start gap-[126px] inline-flex">
-                <div className="w-[140px] px-2 py-3 flex-col justify-start items-start gap-2.5 inline-flex">
-                    <div className="self-stretch text-[#202020] text-sm font-extrabold font-karla uppercase leading-none">About</div>
-                    <div className="text-[#e6207d] text-base font-normal font-karla leading-[17.60px]">Contact Us</div>
-                    <div className="text-[#6a6a6a] text-base font-normal font-karla leading-[17.60px]">About Us</div>
-                    <div className="text-[#6a6a6a] text-base font-normal font-karla leading-[17.60px]">Locations</div>
-                    <div className="text-[#6a6a6a] text-base font-normal font-karla leading-[17.60px]">Blogs</div>
-                </div>
-                <div className="w-[140px] px-2 py-3 flex-col justify-start items-start gap-2.5 inline-flex">
-                    <div className="self-stretch text-[#202020] text-sm font-extrabold font-karla uppercase leading-none">Categories</div>
-                    <div className="text-[#6a6a6a] text-base font-normal font-karla leading-[17.60px]">Men</div>
-                    <div className="text-[#6a6a6a] text-base font-normal font-karla leading-[17.60px]">Women</div>
-                    <div className="text-[#6a6a6a] text-base font-normal font-karla leading-[17.60px]">Kids</div>
-                </div>
-                <div className="px-2 py-3 flex-col justify-start items-start gap-2.5 inline-flex">
-                    <div className="self-stretch text-[#202020] text-sm font-extrabold font-karla uppercase leading-none">Help</div>
-                    <div className="text-[#6a6a6a] text-base font-normal font-karla leading-[17.60px]">Payments</div>
-                    <div className="text-[#6a6a6a] text-base font-normal font-karla leading-[17.60px]">Shipping</div>
-                    <div className="text-[#6a6a6a] text-base font-normal font-karla leading-[17.60px]">Cancellation & Returns</div>
-                </div>
-                <div className="px-2 py-3 flex-col justify-start items-start gap-2.5 inline-flex">
-                    <div className="w-[150px] text-[#202020] text-sm font-extrabold font-karla uppercase leading-none">Legal & Privacy</div>
-                    <div className="text-[#6a6a6a] text-base font-normal font-karla leading-[17.60px]">Terms & Conditions</div>
-                    <div className="text-[#6a6a6a] text-base font-normal font-karla leading-[17.60px]">Privacy Policy</div>
-                    <div className="text-[#6a6a6a] text-base font-normal font-karla leading-[17.60px]">Accessibility</div>
-                </div>
-                <div className="px-2 py-3 flex-col justify-start items-start gap-2.5 inline-flex">
-                    <div className="w-[150px] text-[#202020] text-sm font-extrabold font-karla uppercase leading-none">CUSTOMER SERVICE</div>
-                    <div className="text-[#6a6a6a] text-base font-normal font-karla leading-[17.60px]">Size Guide</div>
-                    <div className="text-[#6a6a6a] text-base font-normal font-karla leading-[17.60px]">Shipping Information</div>
-                    <div className="text-[#6a6a6a] text-base font-normal font-karla leading-[17.60px]">Wishlist</div>
-                    <div className="text-[#6a6a6a] text-base font-normal font-karla leading-[17.60px]">FAQs</div>
-                </div>
+        <footer className='max-w-[1550px] mx-auto bg-[#FDE504] pt-12 pb-0'>
+            <div className="px-4 sm:px-8 lg:px-[71px] grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-8 mb-16">
+                <FooterColumn title="About">
+                    <FooterLink href="#">Contact Us</FooterLink>
+                    <FooterLink href="#">About Us</FooterLink>
+                    <FooterLink href="#">Locations</FooterLink>
+                    <FooterLink href="#">Blogs</FooterLink>
+                </FooterColumn>
+                <FooterColumn title="Categories">
+                    <FooterLink href="#">Men</FooterLink>
+                    <FooterLink href="#">Women</FooterLink>
+                    <FooterLink href="#">Kids</FooterLink>
+                </FooterColumn>
+                <FooterColumn title="Help">
+                    <FooterLink href="#">Payments</FooterLink>
+                    <FooterLink href="#">Shipping</FooterLink>
+                    <FooterLink href="#">Cancellation & Returns</FooterLink>
+                </FooterColumn>
+                <FooterColumn title="Legal & Privacy">
+                    <FooterLink href="#">Terms & Conditions</FooterLink>
+                    <FooterLink href="#">Privacy Policy</FooterLink>
+                    <FooterLink href="#">Accessibility</FooterLink>
+                </FooterColumn>
+                <FooterColumn title="Customer Service">
+                    <FooterLink href="#">Size Guide</FooterLink>
+                    <FooterLink href="#">Shipping Information</FooterLink>
+                    <FooterLink href="/wishlist">Wishlist</FooterLink>
+                    <FooterLink href="#">FAQs</FooterLink>
+                </FooterColumn>
             </div>
-            <div className='px-[95px] pt-[80px] flex justify-between pb-[90px]'>
-                <div className='flex flex-col gap-[16px]'>
-                    <div className="flex gap-[1rem] items-center">
-                        <Image src='kuku_logo.svg' width={56} height={61} />
-                        <h1 className="text-black text-[37px] font-bold font-palanquin_dark leading-[44.40px]">KUKU</h1>
+
+            <div className='px-4 sm:px-8 lg:px-16 grid grid-cols-1 md:grid-cols-3 gap-8 mb-16'>
+                <div className='flex flex-col gap-4'>
+                    <div className="flex items-center gap-4">
+                        <Image src='/kuku_logo.svg' width={56} height={61} alt="KUKU logo" />
+                        <h1 className="text-black text-3xl font-bold font-palanquin_dark">KUKU</h1>
                     </div>
                     <div className='flex gap-4'>
-                        <Image src='fb_logo.svg' width={24} height={24} />
-                        <Image src='x_logo.svg' width={22} height={22} />
-                        <Image src='linkedin_logo.svg' width={24} height={24} />
-                        <Image src='insta_logo.svg' width={24} height={24} />
+                        <Link href='www.facebook.com' target='_blank'>
+                            <SocialIcon src='/fb_logo.svg' alt="Facebook" />
+                        </Link>
+                        <Link href='www.facebook.com' >
+                            <SocialIcon src='/x_logo.svg' alt="X" /></Link>
+                        <Link href='www.facebook.com' >
+                            <SocialIcon src='/linkedin_logo.svg' alt="LinkedIn" /></Link>
+                        <Link href='www.facebook.com' >
+                            <SocialIcon src='/insta_logo.svg' alt="Instagram" /></Link>
                     </div>
                 </div>
-                <div className='flex flex-col gap-[13px] items-center'>
-                    <p className="text-[#6a6a6a] text-sm font-extrabold font-karla uppercase leading-none">Get special offers in our Newsletter</p>
-                    <div className="h-[62px] pl-5 pr-[7px] py-1.5 rounded-[20px] border border-black justify-start items-center gap-[70px] inline-flex">
-                        <div className="text-[#383838] text-sm font-normal font-karla leading-none">Enter your email</div>
-                        <div className="px-[30px] py-5 bg-[#e4086f] rounded-[15px] justify-center items-center gap-[11px] flex">
-                            <button className="text-[#fde504] text-base font-bold font-karla leading-[17.60px]">Subscribe</button>
-                        </div>
-                    </div>
-                </div>
-                <div className='flex flex-col gap-[10px]'>
-                    <Image src='/googlePlay.png' width={143} height={41} alt='' />
-                    <Image src='/appStoreFooter.png' width={143} height={41} alt='' />
-                </div>
-            </div>
-            <div className='h-[80px] w-full bg-[#E4086F] px-[70px] py-5'>
-                <div className='flex justify-between '>
-                    <div className='flex gap-[10px]'>
-                    <Image src='/paypal.svg' width={35} height={23} alt='' />
-                    <Image src='/paypal.svg' width={35} height={23} alt='' />
-                    <Image src='/paypal.svg' width={35} height={23} alt='' />
-                    <Image src='/paypal.svg' width={35} height={23} alt='' />
 
+                <div className='flex flex-col gap-4 items-center'>
+                    <p className="text-[#6a6a6a] text-sm font-extrabold font-karla uppercase">
+                        Get special offers in our Newsletter
+                    </p>
+                    <div className="w-fit max-w-md flex flex-col sm:flex-row items-center gap-2 p-2 rounded-[20px] border border-black">
+                        <input
+                            required
+                            type="email"
+                            placeholder="Enter your email"
+                            className="flex-grow p-2 bg-transparent text-[#383838] text-sm font-normal font-karla outline-none"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                        />
+                        <button
+                            onClick={handleSubscribe}
+                            className="w-full sm:w-auto px-6 py-3 bg-[#e4086f] rounded-[15px] text-[#fde504] text-base font-bold font-karla"
+                        >
+                            Subscribe
+                        </button>
                     </div>
-                    <div>
-                    <p className="text-white text-[13px] font-normal font-karla leading-[14.30px]">Copyright © 2024 Kuku. All Rights Reserved.</p>
+                    {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
+                </div>
+
+                <div className='flex flex-col gap-4 items-center md:items-end'>
+                    <Image src='/googlePlay.png' width={143} height={41} alt='Google Play' />
+                    <Image src='/appStoreFooter.png' width={143} height={41} alt='App Store' />
+                </div>
+            </div>
+
+            <div className='bg-[#E4086F] px-4 sm:px-8 lg:px-16 py-5'>
+                <div className='grid grid-cols-1 sm:grid-cols-3 gap-4 items-center'>
+                    <div className='flex gap-2 justify-center sm:justify-start'>
+                        <PaymentIcon src='/paypal.svg' />
+                        <PaymentIcon src='/fontisto_american-express.svg' />
+                        <PaymentIcon src='/mastercard.svg' />
+                        <PaymentIcon src='/fontisto_visa.svg' />
                     </div>
-                    <div className='flex gap-2'>
-                        <div className='w-fit h-[26px] rounded-[12px] px-[8px] bg-white flex items-center gap-2'>
-                        <Image src='/download-cloud.svg' width={18} height={18} alt='' />
-                        <p className="text-[#2f2f2f] text-xs font-bold font-karla">Download Kuku</p>
-                        </div>
-                        <div className='flex gap-1 items-center '>
-                        <Image src='/globe.svg' width={18} height={18} alt='' />
-                        <p className="text-white text-xs font-bold font-karla">Change Region</p>
-                        <Image src='/chevron-down.svg' width={16} height={16} alt='' />
-                        </div>
+                    <p className="text-white text-xs font-normal font-karla text-center">Copyright © 2024 Kuku. All Rights Reserved.</p>
+                    <div className='flex flex-wrap gap-2 justify-center sm:justify-end'>
+                        <button className='px-3 py-1 bg-white rounded-full flex items-center gap-2'>
+                            <Image src='/download-cloud.svg' width={18} height={18} alt='' />
+                            <span className="text-[#2f2f2f] text-xs font-bold font-karla">Download Kuku</span>
+                        </button>
+                        <button className='flex items-center gap-1'>
+                            <Image src='/globe.svg' width={18} height={18} alt='' />
+                            <span className="text-white text-xs font-bold font-karla">Change Region</span>
+                            <Image src='/chevron-down.svg' width={16} height={16} alt='' />
+                        </button>
                     </div>
                 </div>
             </div>
-        </div>
+        </footer>
     )
 }
+
+const FooterColumn = ({ title, children }) => (
+    <div className="flex flex-col gap-2.5">
+        <h2 className="text-[#202020] text-sm font-extrabold font-karla uppercase">{title}</h2>
+        {children}
+    </div>
+)
+
+const FooterLink = ({ href, children }) => {
+    const pathname = usePathname();
+    const isActive = pathname === href;
+
+    return (
+        <a href={href} className={`text-base font-normal font-karla ${isActive ? 'text-[#e4086f]' : 'text-[#6a6a6a]'} hover:text-[#e4086f]`}>
+            {children}
+        </a>
+    );
+};
+
+const SocialIcon = ({ src, alt }) => (
+    <Image src={src} width={24} height={24} alt={alt} />
+)
+
+const PaymentIcon = ({ src }) => (
+    <Image src={src} width={35} height={23} alt='Payment method' />
+)
 
 export default Footer

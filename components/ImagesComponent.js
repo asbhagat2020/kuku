@@ -1,5 +1,6 @@
 "use client";
 
+import Link from 'next/link';
 import { useState } from "react";
 import { Pagination } from "./Pagination"; // Import the Pagination component
 import Slider from "react-slick";
@@ -249,6 +250,7 @@ export const ImagesComponent = () => {
               </button>
             </div>
 
+
             {/* Slider for product images */}
             <Slider {...innerSliderSettings}>
               {card.productImg.map((imgClass, index) => (
@@ -270,6 +272,7 @@ export const ImagesComponent = () => {
                     <div className="h-10 w-10 flex items-center justify-center bg-white rounded-full mr-10">
                       <img src="handsake_img.jpg" alt="Handshake icon" />
                     </div>
+
                   </div>
                 </div>
               ))}

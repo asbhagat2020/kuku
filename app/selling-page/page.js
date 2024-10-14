@@ -8,7 +8,7 @@ const Page = () => {
     <>
     <Header/>
     <div className="max-w-screen-xl mx-auto px-4 ">
-      <p className="mt-16 font-bold text-3xl font-luckiest">SEE WHAT'S SELLING</p>
+      <p className="mt-16 font-bold text-3xl font-luckiest">SEE WHAT&#39;S SELLING</p>
       <MainComponent />
     </div>
     <Footer/>
@@ -16,5 +16,4 @@ const Page = () => {
   );
 };
 
-// Export as default
 export default Page;
