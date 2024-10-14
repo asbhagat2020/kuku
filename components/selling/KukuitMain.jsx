@@ -166,7 +166,7 @@ const KukuitMain = () => {
                                     />
                                     <span className="checkmark"></span>
                                 </label>
-                                <p className='text-base sm:text-xl font-normal font-karla leading-tight sm:leading-7'>I agree to the KUKU Terms & Conditions. We protect your privacy and to understand how, Read our Privacy Policies</p>
+                                <p className='text-base sm:text-xl font-normal font-karla leading-tight sm:leading-7'>I agree to the <Link href={'/terms'} target='_blank' className='text-[#E4086F] underline'>KUKU Terms & Conditions.</Link> We protect your privacy and to understand how, Read our <Link target='_blank' className='text-[#E4086F] underline' href={'/policies'}>Privacy Policies</Link> </p>
                             </div>
                             {errors.agreeTerms && <p className="text-red-500 text-sm mt-1">{errors.agreeTerms}</p>}
                             <div className='flex flex-col sm:flex-row sm:justify-end gap-4 my-8 sm:my-[36px]'>

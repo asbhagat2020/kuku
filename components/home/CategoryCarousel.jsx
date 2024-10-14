@@ -8,7 +8,7 @@ import { motion } from 'framer-motion'
 
 const CategoryCarousel = () => {
     const [currentSlide, setCurrentSlide] = useState(0);
-    const [centerIndex, setCenterIndex] = useState(2); // Assuming 5 slides are visible
+    const [centerIndex, setCenterIndex] = useState(2);
     const sliderRef = useRef(null);
 
     const products = [

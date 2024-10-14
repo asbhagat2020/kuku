@@ -9,7 +9,7 @@ const BrandCarousel = () => {
     const [hoveredIndex, setHoveredIndex] = useState(null);
 
     const products = [
-        { title: "Dress", price: "12 AED", image: "/nike.svg", hoverImage: "/nike-hover.svg" },
+        { title: "Dress", price: "12 AED", image: "/nike.svg", hoverImage: "/nike_white.svg" },
         { title: "Dress", price: "12 AED", image: "/adidas.png", hoverImage: "/adidas_white.svg" },
         { title: "Dress", price: "12 AED", image: "/Vector.svg", hoverImage: "/Vector_white.svg" },
         { title: "Dress", price: "12 AED", image: "/zara.svg", hoverImage: "/zara_white.svg" },
@@ -64,6 +64,7 @@ const BrandCarousel = () => {
                             onMouseLeave={() => setHoveredIndex(null)}
                         >
                             <Image
+                                unoptimized
                                 src={hoveredIndex === index ? item.hoverImage : item.image}
                                 width={100}
                                 height={100}

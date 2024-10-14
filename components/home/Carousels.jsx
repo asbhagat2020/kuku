@@ -5,24 +5,25 @@ import Slider from "react-slick"
 import { motion } from 'framer-motion'
 import "slick-carousel/slick/slick.css"
 import "slick-carousel/slick/slick-theme.css"
+import Link from 'next/link'
 
 const Carousels = () => {
     const [progress, setProgress] = useState(0)
     const sliderRef = useRef(null)
 
     const product = [
-        { title: "Dress", price: "12 AED", image: ["/dress_1.png","/dress_2.png","/dress_2.png"] },
-        { title: "Dress", price: "12 AED", image: ["/dress_2.png","/dress_2.png","/dress_2.png"]},
-        { title: "Dress", price: "12 AED", image: ["/dress_3.png","/dress_2.png","/dress_2.png"] },
-        { title: "Dress", price: "12 AED", image: ["/dress_1.png","/dress_2.png","/dress_2.png"] },
-        { title: "Dress", price: "12 AED", image: ["/dress_2.png","/dress_2.png","/dress_2.png"] },
-        { title: "Dress", price: "12 AED", image: ["/dress_2.png","/dress_2.png","/dress_2.png"] },
-        { title: "Dress", price: "12 AED", image: ["/dress_2.png","/dress_2.png","/dress_2.png"] },
-        { title: "Dress", price: "12 AED", image: ["/dress_3.png","/dress_2.png","/dress_2.png"] },
-        { title: "Dress", price: "12 AED", image: ["/dress_1.png","/dress_2.png","/dress_2.png"] },
-        { title: "Dress", price: "12 AED", image: ["/dress_3.png","/dress_2.png","/dress_2.png"] },
-        { title: "Dress", price: "12 AED", image: ["/dress_2.png","/dress_2.png","/dress_2.png"] },
-        { title: "Dress", price: "12 AED", image: ["/dress_1.png","/dress_2.png","/dress_2.png"] },
+        { title: "Dress", price: "12 AED", image: ["/dress_1.png", "/dress_2.png", "/dress_2.png"] ,link:"/product"},
+        { title: "Dress", price: "12 AED", image: ["/dress_2.png", "/dress_2.png", "/dress_2.png"],link:"/product" },
+        { title: "Dress", price: "12 AED", image: ["/dress_3.png", "/dress_2.png", "/dress_2.png"],link:"/product" },
+        { title: "Dress", price: "12 AED", image: ["/dress_1.png", "/dress_2.png", "/dress_2.png"],link:"/product" },
+        { title: "Dress", price: "12 AED", image: ["/dress_2.png", "/dress_2.png", "/dress_2.png"],link:"/product" },
+        { title: "Dress", price: "12 AED", image: ["/dress_2.png", "/dress_2.png", "/dress_2.png"],link:"/product" },
+        { title: "Dress", price: "12 AED", image: ["/dress_2.png", "/dress_2.png", "/dress_2.png"],link:"/product" },
+        { title: "Dress", price: "12 AED", image: ["/dress_3.png", "/dress_2.png", "/dress_2.png"],link:"/product" },
+        { title: "Dress", price: "12 AED", image: ["/dress_1.png", "/dress_2.png", "/dress_2.png"],link:"/product" },
+        { title: "Dress", price: "12 AED", image: ["/dress_3.png", "/dress_2.png", "/dress_2.png"],link:"/product" },
+        { title: "Dress", price: "12 AED", image: ["/dress_2.png", "/dress_2.png", "/dress_2.png"],link:"/product" },
+        { title: "Dress", price: "12 AED", image: ["/dress_1.png", "/dress_2.png", "/dress_2.png"],link:"/product" },
     ]
 
     const settings = {
@@ -34,9 +35,12 @@ const Carousels = () => {
         autoplay: false,
         autoplaySpeed: 3000,
         arrows: false,
-        swipe:true,
+        swipe: true,           // Keep swipe enabled for outer slider
+        draggable: true,       // Allow dragging without holding the mouse button
+        touchThreshold: 50,    // Adjust this if needed for smoother swipe
         cssEase: "ease-in-out",
-        touchThreshold: 10,
+        useCSS: true,
+        useTransform: true,
         responsive: [
             {
                 breakpoint: 1280,
@@ -80,9 +84,12 @@ const Carousels = () => {
         slidesToShow: 1,
         slidesToScroll: 1,
         arrows: true,
+        swipe: false,          // Disable swipe/scrolling
+        draggable: false,
+
         customPaging: (i) => (
             <div
-            className={`custom-dot`}
+                className={`custom-dot`}
                 style={{
                     height: "5px",
                     borderRadius: "20px",
@@ -115,13 +122,15 @@ const Carousels = () => {
                     <div key={index}>
                         <div className="w-[307px] h-[404px] rounded-[20px] relative mx-2 outline-none">
                             <div className="absolute top-2 right-2 z-10">
+                                <Link href={item.link}>
                                 <div className='h-[54px] p-[15px] bg-white/40 rounded-[100px]'>
                                     <Image alt='' width={24} height={24} src='wishlist.svg' />
-                                </div>
+                                </div></Link>
                             </div>
+                            <Link href={item.link}>
                             <div className="absolute min-w-[204px] bottom-4 left-4 text-center z-10 bg-[#fde504] px-[50px] py-[20px] rounded-[20px]">
                                 <button className="text-[#202020] text-base font-bold font-karla leading-tight">Buy Now</button>
-                            </div>
+                            </div></Link>
                             <div className="absolute bottom-6 right-5 z-10">
                                 <div className='h-[54px] p-[15px] bg-white rounded-[100px]'>
                                     <Image alt='' width={24} height={24} src='hand_shake.svg' />
@@ -154,8 +163,9 @@ const Carousels = () => {
                     height: '4px',
                     backgroundColor: '#e0e0e0',
                     marginTop: '20px',
-                    marginLeft: "70px",
-                    marginRight: '70px',
+                    marginLeft: "6px",
+                    marginRight: '46px',
+                    marginTop:"80px"
                 }}
             >
                 <motion.div

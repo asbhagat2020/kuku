@@ -33,7 +33,13 @@ export const Chart= () => {
           opacity: 0.5
         }
       },
+    
       xaxis: {
+        lines: {
+          show: true,
+          strokeWidth:10,
+          color: '#0000' // Increase this value to make horizontal lines bolder
+        },
         categories: ['Week 1', 'Week 2', 'Week 3', 'Week 4','Week 5','Week 6','Week 7']
       },
     }

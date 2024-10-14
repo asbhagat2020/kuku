@@ -21,14 +21,14 @@ const ProfileSection = () => {
                 <div className='flex  items-center '>
                     <Link href='/'>
                     <p className="text-[#6a6a6a] text-base font-normal font-karla underline leading-[17.60px] mr-1.5">Home</p></Link>
-                    <div className="w-[9px] h-[0px] origin-top-left rotate-90 border border-black mt-[-5px]"></div>
+                    <div className="w-[9px] h-0 origin-top-left rotate-90 border border-black mt-[-5px]"></div>
                     <Link href='/'>
                     <p className="text-[#6a6a6a] text-base font-normal font-karla underline leading-[17.60px] mr-1.5">Categories</p></Link>
                     <div className="w-[9px] h-[0px] origin-top-left rotate-90 border border-black mt-[-5px]"></div>
                     <Link href='/'>
                     <p className="text-[#6a6a6a] text-base font-normal font-karla underline leading-[17.60px] mr-1.5">Tshirt</p></Link>
                     <div className="w-[9px] h-[0px] origin-top-left rotate-90 border border-black mt-[-5px] mr-1.5"></div>
-                    <p className="text-[#6a6a6a] text-base font-normal font-karla  leading-[17.60px]">Nike Black rounded tshirt</p>
+                    <p className="text-black text-base font-bold font-karla  leading-[17.60px]">Nike Black rounded tshirt</p>
                 </div>
                 <div className='w-[95%] h-[1px]  bg-[#e6e6e6] mt-4'></div>
                 <div className='flex flex-col lg:flex-row gap-[21px] mt-[103px]'>

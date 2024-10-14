@@ -19,6 +19,7 @@ const Header = () => {
   const path = usePathname();
   const panelRef = useRef(null);
   const searchRef = useRef(null);
+  const dropdownRef = useRef(null);
 
   // Notifications data
   const notifications = [
@@ -88,7 +89,7 @@ const Header = () => {
   };
 
   // Paths where the notification icon should be disabled
-  const disabledNotificationPaths = ['/wishlist', '/cart', '/product'];
+  const disabledNotificationPaths = [''];
   const isNotificationDisabled = disabledNotificationPaths.includes(path);
 
   // Determine background color based on the path
@@ -96,11 +97,15 @@ const Header = () => {
   const iconsPath = path === '/user_profile'
   const wishPath = path === '/wishlist'
   const cartPath = path === '/cart'
+  const isHome=path==='/'
   useEffect(() => {
     const handleClickOutside = (event) => {
       // Check if click was outside the search box
       if (searchRef.current && !searchRef.current.contains(event.target)) {
         setIsSearchVisible(false);
+      }
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownVisible(false); // Close dropdown if clicked outside
       }
       // Check if click was outside the notification panel
       if (panelRef.current && !panelRef.current.contains(event.target)) {
@@ -117,7 +122,7 @@ const Header = () => {
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [searchRef, panelRef]);
+  }, [searchRef, dropdownRef, panelRef]);
 
 
   const handleHandburger = () => {
@@ -136,10 +141,10 @@ const Header = () => {
               <Image onClick={handleHandburger} src='menu.svg' width={38} height={38} alt='' className='lg:hidden' />
               <h1 className="text-black text-[37px] font-bold font-palanquin_dark leading-[44.40px] hidden lg:block">KUKU</h1>
             </Link>
-            <div className={`lg:flex gap-[30px] items-center hidden ${isSearchVisible ? "lg:hidden" : ""}`}>
-              <Link href='men' className="text-[#fefae5] text-base font-bold font-karla leading-tight hover:text-pink-500">MEN</Link>
-              <Link href='wommen' className="text-[#fefae5] text-base font-bold font-karla leading-tight hover:text-pink-500">WOMEN</Link>
-              <Link href='kids' className="text-[#fefae5] text-base font-bold font-karla leading-tight hover:text-pink-500">KIDS</Link>
+            <div className={`lg:flex gap-[30px] items-center hidden ${isSearchVisible ? "lg:hidden xl:flex" : ""}`}>
+              <Link href='men' className={`${isHome?"text-[#fefae5]":"text-black"} text-base font-bold font-karla leading-tight hover:text-pink-500`}>MEN</Link>
+              <Link href='wommen' className={`${isHome?"text-[#fefae5]":"text-black"} text-base font-bold font-karla leading-tight hover:text-pink-500`}>WOMEN</Link>
+              <Link href='kids' className={`${isHome?"text-[#fefae5]":"text-black"} text-base font-bold font-karla leading-tight hover:text-pink-500`}>KIDS</Link>
             </div>
           </div>
           <div className={`lg:hidden pl-10 ${isSearchVisible ? "lg:block hidden" : ""}`}>
@@ -149,19 +154,26 @@ const Header = () => {
             {isSearchVisible ? (
               <div ref={searchRef} className='relative h-[54px] pl-5'>
                 <input
-                  className='  h-full bg-white rounded-lg px-[50px] outline-none'
-                  type="search"
+                  className='xl:w-[550px]  h-full bg-white rounded-lg px-[50px] outline-none appearance-none'
+                  type="text"
                   placeholder="Search an item"
                   autoFocus
                   value={searchValue}
                   onChange={handleInputChange}
                 />
+                <style jsx>{`
+                .search-input::-webkit-search-cancel-button {
+                  -webkit-appearance: none;
+                  appearance: none;
+                  display: none;
+                }
+              `}</style>
                 <div onClick={toggleSearch} className="absolute left-6 top-1/2 transform -translate-y-1/2">
                   <Image alt='search icon' width={24} height={24} src='search_button.svg' />
                 </div>
 
                 {suggestions.length > 0 && (
-                  <div className="absolute top-full left-0 w-[50%] lg:w-full bg-white border border-gray-300 rounded-bl-lg rounded-br-lg mt-1 z-10">
+                  <div className="absolute top-full left-6 w-[50%] lg:w-[95%] bg-white border border-gray-300 rounded-bl-lg rounded-br-lg mt-1 z-10">
                     {suggestions.map((suggestion, index) => (
                       <React.Fragment key={index}>
                         <div
@@ -213,24 +225,24 @@ const Header = () => {
                 <Image alt='profile icon' width={24} height={24} src={iconsPath ? "profile_white.svg" : "profile_black.svg"} />
               </div>
             </Link>
-            <div className='relative'>
+            <div ref={dropdownRef} className='relative'>
               <div onClick={toggleDropdown} className='cursor-pointer hidden lg:block'>
                 <Image alt='dropdown' width={14} height={14} src='heade_drop_down.svg' />
               </div>
 
               {isDropdownVisible && (
-                <div className="absolute p-[26px] right-0 top-[40px] w-[178px] h-[246px] bg-white border border-gray-300 rounded-lg shadow-lg z-10">
+                <div className="absolute py-[26px] px-[10px] right-0 top-[40px] min-w-[178px] h-[246px] bg-white border border-gray-300 rounded-lg shadow-lg z-10">
                   {/* Dropdown content goes here */}
-                  <div className="px-4 py-2 hover:bg-gray-100 cursor-pointer font-karla">Account</div>
+                  <div className="px-4 py-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500">Account</div>
                   <Link href='/user_profile'>
-                    <div className="px-4  pb-2 hover:bg-gray-100 cursor-pointer font-karla">Your Profile</div></Link>
-                  <div className="px-4 pb-2  hover:bg-gray-100 cursor-pointer font-karla">Purchases</div>
+                    <div className="px-4  pb-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500">Your Profile</div></Link>
+                  <div className="px-4 pb-2  hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500">Purchases</div>
                   <Link href='/wishlist'>
-                    <div className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla">Wishlist</div></Link>
+                    <div className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500">Wishlist</div></Link>
                   <Link href='/co2'>
-                    <div className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla">Co2 Savings</div>
+                    <div className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500">Co2 Savings</div>
                   </Link>
-                  <div className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla">Address List</div>
+                  <div className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500">Address List</div>
                 </div>
               )}
             </div>
@@ -266,9 +278,9 @@ const Header = () => {
           </div>
           <div className='mx-6 pt-5'>
             <div className='flex flex-col gap-[30px]'>
-              <Link href='men' className="text-black text-base font-bold font-karla leading-tight hover:text-pink-500">MEN</Link>
-              <Link href='wommen' className="text-black text-base font-bold font-karla leading-tight hover:text-pink-500">WOMEN</Link>
-              <Link href='kids' className="text-black text-base font-bold font-karla leading-tight hover:text-pink-500">KIDS</Link>
+              <Link href='men' className={`${isHome?"text-white":"text-black"} text-base font-bold font-karla leading-tight hover:text-pink-500`}>MEN</Link>
+              <Link href='wommen' className={`${isHome?"text-white":"text-black"} text-base font-bold font-karla leading-tight hover:text-pink-500`}>WOMEN</Link>
+              <Link href='kids' className={`${isHome?"text-white":"text-black"} text-base font-bold font-karla leading-tight hover:text-pink-500`}>KIDS</Link>
             </div>
           </div>
           <div className='flex mx-6 mt-5 justify-between'>
