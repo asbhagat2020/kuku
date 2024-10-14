@@ -57,11 +57,11 @@ const Recommendations = () => {
   }, []);
 
   return (
-    <div className="mt-8 flex flex-col items-center mb-20"> 
-      <div className="flex justify-between items-center mb-4 w-full max-w-screen-xl">
+    <div className="mt-8 flex flex-col items-center mb-20">
+      <div className="flex justify-between items-center mb-10 w-full max-w-screen-xl"> 
         <h2
-          className="text-3xl ml-6 leading-tight tracking-wide"
-          style={{ fontFamily: "Luckiest Guy, cursive", fontWeight: 1800 }}
+          className="ml-6 leading-tight tracking-wide font-luckiest" style={{ fontSize: '45px' }}
+          // style={{ fontFamily: "Luckiest Guy, cursive", fontWeight: 900, textShadow: '1px 1px 2px rgba(0, 0, 0, 0.5)' }} 
         >
           YOU MAY ALSO LIKE
         </h2>
@@ -78,7 +78,7 @@ const Recommendations = () => {
         <div
           ref={scrollRef}
           className="flex gap-4 overflow-x-scroll scrollbar-hide"
-          style={{ scrollBehavior: "smooth" }}
+          style={{ scrollBehavior: "smooth", paddingBottom: '60px' }} 
         >
           <RecommendationCard image="/product1.png" price="120.00" />
           <RecommendationCard image="/product2.png" price="120.00" />
