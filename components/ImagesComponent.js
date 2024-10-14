@@ -3,13 +3,16 @@
 import Link from 'next/link';
 import { useState } from "react";
 import { Pagination } from "./Pagination"; // Import the Pagination component
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 const cardData = [
   {
     id: 1,
     user: "Kuku1222",
     img: "/kuki_img.png",
-    productImg: "bg-custom-image1",
+    productImg: ["bg-custom-image1", "bg-custom-image2", "bg-custom-image3"],
     heard_img: "/heard_img.png",
     title: "Dress",
     price: "AED 120.00",
@@ -18,7 +21,7 @@ const cardData = [
     id: 2,
     user: "Kuku1222",
     img: "/kuki_img.png",
-    productImg: "bg-custom-image2",
+    productImg: ["bg-custom-image2", "bg-custom-image3", "bg-custom-image1"],
     heard_img: "/heard_img.png",
     title: "Dress",
     price: "AED 120.00",
@@ -27,7 +30,7 @@ const cardData = [
     id: 3,
     user: "Kuku1222",
     img: "/kuki_img.png",
-    productImg: "bg-custom-image3",
+    productImg: ["bg-custom-image3", "bg-custom-image1", "bg-custom-image2"],
     heard_img: "/heard_img.png",
     title: "Dress",
     price: "AED 120.00",
@@ -36,7 +39,7 @@ const cardData = [
     id: 4,
     user: "Kuku1222",
     img: "/kuki_img.png",
-    productImg: "bg-custom-image4",
+    productImg: ["bg-custom-image4", "bg-custom-image5", "bg-custom-image6"],
     heard_img: "/heard_img.png",
     title: "Dress",
     price: "AED 120.00",
@@ -45,7 +48,7 @@ const cardData = [
     id: 5,
     user: "Kuku1222",
     img: "/kuki_img.png",
-    productImg: "bg-custom-image5",
+    productImg: ["bg-custom-image5", "bg-custom-image6", "bg-custom-image4"],
     heard_img: "/heard_img.png",
     title: "Dress",
     price: "AED 120.00",
@@ -54,7 +57,7 @@ const cardData = [
     id: 6,
     user: "Kuku1222",
     img: "/kuki_img.png",
-    productImg: "bg-custom-image6",
+    productImg: ["bg-custom-image6", "bg-custom-image4", "bg-custom-image5"],
     heard_img: "/heard_img.png",
     title: "Dress",
     price: "AED 120.00",
@@ -63,7 +66,7 @@ const cardData = [
     id: 7,
     user: "Kuku1222",
     img: "/kuki_img.png",
-    productImg: "bg-custom-image2",
+    productImg: ["bg-custom-image1", "bg-custom-image2", "bg-custom-image3"],
     heard_img: "/heard_img.png",
     title: "Dress",
     price: "AED 120.00",
@@ -72,7 +75,7 @@ const cardData = [
     id: 8,
     user: "Kuku1222",
     img: "/kuki_img.png",
-    productImg: "bg-custom-image1",
+    productImg: ["bg-custom-image2", "bg-custom-image3", "bg-custom-image1"],
     heard_img: "/heard_img.png",
     title: "Dress",
     price: "AED 120.00",
@@ -81,7 +84,7 @@ const cardData = [
     id: 9,
     user: "Kuku1222",
     img: "/kuki_img.png",
-    productImg: "bg-custom-image3",
+    productImg: ["bg-custom-image3", "bg-custom-image1", "bg-custom-image2"],
     heard_img: "/heard_img.png",
     title: "Dress",
     price: "AED 120.00",
@@ -90,7 +93,7 @@ const cardData = [
     id: 10,
     user: "Kuku1222",
     img: "/kuki_img.png",
-    productImg: "bg-custom-image1",
+    productImg: ["bg-custom-image1", "bg-custom-image2", "bg-custom-image3"],
     heard_img: "/heard_img.png",
     title: "Dress",
     price: "AED 120.00",
@@ -99,17 +102,16 @@ const cardData = [
     id: 11,
     user: "Kuku1222",
     img: "/kuki_img.png",
-    productImg: "bg-custom-image2",
+    productImg: ["bg-custom-image2", "bg-custom-image3", "bg-custom-image1"],
     heard_img: "/heard_img.png",
     title: "Dress",
     price: "AED 120.00",
-    
   },
   {
     id: 12,
     user: "Kuku1222",
     img: "/kuki_img.png",
-    productImg: "bg-custom-image3",
+    productImg: ["bg-custom-image3", "bg-custom-image1", "bg-custom-image2"],
     heard_img: "/heard_img.png",
     title: "Dress",
     price: "AED 120.00",
@@ -118,7 +120,7 @@ const cardData = [
     id: 13,
     user: "Kuku1222",
     img: "/kuki_img.png",
-    productImg: "bg-custom-image4",
+    productImg: ["bg-custom-image4", "bg-custom-image5", "bg-custom-image6"],
     heard_img: "/heard_img.png",
     title: "Dress",
     price: "AED 120.00",
@@ -127,7 +129,7 @@ const cardData = [
     id: 14,
     user: "Kuku1222",
     img: "/kuki_img.png",
-    productImg: "bg-custom-image5",
+    productImg: ["bg-custom-image5", "bg-custom-image6", "bg-custom-image4"],
     heard_img: "/heard_img.png",
     title: "Dress",
     price: "AED 120.00",
@@ -136,7 +138,7 @@ const cardData = [
     id: 15,
     user: "Kuku1222",
     img: "/kuki_img.png",
-    productImg: "bg-custom-image6",
+    productImg: ["bg-custom-image6", "bg-custom-image4", "bg-custom-image5"],
     heard_img: "/heard_img.png",
     title: "Dress",
     price: "AED 120.00",
@@ -145,7 +147,7 @@ const cardData = [
     id: 16,
     user: "Kuku1222",
     img: "/kuki_img.png",
-    productImg: "bg-custom-image2",
+    productImg: ["bg-custom-image1", "bg-custom-image2", "bg-custom-image3"],
     heard_img: "/heard_img.png",
     title: "Dress",
     price: "AED 120.00",
@@ -154,7 +156,7 @@ const cardData = [
     id: 17,
     user: "Kuku1222",
     img: "/kuki_img.png",
-    productImg: "bg-custom-image1",
+    productImg: ["bg-custom-image2", "bg-custom-image3", "bg-custom-image1"],
     heard_img: "/heard_img.png",
     title: "Dress",
     price: "AED 120.00",
@@ -163,7 +165,7 @@ const cardData = [
     id: 18,
     user: "Kuku1222",
     img: "/kuki_img.png",
-    productImg: "bg-custom-image3",
+    productImg: ["bg-custom-image3", "bg-custom-image1", "bg-custom-image2"],
     heard_img: "/heard_img.png",
     title: "Dress",
     price: "AED 120.00",
@@ -174,33 +176,62 @@ export const ImagesComponent = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const cardsPerPage = 9;
 
-  // Calculate indices for pagination
   const indexOfLastCard = currentPage * cardsPerPage;
   const indexOfFirstCard = indexOfLastCard - cardsPerPage;
   const currentCards = cardData.slice(indexOfFirstCard, indexOfLastCard);
 
-  // Calculate total pages
   const totalPages = Math.ceil(cardData.length / cardsPerPage);
 
   const handleNextPage = () => {
-    if (currentPage < totalPages) {
-      setCurrentPage(currentPage + 1);
-    }
+    if (currentPage < totalPages) setCurrentPage(currentPage + 1);
   };
 
   const handlePrevPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-    }
+    if (currentPage > 1) setCurrentPage(currentPage - 1);
   };
 
   const handlePageChange = (selectedPage) => {
     setCurrentPage(selectedPage);
   };
 
+  const innerSliderSettings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    arrows: true,
+    customPaging: (i) => (
+        <div
+        className={`custom-dot`}
+            style={{
+                height: "5px",
+                borderRadius: "20px",
+                background: "#eee",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                cursor: "pointer",
+                marginTop: "-80px"
+            }}
+        />
+    ),
+    appendDots: dots => (
+        <div
+            style={{
+                padding: "15px",
+                display: "flex",
+                justifyContent: "center",
+            }}
+        >
+            <ul style={{ display: "flex", gap: "5px" }}> {dots} </ul>
+        </div>
+    )
+}
+
   return (
-    <div className="p-6 min-h-screen font-karla">
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div className="p-6 h-auto w-auto font-karla">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
         {currentCards.map((card) => (
           <div key={card.id} className="flex flex-col">
             <div className="flex justify-between items-center space-x-4">
@@ -212,42 +243,41 @@ export const ImagesComponent = () => {
                     className="object-contain h-9 w-7"
                   />
                 </div>
-                <p className="font-semibold text-sm">{card.user}</p>
+                <p className="font-bold text-sm">{card.user}</p>
               </div>
-              <div className="flex items-center">
-                <button className="mt-2 px-4 sm:px-6 py-2 bg-custom-green text-white rounded-full">
-                  Follow
-                </button>
-              </div>
+              <button className="mt-2 px-4 sm:px-6 py-1 bg-custom-green text-white rounded-full">
+                Follow
+              </button>
             </div>
 
-            <div
-              className={`h-80 w-full sm:h-96 flex ${card.productImg} bg-cover bg-center bg-white rounded-2xl shadow-md p-6 mt-4 relative`}
-            >
-              <div className="absolute top-4 right-4 w-14 h-14 flex items-center justify-center rounded-full bg-custom-gray">
-                <img
-                  src={card.heard_img}
-                  alt="heard avatar"
-                  className="w-5 h-4"
-                />
-              </div>
-              <div className="flex items-end w-full">
-                <div className="flex w-full">
-                
-                <Link href="/product" passHref>
-                <button
-        className="bg-[#FDE504] w-[150px] h-[48px] rounded-[1rem] font-medium hover:opacity-80 transition-opacity mr-1"
-      >
-        Buy Now
-      </button>
-    </Link>
-                  
-                  <div className="h-10 w-16 flex items-center justify-center bg-white rounded-full text-center ml-4">
-                    <img src="handsake_img.jpg" alt="handshake avtar"/>
+
+            {/* Slider for product images */}
+            <Slider {...innerSliderSettings}>
+              {card.productImg.map((imgClass, index) => (
+                <div
+                  key={index}
+                  className={`h-64 sm:h-80 w-full ${imgClass} bg-cover bg-center rounded-2xl shadow-md p-6 mt-4 relative`}
+                >
+                  <div className="absolute top-4 right-4 w-12 h-12 flex items-center justify-center rounded-full bg-custom-gray">
+                    <img
+                      src={card.heard_img}
+                      alt="Heart icon"
+                      className="w-5 h-4"
+                    />
+                  </div>
+                  <div className="w-full mr-6 absolute bottom-4 flex justify-evenly">
+                    <button className="w-[70%] sm:px-10 bg-custom-yellow text-black rounded-2xl font-bold mr-1">
+                      Buy Now
+                    </button>
+                    <div className="h-10 w-10 flex items-center justify-center bg-white rounded-full mr-10">
+                      <img src="handsake_img.jpg" alt="Handshake icon" />
+                    </div>
+
                   </div>
                 </div>
-              </div>
-            </div>
+              ))}
+            </Slider>
+
             <h5 className="text-sm font-medium text-gray-700 mt-4">
               {card.title}
             </h5>
@@ -257,13 +287,14 @@ export const ImagesComponent = () => {
           </div>
         ))}
       </div>
-      {/* Use the Pagination component with dynamic page change */}
+
+      {/* Pagination Component */}
       <Pagination
         currentPage={currentPage}
         totalPages={totalPages}
         handleNextPage={handleNextPage}
         handlePrevPage={handlePrevPage}
-        handlePageChange={handlePageChange} // Pass the handlePageChange function
+        handlePageChange={handlePageChange}
       />
     </div>
   );
