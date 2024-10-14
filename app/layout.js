@@ -1,4 +1,5 @@
 
+import { Toaster } from "react-hot-toast";
 import "./globals.css";
 import { Karla, Luckiest_Guy, Palanquin_Dark } from 'next/font/google'
 
@@ -29,6 +30,7 @@ export default function RootLayout({ children }) {
         className={`${karla.variable} ${luckiestGuy.variable} ${palanquinDark.variable}`}
       >
         {children}
+        <Toaster/>
       </body>
     </html>
   );

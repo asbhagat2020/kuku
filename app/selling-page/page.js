@@ -1,4 +1,4 @@
-"use client"; 
+"use client";
 import Header from '@/components/Header';
 import { MainComponent } from '../../components/MainComponent';
 import Footer from '@/components/Footer';
@@ -16,5 +16,4 @@ const Page = () => {
   );
 };
 
-// Export as default
 export default Page;

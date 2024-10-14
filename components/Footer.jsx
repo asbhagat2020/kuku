@@ -1,12 +1,35 @@
+"use client"
 import Image from 'next/image'
 import React from 'react'
-
+import toast from 'react-hot-toast';
+import { useState } from 'react';
+import { usePathname } from 'next/navigation';
+import Link from 'next/link';
 const Footer = () => {
+    const notify = () => toast.success('Suscription request sent');
+    const [email, setEmail] = useState('');
+    const [error, setError] = useState('');
+
+    const validateEmail = (email) => {
+        // Basic email validation regex
+        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return regex.test(email);
+    };
+
+    const handleSubscribe = () => {
+        if (!validateEmail(email)) {
+            setError('Please enter a valid email address.');
+            return;
+        }
+        setError('');
+        // Call your subscription logic or notification here
+        notify();
+    };
     return (
         <footer className='max-w-[1550px] mx-auto bg-[#FDE504] pt-12 pb-0'>
             <div className="px-4 sm:px-8 lg:px-[71px] grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-8 mb-16">
                 <FooterColumn title="About">
-                    <FooterLink href="#" highlighted>Contact Us</FooterLink>
+                    <FooterLink href="#">Contact Us</FooterLink>
                     <FooterLink href="#">About Us</FooterLink>
                     <FooterLink href="#">Locations</FooterLink>
                     <FooterLink href="#">Blogs</FooterLink>
@@ -29,7 +52,7 @@ const Footer = () => {
                 <FooterColumn title="Customer Service">
                     <FooterLink href="#">Size Guide</FooterLink>
                     <FooterLink href="#">Shipping Information</FooterLink>
-                    <FooterLink href="#">Wishlist</FooterLink>
+                    <FooterLink href="/wishlist">Wishlist</FooterLink>
                     <FooterLink href="#">FAQs</FooterLink>
                 </FooterColumn>
             </div>
@@ -41,19 +64,39 @@ const Footer = () => {
                         <h1 className="text-black text-3xl font-bold font-palanquin_dark">KUKU</h1>
                     </div>
                     <div className='flex gap-4'>
-                        <SocialIcon src='/fb_logo.svg' alt="Facebook" />
-                        <SocialIcon src='/x_logo.svg' alt="X" />
-                        <SocialIcon src='/linkedin_logo.svg' alt="LinkedIn" />
-                        <SocialIcon src='/insta_logo.svg' alt="Instagram" />
+                        <Link href='www.facebook.com' target='_blank'>
+                            <SocialIcon src='/fb_logo.svg' alt="Facebook" />
+                        </Link>
+                        <Link href='www.facebook.com' >
+                            <SocialIcon src='/x_logo.svg' alt="X" /></Link>
+                        <Link href='www.facebook.com' >
+                            <SocialIcon src='/linkedin_logo.svg' alt="LinkedIn" /></Link>
+                        <Link href='www.facebook.com' >
+                            <SocialIcon src='/insta_logo.svg' alt="Instagram" /></Link>
                     </div>
                 </div>
 
                 <div className='flex flex-col gap-4 items-center'>
-                    <p className="text-[#6a6a6a] text-sm font-extrabold font-karla uppercase">Get special offers in our Newsletter</p>
-                    <div className="w-full max-w-md flex flex-col sm:flex-row items-center gap-2 p-2 rounded-[20px] border border-black">
-                        <input type="email" placeholder="Enter your email" className="flex-grow p-2 bg-transparent text-[#383838] text-sm font-normal font-karla" />
-                        <button className="w-full sm:w-auto px-6 py-3 bg-[#e4086f] rounded-[15px] text-[#fde504] text-base font-bold font-karla">Subscribe</button>
+                    <p className="text-[#6a6a6a] text-sm font-extrabold font-karla uppercase">
+                        Get special offers in our Newsletter
+                    </p>
+                    <div className="w-fit max-w-md flex flex-col sm:flex-row items-center gap-2 p-2 rounded-[20px] border border-black">
+                        <input
+                            required
+                            type="email"
+                            placeholder="Enter your email"
+                            className="flex-grow p-2 bg-transparent text-[#383838] text-sm font-normal font-karla outline-none"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                        />
+                        <button
+                            onClick={handleSubscribe}
+                            className="w-full sm:w-auto px-6 py-3 bg-[#e4086f] rounded-[15px] text-[#fde504] text-base font-bold font-karla"
+                        >
+                            Subscribe
+                        </button>
                     </div>
+                    {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
                 </div>
 
                 <div className='flex flex-col gap-4 items-center md:items-end'>
@@ -66,9 +109,9 @@ const Footer = () => {
                 <div className='grid grid-cols-1 sm:grid-cols-3 gap-4 items-center'>
                     <div className='flex gap-2 justify-center sm:justify-start'>
                         <PaymentIcon src='/paypal.svg' />
-                        <PaymentIcon src='/paypal.svg' />
-                        <PaymentIcon src='/paypal.svg' />
-                        <PaymentIcon src='/paypal.svg' />
+                        <PaymentIcon src='/fontisto_american-express.svg' />
+                        <PaymentIcon src='/mastercard.svg' />
+                        <PaymentIcon src='/fontisto_visa.svg' />
                     </div>
                     <p className="text-white text-xs font-normal font-karla text-center">Copyright © 2024 Kuku. All Rights Reserved.</p>
                     <div className='flex flex-wrap gap-2 justify-center sm:justify-end'>
@@ -95,11 +138,16 @@ const FooterColumn = ({ title, children }) => (
     </div>
 )
 
-const FooterLink = ({ href, children, highlighted }) => (
-    <a href={href} className={`text-base font-normal font-karla ${highlighted ? 'text-[#e6207d]' : 'text-[#6a6a6a]'}`}>
-        {children}
-    </a>
-)
+const FooterLink = ({ href, children }) => {
+    const pathname = usePathname();
+    const isActive = pathname === href;
+
+    return (
+        <a href={href} className={`text-base font-normal font-karla ${isActive ? 'text-[#e4086f]' : 'text-[#6a6a6a]'} hover:text-[#e4086f]`}>
+            {children}
+        </a>
+    );
+};
 
 const SocialIcon = ({ src, alt }) => (
     <Image src={src} width={24} height={24} alt={alt} />

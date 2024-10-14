@@ -2,12 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url('https://fonts.googleapis.com/css2?family=Karla:wght@400;700&display=swap');
+
+body {
+  font-family: 'Karla', sans-serif;
+}
+
 
 /* Hide the default checkbox */
 .custom-checkbox input {
     display: none;
   }
-  
+
   /* Create a custom checkbox */
   .custom-checkbox .checkmark {
     width: 30px;
@@ -19,7 +25,7 @@
     cursor: pointer;
     transition: background-color 0.3s ease;
   }
-  
+
   /* Add tick mark when checked */
   .custom-checkbox input:checked + .checkmark::after {
     content: "";
@@ -32,7 +38,7 @@
     left: 8px;
     transform: rotate(45deg);
   }
-  
+
   /* Change background color when checked */
   .custom-checkbox input:checked + .checkmark {
     background-color: #e4086f;
@@ -78,3 +84,14 @@ margin-left: 45px;
   .custom-checkbox input:checked + .checkmark {
     background-color: #e4086f;
   }
+  .slick-dots li {
+    width: 20px !important;
+}
+.slick-dots li button:before {
+    display: none;
+}
+.slick-dots li.slick-active .custom-dot {
+    width: 30px;
+    margin-right: 5px !important;
+
+}

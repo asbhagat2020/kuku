@@ -18,7 +18,7 @@ const StriteSection = () => {
     ];
 
     return (
-        <div className="relative max-w-[1550px] mx-auto h-[800px] overflow-hidden"
+        <div className="relative max-w-[1550px] mx-auto min-h-[1050px] overflow-hidden"
         style={{
             backgroundImage: "url('/strite_bg.png')",
             backgroundSize: 'cover',
@@ -26,8 +26,8 @@ const StriteSection = () => {
             backgroundRepeat: 'no-repeat'
           }}
         >
-            <div className='absolute   left-[450px] right-0 top-[80px] z-10'>
-                <Image unoptimized={true} alt='' width={550} height={576} src='/teenagers.png' />
+            <div className='absolute left-[0px] md:left-[100px] top-[350px] lg:left-[250px]   xl:left-[450px] lg:top-[350px] z-10'>
+                <Image unoptimized alt='' width={550} height={576} src='/teenagers.png' />
             </div>
             {/* First marquee (top-left to bottom-right) */}
             <div className="absolute inset-0 -left-1/2 -top-1/2 w-[200%] h-[200%] transform rotate-[20deg]">

@@ -86,15 +86,15 @@ const MarketPlace = () => {
     ];
 
     return (
-        <div ref={triggerRef} className="relative overflow-hidden mt-[-10px] h-[900px]">
+        <div ref={triggerRef} className="relative overflow-hidden mt-[-10px] h-[900px] max-w-[1550px] mx-auto">
             <div className='absolute top-[-10px] right-0 z-10'>
-                <Image width={100} height={100} src='/market_flower.png'/>
+                <Image width={100} height={100} src='/market_flower.png' alt=""/>
             </div>
-            <div ref={sectionRef} className={`flex ${isMobile ? 'w-[700%]' : 'w-[200%]'} h-[906px] transform`}>
+            <div ref={sectionRef} className={`flex ${isMobile ? 'w-[200%]' : 'w-[200%]'} h-[906px] transform`}>
 
                 {/* Panels for cards */}
                 {cardData.map((card, index) => (
-                    <div key={index} className="panel w-full h-full bg-red-600  relative overflow-hidden flex items-center justify-center "
+                    <div key={index} className="panel w-full h-full bg-white  relative overflow-hidden flex items-center justify-center "
                         style={{
                             backgroundImage: "url('marketPlace_BG.png')",
                             backgroundSize: 'cover',
@@ -102,8 +102,8 @@ const MarketPlace = () => {
                             backgroundRepeat: 'no-repeat'
                         }}
                     >
-                        <div className="px-[27px] lg:px-0 w-[600px]">
-                            <div className="text-white  text-center text-7xl lg:text-5xl font-bold font-luckiest">
+                        <div className="px-[27px] lg:px-0 lg:w-[600px]">
+                            <div className="text-white  text-center text-2xl lg:text-5xl font-bold font-luckiest">
                                {card.title}
                             </div>
                         </div>
