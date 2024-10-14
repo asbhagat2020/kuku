@@ -41,7 +41,7 @@ export const SideBar = () => {
   return (
     <>
       {/* Hamburger Icon for Mobile - Sticky */}
-      <div className="lg:hidden fixed top-5 left-0 p-4">
+      <div className="lg:hidden sticky top-22 left-0 ">
         <button onClick={toggleSidebar} className="text-custom-pink text-3xl focus:outline-none">
           <FiMenu />
         </button>
@@ -50,7 +50,7 @@ export const SideBar = () => {
       {/* Sidebar */}
       <div
         ref={sidebarRef} // Attach the ref to the sidebar
-        className={`fixed lg:sticky top-0 left-0 h-auto lg:h-[calc(100vh-250px)] w-64 bg-white z-40 transform ${
+        className={`fixed lg:sticky top-20 left-0 h-auto lg:h-[calc(100vh-200px)] w-64 bg-white shadow-md p-4 z-40 transform ${
           isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
         } transition-transform lg:translate-x-0 lg:w-80 lg:mt-10 lg:ml-2 lg:block overflow-y-auto`}
       >
@@ -67,9 +67,11 @@ export const SideBar = () => {
                 aria-controls="category-options"
               >
                 <label className="font-semibold mb-2">Category</label>
-                <span className="text-gray-500">
+                 <div className='h-auto w-auto p-2 bg-gray-200 rounded-full'>
+                 <span className="text-gray-500">
                   {openDropdown === 'category' ? <FiChevronUp /> : <FiChevronDown />}
                 </span>
+                 </div>
               </div>
               {openDropdown === 'category' && (
                 <div id="category-options" className="flex flex-col space-y-1 mt-2 ml-3">
@@ -103,9 +105,11 @@ export const SideBar = () => {
                 aria-controls="price-options"
               >
                 <label className="font-semibold mb-2">Price</label>
+                <div className='h-auto w-auto p-2 bg-gray-200 rounded-full'>
                 <span className="text-gray-500">
                   {openDropdown === 'price' ? <FiChevronUp /> : <FiChevronDown />}
                 </span>
+                </div>
               </div>
               {openDropdown === 'price' && (
                 <div id="price-options" className="flex flex-col space-y-1 mt-2 ml-3">
@@ -139,9 +143,11 @@ export const SideBar = () => {
                 aria-controls="size-options"
               >
                 <label className="font-semibold mb-2">Size</label>
+              <div className='h-auto w-auto p-2 bg-gray-200 rounded-full'>
                 <span className="text-gray-500">
                   {openDropdown === 'size' ? <FiChevronUp /> : <FiChevronDown />}
                 </span>
+                </div>
               </div>
               {openDropdown === 'size' && (
                 <div id="size-options" className="flex flex-col space-y-1 mt-2 ml-3">
@@ -175,9 +181,11 @@ export const SideBar = () => {
                 aria-controls="condition-options"
               >
                 <label className="font-semibold mb-2">Condition</label>
+                <div className='h-auto w-auto p-2 bg-gray-200 rounded-full'>
                 <span className="text-gray-500">
                   {openDropdown === 'condition' ? <FiChevronUp /> : <FiChevronDown />}
                 </span>
+                </div>
               </div>
               {openDropdown === 'condition' && (
                 <div id="condition-options" className="flex flex-col space-y-1 mt-2 ml-3">

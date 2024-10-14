@@ -1,7 +1,7 @@
-import React from 'react';
+import React from "react";
 // import { ImagesComponent } from './ImagesComponent';
-import { SideBar } from './SideBar';
-import { ImagesComponent } from './ImagesComponent';
+import { SideBar } from "./SideBar";
+import { ImagesComponent } from "./ImagesComponent";
 
 export const MainComponent = () => {
   return (
