@@ -425,7 +425,7 @@ const ProductCard = () => {
               </span>
             </div>
             <div>
-              <div className="text-[#070707] font-[15px]  font-karla mt-3 mb-3">
+              <div className="text-[#070707] text-[15px] font-bold font-karla mt-3 mb-3  ">
                 Quote your price
               </div>
             </div>
@@ -463,7 +463,7 @@ const ProductCard = () => {
               Suggested
             </div>
 
-            <p className="text-sm text-[#525252] mb-4 font-karla">
+            <p className="text-sm font-bold text-[#525252] mb-4 font-karla">
               You can only make one offer per item. If the seller accepts your
               offer, you’ll be notified to place the order. Other users can
               still buy the item before you.
@@ -472,7 +472,7 @@ const ProductCard = () => {
             <div className="justify-center flex-col ">
               <button
                 onClick={handleOpenModal}
-                className={`bg-[#FDE504] text-[#E4086F] text-[20px] font-karla rounded-lg w-[440px] h-[65px] ${
+                className={`bg-[#FDE504] text-[#E4086F] text-[20px] font-bold font-karla rounded-lg w-[440px] h-[65px] ${
                   isSubmitDisabled ? "opacity-50 cursor-not-allowed" : ""
                 }`}
                 disabled={isSubmitDisabled}
@@ -481,7 +481,7 @@ const ProductCard = () => {
               </button>
               <button
                 onClick={handleCloseOfferPopup}
-                className="border-[#F7B5D4] text-[#E4086F] text-[20px] font-karla rounded-lg px-4 py-2 border w-[455px] h-[65px] mt-3"
+                className="border-[#F7B5D4] text-[#E4086F] text-[20px] font-bold  font-karla rounded-lg px-4 py-2 border w-[455px] h-[65px] mt-3"
               >
                 CANCEL
               </button>

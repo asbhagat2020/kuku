@@ -1,8 +1,10 @@
 
 "use client";
 import Image from 'next/image';
-import React, { useEffect, useRef, useState } from 'react';
-import NotificationPanel from './home/NotificationPanel';
+
+import React, { useState, useEffect, useRef } from 'react';
+import NotificationPanel from './home/NotificationPanel'; // Import the NotificationPanel component
+
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 
@@ -15,7 +17,9 @@ const Header = () => {
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
   const [hamburger, setHamburger] = useState(false);
   const path = usePathname();
+  const panelRef = useRef(null);
   const searchRef = useRef(null);
+
   // Notifications data
   const notifications = [
     {
@@ -98,6 +102,23 @@ const Header = () => {
         setIsSearchVisible(false);
       }
     };
+
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (panelRef.current && !panelRef.current.contains(event.target)) {
+        setIsNotificationVisible(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [panelRef]);
+
+
 
     if (typeof document !== 'undefined') {
       document.addEventListener('mousedown', handleClickOutside);
@@ -275,9 +296,17 @@ const Header = () => {
           </div>
         </div>
 
-        {/* Render NotificationPanel conditionally */}
-        {isNotificationVisible && <NotificationPanel notifications={notifications} offers={offers} />}
-      </div></header>
+
+      {/* Render NotificationPanel conditionally */}
+      {isNotificationVisible && (
+        <div ref={panelRef}>
+          <NotificationPanel notifications={notifications} offers={offers} />
+        </div>
+      )}
+    </div>
+
+      </header>
+
   );
 };
 
