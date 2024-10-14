@@ -6,6 +6,7 @@ import { Pagination } from "./Pagination"; // Import the Pagination component
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import Image from 'next/image';
 
 const cardData = [
   {
@@ -230,7 +231,7 @@ export const ImagesComponent = () => {
 }
 
   return (
-    <div className="p-6 h-auto w-auto font-karla">
+    <div className="p-6 ml-8 h-auto w-auto font-karla">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
         {currentCards.map((card) => (
           <div key={card.id} className="flex flex-col">
@@ -270,7 +271,8 @@ export const ImagesComponent = () => {
                       Buy Now
                     </button>
                     <div className="h-10 w-10 flex items-center justify-center bg-white rounded-full mr-10">
-                      <img src="handsake_img.jpg" alt="Handshake icon" />
+                      {/* <img src="handshake_img.png" alt="Handshake icon" /> */}
+                      <Image unoptimized width={30} height={30} src="handshake_img.png" alt="Handshake icon" />
                     </div>
 
                   </div>
