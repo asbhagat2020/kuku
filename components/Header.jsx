@@ -98,35 +98,27 @@ const Header = () => {
   const cartPath = path === '/cart'
   useEffect(() => {
     const handleClickOutside = (event) => {
+      // Check if click was outside the search box
       if (searchRef.current && !searchRef.current.contains(event.target)) {
         setIsSearchVisible(false);
       }
-    };
-
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
+      // Check if click was outside the notification panel
       if (panelRef.current && !panelRef.current.contains(event.target)) {
         setIsNotificationVisible(false);
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [panelRef]);
-
-
-
+    // Add event listener
     if (typeof document !== 'undefined') {
       document.addEventListener('mousedown', handleClickOutside);
     }
+
+    // Cleanup function
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [searchRef]);
+  }, [searchRef, panelRef]);
+
 
   const handleHandburger = () => {
     setHamburger(!hamburger)
@@ -231,10 +223,10 @@ const Header = () => {
                   {/* Dropdown content goes here */}
                   <div className="px-4 py-2 hover:bg-gray-100 cursor-pointer font-karla">Account</div>
                   <Link href='/user_profile'>
-                  <div className="px-4  pb-2 hover:bg-gray-100 cursor-pointer font-karla">Your Profile</div></Link>
+                    <div className="px-4  pb-2 hover:bg-gray-100 cursor-pointer font-karla">Your Profile</div></Link>
                   <div className="px-4 pb-2  hover:bg-gray-100 cursor-pointer font-karla">Purchases</div>
                   <Link href='/wishlist'>
-                  <div className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla">Wishlist</div></Link>
+                    <div className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla">Wishlist</div></Link>
                   <Link href='/co2'>
                     <div className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla">Co2 Savings</div>
                   </Link>
@@ -297,15 +289,15 @@ const Header = () => {
         </div>
 
 
-      {/* Render NotificationPanel conditionally */}
-      {isNotificationVisible && (
-        <div ref={panelRef}>
-          <NotificationPanel notifications={notifications} offers={offers} />
-        </div>
-      )}
-    </div>
+        {/* Render NotificationPanel conditionally */}
+        {isNotificationVisible && (
+          <div ref={panelRef}>
+            <NotificationPanel notifications={notifications} offers={offers} />
+          </div>
+        )}
+      </div>
 
-      </header>
+    </header>
 
   );
 };
