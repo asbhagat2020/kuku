@@ -6,22 +6,23 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
 const Page = () => {
-  const style = {
-    backgroundColor: '#3AD385',
-    minHeight: '100vh',
-    margin: 0,
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: '20px',
-    flexDirection: 'column',
-    overflow: 'auto',
-  };
-
   return (
-    <div style={{ backgroundColor: '#3AD385', minHeight: '100vh', margin: 0 }}>
-      <Header backgroundColor="#FFF" /> 
-      <div style={style}>
+    <div style={{ minHeight: '100vh', margin: 0 }}>
+      <Header backgroundColor="#FFF" />
+      <div 
+        style={{ 
+          backgroundImage: "url('kukuit_bg.png')", 
+          minHeight: 'calc(100vh - 100px)', 
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          padding: '20px',
+          flexDirection: 'column',
+          overflow: 'auto',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }}
+      >
         <ItemList />
       </div>
       <Footer />
@@ -29,4 +30,4 @@ const Page = () => {
   );
 };
 
-export default Page;
+export default Page; 
