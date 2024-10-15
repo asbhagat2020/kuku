@@ -4,7 +4,8 @@ import Link from "next/link";
 import Image from "next/image";
 import amiriImg from "../public/product-image.png";
 import kukuLogo from "../public/emojiKuku.png";
-import { useState } from "react";
+import CustomCalendar from "./CustomCalendar";
+import { useState,useEffect, useRef } from "react";
 import {
   FaStar,
   FaRegHeart,
@@ -26,6 +27,45 @@ const ProductCard = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0); // State to keep track of the current image
 
   const images = [amiriImg, amiriImg];
+
+  // const [isRentPopupOpen, setIsRentPopupOpen] = useState(false);
+  const [isFormatted, setIsFormatted] = useState(''); // For storing the selected date
+  const [showCalendar, setShowCalendar] = useState(false);
+  const modalRef = useRef(null);
+
+  const openCalendar = () => {
+    setShowCalendar(true);
+  };
+
+  const closeCalendar = () => {
+    setShowCalendar(false);
+  };
+
+  const handleDateSelect = (date) => {
+    const formattedDate = new Date(date).toLocaleDateString('en-GB', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    });
+    setIsFormatted(formattedDate); // Assume date comes formatted from CustomCalendar
+    closeCalendar(); // Close the calendar after selecting a date
+  };
+
+
+  // Close modal when clicking outside of it
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (modalRef.current && !modalRef.current.contains(event.target)) {
+        handleCloseRentPopup();
+      }
+    };
+
+    // Attach the event listener
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   const handleOpenModal = () => {
     setIsModalOpen(true);
@@ -367,38 +407,66 @@ const ProductCard = () => {
           </div>
 
           {isRentPopupOpen && (
-            <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-              <div className="bg-white p-6 rounded-lg shadow-lg w-[400px] text-center">
-                <h2 className="text-black text-[20px] font-bold mb-4">
-                  Rental Price: AED 70
-                </h2>
-
-                <label htmlFor="rentalDate" className="block text-left mb-2">
-                  Choose Date
-                </label>
-                <input
-                  type="date"
-                  id="rentalDate"
-                  value={rentalDate}
-                  onChange={(e) => setRentalDate(e.target.value)}
-                  className="border border-gray-300 rounded-md p-2 w-full mb-4"
-                />
-
-                <button
-                  onClick={handleProceed}
-                  className="bg-blue-500 text-white px-4 py-2 rounded-md"
-                >
-                  Proceed
-                </button>
-                <button
-                  onClick={handleCloseRentPopup}
-                  className="ml-2 bg-gray-300 text-black px-4 py-2 rounded-md"
-                >
-                  Close
-                </button>
-              </div>
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+          <div
+            ref={modalRef} // Attach ref to the modal content
+            className="bg-white p-6 rounded-lg shadow-lg w-[400px] text-start"
+          >
+            <div>
+              <span className="text-[#E4086F] text-[14px] font-karla font-bold capitalize tracking-[1.12px] break-words">
+                Rental Price: 
+              </span>
+              <span className="text-[#070707] text-[14px] font-karla font-bold capitalize tracking-[1.12px] break-words">
+                AED 70
+              </span>
             </div>
-          )}
+
+            <label
+              htmlFor="rentalDate"
+              className="block text-left mb-[20px] mt-[20px] cursor-pointer text-[#070707] text-[15px] font-karla font-bold break-words"
+              onClick={openCalendar}
+            >
+              Choose Date
+            </label>
+            <input
+              type="text"
+              id="rentalDate"
+              placeholder="Choose your rental dates"
+              value={isFormatted}
+              onClick={openCalendar}
+              readOnly
+              className="relative border border-gray-300 rounded-md p-2 mb-4 w-full text-[#4C5C6B] text-[16px] font-karla font-normal break-words"
+            />
+
+            {showCalendar && (
+              <div className="absolute z-50">
+                <CustomCalendar onSelectDate={handleDateSelect} closeCalendar={closeCalendar} />
+              </div>
+            )}
+
+            <div className="w-full text-[#525252] text-[15px] font-karla font-bold break-words mb-[15px]">
+              You need to make a one-time deposit for renting the item. The deposit will be refunded post the return of the item.
+            </div>
+            <div className="w-full text-[#E4086F] text-[15px] font-karla font-bold underline break-words mb-[15px]">
+              View our rental policy
+            </div>
+
+            <button
+              onClick={handleProceed}
+              className="px-4 py-2 w-full mb-2 text-[#E4086F] text-[20px] font-karla font-bold leading-[24px] break-words flex-1 h-[60px] bg-[#FDE504] rounded-[20px] flex justify-center items-center gap-[10px]"
+            >
+              PROCEED
+            </button>
+
+            <button
+              onClick={handleCloseRentPopup}
+              className="w-full text-[#E4086F] text-[20px] font-karla font-bold leading-[24px] break-words flex-1 h-[60px] rounded-[20px] border border-[#F7B5D4] flex justify-center items-center gap-[10px]"
+            >
+              CANCEL
+            </button>
+          </div>
+        </div>
+        )}
         </div>
       </div>
 
