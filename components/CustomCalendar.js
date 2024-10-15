@@ -69,7 +69,7 @@ const CustomCalendar = ({ onSelectDate }) => {
           onClick={() => !isBeforeToday && handleDateClick(day)}
           className={`h-10 w-10 flex items-center justify-center rounded-full cursor-pointer border 
             ${isBeforeToday ? 'bg-gray-200 cursor-not-allowed border-gray-300 opacity-50' : 'hover:bg-gray-200 border-gray-300'}
-            ${isSelected ? 'bg-[#FDE504] border-2 border-black' : ''}`}
+            ${isSelected ? 'bg-[#FDE504]  border-2 border-black' : ''}`}
         >
           {day}
         </div>

@@ -6,6 +6,7 @@ import amiriImg from "../public/product-image.png";
 import kukuLogo from "../public/emojiKuku.png";
 import CustomCalendar from "./CustomCalendar";
 import { useState,useEffect, useRef } from "react";
+import calendarImg from "../public/Calendar.png"
 import {
   FaStar,
   FaRegHeart,
@@ -428,16 +429,26 @@ const ProductCard = () => {
             >
               Choose Date
             </label>
-            <input
-              type="text"
-              id="rentalDate"
-              placeholder="Choose your rental dates"
-              value={isFormatted}
-              onClick={openCalendar}
-              readOnly
-              className="relative border border-gray-300 rounded-md p-2 mb-4 w-full text-[#4C5C6B] text-[16px] font-karla font-normal break-words"
-            />
-
+            <div className="flex w-full overflow-hidden items-center justify-between border border-gray-300 rounded-md">
+  <input
+    type="text"
+    id="rentalDate"
+    placeholder="Choose your rental dates"
+    value={isFormatted}
+    onClick={openCalendar} // This is the function to open the calendar
+    readOnly
+    className="relative p-2 text-[#4C5C6B] text-[16px] font-karla font-normal bg-no-repeat bg-right bg-[length:20px_20px] pr-10 outline-none"
+    style={{ width: 'calc(100% - 34px)' }}  
+  />
+<div className="w-[34px] h-[30px] px-[2px] cursor-pointer">
+  <Image
+    src={calendarImg}
+    alt="Calendar Icon"
+    className="w-[100%] h-[100%]"
+    onClick={() => document.getElementById('rentalDate').click()} // Trigger the input click when image is clicked
+  />
+  </div>
+</div>
             {showCalendar && (
               <div className="absolute z-50">
                 <CustomCalendar onSelectDate={handleDateSelect} closeCalendar={closeCalendar} />
@@ -467,6 +478,7 @@ const ProductCard = () => {
           </div>
         </div>
         )}
+ 
         </div>
       </div>
 
@@ -604,7 +616,11 @@ const ProductCard = () => {
         </div>
       )}
     </div>
+    
   );
+  
 };
+
+
 
 export default ProductCard;
