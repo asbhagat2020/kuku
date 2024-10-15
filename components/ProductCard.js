@@ -579,47 +579,48 @@ const ProductCard = () => {
       {/* Modal Section */}
       {isModalOpen && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center"
-          onClick={handleCloseModal} // Close modal when clicking outside
+        className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50" // Set a high z-index value
+        onClick={handleCloseModal} // Close modal when clicking outside
+      >
+        <div
+          className="bg-white p-6 rounded-lg shadow-lg w-[380px] h-[230px] text-center"
+          onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside the modal
         >
-          <div
-            className="bg-white p-6 rounded-lg shadow-lg w-[380px] h-[230px] text-center"
-            onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside the modal
-          >
-            {/* Tick Mark */}
-            <div className="flex justify-center items-center mb-5">
-              <div className="flex justify-center items-center w-[50px] h-[50px] bg-[#30BD75] border-4 border-[#9ae6b4] rounded-full">
-                {/* Light green border */}
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6 text-white"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M5 13l4 4L19 7"
-                  />
-                </svg>
-              </div>
-            </div>
-
-            {/* Title */}
-            <div className="text-[rgb(11,12,30)] text-[20px] font-bold text-center font-karla leading-tight">
-              <div>Your offer has been </div>
-              <div> sent to the seller</div>
-            </div>
-
-            {/* Description */}
-            <div className="text-[#7F808C] text-[16px] font-normal font-karla leading-tight mt-1">
-              <div> Now sit back and relax while the seller</div>
-              <div> takes some time to review your offer</div>
+          {/* Tick Mark */}
+          <div className="flex justify-center items-center mb-5">
+            <div className="flex justify-center items-center w-[50px] h-[50px] bg-[#30BD75] border-4 border-[#9ae6b4] rounded-full">
+              {/* Light green border */}
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6 text-white"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M5 13l4 4L19 7"
+                />
+              </svg>
             </div>
           </div>
+      
+          {/* Title */}
+          <div className="text-[rgb(11,12,30)] text-[20px] font-bold text-center font-karla leading-tight">
+            <div>Your offer has been </div>
+            <div> sent to the seller</div>
+          </div>
+      
+          {/* Description */}
+          <div className="text-[#7F808C] text-[16px] font-normal font-karla leading-tight mt-1">
+            <div> Now sit back and relax while the seller</div>
+            <div> takes some time to review your offer</div>
+          </div>
         </div>
+      </div>
+      
       )}
     </div>
     

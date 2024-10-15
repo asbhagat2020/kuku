@@ -51,39 +51,49 @@ const RecommendationCard = ({ imageList, price }) => {
 
   return (
     <div className="p-2 w-64 shrink-0 relative">
-      {/* Image Slider */}
-      <Slider {...sliderSettings} className="relative">
-        {imageList.map((image, index) => (
-          <div key={index}>
-            <img
-              src={image}
-              alt={`Product ${index + 1}`}
-              className="h-80 w-full object-cover rounded-lg" // Set a consistent height here
-            />
-          </div>
-        ))}
-      </Slider>
-
-      <div className="absolute top-4 right-4 flex items-center justify-center">
-        <div className="bg-transparent border border-white rounded-full p-2 opacity-70">
-          <IoHeartOutline className="text-white w-5 h-5" />
-        </div>
+  {/* Image Slider */}
+  <Slider {...sliderSettings} className="relative">
+    {imageList.map((image, index) => (
+      <div key={index}>
+        <img
+          src={image}
+          alt={`Product ${index + 1}`}
+          className="h-80 w-full object-cover rounded-lg" // Set a consistent height here
+        />
       </div>
+    ))}
+  </Slider>
 
-      <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex items-center justify-center mb-8">
-        <Link href="/product" passHref>
-          <button className="bg-[#FDE504] w-[150px] h-[48px] rounded-[1rem] font-semibold hover:opacity-80 transition-opacity mr-1">
-            Buy Now
-          </button>
-        </Link>
-
-        <div className="flex items-center bg-white rounded-full p-2 shadow-md">
-        <FaHandshake className="mr-2 w-5 h-5" style={{ fill: "none", stroke: "#000000", strokeWidth: "25" }} />
-        </div>
-      </div>
-
-      <p className="text-lg mt-1 font-semibold text-center">AED {price}</p>
+  {/* Favorite Icon */}
+  <div className="absolute top-4 right-4 flex items-center justify-center">
+    <div className="bg-transparent border border-white rounded-full p-2 opacity-70">
+      <IoHeartOutline className="text-white w-5 h-5" />
     </div>
+  </div>
+
+  {/* Buy Now Button and Handshake Icon */}
+  <div
+  className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex items-center justify-center"
+  style={{ marginBottom: '5rem' }}
+>
+    <Link href="/product" passHref>
+      <button className="bg-[#FDE504] w-[150px] h-[48px] rounded-[1rem] font-semibold hover:opacity-80 transition-opacity mr-1">
+        Buy Now
+      </button>
+    </Link>
+
+    <div className="flex items-center bg-white rounded-full p-2 shadow-md ml-2">
+      <FaHandshake className="w-5 h-5" style={{ fill: "none", stroke: "#000000", strokeWidth: "25" }} />
+    </div>
+  </div>
+
+  {/* Dress and Price */}
+  <div className="mt-4">
+    <p className="text-sm font-semibold text-left">Dress</p> {/* Aligned to the left */}
+    <p className="text-lg font-semibold text-left">AED {price}</p> {/* Aligned to the left */}
+  </div>
+</div>
+
   );
 };
 
