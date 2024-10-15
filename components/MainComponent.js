@@ -6,12 +6,12 @@ import { ImagesComponent } from "./ImagesComponent";
 export const MainComponent = () => {
   return (
     <div className="max-w-screen-xl mx-auto px-4">
-      <div className="flex flex-col lg:flex-row">
+      <div className="h-auto lg:w-[1297px] flex flex-col lg:flex-row">
         <SideBar />
         <main className="flex-1 mt-4 lg:mt-0">
           <ImagesComponent />
         </main>
       </div>
-    </div>
+     </div>
   );
 };

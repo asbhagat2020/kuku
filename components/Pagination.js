@@ -25,7 +25,7 @@ export const Pagination = ({
         <select
           onChange={handleChange}
           value={currentPage}
-          className="appearance-none bg-white border border-gray-300 rounded-md py-2 mr-2 pl-3 pr-10 text-gray-700 leading-tight focus:outline-none "
+          className="appearance-none bg-white border-[1px] border-gray-300 rounded-md py-2 mr-2 pl-3 pr-10 text-gray-700 leading-tight focus:outline-none "
           style={{ minWidth: '10px' }} // Adjust width as needed
         >
           {pageNumbers.map((number) => (
@@ -45,7 +45,7 @@ export const Pagination = ({
       <button
         onClick={() => handlePrevPage(currentPage - 1)}
         disabled={currentPage === 1}
-        className={`ml-2 w-8 h-8 p-4 border rounded-l-md flex items-center justify-center ${
+        className={`ml-2 w-8 h-8 p-4 border-[1px] rounded-l-md flex items-center justify-center ${
           currentPage === 1 ? "text-gray-400 cursor-not-allowed" : "text-black hover:bg-gray-200"
         }`}
       >
@@ -57,7 +57,7 @@ export const Pagination = ({
         <button
           key={number}
           onClick={() => handlePageChange(number)}
-          className={`w-8 h-8 p-4 border flex items-center justify-center ${
+          className={`w-8 h-8 p-4 border-[1px] flex items-center justify-center ${
             number === currentPage ? "bg-gray-200 text-gray-400" : "hover:bg-gray-100"
           }`}
         >
@@ -69,7 +69,7 @@ export const Pagination = ({
       <button
         onClick={() => handleNextPage(currentPage + 1)}
         disabled={currentPage === totalPages}
-        className={`w-8 h-8 p-4 border rounded-r-md flex items-center justify-center ${
+        className={`w-8 h-8 p-4 border-[1px] rounded-r-md flex items-center justify-center ${
           currentPage === totalPages ? "text-gray-400 cursor-not-allowed" : "text-black hover:bg-gray-200"
         }`}
       >
