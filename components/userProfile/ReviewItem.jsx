@@ -3,17 +3,19 @@ import Image from 'next/image';
 
 const ReviewItem = () => {
   return (
-    <div className="min-h-[337px] flex-col justify-start items-start gap-[30px] flex border shadow rounded-lg px-[20px] lg:px-[56px] py-[30px]">
-      <div className="self-stretch justify-start items-center xl:gap-[661px] gap-10 inline-flex">
+    <div className="min-h-[337px] flex-col justify-start items-start gap-[30px] flex shadow rounded-lg px-[20px] lg:px-[56px] py-[30px]">
+      <div className="self-stretch justify-between items-center xl:gap-[661px] gap-10 inline-flex">
         <div className="justify-start items-center gap-[18px] flex">
           <Image width={60} height={60} src='/profile_image.svg' alt='Profile Image' />
           <div className="text-black lg:text-xl font-medium font-karla leading-normal">Zara Fathima</div>
         </div>
         <div className="flex gap-5">
-          <div className='flex  gap-1'>
-            <Image width={26} height={26} src='/rating.svg' alt='Rating' />
-            <Image width={26} height={26} src='/rating.svg' alt='Rating' />
-            <Image width={26} height={26} src='/rating.svg' alt='Rating' />
+          <div className='flex  gap-2'>
+            <Image width={26} height={26} src='/Star_blue.svg' alt='Rating' />
+            <Image width={26} height={26} src='/Star_blue.svg' alt='Rating' />
+            <Image width={26} height={26} src='/Star_blue.svg' alt='Rating' />
+            <Image width={26} height={26} src='/star_gray.svg' alt='Rating' />
+            <Image width={26} height={26} src='/star_gray.svg' alt='Rating' />
           </div>
           <div className="text-[#9c9c9c] lg:text-xl font-normal font-karla leading-normal">1 hour ago</div>
         </div>

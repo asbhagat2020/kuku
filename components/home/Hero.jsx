@@ -16,16 +16,16 @@ const Hero = () => {
     return (
         <div className='relative max-w-[1550px] mx-auto h-[1024px] bg-gradient-to-l from-[#F3B202] via-[#F4B202] to-[#EDA702] overflow-hidden pb-5'>
             <div className='absolute top-10 left-0 w-full h-[90%]'>
-                <Image unoptimized={true} src='/home_bg.png' layout='fill' objectFit='cover' />
+                <Image unoptimized={true} src='/home_bg.png' layout='fill' objectFit='cover' alt='home_bg' />
             </div>
             <div className='absolute top-[100px] left-[350px] w-full h-[90%]'>
-                <Image width={60} height={60} unoptimized src='/star.png' objectFit='cover' />
+                <Image width={60} height={60} unoptimized src='/star.png' objectFit='cover' alt='star'/>
             </div>
             <div className='absolute top-48 right-[350px]'>
-                <Image width={60} height={60} unoptimized src='/smile.png' objectFit='cover' />
+                <Image width={60} height={60} unoptimized src='/smile.png' objectFit='cover' alt='smile'/>
             </div>
             <div className='absolute top-[500px] left-[380px] w-full h-[90%]'>
-                <Image width={60} height={60} unoptimized src='/flower.png' objectFit='cover' />
+                <Image width={60} height={60} unoptimized src='/flower.png' objectFit='cover' alt='flower' />
             </div>
             <div className="h-[42px] w-full lg:px-[427px] py-4 bg-gradient-to-r from-[#eda702] via-[#fde504] to-[#eda702] justify-center items-center gap-2.5 inline-flex">
                 <div className="text-center text-[#383838] text-base font-bold font-karla leading-tight">Discover preloved treasures and sell your wardrobe favorites with ease.</div>
@@ -38,7 +38,7 @@ const Hero = () => {
                     <div className="h-[72px] px-11 py-[15px] bg-[#e4086f] rounded-[22px] justify-start items-center inline-flex">
                         <button onClick={handleSellNowClick} className="text-[#fde504] text-xl font-bold font-karla leading-normal">Sell Now</button>
                     </div>
-                    <div className="h-[72px] px-11 py-[15px] bg-white/50 rounded-[22px] backdrop-blur-xl justify-start items-center inline-flex">
+                    <div className="h-[72px] px-11 py-[15px] bg-white/50 rounded-[22px] backdrop-blur-xl justify-start items-center inline-flex gap-[15px]">
                         <button className="text-white text-xl font-bold font-karla leading-normal">Explore</button>
                         <Image width={30} height={30} src='/right_arrow.png' alt='' />
                     </div>

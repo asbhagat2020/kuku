@@ -21,9 +21,11 @@ const Selling = () => {
                     </div>
                 </Link>
             </div>
-            <div className='py-[113px]'>
+            <div className='pt-[113px] pb-[65px]'>
                 <Carousels />
             </div>
+            <Image unoptimized className='absolute bottom-[10%] left-[46px]' width={44} height={44} src='/selling_frame-1.png' alt='cube' />
+            <Image unoptimized className='absolute right-6 bottom-[0px]' width={44} height={24} src='/selling_frame2.svg' alt='cube' />
         </div>
     )
 }
