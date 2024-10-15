@@ -50,11 +50,11 @@ export const SideBar = () => {
       {/* Sidebar */}
       <div
         ref={sidebarRef} // Attach the ref to the sidebar
-        className={`fixed lg:sticky top-20 left-0 h-auto lg:h-[calc(100vh-200px)] w-64 bg-white shadow-md p-4 z-40 transform ${
+        className={`fixed lg:sticky top-20 left-0 h-auto lg:h-[calc(100vh-210px)] w-64 pl-0 pr-4 pt-4 pb-4 z-40 transform ${
           isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
         } transition-transform lg:translate-x-0 lg:w-80 lg:mt-10 lg:ml-2 lg:block overflow-y-auto`}
       >
-        <div className="p-4 lg:p-0">
+        <div className="p-4 lg:p-4 shadow-md bg-white">
           <h1 className="text-2xl text-custom-pink font-bold">Filter by</h1>
 
           <div className="mt-4 filter-section flex flex-col space-y-4">

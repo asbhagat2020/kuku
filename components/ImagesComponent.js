@@ -1,12 +1,12 @@
 "use client";
 
-import Link from 'next/link';
+import Link from "next/link";
 import { useState } from "react";
 import { Pagination } from "./Pagination"; // Import the Pagination component
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import Image from 'next/image';
+import Image from "next/image";
 
 const cardData = [
   {
@@ -194,7 +194,6 @@ export const ImagesComponent = () => {
   const handlePageChange = (selectedPage) => {
     setCurrentPage(selectedPage);
   };
-
   const innerSliderSettings = {
     dots: true,
     infinite: true,
@@ -203,32 +202,32 @@ export const ImagesComponent = () => {
     slidesToScroll: 1,
     arrows: true,
     customPaging: (i) => (
-        <div
+      <div
         className={`custom-dot`}
-            style={{
-                height: "5px",
-                borderRadius: "20px",
-                background: "#eee",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                cursor: "pointer",
-                marginTop: "-80px"
-            }}
-        />
+        style={{
+          height: "5px",
+          borderRadius: "20px",
+          background: "#eee",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          cursor: "pointer",
+          marginTop: "-80px",
+        }}
+      />
     ),
-    appendDots: dots => (
-        <div
-            style={{
-                padding: "15px",
-                display: "flex",
-                justifyContent: "center",
-            }}
-        >
-            <ul style={{ display: "flex", gap: "5px" }}> {dots} </ul>
-        </div>
-    )
-}
+    appendDots: (dots) => (
+      <div
+        style={{
+          padding: "15px",
+          display: "flex",
+          justifyContent: "center",
+        }}
+      >
+        <ul style={{ display: "flex", gap: "5px" }}> {dots} </ul>
+      </div>
+    ),
+  };
 
   return (
     <div className="p-6 ml-8 h-auto w-auto font-karla">
@@ -251,7 +250,6 @@ export const ImagesComponent = () => {
               </button>
             </div>
 
-
             {/* Slider for product images */}
             <Slider {...innerSliderSettings}>
               {card.productImg.map((imgClass, index) => (
@@ -267,14 +265,26 @@ export const ImagesComponent = () => {
                     />
                   </div>
                   <div className="w-full mr-6 absolute bottom-4 flex justify-evenly">
-                    <button className="w-[70%] sm:px-10 bg-custom-yellow text-black rounded-2xl font-bold mr-1">
-                      Buy Now
-                    </button>
-                    <div className="h-10 w-10 flex items-center justify-center bg-white rounded-full mr-10">
-                      {/* <img src="handshake_img.png" alt="Handshake icon" /> */}
-                      <Image unoptimized width={30} height={30} src="handshake_img.png" alt="Handshake icon" />
-                    </div>
+                    <Link href="/product" className="w-[70%]">
+                      {" "}
+                      {/* Ensure Link takes the full width */}
+                      <button className="w-full p-2 sm:px-10 bg-custom-yellow text-black rounded-2xl font-bold mr-1">
+                        Buy Now
+                      </button>
+                    </Link>
 
+                    <div className="h-10 w-10 flex items-center justify-center bg-white rounded-full ml-2 mr-10">
+                      {/* Handshake icon */}
+                      
+                        <Image
+                          unoptimized
+                          width={30}
+                          height={30}
+                          src="handshake_img.png"
+                          alt="Handshake icon"
+                        />
+                   
+                    </div>
                   </div>
                 </div>
               ))}
