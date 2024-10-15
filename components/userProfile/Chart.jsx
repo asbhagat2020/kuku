@@ -7,7 +7,7 @@ export const Chart= () => {
   const [chartData] = useState({
     series: [{
       name: "Desktops",
-      data: [10, 41, 35, 51, 49, 62, 69, 91, 148]
+      data: [10, 41, 35, 71, 49, 32, 69]
     }],
     options: {
       chart: {
@@ -21,27 +21,35 @@ export const Chart= () => {
         enabled: false
       },
       stroke: {
-        curve: 'straight'
+        curve: 'smooth',
       },
       title: {
         text: '',
         align: 'left'
       },
       grid: {
-        row: {
-          colors: ['#f3f3f3', 'transparent'],
-          opacity: 0.5
+        yaxis: {
+          lines: {
+            show: true,
+            color: '#000000',  // Red color for horizontal grid lines
+          }
+        },
+        xaxis: {
+          lines: {
+            show: false
+          }
         }
       },
-    
       xaxis: {
-        lines: {
-          show: true,
-          strokeWidth:10,
-          color: '#0000' // Increase this value to make horizontal lines bolder
+        categories: ['Week 1', 'Week 2', 'Week 3', 'Week 4','Week 5','Week 6','Week 7'],
+        axisTicks: {
+          color: '#000000' // Change this to your desired color
         },
-        categories: ['Week 1', 'Week 2', 'Week 3', 'Week 4','Week 5','Week 6','Week 7']
+        axisBorder: {
+          color: '#000000' // Change this to your desired color
+        }
       },
+
     }
   });
 

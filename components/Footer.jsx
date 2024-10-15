@@ -70,7 +70,7 @@ const Footer = () => {
                         <Link href='www.facebook.com' >
                             <SocialIcon src='/x_logo.svg' alt="X" /></Link>
                         <Link href='www.facebook.com' >
-                            <SocialIcon src='/linkedin_logo.svg' alt="LinkedIn" /></Link>
+                            <SocialIcon src='/linkedin.png' alt="LinkedIn" /></Link>
                         <Link href='www.facebook.com' >
                             <SocialIcon src='/insta_logo.svg' alt="Instagram" /></Link>
                     </div>
@@ -80,7 +80,7 @@ const Footer = () => {
                     <p className="text-[#6a6a6a] text-sm font-extrabold font-karla uppercase">
                         Get special offers in our Newsletter
                     </p>
-                    <div className="w-fit max-w-md flex flex-col sm:flex-row items-center gap-2 p-2 rounded-[20px] border border-black">
+                    <div className="w-fit max-w-md flex flex-col sm:flex-row items-center gap-2 p-2 rounded-[20px] border border-[#393939]">
                         <input
                             required
                             type="email"
@@ -100,8 +100,12 @@ const Footer = () => {
                 </div>
 
                 <div className='flex flex-col gap-4 items-center md:items-end'>
-                    <Image src='/googlePlay.png' width={143} height={41} alt='Google Play' />
-                    <Image src='/appStoreFooter.png' width={143} height={41} alt='App Store' />
+                    <Link href={'#'} target='_blank'>
+                        <Image src='/googlePlay.png' width={143} height={41} alt='Google Play' />
+                    </Link>
+                    <Link href={'#'} target='_blank'>
+                        <Image src='/appStoreFooter.png' width={143} height={41} alt='App Store' />
+                    </Link>
                 </div>
             </div>
 
@@ -150,7 +154,7 @@ const FooterLink = ({ href, children }) => {
 };
 
 const SocialIcon = ({ src, alt }) => (
-    <Image src={src} width={24} height={24} alt={alt} />
+    <Image unoptimized src={src} width={24} height={24} alt={alt} />
 )
 
 const PaymentIcon = ({ src }) => (

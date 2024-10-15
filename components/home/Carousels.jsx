@@ -132,7 +132,7 @@ const Carousels = () => {
                                 <button className="text-[#202020] text-base font-bold font-karla leading-tight">Buy Now</button>
                             </div></Link>
                             <div className="absolute bottom-6 right-5 z-10">
-                                <div className='h-[54px] p-[15px] bg-white rounded-[100px]'>
+                                <div className='h-[54px] p-[15px] bg-white rounded-[100px] cursor-pointer'>
                                     <Image alt='' width={24} height={24} src='hand_shake.svg' />
                                 </div>
                             </div>
