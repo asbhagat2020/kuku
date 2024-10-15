@@ -20,7 +20,7 @@ const innerSliderSettings = {
             style={{
                 height: "5px",
                 borderRadius: "20px",
-                background: "#eee",
+                background: "rgba(235, 235, 228, 0.4)",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",

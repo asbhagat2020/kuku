@@ -36,7 +36,7 @@ const DownloadKuku = () => {
                 )}
             </div>
             {/* Conditional stacking for mobile view */}
-            <div className={`flex ${isMobileOrTablet ? 'flex-col items-center' : 'justify-center gap-[100px]'} pt-[41px]`}>
+            <div className={`flex ${isMobileOrTablet ? 'flex-col items-center' : 'justify-center ml-3.5 gap-[150px]'} pt-[41px]`}>
                 <Link href={'#'}>
                     <Image width={284} height={111} src='/appstore.png' className={`w-full max-w-[284px] ${isMobileOrTablet ? 'mb-[20px]' : ''}`} alt='' />
                 </Link>

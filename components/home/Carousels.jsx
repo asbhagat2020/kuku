@@ -12,17 +12,17 @@ const Carousels = () => {
     const sliderRef = useRef(null)
 
     const product = [
-        { title: "Dress", price: "12 AED", image: ["/dress_1.png", "/dress_2.png", "/dress_2.png"] ,link:"/product"},
-        { title: "Dress", price: "12 AED", image: ["/dress_2.png", "/dress_2.png", "/dress_2.png"],link:"/product" },
-        { title: "Dress", price: "12 AED", image: ["/dress_3.png", "/dress_2.png", "/dress_2.png"],link:"/product" },
+        { title: "Dress", price: "12 AED", image: ["/dress_1.png", "/dress_3.png", "/dress_2.png"] ,link:"/product"},
+        { title: "Dress", price: "12 AED", image: ["/dress_2.png", "/dress_1.png", "/dress_2.png"],link:"/product" },
+        { title: "Dress", price: "12 AED", image: ["/dress_3.png", "/dress_3.png", "/dress_2.png"],link:"/product" },
+        { title: "Dress", price: "12 AED", image: ["/dress_1.png", "/dress_1.png", "/dress_2.png"],link:"/product" },
+        { title: "Dress", price: "12 AED", image: ["/dress_2.png", "/dress_3.png", "/dress_2.png"],link:"/product" },
+        { title: "Dress", price: "12 AED", image: ["/dress_3.png", "/dress_1.png", "/dress_2.png"],link:"/product" },
         { title: "Dress", price: "12 AED", image: ["/dress_1.png", "/dress_2.png", "/dress_2.png"],link:"/product" },
-        { title: "Dress", price: "12 AED", image: ["/dress_2.png", "/dress_2.png", "/dress_2.png"],link:"/product" },
-        { title: "Dress", price: "12 AED", image: ["/dress_2.png", "/dress_2.png", "/dress_2.png"],link:"/product" },
-        { title: "Dress", price: "12 AED", image: ["/dress_2.png", "/dress_2.png", "/dress_2.png"],link:"/product" },
+        { title: "Dress", price: "12 AED", image: ["/dress_2.png", "/dress_3.png", "/dress_2.png"],link:"/product" },
+        { title: "Dress", price: "12 AED", image: ["/dress_1.png", "/dress_3.png", "/dress_2.png"],link:"/product" },
         { title: "Dress", price: "12 AED", image: ["/dress_3.png", "/dress_2.png", "/dress_2.png"],link:"/product" },
-        { title: "Dress", price: "12 AED", image: ["/dress_1.png", "/dress_2.png", "/dress_2.png"],link:"/product" },
-        { title: "Dress", price: "12 AED", image: ["/dress_3.png", "/dress_2.png", "/dress_2.png"],link:"/product" },
-        { title: "Dress", price: "12 AED", image: ["/dress_2.png", "/dress_2.png", "/dress_2.png"],link:"/product" },
+        { title: "Dress", price: "12 AED", image: ["/dress_2.png", "/dress_1.png", "/dress_2.png"],link:"/product" },
         { title: "Dress", price: "12 AED", image: ["/dress_1.png", "/dress_2.png", "/dress_2.png"],link:"/product" },
     ]
 
@@ -93,7 +93,7 @@ const Carousels = () => {
                 style={{
                     height: "5px",
                     borderRadius: "20px",
-                    background: "#eee",
+                    background: "rgba(235, 235, 228, 0.4)",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
