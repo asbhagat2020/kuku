@@ -102,7 +102,7 @@ export default function Cart() {
 
             {/* Price and Discount */}
             <div className="flex flex-col justify-start items-start gap-2">
-              <div className="flex justify-start items-center gap-2">
+              <div className="flex justify-start items-center gap-1">
                 <div className="text-black text-[16px] font-bold font-karla leading-[16px]">
                   AED250.00
                 </div>
@@ -127,25 +127,25 @@ export default function Cart() {
         {/* Right Section: Coupon and Total Section */}
         <div className="lg:w-1/4 w-full mt-[-70px]">
           <div className="w-full h-auto bg-white shadow-md flex flex-col justify-center items-center gap-[21.6px] p-3 mb-4">
-            <div className="w-[210px] text-[#4f4f4f] text-[16px] font-normal font-karla">
+            <div className="w-full text-[#4f4f4f] text-[16px]  font-normal font-karla">
               Have a coupon?
             </div>
-            <div className="flex justify-start items-center gap-[17.6px]">
-              <div className="w-[180px] h-[36px] p-2 bg-white rounded-lg border border-[#f6b4d3] justify-start items-center gap-2 inline-flex">
+            <div className="flex w-full justify-start items-center gap-[17.6px] ">
+              <div className="w-[200px] h-[36px] p-2 bg-white rounded-lg border border-[#f6b4d3] justify-start items-center gap-2 inline-flex ">
                 <input
                   type="text"
                   placeholder="Add coupon"
-                  className="text-[#515151] text-sm font-normal font-karla"
+                  className="text-[#515151] text-sm font-normal outline-none font-karla"
                 />
               </div>
-              <button className="text-center text-[#e4086f] text-[16px] font-medium font-['IBM Plex Sans']">
+              <div className="text-center text-[#e4086f] text-[16px] font-medium font-['IBM Plex Sans']">
                 Apply
-              </button>
+              </div>
             </div>
           </div>
 
           {/* Pricing Summary Section */}
-          <div className="w-full bg-white p-3 rounded-lg shadow-md">
+          <div className="w-full bg-white p-3 border border-gray-100 rounded-lg shadow-xl">
             <div className="flex justify-between items-center mb-2">
               <div className="text-[#4f4f4f] text-[16px] font-normal font-karla leading-[27.19px]">
                 Subtotal:
@@ -171,7 +171,7 @@ export default function Cart() {
                 AED 225
               </div>
             </div>
-            <button className="w-[300px] h-[40px] p-2 bg-[#fde504] rounded-[16px] justify-center items-center mt-2 mb-2 ">
+            <button className="w-full h-[40px] p-2 bg-[#fde504] rounded-[16px] justify-center items-center mt-2 mb-2 ">
               <div className="text-center text-[#070707] text-[14px] text-base font-medium font-karla">
                 Checkout
               </div>
@@ -186,7 +186,7 @@ export default function Cart() {
               />
               <img className="h-[19.2px] w-auto" src="/Logo1.png" alt="Logo1" />
               <img className="h-[19.2px] w-auto" src="/Logo2.png" alt="Logo2" />
-              <img className="h-[19.2px] w-auto" src="/Logo.png" alt="Logo3" />
+              <img className="h-[19.2px] w-auto" src="/visa.png" alt="Logo3" />
               <img
                 className="h-[19.2px] w-auto"
                 src="/payment.png"

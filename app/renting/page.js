@@ -96,7 +96,7 @@ export default function Renting() {
 
         {/* Right Section: Coupon and Total Section */}
         <div className="lg:w-1/4 w-full mt-[-70px] ">
-          <div className="w-full bg-white p-3 rounded-lg shadow-md">
+          <div className="w-full bg-white p-3  border border-gray-100 rounded-lg shadow-xl">
             <div className="flex justify-between items-center mb-2">
               <div className="text-[#4f4f4f] text-[16px] font-normal font-karla leading-[27.19px]">
                 Rental Price
@@ -139,7 +139,7 @@ export default function Renting() {
               />
               <img className="h-[19.2px] w-auto" src="/Logo1.png" alt="Logo1" />
               <img className="h-[19.2px] w-auto" src="/Logo2.png" alt="Logo2" />
-              <img className="h-[19.2px] w-auto" src="/Logo.png" alt="Logo3" />
+              <img className="h-[19.2px] w-auto" src="/visa.png" alt="Logo3" />
               <img
                 className="h-[19.2px] w-auto"
                 src="/payment.png"
