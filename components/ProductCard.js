@@ -26,7 +26,7 @@ const ProductCard = () => {
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true); // State to disable/enable the submit button
   const [isModalOpen, setIsModalOpen] = useState(false); // State to control the modal
   const [currentImageIndex, setCurrentImageIndex] = useState(0); // State to keep track of the current image
-
+  const [isDateSelected, setIsDateSelected] = useState(false);
   const images = [amiriImg, amiriImg];
 
   // const [isRentPopupOpen, setIsRentPopupOpen] = useState(false);
@@ -48,6 +48,7 @@ const ProductCard = () => {
       month: '2-digit',
       year: 'numeric',
     });
+    setIsDateSelected(true);
     setIsFormatted(formattedDate); // Assume date comes formatted from CustomCalendar
     closeCalendar(); // Close the calendar after selecting a date
   };
@@ -437,6 +438,7 @@ const ProductCard = () => {
     value={isFormatted}
     onClick={openCalendar} // This is the function to open the calendar
     readOnly
+    required
     className="relative p-2 text-[#4C5C6B] text-[16px] font-karla font-normal bg-no-repeat bg-right bg-[length:20px_20px] pr-10 outline-none"
     style={{ width: 'calc(100% - 34px)' }}  
   />
@@ -461,13 +463,17 @@ const ProductCard = () => {
             <div className="w-full text-[#E4086F] text-[15px] font-karla font-bold underline break-words mb-[15px]">
               View our rental policy
             </div>
-
-            <button
-              onClick={handleProceed}
-              className="px-4 py-2 w-full mb-2 text-[#E4086F] text-[20px] font-karla font-bold leading-[24px] break-words flex-1 h-[60px] bg-[#FDE504] rounded-[20px] flex justify-center items-center gap-[10px]"
-            >
-              PROCEED
-            </button>
+            <Link href="/renting">
+          <button
+            onClick={handleProceed}
+            className={`px-4 py-2 w-full mb-2 text-[#E4086F] text-[20px] font-karla font-bold leading-[24px] break-words flex-1 h-[60px] bg-[#FDE504] rounded-[20px] flex justify-center items-center gap-[10px] ${
+              !isDateSelected ? "opacity-50 cursor-not-allowed" : ""
+            }`}
+            disabled={!isDateSelected} // Disable the button if no date is selected
+          >
+            PROCEED
+          </button>
+        </Link>
 
             <button
               onClick={handleCloseRentPopup}
