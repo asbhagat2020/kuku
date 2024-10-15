@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import React from 'react';
 import { useMediaQuery } from '@mui/material'; // Import useMediaQuery from Material-UI
+import Link from 'next/link';
 
 const DownloadKuku = () => {
     const isMobileOrTablet = useMediaQuery('(max-width: 1024px)'); // Check for mobile and tablet view (iPad)
@@ -17,7 +18,7 @@ const DownloadKuku = () => {
                 {/* Left Dress Image - Hidden on Mobile and Tablet */}
                 {!isMobileOrTablet && (
                     <div className='order-1'>
-                        <Image width={335} height={242} src='/dress_left.png' alt=''/>
+                        <Image width={335} height={242} src='/dress_left.png' alt='' />
                     </div>
                 )}
                 {/* Center Content */}
@@ -30,18 +31,22 @@ const DownloadKuku = () => {
                 {/* Right Dress Image - Hidden on Mobile and Tablet */}
                 {!isMobileOrTablet && (
                     <div className='order-3 mt-4'>
-                        <Image width={335} height={242} src='/dress_right.png' alt=''/>
+                        <Image width={335} height={242} src='/dress_right.png' alt='' />
                     </div>
                 )}
             </div>
             {/* Conditional stacking for mobile view */}
             <div className={`flex ${isMobileOrTablet ? 'flex-col items-center' : 'justify-center gap-[100px]'} pt-[41px]`}>
-                <Image width={284} height={111} src='/appstore.png' className={`w-full max-w-[284px] ${isMobileOrTablet ? 'mb-[20px]' : ''}`} alt='' />
-                <Image width={284} height={111} src='/androidstore.png' className={`w-full max-w-[284px] ${isMobileOrTablet ? '' : ''}`} alt=''/>
+                <Link href={'#'}>
+                    <Image width={284} height={111} src='/appstore.png' className={`w-full max-w-[284px] ${isMobileOrTablet ? 'mb-[20px]' : ''}`} alt='' />
+                </Link>
+                <Link href={'#'}>
+                <Image width={284} height={111} src='/androidstore.png' className={`w-full max-w-[284px] ${isMobileOrTablet ? '' : ''}`} alt='' />
+                </Link>
             </div>
             {/* Smaller Kuku Logo for Mobile */}
             <div className='flex justify-center mt-[-40px]'>
-                <Image width={256} height={280} src='/kuku_bird.png' className={`w-[120px] ${isMobileOrTablet ? '' : 'lg:w-[256px]'}`} alt=''/> {/* Adjusted size for mobile */}
+                <Image width={256} height={280} src='/kuku_bird.png' className={`w-[120px] ${isMobileOrTablet ? '' : 'lg:w-[256px]'}`} alt='' /> {/* Adjusted size for mobile */}
             </div>
         </div>
     );

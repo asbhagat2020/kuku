@@ -8,7 +8,7 @@ import { motion } from 'framer-motion'
 
 const CategoryCarousel = () => {
     const [currentSlide, setCurrentSlide] = useState(0);
-    const [centerIndex, setCenterIndex] = useState(2);
+    const [centerIndex, setCenterIndex] = useState(0);
     const sliderRef = useRef(null);
 
     const products = [
@@ -21,16 +21,18 @@ const CategoryCarousel = () => {
         { title: "Dress", price: "12 AED", image: "/top.png" },
         { title: "Dress", price: "12 AED", image: "/bottom.png" },
         { title: "Dress", price: "12 AED", image: "/t-shirt.png" },
+        { title: "Dress", price: "12 AED", image: "/t-shirt.png" },
     ];
 
     const settings = {
         dots: false,
         arrows: false,
-        infinite: false,
+        infinite: true,
         speed: 500,
-        slidesToShow: 4.5,
+        slidesToShow: 4.36,
         slidesToScroll: 1,
-        centerMode: false,
+        centerMode: true,
+        centerPadding: '0px',
         beforeChange: (current, next) => setCurrentSlide(next),
         responsive: [
             {
@@ -50,7 +52,7 @@ const CategoryCarousel = () => {
             {
                 breakpoint: 768,
                 settings: {
-                    slidesToShow: 2.5,
+                    slidesToShow: 2.4,
                     slidesToScroll: 1,
                 }
             },
@@ -71,8 +73,8 @@ const CategoryCarousel = () => {
         if (typeof window !== 'undefined') {
             // Update centerIndex when window is resized
             const handleResize = () => {
-                const slidesToShow = window.innerWidth < 480 ? 1 : window.innerWidth < 600 ? 2 : window.innerWidth < 1024 ? 3 : 4;
-                setCenterIndex(Math.floor(slidesToShow / 2));
+                const slidesToShow = window.innerWidth < 480 ? 1 : window.innerWidth < 600 ? 1 : window.innerWidth < 1024 ? 1 : 4;
+                setCenterIndex(Math.floor(slidesToShow / 4));
             };
 
             handleResize(); // Initial call
@@ -96,17 +98,17 @@ const CategoryCarousel = () => {
     };
 
     return (
-        <div className="flex flex-col overflow-hidden px-[20px] md:px-0 md:ml-[-20px]">
+        <div className="flex flex-col overflow-hidden px-[20px] md:px-0 ">
             <Slider ref={sliderRef} {...settings}>
                 {products.map((item, index) => (
                     <div className='relative' key={index}>
-                        {index !== currentSlide + centerIndex && (
-                            <div className="absolute top-2 left-10 md:left-[-50px] h-[25px] px-2.5 py-[5px] bg-[#e4086f]/10 rounded-[10px] justify-center items-center gap-2.5 inline-flex">
+                        {index !== currentSlide && (
+                            <div className="absolute top-2 left-10 md:left-[40px] h-[25px] px-2.5 py-[5px] bg-[#e4086f]/10 rounded-[10px] justify-center items-center gap-2.5 inline-flex">
                                 <div className="text-black text-xs font-normal font-karla">Top</div>
                             </div>
                         )}
                         <div
-                            className={`w-[300px] h-[386px] ml-8 md:ml-[-60px]  bg-white transition-all duration-500 ${index === currentSlide + centerIndex ? "shadow-lg rounded-[155px]" : "rounded-[20px]"
+                            className={`w-[300px] h-[386px] mx-8 bg-white transition-all duration-500 ${index === currentSlide  ? "shadow-lg rounded-[155px]" : "rounded-[20px]"
                                 }`}
                         >
                             <Image

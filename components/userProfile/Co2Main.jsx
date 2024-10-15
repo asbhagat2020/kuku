@@ -1,5 +1,6 @@
 "use client"
 import Image from 'next/image'
+import Link from 'next/link';
 import React from 'react'
 import { buildStyles, CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
@@ -7,7 +8,7 @@ const Co2Main = () => {
   const percentage = 68;
   return (
     <div className="max-w-[1550px] mx-auto h-fit mb-[100px]">
-      <div className=' mt-10 lg:mt-[150px] min-h-[850px] max-w-[100%]  mx-5 lg:mx-[73px] relative rounded-2xl'
+      <div className=' mt-10 lg:mt-[150px] min-h-[850px] max-w-[100%]  mx-5 lg:mx-[73px] relative'
         style={{
           backgroundImage: 'url("/co2_bg.png")',
           backgroundSize: "cover",
@@ -18,11 +19,16 @@ const Co2Main = () => {
         }}
       >
         <div className=''>
-          <div className='flex'>
+          <div className='flex items-center justify-between'>
             <div className='py-[27px] lg:py-[77px] lg:px-5'>
               <p className=""><span className="text-white text-[32px] lg:text-[64px] font-bold font-karla">Hi Palak, <br /></span><span className="text-white text-base lg:text-[32px] font-bold font-karla">you have saved 68 kgs of CO2 emissions this month  </span></p>
             </div>
-            <div></div>
+            <div>
+              <Link href={'#'} className='w-24 h-9 bg-white rounded-3xl px-2 flex gap-2 justify-center items-center'>
+                <Image width={26} height={26} src={'question_green.svg'} alt=''/>
+                <p className='text-green-500 font-karla font-bold'>Help</p>
+              </Link>
+            </div>
 
           </div>
         </div>
