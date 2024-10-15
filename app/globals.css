@@ -94,7 +94,7 @@ margin-left: 45px;
 .slick-dots li.slick-active .custom-dot {
     width: 30px;
     margin-right: 5px !important;
-
+    background: #ffffff !important;
 }
 
 .border {

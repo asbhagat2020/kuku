@@ -1,9 +1,10 @@
 "use client"
 import dynamic from 'next/dynamic';
 import React, { useState } from 'react';
+
 const ReactApexChart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
-export const Chart= () => {
+export const Chart = () => {
   const [chartData] = useState({
     series: [{
       name: "Desktops",
@@ -22,34 +23,39 @@ export const Chart= () => {
       },
       stroke: {
         curve: 'smooth',
+        width:3,
+        colors:["#30BD75"]
       },
       title: {
         text: '',
         align: 'left'
       },
       grid: {
-        yaxis: {
-          lines: {
-            show: true,
-            color: '#000000',  // Red color for horizontal grid lines
-          }
-        },
+        borderColor: '#383838', // This sets the color for all grid lines
+        strokeDashArray: 0,
         xaxis: {
           lines: {
             show: false
+          }
+        },
+        yaxis: {
+          lines: {
+            show: true
           }
         }
       },
       xaxis: {
         categories: ['Week 1', 'Week 2', 'Week 3', 'Week 4','Week 5','Week 6','Week 7'],
-        axisTicks: {
-          color: '#000000' // Change this to your desired color
-        },
         axisBorder: {
-          color: '#000000' // Change this to your desired color
+          color: '#383838'
         }
       },
+      yaxis: {
+        axisBorder: {
+          show: false,
 
+        },
+      }
     }
   });
 
@@ -62,5 +68,3 @@ export const Chart= () => {
     </div>
   );
 };
-
-

@@ -6,6 +6,15 @@ import Link from 'next/link';
 
 const ProfileSection = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [imageSrc, setImageSrc] = useState('/kuku-suit 2.png');
+
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const imageUrl = URL.createObjectURL(file);
+            setImageSrc(imageUrl);
+        }
+    };
 
     const handleEditClick = () => {
         setIsModalOpen(true);
@@ -20,14 +29,14 @@ const ProfileSection = () => {
             <div className='lg:px-[70px] px-[20px] pt-[28px]'>
                 <div className='flex  items-center '>
                     <Link href='/'>
-                    <p className="text-[#6a6a6a] text-base font-normal font-karla underline leading-[17.60px]">Home</p></Link>
+                        <p className="text-[#6a6a6a] text-base font-normal font-karla underline leading-[17.60px]">Home</p></Link>
                     <div class="w-[2px] h-3 bg-black mx-2"></div>
 
                     <Link href='/'>
-                    <p className="text-[#6a6a6a] text-base font-normal font-karla underline leading-[17.60px]">Categories</p></Link>
+                        <p className="text-[#6a6a6a] text-base font-normal font-karla underline leading-[17.60px]">Categories</p></Link>
                     <div class="w-[2px] h-3 bg-black mx-2"></div>
                     <Link href='/'>
-                    <p className="text-[#6a6a6a] text-base font-normal font-karla underline leading-[17.60px]">Tshirt</p></Link>
+                        <p className="text-[#6a6a6a] text-base font-normal font-karla underline leading-[17.60px]">Tshirt</p></Link>
                     <div class="w-[1px] h-3 bg-black mx-2"></div>
                     <p className="text-black text-base font-semibold font-karla  leading-[17.60px]">Nike Black rounded tshirt</p>
                 </div>
@@ -84,25 +93,45 @@ const ProfileSection = () => {
                 {/* Modal Content Here */}
                 <div className='flex flex-col items-center'>
                     <h2 className="text-[#070707] text-[22.91px] font-bold font-karla leading-7 pb-[57px]">Edit Profile</h2>
-                    <div className='w-[114px] h-[114px]  rounded-full bg-[#fde504] flex justify-center items-center '>
-                        <Image width={90} height={90} className='p-1' src='/kuku-suit 2.png' alt='' />
+                    <div className='w-[114px] h-[114px] rounded-full bg-[#fde504] flex justify-center items-center relative'>
+                        {/* Profile Image */}
+                        <Image unoptimized width={100} height={100} className='rounded-full object-cover' src={imageSrc} alt='Profile Picture' />
+
+                        {/* Hidden file input to change the image */}
+                        <input
+                            type="file"
+                            accept="image/*"
+                            className="absolute inset-0 opacity-0 cursor-pointer"
+                            onChange={handleImageChange}
+                        />
+
+                        {/* Edit Icon in the bottom-right corner */}
+                        <div className="absolute bottom-0 right-0 w-[30px] h-[30px] bg-white rounded-full flex justify-center items-center cursor-pointer">
+                            <Image unoptimized width={24} height={24} src={'/edit.png'} alt='Edit' />
+                            <input
+                                type="file"
+                                accept="image/*"
+                                className="absolute inset-0 opacity-0 cursor-pointer"
+                                onChange={handleImageChange}
+                            />
+                        </div>
                     </div>
+
                     <form className="mt-4">
-                        {/* Add your form fields here */}
                         <div>
-                            <input type="text" className="border rounded-[13px] w-full p-2 bg-[#F7F7F7]" placeholder="Fullname" />
+                            <input type="text" className="border rounded-[13px] w-full p-2 bg-[#F7F7F7]" placeholder="Full Name" />
                         </div>
                         <div className="mt-4">
-                            <input className="border rounded-[13px] w-full p-2 bg-[#F7F7F7]" placeholder="Email adress" />
+                            <input className="border rounded-[13px] w-full p-2 bg-[#F7F7F7]" placeholder="Email address" />
                         </div>
                         <div className="mt-4">
-                            <input className="border rounded-[13px] w-full p-2 bg-[#F7F7F7]" placeholder="Phone" />
+                            <input className="border rounded-[13px] w-full p-2 bg-[#F7F7F7]" placeholder="Phone Number" />
                         </div>
                         <div className="mt-4">
-                            <textarea className="border rounded-[13px] h-[160px] w-full p-2 bg-[#F7F7F7] resize-none" placeholder="Phone" />
+                            <textarea className="border rounded-[13px] h-[160px] w-full p-2 bg-[#F7F7F7] resize-none" placeholder="Add Address" />
                         </div>
                         <div className="mt-4 flex justify-center w-[400px]">
-                            <button type="button" className="bg-yellow-500 text-white rounded-[13px] px-4 py-2 mr-2 w-[400px]" onClick={handleCloseModal}>Save</button>
+                            <button type="button" className="bg-yellow-500 text-white rounded-[13px] px-4 py-2 mr-2 w-[400px]" onClick={handleCloseModal}>Save Details</button>
                         </div>
                     </form>
                 </div>
