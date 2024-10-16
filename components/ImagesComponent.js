@@ -199,15 +199,6 @@ export const ImagesComponent = () => {
     setCurrentPage(selectedPage);
   };
 
-  // const handleOpenOfferPopup = (product) => {
-  //   setSelectedProduct(product);
-  //   setOfferPopupOpen(true);
-  // };
-
-  // const handleCloseOfferPopup = () => {
-  //   setOfferPopupOpen(false);
-  //   setSelectedProduct(null); // Reset the product
-  // };
 
   const handleOpenOfferPopup = () => {
     setIsOfferPopupOpen(true);
@@ -325,12 +316,7 @@ export const ImagesComponent = () => {
               onClose={handleCloseOfferPopup}
               onSubmit={handleOfferSubmit}
             />
-            {/* {isOfferPopupOpen && (
-              <OfferPopup
-                product={selectedProduct} // Pass the selected product as a prop
-                onClose={handleCloseOfferPopup}
-              />
-            )} */}
+
 
             <h5 className="text-sm font-medium text-gray-700 mt-4">
               {card.title}
