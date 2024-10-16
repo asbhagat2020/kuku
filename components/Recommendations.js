@@ -132,9 +132,12 @@ const Recommendations = () => {
         </h2>
 
         <Link href="/selling-page">
-          <button className="border-2 border-[#E4086F] text-[#E4086F] bg-white opacity-100 hover:opacity-80 transition-opacity w-[150px] h-[60px] rounded-[1rem] font-bold">
-            View All
-          </button>
+        <button
+  className="border-2 border-[#E4086F] text-[#E4086F] bg-white opacity-100 hover:bg-[#E4086F] hover:text-white hover:opacity-80 transition-all w-[150px] h-[60px] rounded-[1rem] font-bold"
+>
+  View All
+</button>
+
         </Link>
       </div>
 

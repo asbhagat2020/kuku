@@ -100,3 +100,7 @@ margin-left: 45px;
 .border {
   border-width: 3px;
 }
+
+button:hover .fa-handshake {
+  stroke: white;
+}
