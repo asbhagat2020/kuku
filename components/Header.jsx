@@ -231,18 +231,18 @@ const Header = () => {
               </div>
 
               {isDropdownVisible && (
-                <div className="absolute py-[26px] px-[10px] right-0 top-[40px] min-w-[178px] h-[246px] bg-white border border-gray-300 rounded-lg shadow-lg z-10">
+                <div className="absolute py-[26px] px-[10px] right-0 top-[40px] min-w-[178px] h-[246px] bg-white border border-gray-300 rounded-lg shadow-lg z-10 ">
                   {/* Dropdown content goes here */}
-                  <div className="px-4 py-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500">Account</div>
+                  <div className="px-4 py-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold">Account</div>
                   <Link href='/user_profile'>
-                    <div className="px-4  pb-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500">Your Profile</div></Link>
-                  <div className="px-4 pb-2  hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500">Purchases</div>
+                    <div className="px-4  pb-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold">Your Profile</div></Link>
+                  <div className="px-4 pb-2  hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold">Purchases</div>
                   <Link href='/wishlist'>
-                    <div className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500">Wishlist</div></Link>
+                    <div className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold">Wishlist</div></Link>
                   <Link href='/co2'>
-                    <div className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500">Co2 Savings</div>
+                    <div className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-bold font-karla hover:text-pink-500">Co2 Savings</div>
                   </Link>
-                  <div className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500">Address List</div>
+                  <div className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold">Address List</div>
                 </div>
               )}
             </div>
