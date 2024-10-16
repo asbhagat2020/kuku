@@ -272,33 +272,38 @@ const ProductCard = () => {
 
           <div className="flex gap-4 mt-4">
   <Link href="/wishlist">
-    <button
-      className="border-2 rounded-md  px-6 py-3 flex items-center justify-center font-bold text-pink-500 hover:bg-pink-100 transition-all duration-300"
-      style={{
-        borderColor: "#E4086F",
-        height: "60px", // Set to match the height in the image
-        width: "200px", // Set width to be consistent
-        borderRadius: "16px"
-      }}
-    >
-      <FaRegHeart className="mr-2 w-5 h-5" />
-      WISHLIST
-    </button>
+  <button
+  className="border-2 rounded-md px-6 py-3 flex items-center justify-center font-bold text-pink-500 hover:bg-[#E4086F] hover:text-white transition-all duration-300"
+  style={{
+    borderColor: "#E4086F",
+    height: "60px", // Set to match the height in the image
+    width: "200px", // Set width to be consistent
+    borderRadius: "16px",
+  }}
+>
+  <FaRegHeart className="mr-2 w-5 h-5" />
+  WISHLIST
+</button>
+
   </Link>
 
   <button
   onClick={handleOpenOfferPopup}
-  className="border-2 rounded-md px-6 py-3 flex items-center justify-center font-bold text-green-500 hover:bg-green-100 transition-all duration-300"
+  className="group border-2 rounded-md px-6 py-3 flex items-center justify-center font-bold text-green-500 hover:bg-[#30BD75] hover:text-white transition-all duration-300"
   style={{
     borderColor: "#30BD75",
-    height: "60px", 
-    width: "377px", 
+    height: "60px",
+    width: "377px",
     borderRadius: "16px",
   }}
 >
-  <FaHandshake className="mr-2 w-5 h-5" style={{ fill: "none", stroke: "#30BD75", strokeWidth: "25" }} />
+  <FaHandshake
+    className="mr-2 w-5 h-5 transition-all duration-300 group-hover:text-white"
+    style={{ fill: "none", stroke: "currentColor", strokeWidth: "25" }}
+  />
   MAKE AN OFFER
 </button>
+
 </div>
 
 <Link href="/cart">

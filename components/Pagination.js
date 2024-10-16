@@ -1,4 +1,5 @@
 import React from "react";
+// import { OfferPopup } from "./OfferPopup";
 
 export const Pagination = ({
   currentPage,
@@ -75,6 +76,7 @@ export const Pagination = ({
       >
         &gt;
       </button>
+      {/* <OfferPopup/> */}
     </div>
   );
 };
