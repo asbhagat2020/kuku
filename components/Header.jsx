@@ -142,9 +142,9 @@ const Header = () => {
               <h1 className="text-black text-[37px] font-bold font-palanquin_dark leading-[44.40px] hidden lg:block">KUKU</h1>
             </Link>
             <div className={`lg:flex gap-[30px] items-center hidden ${isSearchVisible ? "lg:hidden xl:flex" : ""}`}>
-              <Link href='men' className={`${isHome?"text-[#fefae5]":"text-black"} text-base font-bold font-karla leading-tight hover:text-pink-500`}>MEN</Link>
-              <Link href='wommen' className={`${isHome?"text-[#fefae5]":"text-black"} text-base font-bold font-karla leading-tight hover:text-pink-500`}>WOMEN</Link>
-              <Link href='kids' className={`${isHome?"text-[#fefae5]":"text-black"} text-base font-bold font-karla leading-tight hover:text-pink-500`}>KIDS</Link>
+              <Link href='/selling-page' className={`${isHome?"text-[#fefae5]":"text-black"} text-base font-bold font-karla leading-tight hover:text-pink-500`}>MEN</Link>
+              <Link href='/selling-page' className={`${isHome?"text-[#fefae5]":"text-black"} text-base font-bold font-karla leading-tight hover:text-pink-500`}>WOMEN</Link>
+              <Link href='/selling-page' className={`${isHome?"text-[#fefae5]":"text-black"} text-base font-bold font-karla leading-tight hover:text-pink-500`}>KIDS</Link>
             </div>
           </div>
           <div className={`lg:hidden pl-10 ${isSearchVisible ? "lg:block hidden" : ""}`}>

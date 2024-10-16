@@ -257,6 +257,7 @@ export const ImagesComponent = () => {
                   key={index}
                   className={`h-64 sm:h-80 w-full ${imgClass} bg-cover bg-center rounded-2xl shadow-md p-6 mt-4 relative`}
                 >
+                  <Link href="/wishlist">
                   <div className="absolute top-4 right-4 w-12 h-12 flex items-center justify-center rounded-full bg-custom-gray">
                     <img
                       src={card.heard_img}
@@ -264,6 +265,7 @@ export const ImagesComponent = () => {
                       className="w-5 h-4"
                     />
                   </div>
+                  </Link>
                   <div className="w-full mr-6 absolute bottom-4 flex justify-evenly">
                     <Link href="/product" className="w-[70%]">
                       {" "}
