@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 import Image from 'next/image';
 import React, { useState } from 'react';
 import Popup from './Popup';
@@ -38,10 +40,12 @@ const Hero = () => {
                     <div className="h-[72px] px-11 py-[15px] bg-[#e4086f] rounded-[22px] justify-start items-center inline-flex">
                         <button onClick={handleSellNowClick} className="text-[#fde504] text-xl font-bold font-karla leading-normal">Sell Now</button>
                     </div>
+                    <Link href="/selling-page">
                     <div className="h-[72px] px-11 py-[15px] bg-white/50 rounded-[22px] backdrop-blur-xl justify-start items-center inline-flex gap-[15px]">
                         <button className="text-white text-xl font-bold font-karla leading-normal">Explore</button>
                         <Image width={30} height={30} src='/right_arrow.png' alt='' />
                     </div>
+                    </Link>
                 </div>
             </div>
 
