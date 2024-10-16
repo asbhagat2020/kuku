@@ -23,6 +23,71 @@ const ProfileSection = () => {
     const handleCloseModal = () => {
         setIsModalOpen(false);
     };
+    const [formData, setFormData] = useState({
+        fullName: '',
+        email: '',
+        phoneNumber: '',
+        address: '',
+    });
+    const [formErrors, setFormErrors] = useState({
+        fullName: '',
+        email: '',
+        phoneNumber: '',
+        address: '',
+    });
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setFormData({
+            ...formData,
+            [name]: value,
+        });
+    };
+
+    const validateForm = () => {
+        let errors = {};
+        if (!formData.fullName.trim()) {
+            errors.fullName = 'Full Name is required';
+        }
+        if (!formData.email.trim()) {
+            errors.email = 'Email is required';
+        } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+            errors.email = 'Email address is invalid';
+        }
+        if (!formData.phoneNumber.trim()) {
+            errors.phoneNumber = 'Phone Number is required';
+        } else if (!/^\d{10}$/.test(formData.phoneNumber)) {
+            errors.phoneNumber = 'Phone Number must be 10 digits';
+        }
+        if (!formData.address.trim()) {
+            errors.address = 'Address is required';
+        }
+        return errors;
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const errors = validateForm();
+        if (Object.keys(errors).length === 0) {
+            // No errors, proceed to submit the form
+            console.log('Form data:', formData);
+            setIsModalOpen(false);
+            setFormData({
+                fullName: '',
+                email: '',
+                phoneNumber: '',
+                address: '',
+            })
+            setFormErrors({
+                fullName: '',
+                email: '',
+                phoneNumber: '',
+                address: '',
+            })
+        } else {
+            setFormErrors(errors);
+        }
+    };
 
     return (
         <div className='max-w-[1550px] mx-auto'>
@@ -91,7 +156,7 @@ const ProfileSection = () => {
             </div>
             <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
                 {/* Modal Content Here */}
-                <div className='flex flex-col items-center'>
+                <div className='flex min-h-fit flex-col items-center'>
                     <h2 className="text-[#070707] text-[22.91px] font-bold font-karla leading-7 pb-[57px]">Edit Profile</h2>
                     <div className='w-[114px] h-[114px] rounded-full bg-[#fde504] flex justify-center items-center relative'>
                         {/* Profile Image */}
@@ -117,21 +182,44 @@ const ProfileSection = () => {
                         </div>
                     </div>
 
-                    <form className="mt-4">
+                    <form onSubmit={handleSubmit} className="mt-4">
                         <div>
-                            <input type="text" className="border rounded-[13px] w-full p-2 bg-[#F7F7F7]" placeholder="Full Name" />
+                            <input
+                                type="text"
+                                name="fullName"
+                                value={formData.fullName}
+                                onChange={handleInputChange}
+                                className="border rounded-[13px] w-full p-2 bg-[#F7F7F7]"
+                                placeholder='Full Name'
+                            />
+                            {formErrors.fullName && <p className="text-red-500 text-sm">{formErrors.fullName}</p>}
                         </div>
                         <div className="mt-4">
-                            <input className="border rounded-[13px] w-full p-2 bg-[#F7F7F7]" placeholder="Email address" />
+                            <input className="border rounded-[13px] w-full p-2 bg-[#F7F7F7]" placeholder="Email address"
+                                type="email"
+                                name="email"
+                                value={formData.email}
+                                onChange={handleInputChange} />
+                            {formErrors.email && <p className="text-red-500 text-sm">{formErrors.email}</p>}
                         </div>
                         <div className="mt-4">
-                            <input className="border rounded-[13px] w-full p-2 bg-[#F7F7F7]" placeholder="Phone Number" />
+                            <input
+                                type="text"
+                                name="phoneNumber"
+                                value={formData.phoneNumber}
+                                onChange={handleInputChange}
+                                className="border rounded-[13px] w-full p-2 bg-[#F7F7F7]"
+                                placeholder='Phone Number'
+                            />
+                            {formErrors.phoneNumber && <p className="text-red-500 text-sm">{formErrors.phoneNumber}</p>}
                         </div>
                         <div className="mt-4">
-                            <textarea className="border rounded-[13px] h-[160px] w-full p-2 bg-[#F7F7F7] resize-none" placeholder="Add Address" />
+                            <textarea rows={2} className="border rounded-[13px]  w-full p-2 bg-[#F7F7F7] resize-none " placeholder="Add Address" name="address"
+                                value={formData.address} onChange={handleInputChange} />
+                            {formErrors.address && <p className="text-red-500 text-sm">{formErrors.address}</p>}
                         </div>
                         <div className="mt-4 flex justify-center w-[400px]">
-                            <button type="button" className="bg-yellow-500 text-white rounded-[13px] px-4 py-2 mr-2 w-[400px]" onClick={handleCloseModal}>Save Details</button>
+                            <button type="submit" className="bg-yellow-500 text-white rounded-[13px] px-4 py-2 mr-2 w-[400px]" >Save Details</button>
                         </div>
                     </form>
                 </div>

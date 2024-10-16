@@ -251,18 +251,18 @@ const StatsCards = ({ data }) => {
             </p>
           </div>
           <div className="flex flex-col lg:flex-row pt-[26px] gap-[35px]">
-            <div className="lg:w-[50%] w-full relative bg-yellow-400 px-[45px] flex flex-col z-10 justify-center rounded-[20px]">
-              {/* <div className='w-full h-full absolute left-0'>
-                        <Image width={747} height={373} src='/dashboard_bg.png' alt='' />
-                    </div> */}
-              <div className="flex flex-col gap-[36px]">
+            <div className="lg:w-[50%] w-full relative px-[45px] flex flex-col z-10 justify-center rounded-[20px]">
+              <div className=' absolute left-0'>
+                        <Image width={747} height={373} src='/stats_bg.png' alt='' />
+                    </div>
+              <div className="flex flex-col gap-[36px] z-20">
                 <p className="opacity-80 text-black text-[27.33px] font-normal font-karla leading-7">
                   Overall Revenue
                 </p>
                 <p className="text-black text-[72.88px] font-bold font-karla leading-[72.88px]">
                   3012 د.إ
                 </p>
-                <div className="flex">
+                <div className="flex items-center gap-3">
                   <div className="opacity-80 text-black text-[27.33px] font-normal font-jarla leading-7">
                     versus last month
                   </div>

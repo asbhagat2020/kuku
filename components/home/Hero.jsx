@@ -37,8 +37,8 @@ const Hero = () => {
                     <h1 className="text-center w-[50%] text-[#f0fafe] text-3xl lg:text-7xl font-normal font-luckiest lg:leading-[75.60px]">Your Sustainable Fashion Marketplace</h1>
                 </div>
                 <div className="flex justify-center gap-[10px] pt-[100px] z-10">
-                    <div className="h-[72px] px-11 py-[15px] bg-[#e4086f] rounded-[22px] justify-start items-center inline-flex">
-                        <button onClick={handleSellNowClick} className="text-[#fde504] text-xl font-bold font-karla leading-normal">Sell Now</button>
+                    <div onClick={handleSellNowClick} className="h-[72px] px-11 py-[15px] bg-[#e4086f] rounded-[22px] justify-start items-center inline-flex cursor-pointer">
+                        <button  className="text-[#fde504] text-xl font-bold font-karla leading-normal">Sell Now</button>
                     </div>
                     <Link href="/selling-page">
                     <div className="h-[72px] px-11 py-[15px] bg-white/50 rounded-[22px] backdrop-blur-xl justify-start items-center inline-flex gap-[15px]">

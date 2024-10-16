@@ -64,14 +64,14 @@ const Footer = () => {
                         <h1 className="text-black text-3xl font-bold font-palanquin_dark">KUKU</h1>
                     </div>
                     <div className='flex gap-4'>
-                        <Link href='www.facebook.com' target='_blank'>
+                        <Link href={'https://www.facebook.com'} target='_blank'>
                             <SocialIcon src='/fb_logo.svg' alt="Facebook" />
                         </Link>
-                        <Link href='www.facebook.com' >
+                        <Link href={'https://www.x.com'} target='_blank' >
                             <SocialIcon src='/x_logo.svg' alt="X" /></Link>
-                        <Link href='www.facebook.com' >
+                        <Link href={'https://www.linkedin.com'} target='_blank' >
                             <SocialIcon src='/linkedin.png' alt="LinkedIn" /></Link>
-                        <Link href='www.facebook.com' >
+                        <Link href={'https://www.instagram.com'} target='_blank' >
                             <SocialIcon src='/insta_logo.svg' alt="Instagram" /></Link>
                     </div>
                 </div>

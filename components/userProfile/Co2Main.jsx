@@ -8,7 +8,7 @@ const Co2Main = () => {
   const percentage = 68;
   return (
     <div className="max-w-[1550px] mx-auto h-fit mb-[100px]">
-      <div className=' mt-10 lg:mt-[150px] min-h-[850px] max-w-[100%]  mx-5 lg:mx-[73px] relative'
+      <div className=' mt-10 lg:mt-[150px] min-h-[860px] max-w-[100%]  mx-5 lg:mx-[73px] relative'
         style={{
           backgroundImage: 'url("/co2_bg.png")',
           backgroundSize: "cover",
@@ -21,7 +21,7 @@ const Co2Main = () => {
         <div className=''>
           <div className='flex items-center justify-between'>
             <div className='py-[27px] lg:py-[77px] lg:px-5'>
-              <p className=""><span className="text-white text-[32px] lg:text-[64px] font-bold font-karla">Hi Palak, <br /></span><span className="text-white text-base lg:text-[32px] font-bold font-karla">you have saved 68 kgs of CO2 emissions this month  </span></p>
+              <p className=""><span className="text-white text-[32px] lg:text-[64px] font-bold font-karla">Hi Palak, <br /></span><span className="text-white text-base lg:text-[32px] font-bold font-karla">you have saved 68 kgs of CO<span className="align-text-bottom lg:text-[24px]">2</span> emissions this month  </span></p>
             </div>
             <div>
               <Link href={'#'} className='w-24 h-9 bg-white rounded-3xl px-2 flex gap-2 justify-center items-center'>
@@ -46,8 +46,8 @@ const Co2Main = () => {
               })}
             >
             </CircularProgressbar>
-            <div className='absolute top-[60px] left-[65px] '>
-              <h2 className='font-karla text-center text-[50px] lg:text-[90px] font-bold text-[#FBE300] leading-[60px]'>CO2 <br /><span className='text-[40px] text-[#186940]'>68 Kg</span></h2>
+            <div className='absolute top-[60px] left-[75px] '>
+              <h2 className='font-karla text-center text-[50px] lg:text-[94px] font-bold text-[#FBE300] leading-[40px]'>CO <span className="ml-[-18px] align-text-bottom lg:text-[40px]">2</span> <br /><span className='text-[40px] text-[#186940]'>68 Kg</span></h2>
             </div>
             <div className='absolute bottom-1/4 left-[85px]'>
               <h2 className='font-karla text-[15px] font-bold text-[#186940]'>Saved this month</h2>
@@ -62,8 +62,8 @@ const Co2Main = () => {
       <div className='pt-[58px] px-[71px] flex flex-col lg:flex-row gap-5 lg:gap-0 justify-between flex-shrink-0'>
         <div className='flex flex-col gap-5 lg:gap-[54px]'>
           <div className='flex items-center relative'>
-            <div className='absolute top-[-14px] left-20 z-20'>
-              <Image src='/co2.png' alt="" width={34} height={34} />
+            <div className='absolute top-[-6px] left-20 z-20'>
+              <Image unoptimized src='/co2.png' alt="" width={36} height={36} />
             </div>
             <div className='rounded-full w-[129px] h-[129px] bg-[#d1ffe7] z-10 flex items-center'>
               <Image src='/co2_image.svg' alt="" width={129} height={129} />
@@ -76,8 +76,8 @@ const Co2Main = () => {
             </div>
           </div>
           <div className='flex items-center relative'>
-            <div className='absolute top-[-14px] left-20 z-20'>
-              <Image src='/co2.png' alt="" width={34} height={34} />
+            <div className='absolute top-[-6px] left-20 z-20'>
+              <Image unoptimized src='/co2.png' alt="" width={36} height={36} />
             </div>
             <div className='rounded-full w-[129px] h-[129px] bg-[#d1ffe7] z-10 flex items-center'>
               <Image src='/co2_image.svg' alt="" width={129} height={129} />
@@ -92,8 +92,8 @@ const Co2Main = () => {
         </div>
         <div className='flex flex-col gap-5 lg:gap-[54px]'>
           <div className='flex items-center relative'>
-            <div className='absolute top-[-14px] left-20 z-20'>
-              <Image src='/co2.png' alt="" width={34} height={34} />
+            <div className='absolute top-[-6px] left-20 z-20'>
+              <Image unoptimized src='/co2.png' alt="" width={36} height={36} />
             </div>
             <div className='rounded-full w-[129px] h-[129px] bg-[#d1ffe7] z-10 flex items-center'>
               <Image src='/co2_image.svg' alt="" width={129} height={129} />
@@ -106,8 +106,8 @@ const Co2Main = () => {
             </div>
           </div>
           <div className='flex items-center relative'>
-            <div className='absolute top-[-14px] left-20 z-20'>
-              <Image src='/co2.png' alt="" width={34} height={34} />
+            <div className='absolute top-[-6px] left-20 z-20'>
+              <Image unoptimized src='/co2.png' alt="" width={36} height={36} />
             </div>
             <div className='rounded-full w-[129px] h-[129px] bg-[#d1ffe7] z-10 flex items-center'>
               <Image src='/co2_image.svg' alt="" width={129} height={129} />
