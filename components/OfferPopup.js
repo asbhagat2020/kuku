@@ -83,7 +83,9 @@ export const OfferPopup = ({ isOpen, onClose, onSubmit }) => {
               </button>
               <button
                 onClick={onClose}
+
                 className="border-[#F7B5D4] text-[#E4086F] text-lg font-bold rounded-lg px-4 py-2 border w-full h-[55px] md:w-[440px] md:h-[65px] mt-3"
+
               >
                 CANCEL
               </button>
