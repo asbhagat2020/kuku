@@ -51,9 +51,11 @@ const SellingCards = ({ data }) => (
 
                     <div className="w-[307px] h-[404px] rounded-[20px] relative mx-2 outline-none">
                         <div className="absolute top-2 right-2 z-10">
+                            <Link href="/wishlist">
                             <div className='h-[54px] p-[15px] bg-white/40 rounded-[100px]'>
                                 <Image alt='' width={24} height={24} src='wishlist.svg' />
                             </div>
+                            </Link>
                         </div>
                         <Link href={item.link}>
                             <div className="absolute min-w-[204px] bottom-4 left-4 text-center z-10 bg-[#fde504] px-[50px] py-[20px] rounded-[20px]">
