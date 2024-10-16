@@ -5,16 +5,19 @@ import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import DownloadKuku from "@/components/home/DownloadKuku";
 import { useState } from "react"; // Import useState to track the modal state
+import { useRouter } from 'next/navigation';
 
 export default function Renting() {
   const [isModalOpen, setIsModalOpen] = useState(false); // State to control the modal
 
+  const router =useRouter();
   const handleOpenModal = () => {
     setIsModalOpen(true);
   };
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
+    router.push("/selling-page")
   };
 
   return (
