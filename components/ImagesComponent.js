@@ -7,6 +7,7 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Image from "next/image";
+import { OfferPopup } from "./OfferPopup";
 
 const cardData = [
   {
@@ -175,6 +176,9 @@ const cardData = [
 
 export const ImagesComponent = () => {
   const [currentPage, setCurrentPage] = useState(1);
+  const [isOfferPopupOpen, setIsOfferPopupOpen] = useState(false);
+  const [offerSubmitted, setOfferSubmitted] = useState(false);
+
   const cardsPerPage = 9;
 
   const indexOfLastCard = currentPage * cardsPerPage;
@@ -194,6 +198,23 @@ export const ImagesComponent = () => {
   const handlePageChange = (selectedPage) => {
     setCurrentPage(selectedPage);
   };
+
+
+  const handleOpenOfferPopup = () => {
+    setIsOfferPopupOpen(true);
+  };
+
+  const handleCloseOfferPopup = () => {
+    setIsOfferPopupOpen(false);
+  };
+
+  const handleOfferSubmit = (price) => {
+    console.log("Offer submitted:", price);
+    // Add your submission logic here
+    setOfferSubmitted(true);
+    handleCloseOfferPopup();
+  };
+
   const innerSliderSettings = {
     dots: true,
     infinite: true,
@@ -207,7 +228,7 @@ export const ImagesComponent = () => {
         style={{
           height: "5px",
           borderRadius: "20px",
-          background: "#eee",
+          background: "rgba(235, 235, 228, 0.4)",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
@@ -275,20 +296,27 @@ export const ImagesComponent = () => {
 
                     <div className="h-10 w-10 flex items-center justify-center bg-white rounded-full ml-2 mr-10">
                       {/* Handshake icon */}
-                      
-                        <Image
-                          unoptimized
-                          width={30}
-                          height={30}
-                          src="handshake_img.png"
-                          alt="Handshake icon"
-                        />
-                   
+
+                      <Image
+                        unoptimized
+                        width={30}
+                        height={30}
+                        src="handshake_img.png"
+                        alt="Open Offer Popup"
+                        className="cursor-pointer"
+                        onClick={() => handleOpenOfferPopup(card)}
+                      />
                     </div>
                   </div>
                 </div>
               ))}
             </Slider>
+            <OfferPopup
+              isOpen={isOfferPopupOpen}
+              onClose={handleCloseOfferPopup}
+              onSubmit={handleOfferSubmit}
+            />
+
 
             <h5 className="text-sm font-medium text-gray-700 mt-4">
               {card.title}
