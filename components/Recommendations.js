@@ -80,21 +80,21 @@ const RecommendationCard = ({ imageList, price }) => {
           </div>
         ))}
       </Slider>
-
-      {/* Favorite Icon */}
-      <div className="absolute top-4 right-4 flex items-center justify-center">
-        <div
-          className="rounded-full p-2"
-          style={{
-            background: "rgba(32, 31, 31, 0.30)",
-            borderRadius: "100px",
-            opacity: 0.7, // Maintain the opacity as needed
-          }}
-        >
-          <IoHeartOutline className="text-white w-5 h-5" />
+      <Link href="/wishlist">
+        {/* Favorite Icon */}
+        <div className="absolute top-4 right-4 flex items-center justify-center">
+          <div
+            className="rounded-full p-2"
+            style={{
+              background: "rgba(32, 31, 31, 0.30)",
+              borderRadius: "100px",
+              opacity: 0.7,
+            }}
+          >
+            <IoHeartOutline className="text-white w-5 h-5" />
+          </div>
         </div>
-      </div>
-
+      </Link>
       {/* Buy Now Button and Handshake Image */}
       <div
         className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex items-center justify-center"
@@ -107,13 +107,13 @@ const RecommendationCard = ({ imageList, price }) => {
         </Link>
 
         <div
-          className="flex items-center justify-center bg-white rounded-full shadow-md ml-2"
+          className="flex items-center justify-center bg-white rounded-full shadow-md ml-2 hover:bg-gray-200 transition-colors duration-300 cursor-pointer"
           style={{ width: "38px", height: "40px" }}
         >
           <img
             src="/shake_hands.png"
             alt="Handshake"
-            className="w-6 h-6"
+            className="w-6 h-6 hover:scale-110 transition-transform duration-300"
             style={{ width: "24px", height: "24px" }}
             onClick={() => handleOpenOfferPopup()}
           />

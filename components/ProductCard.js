@@ -5,8 +5,8 @@ import Image from "next/image";
 import amiriImg from "../public/product-image.png";
 import kukuLogo from "../public/emojiKuku.png";
 import CustomCalendar from "./CustomCalendar";
-import { useState,useEffect, useRef } from "react";
-import calendarImg from "../public/Calendar.png"
+import { useState, useEffect, useRef } from "react";
+import calendarImg from "../public/Calendar.png";
 import {
   FaStar,
   FaRegHeart,
@@ -15,7 +15,7 @@ import {
   FaArrowLeft,
   FaArrowRight,
 } from "react-icons/fa";
-import { FaHandshake } from 'react-icons/fa';
+import { FaHandshake } from "react-icons/fa";
 
 const ProductCard = () => {
   const [isRentPopupOpen, setRentPopupOpen] = useState(false);
@@ -30,7 +30,7 @@ const ProductCard = () => {
   const images = [amiriImg, amiriImg];
 
   // const [isRentPopupOpen, setIsRentPopupOpen] = useState(false);
-  const [isFormatted, setIsFormatted] = useState(''); // For storing the selected date
+  const [isFormatted, setIsFormatted] = useState(""); // For storing the selected date
   const [showCalendar, setShowCalendar] = useState(false);
   const modalRef = useRef(null);
 
@@ -43,16 +43,15 @@ const ProductCard = () => {
   };
 
   const handleDateSelect = (date) => {
-    const formattedDate = new Date(date).toLocaleDateString('en-GB', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
+    const formattedDate = new Date(date).toLocaleDateString("en-GB", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
     });
     setIsDateSelected(true);
     setIsFormatted(formattedDate); // Assume date comes formatted from CustomCalendar
     closeCalendar(); // Close the calendar after selecting a date
   };
-
 
   // Close modal when clicking outside of it
   useEffect(() => {
@@ -63,9 +62,9 @@ const ProductCard = () => {
     };
 
     // Attach the event listener
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
 
@@ -134,8 +133,18 @@ const ProductCard = () => {
     <div className="max-w-screen-xl mx-auto pl-1 pr-6 font-karla">
       {/* Breadcrumbs */}
       <div className="breadcrumb text-gray-500 text-sm mb-3 mt-2">
-        <span>Home</span> | <span>Categories</span> | <span>Tshirt</span> |{" "}
-        <span className="font-bold">AMIRI Men Oversize T-shirt</span>
+        <Link href="/" className="hover">
+          Home
+        </Link>
+        {" | "}
+        <Link href="/" className="hover">
+          Categories
+        </Link>{" "}
+        |
+        <Link href="/" className="hover">
+          Tshirt
+        </Link>{" "}
+        | <span className="font-bold">AMIRI Men Oversize T-shirt</span>
       </div>
 
       <hr className="border-gray-300 mb-4" />
@@ -260,7 +269,7 @@ const ProductCard = () => {
           <div className="flex items-center text-gray-600 space-x-4 font-medium">
             <div>
               <span className="font-bold">SIZE</span>
-              <span className="inline-block ml-2 px-2 py-1 border border-red-500 text-red-500 rounded">
+              <span className="inline-block ml-2 px-2 py-1 border border-pink-500 text-red-500 rounded">
                 OS
               </span>
             </div>
@@ -271,73 +280,74 @@ const ProductCard = () => {
           </div>
 
           <div className="flex gap-4 mt-4">
-  <Link href="/wishlist">
-  <button
-  className="border-2 rounded-md px-6 py-3 flex items-center justify-center font-bold text-pink-500 hover:bg-[#E4086F] hover:text-white transition-all duration-300"
-  style={{
-    borderColor: "#E4086F",
-    height: "60px", // Set to match the height in the image
-    width: "200px", // Set width to be consistent
-    borderRadius: "16px",
-  }}
->
-  <FaRegHeart className="mr-2 w-5 h-5" />
-  WISHLIST
-</button>
+            <Link href="/wishlist">
+              <button
+                className="border-2 rounded-md px-6 py-3 flex items-center justify-center font-bold text-pink-500 hover:bg-[#E4086F] hover:text-white transition-all duration-300"
+                style={{
+                  borderColor: "#E4086F",
+                  height: "60px", // Set to match the height in the image
+                  width: "200px", // Set width to be consistent
+                  borderRadius: "16px",
+                }}
+              >
+                <FaRegHeart className="mr-2 w-5 h-5" />
+                WISHLIST
+              </button>
+            </Link>
 
-  </Link>
+            <button
+              onClick={handleOpenOfferPopup}
+              className="group border-2 rounded-md px-6 py-3 flex items-center justify-center font-bold text-green-500 hover:bg-[#30BD75] hover:text-white transition-all duration-300"
+              style={{
+                borderColor: "#30BD75",
+                height: "60px",
+                width: "377px",
+                borderRadius: "16px",
+              }}
+            >
+              <FaHandshake
+                className="mr-2 w-5 h-5 transition-all duration-300 group-hover:text-white"
+                style={{
+                  fill: "none",
+                  stroke: "currentColor",
+                  strokeWidth: "25",
+                }}
+              />
+              MAKE AN OFFER
+            </button>
+          </div>
 
-  <button
-  onClick={handleOpenOfferPopup}
-  className="group border-2 rounded-md px-6 py-3 flex items-center justify-center font-bold text-green-500 hover:bg-[#30BD75] hover:text-white transition-all duration-300"
-  style={{
-    borderColor: "#30BD75",
-    height: "60px",
-    width: "377px",
-    borderRadius: "16px",
-  }}
->
-  <FaHandshake
-    className="mr-2 w-5 h-5 transition-all duration-300 group-hover:text-white"
-    style={{ fill: "none", stroke: "currentColor", strokeWidth: "25" }}
-  />
-  MAKE AN OFFER
-</button>
+          <Link href="/cart">
+            <button
+              className="mt-4 text-black w-full font-bold flex items-center justify-center hover:bg-yellow-500 transition-all duration-300"
+              style={{
+                height: "72px",
+                backgroundColor: "#FDE504",
+                borderRadius: "16px",
+              }}
+            >
+              <FaShoppingBag className="mr-2" />
+              ADD TO BAG
+            </button>
+          </Link>
 
-</div>
+          <div className="flex flex-col mt-2">
+            <div className="text-center font-bold text-black">
+              Or Rent it for
+            </div>
 
-<Link href="/cart">
-  <button
-    className="mt-4 text-black w-full font-bold flex items-center justify-center hover:bg-yellow-500 transition-all duration-300"
-    style={{
-      height: "72px",
-      backgroundColor: "#FDE504",
-      borderRadius: "16px",
-    }}
-  >
-    <FaShoppingBag className="mr-2" />
-    ADD TO BAG
-  </button>
-</Link>
-
-<div className="flex flex-col mt-2">
-  <div className="text-center font-bold text-black">
-    Or Rent it for
-  </div>
-
-  <button
-    onClick={handleOpenRentPopup}
-    className="mt-2 text-black w-full font-bold hover:bg-blue-300 transition-all duration-300"
-    style={{
-      height: "72px",
-      backgroundColor: "#69D3FA",
-      borderRadius: "16px",
-    }}
-  >
-    AED 70
-  </button>
-</div>
-
+            <button
+              onClick={handleOpenRentPopup}
+              className="mt-2 text-black w-full font-bold hover:bg-blue-300 transition-all duration-300"
+              style={{
+                height: "72px",
+                backgroundColor: "#69D3FA",
+                borderRadius: "16px",
+              }}
+            >
+              AED 70
+            </button>
+          </div>
 
           <div
             className="mt-10 mb-0.75"
@@ -414,82 +424,87 @@ const ProductCard = () => {
           </div>
 
           {isRentPopupOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-          <div
-            ref={modalRef} // Attach ref to the modal content
-            className="bg-white p-6 rounded-lg shadow-lg w-[400px] text-start"
-          >
-            <div>
-              <span className="text-[#E4086F] text-[14px] font-karla font-bold capitalize tracking-[1.12px] break-words">
-                Rental Price: 
-              </span>
-              <span className="text-[#070707] text-[14px] font-karla font-bold capitalize tracking-[1.12px] break-words">
-                AED 70
-              </span>
-            </div>
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+              <div
+                ref={modalRef} // Attach ref to the modal content
+                className="bg-white p-6 rounded-lg shadow-lg w-[400px] text-start"
+              >
+                <div>
+                  <span className="text-[#E4086F] text-[14px] font-karla font-bold capitalize tracking-[1.12px] break-words">
+                    Rental Price:
+                  </span>
+                  <span className="text-[#070707] text-[14px] font-karla font-bold capitalize tracking-[1.12px] break-words">
+                    AED 70
+                  </span>
+                </div>
 
-            <label
-              htmlFor="rentalDate"
-              className="block text-left mb-[20px] mt-[20px] cursor-pointer text-[#070707] text-[15px] font-karla font-bold break-words"
-              onClick={openCalendar}
-            >
-              Choose Date
-            </label>
-            <div className="flex w-full overflow-hidden items-center justify-between border border-gray-300 rounded-md">
-  <input
-    type="text"
-    id="rentalDate"
-    placeholder="Choose your rental dates"
-    value={isFormatted}
-    onClick={openCalendar} // This is the function to open the calendar
-    readOnly
-    required
-    className="relative p-2 text-[#4C5C6B] text-[16px] font-karla font-normal bg-no-repeat bg-right bg-[length:20px_20px] pr-10 outline-none"
-    style={{ width: 'calc(100% - 34px)' }}  
-  />
-<div className="w-[34px] h-[30px] px-[2px] cursor-pointer">
-  <Image
-    src={calendarImg}
-    alt="Calendar Icon"
-    className="w-[100%] h-[100%]"
-    onClick={() => document.getElementById('rentalDate').click()} // Trigger the input click when image is clicked
-  />
-  </div>
-</div>
-            {showCalendar && (
-              <div className="absolute z-50">
-                <CustomCalendar onSelectDate={handleDateSelect} closeCalendar={closeCalendar} />
+                <label
+                  htmlFor="rentalDate"
+                  className="block text-left mb-[20px] mt-[20px] cursor-pointer text-[#070707] text-[15px] font-karla font-bold break-words"
+                  onClick={openCalendar}
+                >
+                  Choose Date
+                </label>
+                <div className="flex w-full overflow-hidden items-center justify-between border border-gray-300 rounded-md">
+                  <input
+                    type="text"
+                    id="rentalDate"
+                    placeholder="Choose your rental dates"
+                    value={isFormatted}
+                    onClick={openCalendar} // This is the function to open the calendar
+                    readOnly
+                    required
+                    className="relative p-2 text-[#4C5C6B] text-[16px] font-karla font-normal bg-no-repeat bg-right bg-[length:20px_20px] pr-10 outline-none"
+                    style={{ width: "calc(100% - 34px)" }}
+                  />
+                  <div className="w-[34px] h-[30px] px-[2px] cursor-pointer">
+                    <Image
+                      src={calendarImg}
+                      alt="Calendar Icon"
+                      className="w-[100%] h-[100%]"
+                      onClick={() =>
+                        document.getElementById("rentalDate").click()
+                      } // Trigger the input click when image is clicked
+                    />
+                  </div>
+                </div>
+                {showCalendar && (
+                  <div className="absolute z-50">
+                    <CustomCalendar
+                      onSelectDate={handleDateSelect}
+                      closeCalendar={closeCalendar}
+                    />
+                  </div>
+                )}
+
+                <div className="w-full text-[#525252] text-[15px] font-karla font-bold break-words mb-[15px]">
+                  You need to make a one-time deposit for renting the item. The
+                  deposit will be refunded post the return of the item.
+                </div>
+                <div className="w-full text-[#E4086F] text-[15px] font-karla font-bold underline break-words mb-[15px]">
+                  View our rental policy
+                </div>
+                <Link href="/renting">
+                  <button
+                    onClick={handleProceed}
+                    className={`px-4 py-2 w-full mb-2 text-[#E4086F] text-[20px] font-karla font-bold leading-[24px] break-words flex-1 h-[60px] bg-[#FDE504] rounded-[20px] flex justify-center items-center gap-[10px] ${
+                      !isDateSelected ? "opacity-50 cursor-not-allowed" : ""
+                    }`}
+                    disabled={!isDateSelected} // Disable the button if no date is selected
+                  >
+                    PROCEED
+                  </button>
+                </Link>
+
+                <button
+                  onClick={handleCloseRentPopup}
+                  className="w-full text-[#E4086F] text-[20px] font-karla font-bold leading-[24px] break-words flex-1 h-[60px] rounded-[20px] border border-[#F7B5D4] flex justify-center items-center gap-[10px]"
+                >
+                  CANCEL
+                </button>
               </div>
-            )}
-
-            <div className="w-full text-[#525252] text-[15px] font-karla font-bold break-words mb-[15px]">
-              You need to make a one-time deposit for renting the item. The deposit will be refunded post the return of the item.
             </div>
-            <div className="w-full text-[#E4086F] text-[15px] font-karla font-bold underline break-words mb-[15px]">
-              View our rental policy
-            </div>
-            <Link href="/renting">
-          <button
-            onClick={handleProceed}
-            className={`px-4 py-2 w-full mb-2 text-[#E4086F] text-[20px] font-karla font-bold leading-[24px] break-words flex-1 h-[60px] bg-[#FDE504] rounded-[20px] flex justify-center items-center gap-[10px] ${
-              !isDateSelected ? "opacity-50 cursor-not-allowed" : ""
-            }`}
-            disabled={!isDateSelected} // Disable the button if no date is selected
-          >
-            PROCEED
-          </button>
-        </Link>
-
-            <button
-              onClick={handleCloseRentPopup}
-              className="w-full text-[#E4086F] text-[20px] font-karla font-bold leading-[24px] break-words flex-1 h-[60px] rounded-[20px] border border-[#F7B5D4] flex justify-center items-center gap-[10px]"
-            >
-              CANCEL
-            </button>
-          </div>
-        </div>
-        )}
- 
+          )}
         </div>
       </div>
 
@@ -584,55 +599,50 @@ const ProductCard = () => {
       {/* Modal Section */}
       {isModalOpen && (
         <div
-        className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50" // Set a high z-index value
-        onClick={handleCloseModal} // Close modal when clicking outside
-      >
-        <div
-          className="bg-white p-6 rounded-lg shadow-lg w-[380px] h-[230px] text-center"
-          onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside the modal
+          className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50" // Set a high z-index value
+          onClick={handleCloseModal} // Close modal when clicking outside
         >
-          {/* Tick Mark */}
-          <div className="flex justify-center items-center mb-5">
-            <div className="flex justify-center items-center w-[50px] h-[50px] bg-[#30BD75] border-4 border-[#9ae6b4] rounded-full">
-              {/* Light green border */}
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6 text-white"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M5 13l4 4L19 7"
-                />
-              </svg>
+          <div
+            className="bg-white p-6 rounded-lg shadow-lg w-[380px] h-[230px] text-center"
+            onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside the modal
+          >
+            {/* Tick Mark */}
+            <div className="flex justify-center items-center mb-5">
+              <div className="flex justify-center items-center w-[50px] h-[50px] bg-[#30BD75] border-4 border-[#9ae6b4] rounded-full">
+                {/* Light green border */}
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6 text-white"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M5 13l4 4L19 7"
+                  />
+                </svg>
+              </div>
+            </div>
+
+            {/* Title */}
+            <div className="text-[rgb(11,12,30)] text-[20px] font-bold text-center font-karla leading-tight">
+              <div>Your offer has been </div>
+              <div> sent to the seller</div>
+            </div>
+
+            {/* Description */}
+            <div className="text-[#7F808C] text-[16px] font-normal font-karla leading-tight mt-1">
+              <div> Now sit back and relax while the seller</div>
+              <div> takes some time to review your offer</div>
             </div>
           </div>
-      
-          {/* Title */}
-          <div className="text-[rgb(11,12,30)] text-[20px] font-bold text-center font-karla leading-tight">
-            <div>Your offer has been </div>
-            <div> sent to the seller</div>
-          </div>
-      
-          {/* Description */}
-          <div className="text-[#7F808C] text-[16px] font-normal font-karla leading-tight mt-1">
-            <div> Now sit back and relax while the seller</div>
-            <div> takes some time to review your offer</div>
-          </div>
         </div>
-      </div>
-      
       )}
     </div>
-    
   );
-  
 };
-
-
 
 export default ProductCard;
