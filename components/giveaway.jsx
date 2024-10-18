@@ -45,7 +45,7 @@ const Giveaway = () => {
           }}
         >
           {/* Top Navigation */}
-          <div className="flex justify-between w-full">
+          <div className="flex justify-between w-[86%]">
             {/* Back button */}
             <button onClick={handleBack} className="text-3xl cursor-pointer">
               <img src="/gv_arrow.png" alt="Back" className="w-8 h-8" />
@@ -61,29 +61,29 @@ const Giveaway = () => {
           </div>
 
           {/* Progress Bar as Slider */}
-          <div className="flex justify-center items-center w-full mt-4">
+          <div className="sticky top-20 w-[88%] flex justify-center items-center">
             <span
               onClick={() => goToStep(1)}
-              className={`w-1/3 h-1 cursor-pointer ${
+              className={`w-1/3 h-1 cursor-pointer mx-3 ${
                 currentStep >= 1 ? "bg-green-500" : "bg-gray-300"
               } rounded-full`}
             ></span>
             <span
               onClick={() => goToStep(2)}
-              className={`w-1/3 h-1 cursor-pointer ${
+              className={`w-1/3 h-1 cursor-pointer mx-3 ${
                 currentStep >= 2 ? "bg-green-500" : "bg-gray-300"
-              } rounded-full mx-2`}
+              } rounded-full`}
             ></span>
             <span
               onClick={() => goToStep(3)}
-              className={`w-1/3 h-1 cursor-pointer ${
+              className={`w-1/3 h-1 cursor-pointer mx-3 ${
                 currentStep === 3 ? "bg-green-500" : "bg-gray-300"
               } rounded-full`}
             ></span>
           </div>
 
           {/* Main Content */}
-          <div className="text-center my-8">
+          <div className="text-center my-8 mt-14">
             <h1 className="text-2xl font-bold mb-4">
               {currentStep === 1 && (
                 <>
@@ -106,7 +106,7 @@ const Giveaway = () => {
             </h1>
 
             {/* Buttons */}
-            <div className="flex justify-center space-x-8 mt-6">
+            <div className="flex justify-center space-x-16 mt-6">
               {currentStep === 3 ? (
                 <>
                   <button
@@ -124,10 +124,16 @@ const Giveaway = () => {
                 </>
               ) : (
                 <>
-                  <button className="px-8 py-2 bg-green-500 text-white font-semibold rounded-md hover:bg-green-600 transition">
+                  <button
+                    onClick={handleNext} // Navigate forward for the first button
+                    className="px-8 py-2 bg-green-500 text-white font-semibold rounded-md hover:bg-green-600 transition"
+                  >
                     LOREM IPSUM
                   </button>
-                  <button className="px-8 py-2 bg-white text-black font-semibold rounded-md border border-black hover:bg-gray-100 transition">
+                  <button
+                    onClick={handleNext} // Navigate forward for the second button
+                    className="px-8 py-2 bg-white text-black font-semibold rounded-md border border-black hover:bg-gray-100 transition"
+                  >
                     LOREM IPSUM
                   </button>
                 </>
@@ -136,30 +142,33 @@ const Giveaway = () => {
           </div>
 
           {/* Image Section */}
-          <div className="flex justify-center w-full">
+          <div className="w-full overflow-hidden">
             {currentStep === 1 && (
-              <img
-                src="/window_kuku.png"
-                alt="Step 1"
-                className="w-[404px] h-[430.1px]"
-                style={{ marginBottom: "2rem" }}
-              />
+              <div className="flex justify-center" style={{ height: "450px" }}>
+                <img
+                  src="/window_kuku.png"
+                  alt="Step 1"
+                  className="w-[404px] h-[430.1px] object-contain"
+                />
+              </div>
             )}
             {currentStep === 2 && (
-              <img
-                src="/cloth_hanger.png"
-                alt="Step 2"
-                className="w-[1733.46px] h-[313.77px]"
-                style={{ marginBottom: "2rem" }}
-              />
+              <div className="flex justify-center" style={{ height: "370px" }}>
+                <img
+                  src="/cloth_hanger.png"
+                  alt="Step 2"
+                 className="w-[108%] object-cover mt-[70px]"
+                />
+              </div>
             )}
             {currentStep === 3 && (
-              <img
-                src="/playgorund.png"
-                alt="Step 3"
-                className="w-full"
-                style={{ margin: 0, padding: 0 }}
-              />
+              <div className="flex justify-center w-full">
+                <img
+                  src="/playgorund.png"
+                  alt="Step 3"
+                  className="w-[108%] object-cover"
+                />
+              </div>
             )}
           </div>
         </div>
@@ -207,6 +216,13 @@ const Giveaway = () => {
               className="w-[340px] h-[399.13px]"
             />
           </div>
+          {/* Help button in Final Screen */}
+          <button
+            onClick={() => alert("Help button clicked")}
+            className="absolute top-4 right-4"
+          >
+            <img src="/help_gv.png" alt="Help" className="w-24 h-8" />
+          </button>
         </div>
       )}
     </>
