@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import React, { useState } from "react";
 
 const Giveaway = () => {
@@ -47,13 +48,15 @@ const Giveaway = () => {
           {/* Top Navigation */}
           <div className="flex justify-between w-[86%]">
             {/* Back button */}
+            <Link href="/">
             <button onClick={handleBack} className="text-3xl cursor-pointer">
+              
               <img src="/gv_arrow.png" alt="Back" className="w-8 h-8" />
             </button>
-
+            </Link>
             {/* Help button */}
             <button
-              onClick={() => alert("Help button clicked")}
+              // onClick={() => alert("Help button clicked")}
               className="cursor-pointer"
             >
               <img src="/help_gv.png" alt="Help" className="w-24 h-8" />
@@ -110,7 +113,7 @@ const Giveaway = () => {
               {currentStep === 3 ? (
                 <>
                   <button
-                    onClick={handleFinalScreen}
+                    // onClick={handleFinalScreen}
                     className="px-8 py-2 bg-green-500 text-white font-semibold rounded-md hover:bg-green-600 transition"
                   >
                     LOREM IPSUM
@@ -125,7 +128,7 @@ const Giveaway = () => {
               ) : (
                 <>
                   <button
-                    onClick={handleNext} // Navigate forward for the first button
+                    // onClick={handleNext} // Navigate forward for the first button
                     className="px-8 py-2 bg-green-500 text-white font-semibold rounded-md hover:bg-green-600 transition"
                   >
                     LOREM IPSUM
