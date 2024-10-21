@@ -41,7 +41,7 @@ export const SideBar = () => {
   return (
     <>
       {/* Hamburger Icon for Mobile - Sticky */}
-      <div className="lg:hidden sticky top-22 left-0 ">
+      <div className="lg:hidden sticky top-0 left-0 z-50 ">
         <button onClick={toggleSidebar} className="text-custom-pink text-3xl focus:outline-none">
           <FiMenu />
         </button>
