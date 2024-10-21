@@ -121,7 +121,7 @@ const ItemList = () => {
           clipPath: "ellipse(90% 100% at 50% 0%)",
         }}
       >
-        <div className="text-[#e6e6e6] text-[46px] font-luckiest leading-[55.20px]">
+        <div className="text-[#e6e6e6] text-[32px] sm:text-[46px] font-luckiest leading-[38px] sm:leading-[55.20px]">
           LIST YOUR ITEM
         </div>
 
@@ -140,13 +140,13 @@ const ItemList = () => {
 
       </div>
 
-      <div className="px-6 md:px-16 lg:px-20 py-10">
+      <div className="px-4 sm:px-8 md:px-16 lg:px-20 py-8 sm:py-10">
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
             <label className="block text-[#151515] text-base font-bold font-karla mb-2">
               Product Images
             </label>
-            <div className="flex space-x-9">
+            <div className="flex flex-wrap gap-4 sm:gap-9">
               {Array(4)
                 .fill()
                 .map((_, idx) => (

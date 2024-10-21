@@ -7,21 +7,11 @@ import Footer from '@/components/Footer';
 
 const Page = () => {
   return (
-    <div style={{ minHeight: '100vh', margin: 0 }}>
+    <div className="min-h-screen m-0">
       <Header backgroundColor="#FFF" />
       <div 
-        style={{ 
-          backgroundImage: "url('kukuit_bg.png')", 
-          minHeight: 'calc(100vh - 100px)', 
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          padding: '20px',
-          flexDirection: 'column',
-          overflow: 'auto',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-        }}
+        className="bg-cover bg-center min-h-[calc(100vh-100px)] flex flex-col justify-center items-center p-4 sm:p-8 overflow-auto"
+        style={{ backgroundImage: "url('kukuit_bg.png')" }}
       >
         <ItemList />
       </div>
@@ -30,4 +20,4 @@ const Page = () => {
   );
 };
 
-export default Page; 
+export default Page;
