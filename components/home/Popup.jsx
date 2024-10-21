@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import Link from 'next/link';
+import Link from "next/link";
 import Image from "next/image";
 
 const Popup = ({ isOpen, onClose }) => {
@@ -21,52 +21,48 @@ const Popup = ({ isOpen, onClose }) => {
           {/* Section 1 */}
           <div className="w-[328px] h-[154px] relative rounded-xl border border-[#e0e0e0] flex flex-col p-4">
             <div className="flex items-center">
-              <Image
-                src="/green-tick.png"
-                alt="tick"
-                width={18}
-                height={18}
-              />
+              <Image src="/green-tick.png" alt="tick" width={18} height={18} />
               <span className="ml-2 text-[#070707] text-base font-normal leading-tight">
                 You click photos and pack order
               </span>
             </div>
             <div className="flex items-center mt-2">
-              <Image
-                src="/green-tick.png"
-                alt="tick"
-                width={18}
-                height={18}
-              />
+              <Image src="/green-tick.png" alt="tick" width={18} height={18} />
               <span className="ml-2 text-[#070707] text-base font-normal leading-tight">
                 We pick up order at your doorstep
               </span>
             </div>
             <Link href="/listingproduct">
-            <button className="w-[292px] h-[52px] mt-4 bg-gradient-to-r from-[#e4086f] to-[#ff489e] rounded-[10px] flex items-center justify-between">
-              <div className="flex items-center">
-                <div className="w-[30.86px] h-[30.86px] bg-white rounded-full flex items-center justify-center mr-2" style={{ marginLeft: '8px' }}> 
+              <button className="w-[292px] h-[52px] mt-4 bg-gradient-to-r from-[#e4086f] to-[#ff489e] rounded-[10px] flex items-center justify-between">
+                <div className="flex items-center">
+                  <div
+                    className="w-[30.86px] h-[30.86px] bg-white rounded-full flex items-center justify-center mr-2"
+                    style={{ marginLeft: "8px" }}
+                  >
+                    <Image
+                      src="/mb-icon.png"
+                      alt="Post Item Icon"
+                      width={28}
+                      height={28}
+                    />
+                  </div>
+
+                  <span
+                    className="text-white text-base font-bold text-center"
+                    style={{ marginLeft: "6px" }}
+                  >
+                    Post Item Myself
+                  </span>
+                </div>
+                <div className="w-6 h-6">
                   <Image
-                    src="/mb-icon.png"
-                    alt="Post Item Icon"
-                    width={28}
-                    height={28}
+                    src="/arrow-right.png"
+                    alt="Arrow"
+                    width={24}
+                    height={24}
                   />
                 </div>
-                
-                <span className="text-white text-base font-bold text-center" style={{ marginLeft: '6px' }}> 
-                  Post Item Myself
-                </span>
-              </div>
-              <div className="w-6 h-6">
-                <Image
-                  src="/arrow-right.png" 
-                  alt="Arrow"
-                  width={24}
-                  height={24}
-                />
-              </div>
-            </button>
+              </button>
             </Link>
           </div>
 
@@ -76,23 +72,13 @@ const Popup = ({ isOpen, onClose }) => {
           {/* Section 2 */}
           <div className="w-[328px] h-[181px] relative rounded-xl border border-[#e0e0e0] flex flex-col p-4">
             <div className="flex items-center">
-              <Image
-                src="/green-tick.png"
-                alt="tick"
-                width={18}
-                height={18}
-              />
+              <Image src="/green-tick.png" alt="tick" width={18} height={18} />
               <span className="ml-2 text-[#070707] text-base font-normal leading-tight">
                 You click photos and pack order
               </span>
             </div>
             <div className="flex items-center mt-2">
-              <Image
-                src="/green-tick.png"
-                alt="tick"
-                width={18}
-                height={18}
-              />
+              <Image src="/green-tick.png" alt="tick" width={18} height={18} />
               <span className="ml-2 text-[#070707] text-base font-normal leading-tight">
                 We pick up order at your doorstep
               </span>
@@ -101,29 +87,39 @@ const Popup = ({ isOpen, onClose }) => {
               *Ku-Kit is only applicable for minimum 5 items
             </div>
             <Link href="/kukuit">
-            <button className="w-[292px] h-[52px] bg-gradient-to-r from-[#f7d400] to-[#fef200] rounded-[10px] flex items-center justify-between">
-              <div className="flex items-center">
-                <div className="w-[30.86px] h-[30.86px] bg-white rounded-full flex items-center justify-center mr-2" style={{ marginLeft: '6px' }}> {/* Reduced by 4px */}
+              <button className="w-[292px] h-[52px] bg-gradient-to-r from-[#f7d400] to-[#fef200] rounded-[10px] flex items-center justify-between">
+                <div className="flex items-center">
+                  <div
+                    className="w-[30.86px] h-[30.86px] bg-white rounded-full flex items-center justify-center mr-2"
+                    style={{ marginLeft: "6px" }}
+                  >
+                    {" "}
+                    {/* Reduced by 4px */}
+                    <Image
+                      src="/giftbox-icon.png"
+                      alt="Kukit Services"
+                      width={22}
+                      height={22}
+                    />
+                  </div>
+                  <span
+                    className="text-white text-base font-bold text-center"
+                    style={{ marginLeft: "6px" }}
+                  >
+                    {" "}
+                    {/* Shifted 4px more right */}
+                    Kukit Services
+                  </span>
+                </div>
+                <div className="w-6 h-6">
                   <Image
-                    src="/giftbox-icon.png"
-                    alt="Kukit Services"
-                    width={22} 
-                    height={22} 
+                    src="/arrow-right.png"
+                    alt="Arrow"
+                    width={24}
+                    height={24}
                   />
                 </div>
-                <span className="text-white text-base font-bold text-center" style={{ marginLeft: '6px' }}> {/* Shifted 4px more right */}
-                  Kukit Services
-                </span>
-              </div>
-              <div className="w-6 h-6">
-                <Image
-                  src="/arrow-right.png" 
-                  alt="Arrow"
-                  width={24}
-                  height={24}
-                />
-              </div>
-            </button>
+              </button>
             </Link>
           </div>
 
@@ -135,29 +131,37 @@ const Popup = ({ isOpen, onClose }) => {
             <div className="text-[#070707] text-base font-normal">
               Give away clothes for rebate per kg
             </div>
-            <button className="w-[292px] h-[52px] bg-[#30bd75] rounded-[10px] flex items-center justify-between mt-2">
-              <div className="flex items-center">
-                <div className="w-[30.86px] h-[30.86px] bg-white rounded-full flex items-center justify-center mr-2" style={{ marginLeft: '6px' }}> {/* Reduced by 4px */}
+            <Link href="/giveaway">
+              <button className="w-[292px] h-[52px] bg-[#30bd75] rounded-[10px] flex items-center justify-between mt-2">
+                <div className="flex items-center">
+                  <div
+                    className="w-[30.86px] h-[30.86px] bg-white rounded-full flex items-center justify-center mr-2"
+                    style={{ marginLeft: "6px" }}
+                  >
+                    <Image
+                      src="/giftbox-icon.png"
+                      alt="Give Away"
+                      width={22}
+                      height={22}
+                    />
+                  </div>
+                  <span
+                    className="text-white text-base font-bold text-center"
+                    style={{ marginLeft: "6px" }}
+                  >
+                    Give Away
+                  </span>
+                </div>
+                <div className="w-6 h-6">
                   <Image
-                    src="/giftbox-icon.png"
-                    alt="Give Away"
-                    width={22} 
-                    height={22} 
+                    src="/arrow-right.png"
+                    alt="Arrow"
+                    width={24}
+                    height={24}
                   />
                 </div>
-                <span className="text-white text-base font-bold text-center" style={{ marginLeft: '6px' }}> 
-                  Give Away
-                </span>
-              </div>
-              <div className="w-6 h-6">
-                <Image
-                  src="/arrow-right.png" 
-                  alt="Arrow"
-                  width={24}
-                  height={24}
-                />
-              </div>
-            </button>
+              </button>
+            </Link>
           </div>
         </div>
       </div>
