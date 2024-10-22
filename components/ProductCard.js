@@ -319,10 +319,9 @@ const ProductCard = () => {
 
           <Link href="/cart">
             <button
-              className="mt-4 text-black w-full font-bold flex items-center justify-center hover:bg-yellow-500 transition-all duration-300"
+              className="mt-4 text-black w-full font-bold flex items-center justify-center bg-yellow-300 hover:bg-yellow-400 transition-all duration-300"
               style={{
                 height: "72px",
-                backgroundColor: "#FDE504",
                 borderRadius: "16px",
               }}
             >
@@ -338,10 +337,9 @@ const ProductCard = () => {
 
             <button
               onClick={handleOpenRentPopup}
-              className="mt-2 text-black w-full font-bold hover:bg-blue-300 transition-all duration-300"
+              className="mt-2 text-black w-full font-bold bg-[#69D3FA] transition-all duration-300 hover:bg-[#9ee1fb]"
               style={{
                 height: "72px",
-                backgroundColor: "#69D3FA",
                 borderRadius: "16px",
               }}
             >
