@@ -509,7 +509,16 @@ const ProductCard = () => {
       {/* Offer Popup */}
       {isOfferPopupOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-          <div className="bg-white p-9 rounded-lg shadow-lg w-[500px] text-start">
+          <div
+            className="bg-white p-9 rounded-lg shadow-lg w-[500px] text-start"
+            style={{
+              width: "500px", // Default width for desktop
+              ...(window.innerWidth <= 768 && {
+                width: "90%",
+                padding: "1.5rem",
+              }), // Mobile responsive styling
+            }}
+          >
             <div>
               <span
                 style={{
@@ -529,16 +538,24 @@ const ProductCard = () => {
               </span>
             </div>
             <div>
-              <div className="text-[#070707] text-[15px] font-bold font-karla mt-3 mb-3  ">
+              <div className="text-[#070707] text-[15px] font-bold font-karla mt-3 mb-3">
                 Quote your price
               </div>
             </div>
-            <div className="flex gap-[8px]">
+            <div
+              className="flex gap-[8px]"
+              style={{
+                flexDirection: window.innerWidth <= 768 ? "column" : "row", // Stack buttons in mobile view
+              }}
+            >
               <button
                 className={`w-[89px] h-[41px] py-[8.66px] px-[10.93px] bg-white rounded-[6.93px] border ${
                   selectedPrice === 200 ? "border-pink-500" : "border-[#878787]"
                 } inline-flex items-center justify-center gap-[8.66px]`}
                 onClick={() => handlePriceSelection(200)}
+                style={{
+                  width: window.innerWidth <= 768 ? "100%" : "89px", // Full width for mobile
+                }}
               >
                 <div className="text-[#4C5C6B] text-[14px] font-karla font-normal break-words">
                   AED 200
@@ -549,6 +566,9 @@ const ProductCard = () => {
                   selectedPrice === 195 ? "border-pink-500" : "border-[#878787]"
                 } inline-flex items-center justify-center gap-[8.66px]`}
                 onClick={() => handlePriceSelection(195)}
+                style={{
+                  width: window.innerWidth <= 768 ? "100%" : "89px", // Full width for mobile
+                }}
               >
                 <div className="text-[#4C5C6B] text-[14px] font-karla font-normal break-words">
                   AED 195
@@ -560,6 +580,9 @@ const ProductCard = () => {
                   placeholder="Enter the custom amount"
                   className="w-[245px] h-[41px] py-[8.66px] px-[19.93px] bg-white rounded-[6.93px] border border-[#878787] text-[#4C5C6B] text-[14px] font-karla font-normal placeholder:text-[#B0B0B0] break-words outline-none"
                   onChange={(e) => handlePriceSelection(e.target.value)}
+                  style={{
+                    width: window.innerWidth <= 768 ? "100%" : "245px", // Full width for mobile
+                  }}
                 />
               </div>
             </div>
@@ -573,19 +596,25 @@ const ProductCard = () => {
               still buy the item before you.
             </p>
 
-            <div className="justify-center flex-col ">
+            <div className="justify-center flex-col">
               <button
                 onClick={handleOpenModal}
                 className={`bg-[#FDE504] text-[#E4086F] text-[20px] font-bold font-karla rounded-lg w-[440px] h-[65px] ${
                   isSubmitDisabled ? "opacity-50 cursor-not-allowed" : ""
                 }`}
                 disabled={isSubmitDisabled}
+                style={{
+                  width: window.innerWidth <= 768 ? "100%" : "440px", // Full width for mobile
+                }}
               >
                 SUBMIT
               </button>
               <button
                 onClick={handleCloseOfferPopup}
-                className="border-[#F7B5D4] text-[#E4086F] text-[20px] font-bold  font-karla rounded-lg px-4 py-2 border w-[455px] h-[65px] mt-3"
+                className="border-[#F7B5D4] text-[#E4086F] text-[20px] font-bold font-karla rounded-lg px-4 py-2 border w-[455px] h-[65px] mt-3"
+                style={{
+                  width: window.innerWidth <= 768 ? "100%" : "440px", // Full width for mobile
+                }}
               >
                 CANCEL
               </button>
