@@ -10,14 +10,14 @@ import { useRouter } from 'next/navigation';
 export default function Renting() {
   const [isModalOpen, setIsModalOpen] = useState(false); // State to control the modal
 
-  const router =useRouter();
+  const router = useRouter();
   const handleOpenModal = () => {
     setIsModalOpen(true);
   };
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
-    router.push("/selling-page")
+    router.push("/selling-page");
   };
 
   return (
@@ -74,14 +74,14 @@ export default function Renting() {
 
                 <div className="flex justify-start mt-1 items-start gap-4">
                   <Link href="/product">
-                    <button className="w-full md:w-[200px] h-[40px] md:h-[50px] hover:text-white hover:border-white rounded-[14px] text-black border-2 border-[#0f0f0f] justify-center items-center gap-[8.8px] inline-flex hover:bg-[#e4086f]">
+                    <button className="w-full md:w-[200px] h-[40px] md:h-[50px] hover:text-white hover:border-white rounded-[14px] text-black border-2 border-[#0f0f0f] justify-center items-center gap-[8.8px] inline-flex hover:bg-[#e4086f] p-2">
                       <span className="text-[12px] md:text-[14px] font-bold font-karla uppercase leading-snug">
                         Remove
                       </span>
                     </button>
                   </Link>
                   <Link href="/wishlist">
-                    <button className="w-full md:w-[200px] h-[40px] md:h-[50px] hover:text-white hover:border-white rounded-[14px] text-black border-2 border-[#0f0f0f] justify-center items-center gap-[8.8px] inline-flex hover:bg-[#e4086f]">
+                    <button className="w-full md:w-[200px] h-[40px] md:h-[50px] hover:text-white hover:border-white rounded-[14px] text-black border-2 border-[#0f0f0f] justify-center items-center gap-[8.8px] inline-flex hover:bg-[#e4086f] p-2">
                       <span className="text-[12px] md:text-[14px] font-bold font-karla uppercase leading-snug">
                         Add to Wishlist
                       </span>
@@ -135,7 +135,7 @@ export default function Renting() {
                 onClick={handleOpenModal}
                 className="w-full h-[48px] p-2 bg-[#fde504] rounded-[16px] justify-center items-center mt-2 mb-2"
               >
-                <div className="text-center text-[#070707] text-[14px] font-medium font-karla">
+                <div className="text-center text-[#070707] text-[14px] font-bold font-karla">
                   Pay Deposit
                 </div>
               </button>
@@ -179,38 +179,36 @@ export default function Renting() {
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
+                    strokeWidth="2"
                   >
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M5 13l4 4L19 7"
+                      d="M5 12l5 5L20 7"
                     />
                   </svg>
                 </div>
               </div>
 
-              {/* Title */}
-              <div className="text-[rgb(11,12,30)] text-[20px] font-bold text-center font-karla leading-tight">
-                <div>Your rental request</div>
-                <div>has been confirmed</div>
+              {/* Modal Title */}
+              <div className="text-[20px] md:text-[24px] font-bold font-karla mb-4">
+                Successfully paid deposit!
               </div>
-
-              {/* Description */}
-              <div className="text-[#7F808C] text-[16px] font-normal font-karla leading-tight mt-1">
-                <div> Kuku team will reach out to you and let</div>
-                <div> you know about the further details</div>
+              <div className="text-[#6B6B6B] text-[14px] md:text-[16px] mb-8">
+                Thank you for your payment. Your transaction is complete.
               </div>
+              <button
+                onClick={handleCloseModal}
+                className="w-full h-[48px] bg-[#e4086f] rounded-[14px] text-white"
+              >
+                Go to Selling Page
+              </button>
             </div>
           </div>
         )}
-
       </div>
-      <div>
-        <DownloadKuku />
-        <Footer />
-      </div>
-
+      <DownloadKuku />
+      <Footer />
     </>
   );
 }
