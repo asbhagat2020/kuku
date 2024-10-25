@@ -6,6 +6,9 @@ import NotificationPanel from "./home/NotificationPanel"; // Import the Notifica
 
 import { usePathname } from "next/navigation";
 import Link from "next/link";
+import WomenDropdown from "./WomenDropdown";
+import MenDropdown from "./MenDropdown";
+import KidsDropdown from "./KidsDropdown";
 
 const Header = () => {
   const [isSearchVisible, setIsSearchVisible] = useState(false);
@@ -58,6 +61,10 @@ const Header = () => {
         "Great news! Someone has made you an offer. Tap here to check it out",
     },
   ];
+
+
+
+
 
   const toggleSearch = () => {
     setIsSearchVisible(!isSearchVisible);
@@ -170,7 +177,8 @@ const Header = () => {
                   isHome ? "text-[#fefae5]" : "text-black"
                 } text-base font-bold font-karla leading-tight hover:text-pink-500`}
               >
-                MEN
+                {/* Men */}
+                <MenDropdown/>
               </Link>
               <Link
                 href="/selling-page"
@@ -178,7 +186,8 @@ const Header = () => {
                   isHome ? "text-[#fefae5]" : "text-black"
                 } text-base font-bold font-karla leading-tight hover:text-pink-500`}
               >
-                WOMEN
+                {/* Women */}
+              <WomenDropdown/>
               </Link>
               <Link
                 href="/selling-page"
@@ -186,7 +195,8 @@ const Header = () => {
                   isHome ? "text-[#fefae5]" : "text-black"
                 } text-base font-bold font-karla leading-tight hover:text-pink-500`}
               >
-                KIDS
+                {/* Kids */}
+                <KidsDropdown/>
               </Link>
             </div>
           </div>
@@ -426,7 +436,8 @@ const Header = () => {
                   isHome ? "text-white" : "text-black"
                 } text-base font-bold font-karla leading-tight hover:text-pink-500`}
               >
-                MEN
+                {/* MEN */}
+                <MenDropdown/>
               </Link>
               <Link
                 href="wommen"
@@ -434,7 +445,8 @@ const Header = () => {
                   isHome ? "text-white" : "text-black"
                 } text-base font-bold font-karla leading-tight hover:text-pink-500`}
               >
-                WOMEN
+                {/* WOMEN */}
+                <WomenDropdown/>
               </Link>
               <Link
                 href="kids"
@@ -442,7 +454,8 @@ const Header = () => {
                   isHome ? "text-white" : "text-black"
                 } text-base font-bold font-karla leading-tight hover:text-pink-500`}
               >
-                KIDS
+                {/* KIDS */}
+                <KidsDropdown/>
               </Link>
             </div>
           </div>
