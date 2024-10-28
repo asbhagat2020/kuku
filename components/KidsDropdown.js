@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const categories = [
   {
@@ -130,7 +130,7 @@ const categories = [
     ],
   },
   {
-    title: "Toddler and Infant Clothing",
+    title: "Toddler and Infant",
     items: [
       "Toddler Suits",
       "Toddler Dresses",
@@ -153,24 +153,70 @@ const categories = [
 
 export default function KidsDropdown() {
   const [isKidsHovered, setIsKidsHovered] = useState(false);
+  const [isMounted, setIsMounted] = useState(false); // Handle SSR mismatch
+
+  // Ensure the component only renders interactive content on the client
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  if (!isMounted) return null; // Prevent SSR-client mismatch
 
   return (
-    <div 
-      className="relative z-50"
+    <div
+      className=" relative lg:z-50 group md:z-30"
       onMouseEnter={() => setIsKidsHovered(true)}
       onMouseLeave={() => setIsKidsHovered(false)}
     >
-      <a href="#" className="text-[#fefae5] hover:text-pink-500 z-500">KIDS</a>
-      {/* Dropdown Menu */}
+      {/* Title and underline effect */}
+      <div className="relative lg:py-[33px]">
+        <span className="text-[#fefae5] hover:text-pink-500 cursor-pointer">
+          KIDS
+        </span>
+        {/* Underline effect */}
+        <div
+          className={`absolute bottom-0 left-0 lg:w-full h-0.5 bg-pink-500 transform origin-left transition-transform duration-300 ${
+            isKidsHovered ? 'scale-x-100' : 'scale-x-0'
+          }`}
+        />
+      </div>
+
+      {/* Invisible bridge to prevent hover gap */}
+      <div className="absolute h-8 w-full" />
+
+      {/* Dropdown Menu with thin scrollbar */}
       {isKidsHovered && (
-        <div className="absolute left-0 mt-0 w-max bg-white shadow-lg border border-gray-200 p-4 z-0 max-h-60 md:max-h-80 lg:max-h-[32rem] overflow-y-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <div className="absolute lg:left-[-300px] lg:top-full w-max bg-white shadow-lg p-4 z-10 max-h-60 md:max-h-80 lg:max-h-[25rem] overflow-y-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 thin-scrollbar">
+          <style jsx>{`
+            .thin-scrollbar {
+              scrollbar-width: thin;
+              scrollbar-color: #E5E7EB transparent;
+            }
+            .thin-scrollbar::-webkit-scrollbar {
+              width: 2px;
+            }
+            .thin-scrollbar::-webkit-scrollbar-track {
+              background: transparent;
+            }
+            .thin-scrollbar::-webkit-scrollbar-thumb {
+              background-color: #E5E7EB;
+              border-radius: 20px;
+            }
+            .thin-scrollbar::-webkit-scrollbar-thumb:hover {
+              background-color: #D1D5DB;
+            }
+          `}</style>
           {categories.map((category) => (
             <div key={category.title}>
-              <h4 className="font-bold text-pink-500 mb-4 text-sm sm:text-base">{category.title}</h4>
+              <h4 className="font-bold text-pink-500 mb-4 text-sm sm:text-base">
+                {category.title}
+              </h4>
               <ul className="space-y-2 text-xs sm:text-sm">
                 {category.items.map((item) => (
                   <li key={item}>
-                    <a href="#" className="text-[#3F3F3F] hover:text-pink-500">{item}</a>
+                    <a href="#" className="text-gray-600 hover:text-pink-500">
+                      {item}
+                    </a>
                   </li>
                 ))}
               </ul>

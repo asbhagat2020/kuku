@@ -141,7 +141,7 @@ const Header = () => {
   return (
     <header>
       <div
-        className="max-w-full lg:px-[70px] py-[23px] h-[108px]"
+        className="max-w-full lg:px-[70px] py-[23px] h-[108px] z-100"
         style={{ backgroundColor: isSpecialPath ? "#FFF" : "#EDA702" }}
       >
         <div className="flex justify-between">

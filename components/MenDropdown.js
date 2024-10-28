@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const categories = [
   {
@@ -127,7 +127,7 @@ const categories = [
     ],
   },
   {
-    title: "Outdoor and Adventure Clothing",
+    title: "Outdoor and Adventure",
     items: [
       "Hiking Pants",
       "Outdoor Jackets",
@@ -151,33 +151,79 @@ const categories = [
 ];
 
 export default function MenDropdown() {
-    const [isMenHovered, setIsMenHovered] = useState(false);
-  
-    return (
-      <div
-        className="relative z-70"
-        onMouseEnter={() => setIsMenHovered(true)}
-        onMouseLeave={() => setIsMenHovered(false)}
-      >
-        <a href="#" className="text-[#fefae5] hover:text-pink-500">MEN</a>
-        {/* Dropdown Menu */}
-        {isMenHovered && (
-          <div className="absolute left-0 mt-0 w-max lg:w-[800px] bg-white shadow-lg border border-gray-200 p-4 z-10 max-h-60 lg:max-h-[500px] overflow-y-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {categories.map((category) => (
-              <div key={category.title}>
-                <h4 className="font-bold text-pink-500 mb-4 text-sm sm:text-base">{category.title}</h4>
-                <ul className="space-y-2 text-xs sm:text-sm">
-                  {category.items.map((item) => (
-                    <li key={item}>
-                      <a href="#" className="text-[#3F3F3F] hover:text-pink-500">{item}</a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
-        )}
+  const [isMenHovered, setIsMenHovered] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
+
+  // Ensure the component only renders on the client
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  if (!isMounted) return null; // Prevent SSR mismatch
+
+  return (
+    <div
+      className="relative z-50 group md:z-50"
+      onMouseEnter={() => setIsMenHovered(true)}
+      onMouseLeave={() => setIsMenHovered(false)}
+    >
+      {/* Navigation Link with Underline Effect */}
+      <div className="relative lg:py-[33px]">
+        <a href="#" className="text-[#fefae5] hover:text-pink-500">
+          MEN
+        </a>
+        {/* Underline effect */}
+        <div
+          className={`absolute bottom-0 left-0 lg:w-full h-0.5 bg-pink-500 transform origin-left transition-transform duration-300 ${
+            isMenHovered ? 'scale-x-100' : 'scale-x-0'
+          }`}
+        />
       </div>
-    );
-  }
+
+      {/* Invisible bridge to prevent hover gap */}
+      <div className="absolute h-8 w-full" />
+
+      {/* Dropdown Menu */}
+      {isMenHovered && (
+        <div className="absolute lg:left-[-150px] lg:top-full w-max bg-white shadow-lg p-4 z-10 max-h-60 md:max-h-80 lg:max-h-[25rem] overflow-y-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 thin-scrollbar">
+         <style jsx>{`
+            .thin-scrollbar {
+              scrollbar-width: thin;
+              scrollbar-color: #E5E7EB transparent;
+            }
+            .thin-scrollbar::-webkit-scrollbar {
+              width: 2px;
+            }
+            .thin-scrollbar::-webkit-scrollbar-track {
+              background: transparent;
+            }
+            .thin-scrollbar::-webkit-scrollbar-thumb {
+              background-color: #E5E7EB;
+              border-radius: 20px;
+            }
+            .thin-scrollbar::-webkit-scrollbar-thumb:hover {
+              background-color: #D1D5DB;
+            }
+          `}</style>
+          {categories.map((category) => (
+            <div key={category.title}>
+              <h4 className="font-bold text-pink-500 mb-4 text-sm sm:text-base">
+                {category.title}
+              </h4>
+              <ul className="space-y-2 text-xs sm:text-sm">
+                {category.items.map((item) => (
+                  <li key={item}>
+                    <a href="#" className="text-gray-600 hover:text-pink-500">
+                      {item}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
   
