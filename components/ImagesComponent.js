@@ -13,7 +13,7 @@ const cardData = [
   {
     id: 1,
     user: "Kuku1222",
-    img: "/kuki_img.png",
+    img: "/profile_icon.svg",
     productImg: ["bg-custom-image1", "bg-custom-image2", "bg-custom-image3"],
     heard_img: "/heard_img.png",
     title: "Dress",
@@ -22,7 +22,7 @@ const cardData = [
   {
     id: 2,
     user: "Kuku1222",
-    img: "/kuki_img.png",
+    img: "/profile_icon.svg",
     productImg: ["bg-custom-image2", "bg-custom-image3", "bg-custom-image1"],
     heard_img: "/heard_img.png",
     title: "Dress",
@@ -31,7 +31,7 @@ const cardData = [
   {
     id: 3,
     user: "Kuku1222",
-    img: "/kuki_img.png",
+    img: "/profile_icon.svg",
     productImg: ["bg-custom-image3", "bg-custom-image1", "bg-custom-image2"],
     heard_img: "/heard_img.png",
     title: "Dress",
@@ -40,7 +40,7 @@ const cardData = [
   {
     id: 4,
     user: "Kuku1222",
-    img: "/kuki_img.png",
+    img: "/profile_icon.svg",
     productImg: ["bg-custom-image4", "bg-custom-image5", "bg-custom-image6"],
     heard_img: "/heard_img.png",
     title: "Dress",
@@ -49,7 +49,7 @@ const cardData = [
   {
     id: 5,
     user: "Kuku1222",
-    img: "/kuki_img.png",
+    img: "/profile_icon.svg",
     productImg: ["bg-custom-image5", "bg-custom-image6", "bg-custom-image4"],
     heard_img: "/heard_img.png",
     title: "Dress",
@@ -58,7 +58,7 @@ const cardData = [
   {
     id: 6,
     user: "Kuku1222",
-    img: "/kuki_img.png",
+    img: "/profile_icon.svg",
     productImg: ["bg-custom-image6", "bg-custom-image4", "bg-custom-image5"],
     heard_img: "/heard_img.png",
     title: "Dress",
@@ -67,7 +67,7 @@ const cardData = [
   {
     id: 7,
     user: "Kuku1222",
-    img: "/kuki_img.png",
+    img: "/profile_icon.svg",
     productImg: ["bg-custom-image1", "bg-custom-image2", "bg-custom-image3"],
     heard_img: "/heard_img.png",
     title: "Dress",
@@ -76,7 +76,7 @@ const cardData = [
   {
     id: 8,
     user: "Kuku1222",
-    img: "/kuki_img.png",
+    img: "/profile_icon.svg",
     productImg: ["bg-custom-image2", "bg-custom-image3", "bg-custom-image1"],
     heard_img: "/heard_img.png",
     title: "Dress",
@@ -85,7 +85,7 @@ const cardData = [
   {
     id: 9,
     user: "Kuku1222",
-    img: "/kuki_img.png",
+    img: "/profile_icon.svg",
     productImg: ["bg-custom-image3", "bg-custom-image1", "bg-custom-image2"],
     heard_img: "/heard_img.png",
     title: "Dress",
@@ -94,7 +94,7 @@ const cardData = [
   {
     id: 10,
     user: "Kuku1222",
-    img: "/kuki_img.png",
+    img: "/profile_icon.svg",
     productImg: ["bg-custom-image1", "bg-custom-image2", "bg-custom-image3"],
     heard_img: "/heard_img.png",
     title: "Dress",
@@ -103,7 +103,7 @@ const cardData = [
   {
     id: 11,
     user: "Kuku1222",
-    img: "/kuki_img.png",
+    img: "/profile_icon.svg",
     productImg: ["bg-custom-image2", "bg-custom-image3", "bg-custom-image1"],
     heard_img: "/heard_img.png",
     title: "Dress",
@@ -112,7 +112,7 @@ const cardData = [
   {
     id: 12,
     user: "Kuku1222",
-    img: "/kuki_img.png",
+    img: "/profile_icon.svg",
     productImg: ["bg-custom-image3", "bg-custom-image1", "bg-custom-image2"],
     heard_img: "/heard_img.png",
     title: "Dress",
@@ -121,7 +121,7 @@ const cardData = [
   {
     id: 13,
     user: "Kuku1222",
-    img: "/kuki_img.png",
+    img: "/profile_icon.svg",
     productImg: ["bg-custom-image4", "bg-custom-image5", "bg-custom-image6"],
     heard_img: "/heard_img.png",
     title: "Dress",
@@ -130,7 +130,7 @@ const cardData = [
   {
     id: 14,
     user: "Kuku1222",
-    img: "/kuki_img.png",
+    img: "/profile_icon.svg",
     productImg: ["bg-custom-image5", "bg-custom-image6", "bg-custom-image4"],
     heard_img: "/heard_img.png",
     title: "Dress",
@@ -139,7 +139,7 @@ const cardData = [
   {
     id: 15,
     user: "Kuku1222",
-    img: "/kuki_img.png",
+    img: "/profile_icon.svg",
     productImg: ["bg-custom-image6", "bg-custom-image4", "bg-custom-image5"],
     heard_img: "/heard_img.png",
     title: "Dress",
@@ -148,7 +148,7 @@ const cardData = [
   {
     id: 16,
     user: "Kuku1222",
-    img: "/kuki_img.png",
+    img: "/profile_icon.svg",
     productImg: ["bg-custom-image1", "bg-custom-image2", "bg-custom-image3"],
     heard_img: "/heard_img.png",
     title: "Dress",
@@ -157,7 +157,7 @@ const cardData = [
   {
     id: 17,
     user: "Kuku1222",
-    img: "/kuki_img.png",
+    img: "/profile_icon.svg",
     productImg: ["bg-custom-image2", "bg-custom-image3", "bg-custom-image1"],
     heard_img: "/heard_img.png",
     title: "Dress",
@@ -166,7 +166,7 @@ const cardData = [
   {
     id: 18,
     user: "Kuku1222",
-    img: "/kuki_img.png",
+    img: "/profile_icon.svg",
     productImg: ["bg-custom-image3", "bg-custom-image1", "bg-custom-image2"],
     heard_img: "/heard_img.png",
     title: "Dress",
@@ -178,13 +178,18 @@ export const ImagesComponent = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [isOfferPopupOpen, setIsOfferPopupOpen] = useState(false);
   const [offerSubmitted, setOfferSubmitted] = useState(false);
-
+  const [likedCards, setLikedCards] = useState({});
+  
   const cardsPerPage = 9;
 
   const indexOfLastCard = currentPage * cardsPerPage;
   const indexOfFirstCard = indexOfLastCard - cardsPerPage;
   const currentCards = cardData.slice(indexOfFirstCard, indexOfLastCard);
+  const [isLiked, setIsLiked] = useState(false);
 
+  const handleClick = () => {
+    setIsLiked(!isLiked);
+  };
   const totalPages = Math.ceil(cardData.length / cardsPerPage);
 
   const handleNextPage = () => {
@@ -199,7 +204,6 @@ export const ImagesComponent = () => {
     setCurrentPage(selectedPage);
   };
 
-
   const handleOpenOfferPopup = () => {
     setIsOfferPopupOpen(true);
   };
@@ -213,6 +217,13 @@ export const ImagesComponent = () => {
     // Add your submission logic here
     setOfferSubmitted(true);
     handleCloseOfferPopup();
+  };
+
+  const handleLikeClick = (cardId) => {
+    setLikedCards((prevLikedCards) => ({
+      ...prevLikedCards,
+      [cardId]: !prevLikedCards[cardId],
+    }));
   };
 
   const innerSliderSettings = {
@@ -257,13 +268,13 @@ export const ImagesComponent = () => {
           <div key={card.id} className="flex flex-col">
             <div className="flex justify-between items-center space-x-4">
               <div className="flex space-x-4 items-center">
-                <div className="flex items-center justify-center rounded-full bg-purple-600 w-10 h-10">
-                  <img
-                    src={card.img}
-                    alt="User avatar"
-                    className="object-contain h-9 w-7"
-                  />
-                </div>
+                {/* <div className="flex items-center justify-center rounded-full bg-purple-600 w-10 h-10"> */}
+                <img
+                  src={card.img}
+                  alt="User avatar"
+                  className="object-contain h-12 w-12"
+                />
+                {/* </div> */}
                 <p className="font-bold text-sm">{card.user}</p>
               </div>
               <button className="mt-2 px-4 sm:px-6 py-1 bg-custom-green text-white rounded-full">
@@ -278,16 +289,20 @@ export const ImagesComponent = () => {
                   key={index}
                   className={`h-64 sm:h-80 w-full ${imgClass} bg-cover bg-center rounded-2xl shadow-md p-6 mt-4 relative`}
                 >
-
-                 <Link href="/wishlist">
-                 <div className="absolute top-4 right-4 w-12 h-12 flex items-center justify-center rounded-full bg-custom-gray">
+                  <div
+                    className="absolute top-4 right-4 w-12 h-12 flex items-center justify-center rounded-full bg-custom-gray cursor-pointer"
+                    onClick={() => handleLikeClick(card.id)}
+                  >
                     <img
                       src={card.heard_img}
                       alt="Heart icon"
-                      className="w-5 h-4"
+                      className={`w-5 h-5 transition-all duration-200 ${
+                        likedCards[card.id] ? "bg-red-600 w-6 h-5" : "bg-gray-500"
+                      }`}
+                      style={{ color: likedCards[card.id] ? "red" : "inherit" }}
                     />
                   </div>
-                 </Link>
+
                   <div className="w-full mr-6 absolute bottom-4 flex justify-evenly">
                     <Link href="/product" className="w-[70%]">
                       {" "}
@@ -319,7 +334,6 @@ export const ImagesComponent = () => {
               onClose={handleCloseOfferPopup}
               onSubmit={handleOfferSubmit}
             />
-
 
             <h5 className="text-sm font-medium text-gray-700 mt-4">
               {card.title}

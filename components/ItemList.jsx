@@ -126,18 +126,17 @@ const ItemList = () => {
         </div>
 
         <img
-  src="/yellow-bird.png"
-  alt="Yellow Bird"
-  className="absolute top-6 right-24 w-12 h-12 hidden md:block" // Hidden on mobile, shown on desktop
-  style={{ marginTop: "53px", marginRight: "30px" }}
-/>
-<div
-  className="absolute top-5 right-6 w-12 h-12 rounded-full border-2 border-black border-dotted flex items-center justify-center p-[2px] hidden md:flex" // Hidden on mobile, shown on desktop
-  style={{ marginTop: "63px" }}
->
-  <div className="w-5 h-5 bg-yellow-400 rounded-full border-2 border-black"></div>
-</div>
-
+          src="/yellow-bird.png"
+          alt="Yellow Bird"
+          className="absolute top-6 right-24 w-12 h-12 hidden md:block" // Hidden on mobile, shown on desktop
+          style={{ marginTop: "53px", marginRight: "30px" }}
+        />
+        <div
+          className="absolute top-5 right-6 w-12 h-12 rounded-full border-2 border-black border-dotted flex items-center justify-center p-[2px] hidden md:flex" // Hidden on mobile, shown on desktop
+          style={{ marginTop: "63px" }}
+        >
+          <div className="w-5 h-5 bg-yellow-400 rounded-full border-2 border-black"></div>
+        </div>
       </div>
 
       <div className="px-4 sm:px-8 md:px-16 lg:px-20 py-8 sm:py-10">
@@ -300,9 +299,10 @@ const ItemList = () => {
               } rounded-lg max-w-[500px]`}
             >
               <option value="">Choose Product Size</option>
-              <option value="Small">Small</option>
-              <option value="Medium">Medium</option>
-              <option value="Large">Large</option>
+              <option value="Small">S</option>
+              <option value="Medium">M</option>
+              <option value="Large">L</option>
+              <option value="V-Large">XL</option>
             </select>
             {errors.size && <p className="text-red-500 mt-1">{errors.size}</p>}
           </div>
