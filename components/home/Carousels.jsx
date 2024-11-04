@@ -7,10 +7,15 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Link from "next/link";
 import { OfferPopup } from "@/components/OfferPopup";
+import { FcLike } from "react-icons/fc";
+import { GoHeart } from "react-icons/go";
 
 const Carousels = () => {
   const [isOfferPopupOpen, setIsOfferPopupOpen] = useState(false);
   const [offerSubmitted, setOfferSubmitted] = useState(false);
+  const [likedCards, setLikedCards] = useState({});
+
+  
   const handleOpenOfferPopup = () => {
     setIsOfferPopupOpen(true);
   };
@@ -30,72 +35,84 @@ const Carousels = () => {
 
   const product = [
     {
+      id:1,
       title: "Dress",
       price: "12 AED",
       image: ["/dress_1.png", "/dress_3.png", "/dress_2.png"],
       link: "/product",
     },
     {
+      id:2,
       title: "Dress",
       price: "12 AED",
       image: ["/dress_2.png", "/dress_1.png", "/dress_2.png"],
       link: "/product",
     },
     {
+      id:3,
       title: "Dress",
       price: "12 AED",
       image: ["/dress_3.png", "/dress_3.png", "/dress_2.png"],
       link: "/product",
     },
     {
+      id:4,
       title: "Dress",
       price: "12 AED",
       image: ["/dress_1.png", "/dress_1.png", "/dress_2.png"],
       link: "/product",
     },
     {
+      id:5,
       title: "Dress",
       price: "12 AED",
       image: ["/dress_2.png", "/dress_3.png", "/dress_2.png"],
       link: "/product",
     },
     {
+      id:6,
       title: "Dress",
       price: "12 AED",
       image: ["/dress_3.png", "/dress_1.png", "/dress_2.png"],
       link: "/product",
     },
     {
+      id:7,
       title: "Dress",
       price: "12 AED",
       image: ["/dress_1.png", "/dress_2.png", "/dress_2.png"],
       link: "/product",
     },
     {
+      id:8,
       title: "Dress",
       price: "12 AED",
       image: ["/dress_2.png", "/dress_3.png", "/dress_2.png"],
       link: "/product",
     },
     {
+      id:9,
       title: "Dress",
       price: "12 AED",
       image: ["/dress_1.png", "/dress_3.png", "/dress_2.png"],
       link: "/product",
     },
     {
+      id:10,
       title: "Dress",
       price: "12 AED",
       image: ["/dress_3.png", "/dress_2.png", "/dress_2.png"],
       link: "/product",
     },
     {
+      id:11,
       title: "Dress",
       price: "12 AED",
       image: ["/dress_2.png", "/dress_1.png", "/dress_2.png"],
       link: "/product",
     },
     {
+      id:12,
       title: "Dress",
       price: "12 AED",
       image: ["/dress_1.png", "/dress_2.png", "/dress_2.png"],
@@ -161,8 +178,8 @@ const Carousels = () => {
     slidesToShow: 1,
     slidesToScroll: 1,
     arrows: true,
-    swipe: false, // Disable swipe/scrolling
-    draggable: false,
+    swipe: true, // Disable swipe/scrolling
+    draggable: true,
 
     customPaging: (i) => (
       <div
@@ -192,6 +209,13 @@ const Carousels = () => {
     ),
   };
 
+  const handleLikeClick = (cardId) => {
+    setLikedCards((prevLikedCards) => ({
+      ...prevLikedCards,
+      [cardId]: !prevLikedCards[cardId],
+    }));
+  };
+
   return (
     <div className="lg:pl-[50px] pl-5 outline-none">
       <Slider ref={sliderRef} {...settings}>
@@ -199,11 +223,18 @@ const Carousels = () => {
           <div key={index}>
             <div className="w-[307px] h-[404px] rounded-[20px] relative mx-2 outline-none">
               <div className="absolute top-2 right-2 z-10">
-                <Link href={item.link}>
-                  <div className="h-[54px] p-[15px] bg-white/40 rounded-[100px]">
-                    <Image alt="" width={24} height={24} src="wishlist.svg" />
+                {/* <Link href={item.link}> */}
+                <div
+                    className="absolute top-4 right-4 w-12 h-12 flex items-center justify-center rounded-full bg-custom-gray cursor-pointer"
+                    onClick={() => handleLikeClick(item.id)}
+                  >
+                    {likedCards[item.id] ? (
+                      <FcLike className="text-2xl w-8 h-8" /> // Filled heart icon if liked
+                    ) : (
+                      <GoHeart className="text-2xl text-gray-300" /> // Outline heart icon if not liked
+                    )}
                   </div>
-                </Link>
+                {/* </Link> */}
               </div>
               <Link href={item.link}>
                 <div className="absolute min-w-[204px] bottom-4 left-4 text-center z-10 bg-[#fde504] px-[50px] py-[20px] rounded-[20px]">

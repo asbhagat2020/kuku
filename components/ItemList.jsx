@@ -299,10 +299,13 @@ const ItemList = () => {
               } rounded-lg max-w-[500px]`}
             >
               <option value="">Choose Product Size</option>
-              <option value="Small">S</option>
-              <option value="Medium">M</option>
-              <option value="Large">L</option>
-              <option value="V-Large">XL</option>
+              <option value="XS">XS (Extra Small)</option>
+              <option value="S">S (Small)</option>
+              <option value="M">M (Medium)</option>
+              <option value="L">L (Large)</option>
+              <option value="XL">XL (Extra Large)</option>
+              <option value="XXL">XXL (2X Large)</option>
+              <option value="XXXL">XXXL (3X Large)</option>
             </select>
             {errors.size && <p className="text-red-500 mt-1">{errors.size}</p>}
           </div>
@@ -320,9 +323,11 @@ const ItemList = () => {
               } rounded-lg max-w-[500px]`}
             >
               <option value="">Choose Usage Level</option>
-              <option value="Light">Light</option>
-              <option value="Moderate">Moderate</option>
-              <option value="Heavy">Heavy</option>
+              <option value="Casual">Casual</option>
+              <option value="Regular">Regular</option>
+              <option value="Frequent">Frequent</option>
+              <option value="Occasional">Occasional</option>
+              <option value="Daily">Daily</option>
             </select>
             {errors.usage && (
               <p className="text-red-500 mt-1">{errors.usage}</p>
