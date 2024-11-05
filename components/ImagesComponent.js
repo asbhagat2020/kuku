@@ -10,12 +10,13 @@ import Image from "next/image";
 import { OfferPopup } from "./OfferPopup";
 import { FcLike } from "react-icons/fc";
 import { GoHeart } from "react-icons/go";
+
 const cardData = [
   {
     id: 1,
     user: "Kuku1222",
     img: "/profile_icon.svg",
-    productImg: ["/bg-custom-image1.png", "/bg-custom-image2.png", "/bg-custom-image3.png"],
+    productImg: ["/card_image1.png", "/card_image2.png", "/card_image3.png"],
     heard_img: "/heard_img.png",
     title: "Dress",
     price: "AED 120.00",
@@ -24,7 +25,7 @@ const cardData = [
     id: 2,
     user: "Kuku1222",
     img: "/profile_icon.svg",
-    productImg: ["/bg-custom-image2.png", "/bg-custom-image3.png", "/bg-custom-image1.png"],
+    productImg: ["/card_image2.png", "/card_image3.png", "/card_image1.png"],
     heard_img: "/heard_img.png",
     title: "Dress",
     price: "AED 120.00",
@@ -33,7 +34,7 @@ const cardData = [
     id: 3,
     user: "Kuku1222",
     img: "/profile_icon.svg",
-    productImg: ["/bg-custom-image3.png", "/bg-custom-image1.png", "/bg-custom-image2.png"],
+    productImg: ["/card_image3.png", "/card_image1.png", "/card_image2.png"],
     heard_img: "/heard_img.png",
     title: "Dress",
     price: "AED 120.00",
@@ -42,7 +43,7 @@ const cardData = [
     id: 4,
     user: "Kuku1222",
     img: "/profile_icon.svg",
-    productImg: ["/bg-custom-image4.png", "/bg-custom-image5.png", "/bg-custom-image6.png"],
+    productImg: ["/card_image4.png", "/card_image5.png", "/card_image6.png"],
     heard_img: "/heard_img.png",
     title: "Dress",
     price: "AED 120.00",
@@ -51,7 +52,7 @@ const cardData = [
     id: 5,
     user: "Kuku1222",
     img: "/profile_icon.svg",
-    productImg: ["/bg-custom-image5.png", "/bg-custom-image6.png", "/bg-custom-image4.png"],
+    productImg: ["/card_image5.png", "/card_image6.png", "/card_image4.png"],
     heard_img: "/heard_img.png",
     title: "Dress",
     price: "AED 120.00",
@@ -60,7 +61,7 @@ const cardData = [
     id: 6,
     user: "Kuku1222",
     img: "/profile_icon.svg",
-    productImg: ["/bg-custom-image6.png", "/bg-custom-image4.png", "/bg-custom-image5.png"],
+    productImg: ["/card_image6.png", "/card_image4.png", "/card_image5.png"],
     heard_img: "/heard_img.png",
     title: "Dress",
     price: "AED 120.00",
@@ -69,7 +70,7 @@ const cardData = [
     id: 7,
     user: "Kuku1222",
     img: "/profile_icon.svg",
-    productImg: ["/bg-custom-image1.png", "/bg-custom-image2.png", "/bg-custom-image3.png"],
+    productImg: ["/card_image1.png", "/card_image2.png", "/card_image3.png"],
     heard_img: "/heard_img.png",
     title: "Dress",
     price: "AED 120.00",
@@ -78,7 +79,7 @@ const cardData = [
     id: 8,
     user: "Kuku1222",
     img: "/profile_icon.svg",
-    productImg: ["/bg-custom-image2.png", "/bg-custom-image3.png", "/bg-custom-image1.png"],
+    productImg: ["/card_image2.png", "/card_image3.png", "/card_image1.png"],
     heard_img: "/heard_img.png",
     title: "Dress",
     price: "AED 120.00",
@@ -87,7 +88,7 @@ const cardData = [
     id: 9,
     user: "Kuku1222",
     img: "/profile_icon.svg",
-    productImg: ["/bg-custom-image3.png", "/bg-custom-image1.png", "/bg-custom-image2.png"],
+    productImg: ["/card_image3.png", "/card_image1.png", "/card_image2.png"],
     heard_img: "/heard_img.png",
     title: "Dress",
     price: "AED 120.00",
@@ -96,7 +97,7 @@ const cardData = [
     id: 10,
     user: "Kuku1222",
     img: "/profile_icon.svg",
-    productImg: ["/bg-custom-image1.png", "/bg-custom-image2.png", "/bg-custom-image3.png"],
+    productImg: ["/card_image1.png", "/card_image2.png", "/card_image3.png"],
     heard_img: "/heard_img.png",
     title: "Dress",
     price: "AED 120.00",
@@ -105,7 +106,7 @@ const cardData = [
     id: 11,
     user: "Kuku1222",
     img: "/profile_icon.svg",
-    productImg: ["/bg-custom-image2.png", "/bg-custom-image3.png", "/bg-custom-image1.png"],
+    productImg: ["/card_image2.png", "/card_image3.png", "/card_image1.png"],
     heard_img: "/heard_img.png",
     title: "Dress",
     price: "AED 120.00",
@@ -114,7 +115,7 @@ const cardData = [
     id: 12,
     user: "Kuku1222",
     img: "/profile_icon.svg",
-    productImg: ["/bg-custom-image3.png", "/bg-custom-image1.png", "/bg-custom-image2.png"],
+    productImg: ["/card_image3.png", "/card_image1.png", "/card_image2.png"],
     heard_img: "/heard_img.png",
     title: "Dress",
     price: "AED 120.00",
@@ -123,7 +124,7 @@ const cardData = [
     id: 13,
     user: "Kuku1222",
     img: "/profile_icon.svg",
-    productImg: ["/bg-custom-image4.png", "/bg-custom-image5.png", "/bg-custom-image6.png"],
+    productImg: ["/card_image4.png", "/card_image5.png", "/card_image6.png"],
     heard_img: "/heard_img.png",
     title: "Dress",
     price: "AED 120.00",
@@ -132,7 +133,7 @@ const cardData = [
     id: 14,
     user: "Kuku1222",
     img: "/profile_icon.svg",
-    productImg: ["/bg-custom-image5.png", "/bg-custom-image6.png", "/bg-custom-image4.png"],
+    productImg: ["/card_image5.png", "/card_image6.png", "/card_image4.png"],
     heard_img: "/heard_img.png",
     title: "Dress",
     price: "AED 120.00",
@@ -141,7 +142,7 @@ const cardData = [
     id: 15,
     user: "Kuku1222",
     img: "/profile_icon.svg",
-    productImg: ["/bg-custom-image6.png", "/bg-custom-image4.png", "/bg-custom-image5.png"],
+    productImg: ["/card_image6.png", "/card_image4.png", "/card_image5.png"],
     heard_img: "/heard_img.png",
     title: "Dress",
     price: "AED 120.00",
@@ -150,7 +151,7 @@ const cardData = [
     id: 16,
     user: "Kuku1222",
     img: "/profile_icon.svg",
-    productImg: ["/bg-custom-image1.png", "/bg-custom-image2.png", "/bg-custom-image3.png"],
+    productImg: ["/card_image1.png", "/card_image2.png", "/card_image3.png"],
     heard_img: "/heard_img.png",
     title: "Dress",
     price: "AED 120.00",
@@ -159,7 +160,7 @@ const cardData = [
     id: 17,
     user: "Kuku1222",
     img: "/profile_icon.svg",
-    productImg: ["/bg-custom-image2.png", "/bg-custom-image3.png", "/bg-custom-image1.png"],
+    productImg: ["/card_image2.png", "/card_image3.png", "/card_image1.png"],
     heard_img: "/heard_img.png",
     title: "Dress",
     price: "AED 120.00",
@@ -168,7 +169,7 @@ const cardData = [
     id: 18,
     user: "Kuku1222",
     img: "/profile_icon.svg",
-    productImg: ["/bg-custom-image3.png", "/bg-custom-image1.png", "/bg-custom-image2.png"],
+    productImg: ["/card_image3.png", "/card_image1.png", "/card_image2.png"],
     heard_img: "/heard_img.png",
     title: "Dress",
     price: "AED 120.00",
@@ -281,7 +282,7 @@ export const ImagesComponent = () => {
                 Follow
               </button>
             </div>
-  
+
             <div className="relative mt-4">
               {/* Heart icon for like functionality */}
               <div
@@ -294,10 +295,10 @@ export const ImagesComponent = () => {
                   <GoHeart className="text-2xl text-gray-300" /> // Outline heart icon if not liked
                 )}
               </div>
-  
+
               {/* Slider for product images */}
               <Slider {...innerSliderSettings}>
-              {card.productImg.map((imgSrc, imgIndex) => (
+                {card.productImg.map((imgSrc, imgIndex) => (
                   <div key={imgIndex}>
                     <Image
                       src={imgSrc}
@@ -309,16 +310,16 @@ export const ImagesComponent = () => {
                   </div>
                 ))}
               </Slider>
-  
+
               {/* Buy Now button and handshake icon - fixed position */}
               <div className="absolute w-full bottom-4 flex justify-evenly items-center px-4">
                 <Link href="/product" className="w-[70%]">
-                  <button className="w-full p-2 sm:px-10 bg-custom-yellow text-black rounded-2xl font-bold mr-1">
+                  <button className="w-full p-2 py-[15px] sm:px-10 bg-custom-yellow text-black rounded-2xl font-bold mr-1">
                     Buy Now
                   </button>
                 </Link>
-                
-                <div className="h-10 w-10 flex items-center justify-center bg-white rounded-full">
+
+                <div className="h-12 w-12 flex items-center justify-center bg-white rounded-full">
                   <Image
                     unoptimized
                     width={30}
@@ -331,13 +332,13 @@ export const ImagesComponent = () => {
                 </div>
               </div>
             </div>
-  
+
             <OfferPopup
               isOpen={isOfferPopupOpen}
               onClose={handleCloseOfferPopup}
               onSubmit={handleOfferSubmit}
             />
-  
+
             <h5 className="text-sm font-medium text-gray-700 mt-4">
               {card.title}
             </h5>
@@ -347,7 +348,7 @@ export const ImagesComponent = () => {
           </div>
         ))}
       </div>
-  
+
       {/* Pagination Component */}
       <Pagination
         currentPage={currentPage}
@@ -358,5 +359,4 @@ export const ImagesComponent = () => {
       />
     </div>
   );
-  
 };

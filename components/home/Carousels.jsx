@@ -13,9 +13,13 @@ import { GoHeart } from "react-icons/go";
 const Carousels = () => {
   const [isOfferPopupOpen, setIsOfferPopupOpen] = useState(false);
   const [offerSubmitted, setOfferSubmitted] = useState(false);
+  const [isCardHovered, setIsCardHovered] = useState(false);
+  const sliderRef = useRef(null);
+  const [progress, setProgress] = useState(0);
   const [likedCards, setLikedCards] = useState({});
 
-  
+
+
   const handleOpenOfferPopup = () => {
     setIsOfferPopupOpen(true);
   };
@@ -26,93 +30,98 @@ const Carousels = () => {
 
   const handleOfferSubmit = (price) => {
     console.log("Offer submitted:", price);
-    // Add your submission logic here
     setOfferSubmitted(true);
     handleCloseOfferPopup();
   };
-  const [progress, setProgress] = useState(0);
-  const sliderRef = useRef(null);
+
+
+  const handleLikeClick = (cardId) => {
+    setLikedCards((prevLikedCards) => ({
+      ...prevLikedCards,
+      [cardId]: !prevLikedCards[cardId],
+    }));
+  };
 
   const product = [
     {
-      id:1,
+      id: 1,
       title: "Dress",
       price: "12 AED",
       image: ["/dress_1.png", "/dress_3.png", "/dress_2.png"],
       link: "/product",
     },
     {
-      id:2,
+      id: 2,
       title: "Dress",
       price: "12 AED",
       image: ["/dress_2.png", "/dress_1.png", "/dress_2.png"],
       link: "/product",
     },
     {
-      id:3,
+      id: 3,
       title: "Dress",
       price: "12 AED",
       image: ["/dress_3.png", "/dress_3.png", "/dress_2.png"],
       link: "/product",
     },
     {
-      id:4,
+      id: 4,
       title: "Dress",
       price: "12 AED",
       image: ["/dress_1.png", "/dress_1.png", "/dress_2.png"],
       link: "/product",
     },
     {
-      id:5,
+      id: 5,
       title: "Dress",
       price: "12 AED",
       image: ["/dress_2.png", "/dress_3.png", "/dress_2.png"],
       link: "/product",
     },
     {
-      id:6,
+      id: 6,
       title: "Dress",
       price: "12 AED",
       image: ["/dress_3.png", "/dress_1.png", "/dress_2.png"],
       link: "/product",
     },
     {
-      id:7,
+      id: 7,
       title: "Dress",
       price: "12 AED",
       image: ["/dress_1.png", "/dress_2.png", "/dress_2.png"],
       link: "/product",
     },
     {
-      id:8,
+      id: 8,
       title: "Dress",
       price: "12 AED",
       image: ["/dress_2.png", "/dress_3.png", "/dress_2.png"],
       link: "/product",
     },
     {
-      id:9,
+      id: 9,
       title: "Dress",
       price: "12 AED",
       image: ["/dress_1.png", "/dress_3.png", "/dress_2.png"],
       link: "/product",
     },
     {
-      id:10,
+      id: 10,
       title: "Dress",
       price: "12 AED",
       image: ["/dress_3.png", "/dress_2.png", "/dress_2.png"],
       link: "/product",
     },
     {
-      id:11,
+      id: 11,
       title: "Dress",
       price: "12 AED",
       image: ["/dress_2.png", "/dress_1.png", "/dress_2.png"],
       link: "/product",
     },
     {
-      id:12,
+      id: 12,
       title: "Dress",
       price: "12 AED",
       image: ["/dress_1.png", "/dress_2.png", "/dress_2.png"],
@@ -120,6 +129,7 @@ const Carousels = () => {
     },
   ];
 
+  // Main slider settings
   const settings = {
     dots: false,
     infinite: false,
@@ -129,9 +139,9 @@ const Carousels = () => {
     autoplay: false,
     autoplaySpeed: 3000,
     arrows: false,
-    swipe: true, // Keep swipe enabled for outer slider
-    draggable: true, // Allow dragging without holding the mouse button
-    touchThreshold: 50, // Adjust this if needed for smoother swipe
+    swipe: !isCardHovered, // Disable swipe when card is hovered
+    draggable: !isCardHovered, // Disable drag when card is hovered
+    touchThreshold: 50,
     cssEase: "ease-in-out",
     useCSS: true,
     useTransform: true,
@@ -171,6 +181,7 @@ const Carousels = () => {
     },
   };
 
+  // Inner slider settings
   const innerSliderSettings = {
     dots: true,
     infinite: true,
@@ -178,12 +189,11 @@ const Carousels = () => {
     slidesToShow: 1,
     slidesToScroll: 1,
     arrows: true,
-    swipe: true, // Disable swipe/scrolling
+    swipe: true,
     draggable: true,
-
     customPaging: (i) => (
       <div
-        className={`custom-dot`}
+        className="custom-dot"
         style={{
           height: "5px",
           borderRadius: "20px",
@@ -209,31 +219,34 @@ const Carousels = () => {
     ),
   };
 
-  const handleLikeClick = (cardId) => {
-    setLikedCards((prevLikedCards) => ({
-      ...prevLikedCards,
-      [cardId]: !prevLikedCards[cardId],
-    }));
-  };
-
   return (
     <div className="lg:pl-[50px] pl-5 outline-none">
       <Slider ref={sliderRef} {...settings}>
         {product.map((item, index) => (
           <div key={index}>
-            <div className="w-[307px] h-[404px] rounded-[20px] relative mx-2 outline-none">
+            <div
+              className="w-[307px] h-[404px] rounded-[20px] relative mx-2 outline-none"
+              onMouseEnter={() => setIsCardHovered(true)}
+              onMouseLeave={() => setIsCardHovered(false)}
+              onTouchStart={() => setIsCardHovered(true)}
+              onTouchEnd={() => setIsCardHovered(false)}
+            >
               <div className="absolute top-2 right-2 z-10">
                 {/* <Link href={item.link}> */}
+                {/* <div className="h-[54px] p-[15px] bg-white/40 rounded-[100px]">
+                    <Image alt="" width={24} height={24} src="wishlist.svg" />
+                  </div> */}
+
                 <div
-                    className="absolute top-4 right-4 w-12 h-12 flex items-center justify-center rounded-full bg-custom-gray cursor-pointer"
-                    onClick={() => handleLikeClick(item.id)}
-                  >
-                    {likedCards[item.id] ? (
-                      <FcLike className="text-2xl w-8 h-8" /> // Filled heart icon if liked
-                    ) : (
-                      <GoHeart className="text-2xl text-gray-300" /> // Outline heart icon if not liked
-                    )}
-                  </div>
+                  className="absolute top-4 right-4 w-12 h-12 flex items-center justify-center rounded-full bg-custom-gray cursor-pointer"
+                  onClick={() => handleLikeClick(item.id)}
+                >
+                  {likedCards[item.id] ? (
+                    <FcLike className="text-2xl w-8 h-8" /> // Filled heart icon if liked
+                  ) : (
+                    <GoHeart className="text-2xl text-gray-300" /> // Outline heart icon if not liked
+                  )}
+                </div>
                 {/* </Link> */}
               </div>
               <Link href={item.link}>
@@ -244,30 +257,29 @@ const Carousels = () => {
                 </div>
               </Link>
               <div className="absolute bottom-6 right-5 z-10">
-                <div className="h-[54px] p-[15px] bg-white rounded-[100px] cursor-pointer">
-                  <Image
-                    alt=""
-                    width={24}
-                    height={24}
-                    src="hand_shake.svg"
-                    onClick={() => handleOpenOfferPopup()}
-                  />
+                <div
+                  className="h-[54px] p-[15px] bg-white rounded-[100px] cursor-pointer"
+                  onClick={() => handleOpenOfferPopup()}
+                >
+                  <Image alt="" width={24} height={24} src="hand_shake.svg" />
                 </div>
               </div>
 
-              <Slider {...innerSliderSettings}>
-                {item.image.map((imgSrc, imgIndex) => (
-                  <div key={imgIndex}>
-                    <Image
-                      src={imgSrc}
-                      width={307}
-                      height={404}
-                      layout="responsive"
-                      alt={item.title}
-                    />
-                  </div>
-                ))}
-              </Slider>
+              <div onClick={(e) => e.stopPropagation()}>
+                <Slider {...innerSliderSettings}>
+                  {item.image.map((imgSrc, imgIndex) => (
+                    <div key={imgIndex}>
+                      <Image
+                        src={imgSrc}
+                        width={307}
+                        height={404}
+                        layout="responsive"
+                        alt={item.title}
+                      />
+                    </div>
+                  ))}
+                </Slider>
+              </div>
             </div>
             <div className="mt-2">
               <h3 className="font-karla font-bold text-base">{item.title}</h3>
@@ -283,10 +295,9 @@ const Carousels = () => {
         style={{
           height: "4px",
           backgroundColor: "#e0e0e0",
-          marginTop: "20px",
+          marginTop: "80px",
           marginLeft: "6px",
           marginRight: "46px",
-          marginTop: "80px",
         }}
       >
         <motion.div

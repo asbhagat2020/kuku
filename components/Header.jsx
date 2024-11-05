@@ -354,7 +354,7 @@ const Header = () => {
                 />
               </div>
             </Link>
-            <LanguageSelector/>
+            
             <div ref={dropdownRef} className="relative">
               <div
                 onClick={toggleDropdown}
@@ -369,7 +369,7 @@ const Header = () => {
               </div>
 
               {isDropdownVisible && (
-                <div className="absolute py-[26px] px-[10px] right-0 top-[40px] min-w-[178px] h-[265px] bg-white border border-gray-300 rounded-lg shadow-lg z-10 ">
+                <div className="absolute py-[26px] px-[10px] right-0 top-[40px] min-w-[178px] h-[300px] bg-white border border-gray-300 rounded-lg shadow-lg z-10 ">
                   {/* Dropdown content goes here */}
                   <div className="px-4 py-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold">
                     Account
@@ -395,6 +395,12 @@ const Header = () => {
                   <div className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold">
                     Address List
                   </div>
+                  <Link href="#">
+                  <div className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold">
+                    Setting
+                  </div>
+                  </Link>
+
                   <Link href="/login">
                   <div className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold">
                     Sign out
@@ -402,7 +408,9 @@ const Header = () => {
                   </Link>
                 </div>
               )}
+             
             </div>
+            <LanguageSelector/>
           </div>
         </div>
         <div
@@ -434,33 +442,37 @@ const Header = () => {
           <div className="mx-6 pt-5">
             <div className="flex flex-col gap-[30px]">
               <Link
-                href="men"
+                href="#"
                 className={`${
                   isHome ? "text-white" : "text-black"
-                } text-base font-bold font-karla leading-tight hover:text-pink-500`}
+                } text-base font-bold font-karla leading-tight hover:text-pink-500 z-50`}
               >
                 {/* MEN */}
                 <MenDropdown />
               </Link>
               <Link
-                href="wommen"
+                href="#"
                 className={`${
                   isHome ? "text-white" : "text-black"
-                } text-base font-bold font-karla leading-tight hover:text-pink-500`}
+                } text-base font-bold font-karla leading-tight hover:text-pink-500 z-40`}
               >
                 {/* WOMEN */}
                 <WomenDropdown />
               </Link>
               <Link
-                href="kids"
+                href="#"
                 className={`${
                   isHome ? "text-white" : "text-black"
-                } text-base font-bold font-karla leading-tight hover:text-pink-500`}
+                } text-base font-bold font-karla leading-tight hover:text-pink-500 z-30`}
               >
                 {/* KIDS */}
                 <KidsDropdown />
               </Link>
             </div>
+
+            <Link href="#">
+            <p>Setting</p>
+            </Link>
           </div>
           <div className="flex mx-6 mt-5 justify-between">
             <Link href="/cart">
