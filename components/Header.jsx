@@ -137,9 +137,9 @@ const Header = () => {
         className="max-w-full lg:px-[70px] py-[23px] h-[108px]"
         style={{ backgroundColor: isSpecialPath ? "#FFF" : "#EDA702" }}
       >
-        <div className="flex justify-between">
-          <div className="flex gap-[60px]">
-            <Link href="/" className="flex gap-[1rem] items-center pl-5">
+        <div className="flex justify-between items-center">
+          <div className="flex items-center gap-[60px] ml-[-40px]">
+            <Link href="/" className="flex gap-[1rem] items-center pl-0">
               <Image
                 src="kuku_logo.svg"
                 width={56}
@@ -147,18 +147,19 @@ const Header = () => {
                 alt=""
                 className="hidden lg:block"
               />
-              <Image
-                onClick={handleHandburger}
-                src="menu.svg"
-                width={38}
-                height={38}
-                alt=""
-                className="lg:hidden"
-              />
               <h1 className="text-black text-[37px] font-bold font-palanquin_dark leading-[44.40px] hidden lg:block">
                 KUKU
               </h1>
             </Link>
+            <Image
+              onClick={handleHandburger}
+              src="menu.svg"
+              width={38}
+              height={38}
+              alt=""
+              className="lg:hidden"
+            />
+
             <div
               className={`lg:flex gap-[30px] items-center hidden ${
                 isSearchVisible ? "lg:hidden xl:flex" : ""
@@ -195,13 +196,15 @@ const Header = () => {
               isSearchVisible ? "lg:block hidden" : ""
             }`}
           >
-            <Image
-              src="kuku_logo.svg"
-              width={56}
-              height={61}
-              alt=""
-              className=""
-            />
+            <Link href="/">
+              <Image
+                src="kuku_logo.svg"
+                width={56}
+                height={61}
+                alt=""
+                className=""
+              />
+            </Link>
           </div>
           <div className="flex gap-[10px] items-center">
             {isSearchVisible ? (
