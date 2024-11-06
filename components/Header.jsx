@@ -23,6 +23,23 @@ const Header = () => {
   const searchRef = useRef(null);
   const dropdownRef = useRef(null);
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
+  const [isFixed, setIsFixed] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const headerOffset = document.getElementById("header")?.offsetTop || 0;
+
+      if (window.scrollY > headerOffset) {
+        setIsFixed(true);
+      } else {
+        setIsFixed(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   // Notifications data
   const notifications = [
     {
@@ -137,15 +154,19 @@ const Header = () => {
   };
   return (
     <header>
-       <LanguageSelector/>
+      <LanguageSelector />
       <div
-        className="fixedx top-0 max-w-full lg:px-[70px] py-[23px] h-[108px] z-100 "
-        style={{ backgroundColor: isSpecialPath ? "#FFF" : "#EDA702" }}
+        id="header"
+        className={`w-full transition-all duration-300 ${
+          isFixed ? "fixed top-0 left-0 right-0 shadow-md" : "relative"
+        } max-w-full lg:px-[70px] py-[23px] h-[80px] lg:h-[108px] z-40`}
+        style={{
+          backgroundColor: isSpecialPath ? "#FFF" : "#EDA702",
+        }}
       >
         <div className="flex justify-between items-center">
-          <div className="flex items-center gap-[60px] ml-[-40px]">
+          <div className="flex items-center sm:gap-[20px] lg:gap-[60px] lg:ml-[-40px]">
             <Link href="/" className="flex gap-[1rem] items-center pl-0">
-
               <Image
                 src="kuku_logo.svg"
                 width={56}
@@ -160,11 +181,28 @@ const Header = () => {
             <Image
               onClick={handleHandburger}
               src="menu.svg"
-              width={38}
-              height={38}
+              width={30}
+              height={30}
               alt=""
-              className="lg:hidden"
+              className="pl-2 lg:hidden"
             />
+            <div
+              className={`lg:hidden pl-4 ${
+                isSearchVisible ? "lg:block hidden" : ""
+              }`}
+            >
+              <Link href="/">
+                <Image
+                  src="kuku_logo.svg"
+                  // width={56}
+                  // height={61}
+                  width={36}
+                  height={41}
+                  alt=""
+                  className=""
+                />
+              </Link>
+            </div>
 
             <div
               className={`lg:flex gap-[30px] items-center hidden ${
@@ -200,21 +238,23 @@ const Header = () => {
               </Link>
             </div>
           </div>
-          <div
-            className={`lg:hidden pl-10 ${
+          {/* <div
+            className={`lg:hidden p-0 ${
               isSearchVisible ? "lg:block hidden" : ""
             }`}
           >
             <Link href="/">
               <Image
                 src="kuku_logo.svg"
-                width={56}
-                height={61}
+                // width={56}
+                // height={61}
+                width={36}
+                height={41}
                 alt=""
                 className=""
               />
             </Link>
-          </div>
+          </div> */}
           <div className="flex gap-[10px] items-center">
             {isSearchVisible ? (
               <div ref={searchRef} className="relative h-[54px] pl-5">
@@ -280,7 +320,7 @@ const Header = () => {
               </div>
             ) : (
               <div
-                className="h-[54px] p-[15px] bg-[#393939] rounded-[100px] cursor-pointer"
+                className="h-10 w-10 lg:h-[54px] lg:w-[54px] flex items-center justify-center bg-[#393939] rounded-full cursor-pointer"
                 onClick={toggleSearch}
               >
                 <Image
@@ -288,13 +328,14 @@ const Header = () => {
                   width={24}
                   height={24}
                   src="search.svg"
+                  className="w-4 h-4 lg:w-6 lg:h-6"
                 />
               </div>
             )}
 
             {!isNotificationDisabled && (
               <div
-                className={`h-[54px] p-[15px] bg-white/40 rounded-[100px] cursor-pointer ${
+                className={`h-10 w-10 lg:h-[54px] lg:w-[54px] flex items-center justify-center bg-white/40 rounded-full cursor-pointer ${
                   isSearchVisible ? "lg:block hidden" : ""
                 }`}
                 onClick={toggleNotifications}
@@ -304,6 +345,7 @@ const Header = () => {
                   width={24}
                   height={24}
                   src="notification.svg"
+                  className="w-5 h-5 lg:w-6 lg:h-6"
                 />
               </div>
             )}
@@ -333,15 +375,16 @@ const Header = () => {
             </Link>
             <Link href="/wishlist">
               <div
-                className={`${
+                className={`h-10 w-10 lg:h-[54px] lg:w-[54px] flex items-center justify-center rounded-full cursor-pointer ${
                   wishPath ? "bg-[#393939]" : "bg-white/40"
-                } h-[54px] p-[15px] rounded-[100px] hidden lg:block`}
+                }`}
               >
                 <Image
                   alt="wishlist icon"
                   width={24}
                   height={24}
                   src={wishPath ? "wishlist_white.svg" : "wishlist.svg"}
+                  className="w-5 h-5 lg:w-6 lg:h-6"
                 />
               </div>
             </Link>
@@ -359,7 +402,7 @@ const Header = () => {
                 />
               </div>
             </Link>
-            
+
             <div ref={dropdownRef} className="relative">
               <div
                 onClick={toggleDropdown}
@@ -401,21 +444,19 @@ const Header = () => {
                     Address List
                   </div>
                   <Link href="#">
-                  <div className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold">
-                    Setting
-                  </div>
+                    <div className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold">
+                      Setting
+                    </div>
                   </Link>
 
                   <Link href="/login">
-                  <div className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold">
-                    Sign out
-                  </div>
+                    <div className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold">
+                      Sign out
+                    </div>
                   </Link>
                 </div>
               )}
-             
             </div>
-            {/* <LanguageSelector/> */}
           </div>
         </div>
         <div
@@ -476,7 +517,7 @@ const Header = () => {
             </div>
 
             <Link href="#">
-            <p>Setting</p>
+              <p>Setting</p>
             </Link>
           </div>
           <div className="flex mx-6 mt-5 justify-between">

@@ -50,7 +50,7 @@ const LanguageSelector = () => {
     <>
       {/* Blue overlay */}
       {isOpen && (
-        <div className="fixed inset-0 bg-blue-500/20 backdrop-blur-sm z-40" />
+        <div className="fixed inset-0 bg-blue-500/20 backdrop-blur-sm z-50" />
       )}
 
       <div
