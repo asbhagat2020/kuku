@@ -137,10 +137,12 @@ const Header = () => {
   };
   return (
     <header>
+       <LanguageSelector/>
       <div
-        className="max-w-full lg:px-[70px] py-[23px] h-[108px] z-100"
+        className="fixedx top-0 max-w-full lg:px-[70px] py-[23px] h-[108px] z-100 "
         style={{ backgroundColor: isSpecialPath ? "#FFF" : "#EDA702" }}
       >
+       
         <div className="flex justify-between">
           <div className="flex gap-[60px]">
             <Link href="/" className="flex gap-[1rem] items-center pl-5">
@@ -410,7 +412,7 @@ const Header = () => {
               )}
              
             </div>
-            <LanguageSelector/>
+            {/* <LanguageSelector/> */}
           </div>
         </div>
         <div
