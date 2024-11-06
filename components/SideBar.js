@@ -75,7 +75,7 @@ export const SideBar = () => {
               </div>
               {openDropdown === 'category' && (
                 <div id="category-options" className="flex flex-col space-y-1 mt-2 ml-3">
-                  {['electronics', 'clothing', 'books'].map((category) => (
+                  {['Men', 'Women', 'Kids'].map((category) => (
                     <div className="flex items-center" key={category}>
                       <input
                         type="checkbox"
@@ -189,7 +189,7 @@ export const SideBar = () => {
               </div>
               {openDropdown === 'condition' && (
                 <div id="condition-options" className="flex flex-col space-y-1 mt-2 ml-3">
-                  {['never-used', 'used-once', 'rarely-used', 'medium-used', 'well-used'].map(
+                  {['never-used', 'used-ones', 'rarely-used', 'medium-used', 'well-used'].map(
                     (condition) => (
                       <div className="flex items-center" key={condition}>
                         <input

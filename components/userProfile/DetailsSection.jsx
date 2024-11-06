@@ -8,6 +8,8 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Link from "next/link";
 import { OfferPopup } from "../OfferPopup";
+import { FcLike } from "react-icons/fc";
+import { GoHeart } from "react-icons/go";
 const innerSliderSettings = {
   dots: true,
   infinite: true,
@@ -46,6 +48,7 @@ const innerSliderSettings = {
 const SellingCards = ({ data }) => {
   const [isOfferPopupOpen, setIsOfferPopupOpen] = useState(false);
   const [offerSubmitted, setOfferSubmitted] = useState(false);
+  const [likedCards, setLikedCards] = useState({});
   const handleOpenOfferPopup = () => {
     setIsOfferPopupOpen(true);
   };
@@ -60,6 +63,13 @@ const SellingCards = ({ data }) => {
     setOfferSubmitted(true);
     handleCloseOfferPopup();
   };
+
+  const handleLikeClick = (cardId) => {
+    setLikedCards((prevLikedCards) => ({
+      ...prevLikedCards,
+      [cardId]: !prevLikedCards[cardId],
+    }));
+  };
   return (
     <div className="px-[71px] mb-10">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-4 relative place-items-center">
@@ -67,8 +77,19 @@ const SellingCards = ({ data }) => {
           <div key={item.id} className="flex flex-col gap-3">
             <div className="w-[307px] h-[404px] rounded-[20px] relative mx-2 outline-none">
               <div className="absolute top-2 right-2 z-10">
-                <div className="h-[54px] p-[15px] bg-white/40 rounded-[100px]">
+                {/* <div className="h-[54px] p-[15px] bg-white/40 rounded-[100px]">
                   <Image alt="" width={24} height={24} src="wishlist.svg" />
+                </div> */}
+
+                <div
+                  className="absolute top-4 right-4 w-12 h-12 flex items-center justify-center rounded-full bg-custom-gray cursor-pointer"
+                  onClick={() => handleLikeClick(item.id)}
+                >
+                  {likedCards[item.id] ? (
+                    <FcLike className="text-2xl w-8 h-8" /> // Filled heart icon if liked
+                  ) : (
+                    <GoHeart className="text-2xl text-gray-300" /> // Outline heart icon if not liked
+                  )}
                 </div>
               </div>
               <Link href={item.link}>
@@ -252,9 +273,9 @@ const StatsCards = ({ data }) => {
           </div>
           <div className="flex flex-col lg:flex-row pt-[26px] gap-[35px]">
             <div className="lg:w-[50%] w-full relative px-[45px] flex flex-col z-10 justify-center rounded-[20px]">
-              <div className=' absolute left-0'>
-                        <Image width={747} height={373} src='/stats_bg.png' alt='' />
-                    </div>
+              <div className=" absolute left-0">
+                <Image width={747} height={373} src="/stats_bg.png" alt="" />
+              </div>
               <div className="flex flex-col gap-[36px] z-20">
                 <p className="opacity-80 text-black text-[27.33px] font-normal font-karla leading-7">
                   Overall Revenue

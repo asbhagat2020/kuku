@@ -40,7 +40,7 @@ export const OfferPopup = ({ isOpen, onClose, onSubmit }) => {
               Quote your price
             </div>
             <div className="flex flex-wrap gap-2">
-              <button
+              {/* <button
                 className={`w-[85px] h-[40px] bg-white rounded-lg border ${
                   selectedPrice === 200 ? "border-pink-500" : "border-[#878787]"
                 } flex items-center justify-center`}
@@ -55,12 +55,13 @@ export const OfferPopup = ({ isOpen, onClose, onSubmit }) => {
                 onClick={() => handlePriceSelection(195)}
               >
                 <div className="text-[#4C5C6B] text-sm">AED 195</div>
-              </button>
+              </button> */}
               <input
                 type="text"
                 placeholder="Enter the custom amount"
                 className="flex-1 min-w-[200px] h-[40px] bg-white rounded-lg border border-[#878787] px-4 text-sm placeholder:text-[#B0B0B0] outline-none"
                 onChange={(e) => handlePriceSelection(e.target.value)}
+                required
               />
             </div>
             <div className="text-[#E4086F] text-xs mt-1 mb-4">

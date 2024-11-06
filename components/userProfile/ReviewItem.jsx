@@ -11,9 +11,9 @@ const ReviewItem = () => {
         </div>
         <div className="flex gap-5">
           <div className='flex  gap-2'>
-            <Image width={26} height={26} src='/Star_blue.svg' alt='Rating' />
-            <Image width={26} height={26} src='/Star_blue.svg' alt='Rating' />
-            <Image width={26} height={26} src='/Star_blue.svg' alt='Rating' />
+            <Image width={26} height={26} src='/rating.svg' alt='Rating' />
+            <Image width={26} height={26} src='/rating.svg' alt='Rating' />
+            <Image width={26} height={26} src='/rating.svg' alt='Rating' />
             <Image width={26} height={26} src='/star_gray.svg' alt='Rating' />
             <Image width={26} height={26} src='/star_gray.svg' alt='Rating' />
           </div>

@@ -6,6 +6,10 @@ import NotificationPanel from "./home/NotificationPanel"; // Import the Notifica
 
 import { usePathname } from "next/navigation";
 import Link from "next/link";
+import WomenDropdown from "./WomenDropdown";
+import MenDropdown from "./MenDropdown";
+import KidsDropdown from "./KidsDropdown";
+import LanguageSelector from "./LanguageSelector";
 
 const Header = () => {
   const [isSearchVisible, setIsSearchVisible] = useState(false);
@@ -134,7 +138,7 @@ const Header = () => {
   return (
     <header>
       <div
-        className="max-w-full lg:px-[70px] py-[23px] h-[108px]"
+        className="max-w-full lg:px-[70px] py-[23px] h-[108px] z-100"
         style={{ backgroundColor: isSpecialPath ? "#FFF" : "#EDA702" }}
       >
         <div className="flex justify-between items-center">
@@ -171,7 +175,8 @@ const Header = () => {
                   isHome ? "text-[#fefae5]" : "text-black"
                 } text-base font-bold font-karla leading-tight hover:text-pink-500`}
               >
-                MEN
+                {/* Men */}
+                <MenDropdown />
               </Link>
               <Link
                 href="/selling-page"
@@ -179,7 +184,8 @@ const Header = () => {
                   isHome ? "text-[#fefae5]" : "text-black"
                 } text-base font-bold font-karla leading-tight hover:text-pink-500`}
               >
-                WOMEN
+                {/* Women */}
+                <WomenDropdown />
               </Link>
               <Link
                 href="/selling-page"
@@ -187,7 +193,8 @@ const Header = () => {
                   isHome ? "text-[#fefae5]" : "text-black"
                 } text-base font-bold font-karla leading-tight hover:text-pink-500`}
               >
-                KIDS
+                {/* Kids */}
+                <KidsDropdown />
               </Link>
             </div>
           </div>
@@ -350,6 +357,7 @@ const Header = () => {
                 />
               </div>
             </Link>
+            <LanguageSelector/>
             <div ref={dropdownRef} className="relative">
               <div
                 onClick={toggleDropdown}
@@ -364,7 +372,7 @@ const Header = () => {
               </div>
 
               {isDropdownVisible && (
-                <div className="absolute py-[26px] px-[10px] right-0 top-[40px] min-w-[178px] h-[246px] bg-white border border-gray-300 rounded-lg shadow-lg z-10 ">
+                <div className="absolute py-[26px] px-[10px] right-0 top-[40px] min-w-[178px] h-[265px] bg-white border border-gray-300 rounded-lg shadow-lg z-10 ">
                   {/* Dropdown content goes here */}
                   <div className="px-4 py-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold">
                     Account
@@ -390,6 +398,11 @@ const Header = () => {
                   <div className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold">
                     Address List
                   </div>
+                  <Link href="/login">
+                  <div className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold">
+                    Sign out
+                  </div>
+                  </Link>
                 </div>
               )}
             </div>
@@ -429,7 +442,8 @@ const Header = () => {
                   isHome ? "text-white" : "text-black"
                 } text-base font-bold font-karla leading-tight hover:text-pink-500`}
               >
-                MEN
+                {/* MEN */}
+                <MenDropdown />
               </Link>
               <Link
                 href="wommen"
@@ -437,7 +451,8 @@ const Header = () => {
                   isHome ? "text-white" : "text-black"
                 } text-base font-bold font-karla leading-tight hover:text-pink-500`}
               >
-                WOMEN
+                {/* WOMEN */}
+                <WomenDropdown />
               </Link>
               <Link
                 href="kids"
@@ -445,7 +460,8 @@ const Header = () => {
                   isHome ? "text-white" : "text-black"
                 } text-base font-bold font-karla leading-tight hover:text-pink-500`}
               >
-                KIDS
+                {/* KIDS */}
+                <KidsDropdown />
               </Link>
             </div>
           </div>

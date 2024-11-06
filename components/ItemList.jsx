@@ -126,18 +126,17 @@ const ItemList = () => {
         </div>
 
         <img
-  src="/yellow-bird.png"
-  alt="Yellow Bird"
-  className="absolute top-6 right-24 w-12 h-12 hidden md:block" // Hidden on mobile, shown on desktop
-  style={{ marginTop: "53px", marginRight: "30px" }}
-/>
-<div
-  className="absolute top-5 right-6 w-12 h-12 rounded-full border-2 border-black border-dotted flex items-center justify-center p-[2px] hidden md:flex" // Hidden on mobile, shown on desktop
-  style={{ marginTop: "63px" }}
->
-  <div className="w-5 h-5 bg-yellow-400 rounded-full border-2 border-black"></div>
-</div>
-
+          src="/yellow-bird.png"
+          alt="Yellow Bird"
+          className="absolute top-6 right-24 w-12 h-12 hidden md:block" // Hidden on mobile, shown on desktop
+          style={{ marginTop: "53px", marginRight: "30px" }}
+        />
+        <div
+          className="absolute top-5 right-6 w-12 h-12 rounded-full border-2 border-black border-dotted flex items-center justify-center p-[2px] hidden md:flex" // Hidden on mobile, shown on desktop
+          style={{ marginTop: "63px" }}
+        >
+          <div className="w-5 h-5 bg-yellow-400 rounded-full border-2 border-black"></div>
+        </div>
       </div>
 
       <div className="px-4 sm:px-8 md:px-16 lg:px-20 py-8 sm:py-10">
@@ -300,9 +299,13 @@ const ItemList = () => {
               } rounded-lg max-w-[500px]`}
             >
               <option value="">Choose Product Size</option>
-              <option value="Small">Small</option>
-              <option value="Medium">Medium</option>
-              <option value="Large">Large</option>
+              <option value="XS">XS (Extra Small)</option>
+              <option value="S">S (Small)</option>
+              <option value="M">M (Medium)</option>
+              <option value="L">L (Large)</option>
+              <option value="XL">XL (Extra Large)</option>
+              <option value="XXL">XXL (2X Large)</option>
+              <option value="XXXL">XXXL (3X Large)</option>
             </select>
             {errors.size && <p className="text-red-500 mt-1">{errors.size}</p>}
           </div>
@@ -320,9 +323,11 @@ const ItemList = () => {
               } rounded-lg max-w-[500px]`}
             >
               <option value="">Choose Usage Level</option>
-              <option value="Light">Light</option>
-              <option value="Moderate">Moderate</option>
-              <option value="Heavy">Heavy</option>
+              <option value="Casual">Casual</option>
+              <option value="Regular">Regular</option>
+              <option value="Frequent">Frequent</option>
+              <option value="Occasional">Occasional</option>
+              <option value="Daily">Daily</option>
             </select>
             {errors.usage && (
               <p className="text-red-500 mt-1">{errors.usage}</p>

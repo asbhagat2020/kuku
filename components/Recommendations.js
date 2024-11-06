@@ -7,10 +7,14 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { OfferPopup } from "./OfferPopup";
+import { FcLike } from "react-icons/fc";
+import { GoHeart } from "react-icons/go";
 
-const RecommendationCard = ({ imageList, price }) => {
+const RecommendationCard = ({id, imageList, price }) => {
   const [isOfferPopupOpen, setIsOfferPopupOpen] = useState(false);
   const [offerSubmitted, setOfferSubmitted] = useState(false);
+  const [likedCards, setLikedCards] = useState({});
+
   const handleOpenOfferPopup = () => {
     setIsOfferPopupOpen(true);
   };
@@ -66,6 +70,13 @@ const RecommendationCard = ({ imageList, price }) => {
     ),
   };
 
+  const handleLikeClick = (cardId) => {
+    setLikedCards((prevLikedCards) => ({
+      ...prevLikedCards,
+      [cardId]: !prevLikedCards[cardId],
+    }));
+  };
+
   return (
     <div className="p-2 w-64 shrink-0 relative">
       {/* Image Slider */}
@@ -80,8 +91,8 @@ const RecommendationCard = ({ imageList, price }) => {
           </div>
         ))}
       </Slider>
-      <Link href="/wishlist">
-        {/* Favorite Icon */}
+      {/* <Link href="/wishlist">
+       
         <div className="absolute top-4 right-4 flex items-center justify-center">
           <div
             className="rounded-full p-2"
@@ -94,7 +105,18 @@ const RecommendationCard = ({ imageList, price }) => {
             <IoHeartOutline className="text-white w-5 h-5" />
           </div>
         </div>
-      </Link>
+      </Link> */}
+      <div
+        className="absolute top-4 right-4 w-12 h-12 flex items-center justify-center rounded-full bg-custom-gray cursor-pointer"
+        onClick={() => handleLikeClick(id)}
+      >
+        {likedCards[id] ? (
+          <FcLike className="text-2xl w-8 h-8" /> // Filled heart icon if liked
+        ) : (
+          <GoHeart className="text-2xl text-gray-300" /> // Outline heart icon if not liked
+        )}
+      </div>
+
       {/* Buy Now Button and Handshake Image */}
       <div
         className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex items-center justify-center"
