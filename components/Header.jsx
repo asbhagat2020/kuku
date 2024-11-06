@@ -137,13 +137,15 @@ const Header = () => {
   };
   return (
     <header>
+       <LanguageSelector/>
       <div
-        className="max-w-full lg:px-[70px] py-[23px] h-[108px] z-100"
+        className="fixedx top-0 max-w-full lg:px-[70px] py-[23px] h-[108px] z-100 "
         style={{ backgroundColor: isSpecialPath ? "#FFF" : "#EDA702" }}
       >
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-[60px] ml-[-40px]">
             <Link href="/" className="flex gap-[1rem] items-center pl-0">
+
               <Image
                 src="kuku_logo.svg"
                 width={56}
@@ -413,7 +415,7 @@ const Header = () => {
               )}
              
             </div>
-            <LanguageSelector/>
+            {/* <LanguageSelector/> */}
           </div>
         </div>
         <div
