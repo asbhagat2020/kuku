@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { ChevronDown, ChevronUp, ChevronRight } from "lucide-react";
+import { usePathname } from "next/navigation";
 
 
 const categories = [
@@ -139,6 +140,9 @@ export default function WomenDropdown() {
   const [isMounted, setIsMounted] = useState(false); // Prevent SSR mismatch
   const [isMainMenuOpen, setIsMainMenuOpen] = useState(false);
   const [openCategory, setOpenCategory] = useState(null);
+  const path = usePathname();
+
+  const isHome = path === "/";
 
   // Ensure the component only renders fully on the client
   useEffect(() => {
@@ -203,12 +207,14 @@ export default function WomenDropdown() {
 
       {/* Desktop View */}
       <div
-        className="hidden lg:block relative z-50 group"
+        className="hidden lg:block relative z-50 group lg:z-40"
         onMouseEnter={() => setIsWomenHovered(true)}
         onMouseLeave={() => setIsWomenHovered(false)}
       >
         <div className="relative lg:py-[33px]">
-          <a href="#" className="text-[#fefae5] hover:text-pink-500">
+          <a href="#" className={`${
+                  isHome ? "text-[#fefae5]" : "text-black"
+                } text-base font-bold font-karla leading-tight hover:text-pink-500`}>
           WOMEN
           </a>
           <div

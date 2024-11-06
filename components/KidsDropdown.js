@@ -1,4 +1,5 @@
 import { ChevronDown, ChevronRight, ChevronUp } from "lucide-react";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const categories = [
@@ -157,7 +158,9 @@ export default function KidsDropdown() {
   const [isMounted, setIsMounted] = useState(false); // Handle SSR mismatch
   const [isMainMenuOpen, setIsMainMenuOpen] = useState(false);
   const [openCategory, setOpenCategory] = useState(null);
+  const path = usePathname();
 
+  const isHome = path === "/";
   // Ensure the component only renders interactive content on the client
   useEffect(() => {
     setIsMounted(true);
@@ -221,12 +224,14 @@ export default function KidsDropdown() {
 
       {/* Desktop View */}
       <div
-        className="hidden lg:block relative z-50 group"
+        className="hidden lg:block relative z-50 group lg:z-40"
         onMouseEnter={() => setIsKidsHovered(true)}
         onMouseLeave={() => setIsKidsHovered(false)}
       >
         <div className="relative lg:py-[33px]">
-          <a href="#" className="text-[#fefae5] hover:text-pink-500">
+          <a href="#" className={`${
+                  isHome ? "text-[#fefae5]" : "text-black"
+                } text-base font-bold font-karla leading-tight hover:text-pink-500`}>
           KIDS
           </a>
           <div
@@ -239,7 +244,7 @@ export default function KidsDropdown() {
         <div className="absolute h-8 w-full" />
 
         {isKidsHovered && (
-          <div className="absolute lg:left-[-300px] lg:top-full w-max bg-white shadow-lg p-4 z-10 max-h-60 md:max-h-80 lg:max-h-[25rem] overflow-y-auto grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 thin-scrollbar">
+          <div className="absolute lg:left-[-300px] lg:top-full w-max bg-white shadow-lg p-4 z-50 max-h-60 md:max-h-80 lg:max-h-[25rem] overflow-y-auto grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 thin-scrollbar">
             <style jsx>{`
               .thin-scrollbar {
                 scrollbar-width: thin;
