@@ -135,10 +135,10 @@ const categories = [
 
 
 
-export default function WomenDropdown() {
+export default function WomenDropdown({ isOpen, onToggle }) {
   const [isWomenHovered, setIsWomenHovered] = useState(false);
   const [isMounted, setIsMounted] = useState(false); // Prevent SSR mismatch
-  const [isMainMenuOpen, setIsMainMenuOpen] = useState(false);
+  // const [isMainMenuOpen, setIsMainMenuOpen] = useState(false);
   const [openCategory, setOpenCategory] = useState(null);
   const path = usePathname();
 
@@ -156,18 +156,18 @@ export default function WomenDropdown() {
       {/* Mobile View */}
       <div className="lg:hidden relative z-50">
         <button
-          onClick={() => setIsMainMenuOpen(!isMainMenuOpen)}
-          className="flex items-center justify-between w-full p-4 text-[#fefae5] hover:text-pink-500 z-0"
+          onClick={onToggle}
+          className="flex items-center justify-between w-full p-4 text-black hover:text-pink-500 z-0"
         >
           <span className="font-bold ">WOMEN</span>
-          {isMainMenuOpen ? (
+          {isOpen ? (
             <ChevronUp className="w-5 h-5" />
           ) : (
             <ChevronDown className="w-5 h-5" />
           )}
         </button>
 
-        {isMainMenuOpen && (
+        {isOpen && (
           <div className="absolute top-full left-0 w-full bg-white shadow-lg max-h-[70vh] overflow-y-auto thin-scrollbar">
             {categories.map((category) => (
               <div key={category.title} className="border-t border-gray-100">

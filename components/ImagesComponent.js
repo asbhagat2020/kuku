@@ -265,7 +265,7 @@ export const ImagesComponent = () => {
   };
 
   return (
-    <div className="p-6 ml-8 h-auto w-auto font-karla">
+    <div className="p-6 ml-8 h-auto w-auto font-karla z-10">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
         {currentCards.map((card) => (
           <div key={card.id} className="flex flex-col">

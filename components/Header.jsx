@@ -10,9 +10,12 @@ import WomenDropdown from "./WomenDropdown";
 import MenDropdown from "./MenDropdown";
 import KidsDropdown from "./KidsDropdown";
 import LanguageSelector from "./LanguageSelector";
+import { BottomNavigation } from "./BottomNavigation";
+import SettingsDropdown from "./SettingsDropdown";
 
 const Header = () => {
   const [isSearchVisible, setIsSearchVisible] = useState(false);
+  const [isMobileSearchVisible, setIsMobileSearchVisible] = useState(false);
   const [isNotificationVisible, setIsNotificationVisible] = useState(false);
   const [suggestions, setSuggestions] = useState([]);
   const [searchValue, setSearchValue] = useState("");
@@ -21,9 +24,15 @@ const Header = () => {
   const path = usePathname();
   const panelRef = useRef(null);
   const searchRef = useRef(null);
+  const mobileSearchRef = useRef(null);
   const dropdownRef = useRef(null);
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const [isFixed, setIsFixed] = useState(false);
+  const [currentOpenDropdown, setCurrentOpenDropdown] = useState(null);
+
+  const handleToggle = (dropdown) => {
+    setCurrentOpenDropdown(currentOpenDropdown === dropdown ? null : dropdown);
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -81,7 +90,13 @@ const Header = () => {
   ];
 
   const toggleSearch = () => {
-    setIsSearchVisible(!isSearchVisible);
+    if (hamburger) {
+      // If in mobile menu, toggle mobile search
+      setIsMobileSearchVisible(!isMobileSearchVisible);
+    } else {
+      // If in main header, toggle desktop search
+      setIsSearchVisible(!isSearchVisible);
+    }
   };
 
   const toggleNotifications = () => {
@@ -126,6 +141,14 @@ const Header = () => {
       if (searchRef.current && !searchRef.current.contains(event.target)) {
         setIsSearchVisible(false);
       }
+      // Handle mobile search click outside
+      if (
+        mobileSearchRef.current &&
+        !mobileSearchRef.current.contains(event.target)
+      ) {
+        setIsMobileSearchVisible(false);
+      }
+
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setIsDropdownVisible(false); // Close dropdown if clicked outside
       }
@@ -151,6 +174,7 @@ const Header = () => {
   };
   const handleBack = () => {
     setHamburger(!hamburger);
+    setIsMobileSearchVisible(false); // Close mobile search when closing menu
   };
   return (
     <header>
@@ -238,23 +262,7 @@ const Header = () => {
               </Link>
             </div>
           </div>
-          {/* <div
-            className={`lg:hidden p-0 ${
-              isSearchVisible ? "lg:block hidden" : ""
-            }`}
-          >
-            <Link href="/">
-              <Image
-                src="kuku_logo.svg"
-                // width={56}
-                // height={61}
-                width={36}
-                height={41}
-                alt=""
-                className=""
-              />
-            </Link>
-          </div> */}
+
           <div className="flex gap-[10px] items-center">
             {isSearchVisible ? (
               <div ref={searchRef} className="relative h-[54px] pl-5">
@@ -336,7 +344,7 @@ const Header = () => {
             {!isNotificationDisabled && (
               <div
                 className={`h-10 w-10 lg:h-[54px] lg:w-[54px] flex items-center justify-center bg-white/40 rounded-full cursor-pointer ${
-                  isSearchVisible ? "lg:block hidden" : ""
+                  isSearchVisible ? "block" : ""
                 }`}
                 onClick={toggleNotifications}
               >
@@ -375,9 +383,9 @@ const Header = () => {
             </Link>
             <Link href="/wishlist">
               <div
-                className={`h-10 w-10 lg:h-[54px] lg:w-[54px] flex items-center justify-center rounded-full cursor-pointer ${
+                className={` h-10 w-10 lg:h-[54px] lg:w-[54px] flex items-center justify-center rounded-full cursor-pointer  ${
                   wishPath ? "bg-[#393939]" : "bg-white/40"
-                }`}
+                } ml-[-10px] lg:ml-0`}
               >
                 <Image
                   alt="wishlist icon"
@@ -459,6 +467,7 @@ const Header = () => {
             </div>
           </div>
         </div>
+        <BottomNavigation />
         <div
           className={`w-full h-screen bg-yellow-500 lg:hidden fixed  px-[20px] py-[20px] top-[-2px] left-0 right-0 bottom-0 z-[1000] transition-transform ease-in-out duration-300 ${
             hamburger
@@ -481,8 +490,91 @@ const Header = () => {
               />
               <p className="font-karla font-bold">Back</p>
             </div>
-            <div className="">
-              <Image src="/kuku_logo.svg" width={50} height={50} alt="img" />
+
+            {/* Mobile Search Section */}
+
+            <div className="flex items-center justify-evenly gap-[40px]">
+              {isMobileSearchVisible ? (
+                <div ref={mobileSearchRef} className="relative flex-1 mx-4">
+                  <input
+                    className="w-full h-10 bg-white rounded-lg px-[50px] outline-none appearance-none"
+                    type="text"
+                    placeholder="Search an item"
+                    autoFocus
+                    value={searchValue}
+                    onChange={handleInputChange}
+                  />
+                  <div
+                    onClick={toggleSearch}
+                    className="absolute left-4 top-1/2 transform -translate-y-1/2"
+                  >
+                    <Image
+                      alt="search icon"
+                      width={20}
+                      height={20}
+                      src="search_button.svg"
+                    />
+                  </div>
+
+                  {/* Mobile Search Suggestions */}
+                  {suggestions.length > 0 && (
+                    <div className="absolute top-full left-0 w-full bg-white border border-gray-300 rounded-bl-lg rounded-br-lg mt-1 z-50">
+                      {suggestions.map((suggestion, index) => (
+                        <React.Fragment key={index}>
+                          <div className="px-4 py-3 cursor-pointer hover:bg-gray-100 font-karla flex justify-between gap-4">
+                            <div className="flex gap-4">
+                              <Image
+                                width={20}
+                                height={20}
+                                src="search_button.svg"
+                                alt=""
+                              />
+                              <p className="text-[#070707] text-sm font-normal font-karla leading-snug tracking-tight">
+                                {suggestion}
+                              </p>
+                            </div>
+                            <Image
+                              width={20}
+                              height={20}
+                              src="arrow-up-right.svg"
+                              alt=""
+                            />
+                          </div>
+                          {index !== suggestions.length - 1 && (
+                            <div className="w-[95%] mx-auto h-[1px] bg-[#383838]"></div>
+                          )}
+                        </React.Fragment>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div
+                  className="h-10 w-10 flex items-center justify-center bg-[#393939] rounded-full cursor-pointer"
+                  onClick={toggleSearch}
+                >
+                  <Image
+                    alt="search icon"
+                    width={24}
+                    height={24}
+                    src="search.svg"
+                    className="w-4 h-4"
+                  />
+                </div>
+              )}
+
+              <Link href="/">
+                <div onClick={handleBack}>
+                  <Image
+                    src="/kuku_logo.svg"
+                    // width={50}
+                    // height={50}
+                    width={36}
+                    height={41}
+                    alt="img"
+                  />
+                </div>
+              </Link>
             </div>
           </div>
           <div className="mx-6 pt-5">
@@ -494,7 +586,11 @@ const Header = () => {
                 } text-base font-bold font-karla leading-tight hover:text-pink-500 z-50`}
               >
                 {/* MEN */}
-                <MenDropdown />
+                {/* <MenDropdown /> */}
+                <MenDropdown
+                  isOpen={currentOpenDropdown === "men"}
+                  onToggle={() => handleToggle("men")}
+                />
               </Link>
               <Link
                 href="#"
@@ -503,7 +599,11 @@ const Header = () => {
                 } text-base font-bold font-karla leading-tight hover:text-pink-500 z-40`}
               >
                 {/* WOMEN */}
-                <WomenDropdown />
+                {/* <WomenDropdown /> */}
+                <WomenDropdown
+                  isOpen={currentOpenDropdown === "women"}
+                  onToggle={() => handleToggle("women")}
+                />
               </Link>
               <Link
                 href="#"
@@ -512,13 +612,18 @@ const Header = () => {
                 } text-base font-bold font-karla leading-tight hover:text-pink-500 z-30`}
               >
                 {/* KIDS */}
-                <KidsDropdown />
+                {/* <KidsDropdown /> */}
+                <KidsDropdown
+                  isOpen={currentOpenDropdown === "kids"}
+                  onToggle={() => handleToggle("kids")}
+                />
               </Link>
+              <hr />
+              <SettingsDropdown 
+               isOpen={currentOpenDropdown === "setting"}
+               onToggle={() => handleToggle("setting")}
+              />
             </div>
-
-            <Link href="#">
-              <p>Setting</p>
-            </Link>
           </div>
           <div className="flex mx-6 mt-5 justify-between">
             <Link href="/cart">
