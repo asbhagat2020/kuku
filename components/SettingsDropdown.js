@@ -1,18 +1,18 @@
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import { useState } from 'react';
 
-const SettingsDropdown = () => {
-  const [isOpen, setIsOpen] = useState(false);
+const SettingsDropdown = ({isOpen, onToggle}) => {
+  // const [isOpen, setIsOpen] = useState(false);
 
-  const toggleDropdown = () => {
-    setIsOpen(!isOpen);
-  };
+  // const toggleDropdown = () => {
+  //   setIsOpen(!isOpen);
+  // };
 
   return (
     <div className="relative inline-block text-left">
       <div>
         <button
-          onClick={toggleDropdown}
+          onClick={onToggle}
           className="flex items-center justify-between w-full p-4 text-black hover:text-pink-500 z-0"
         >
           <span className="font-bold ">Setting</span>

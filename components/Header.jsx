@@ -28,6 +28,11 @@ const Header = () => {
   const dropdownRef = useRef(null);
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const [isFixed, setIsFixed] = useState(false);
+  const [currentOpenDropdown, setCurrentOpenDropdown] = useState(null);
+
+  const handleToggle = (dropdown) => {
+    setCurrentOpenDropdown(currentOpenDropdown === dropdown ? null : dropdown);
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -559,10 +564,7 @@ const Header = () => {
               )}
 
               <Link href="/">
-                <div 
-               
-                  onClick={handleBack}
-                >
+                <div onClick={handleBack}>
                   <Image
                     src="/kuku_logo.svg"
                     // width={50}
@@ -584,7 +586,11 @@ const Header = () => {
                 } text-base font-bold font-karla leading-tight hover:text-pink-500 z-50`}
               >
                 {/* MEN */}
-                <MenDropdown />
+                {/* <MenDropdown /> */}
+                <MenDropdown
+                  isOpen={currentOpenDropdown === "men"}
+                  onToggle={() => handleToggle("men")}
+                />
               </Link>
               <Link
                 href="#"
@@ -593,7 +599,11 @@ const Header = () => {
                 } text-base font-bold font-karla leading-tight hover:text-pink-500 z-40`}
               >
                 {/* WOMEN */}
-                <WomenDropdown />
+                {/* <WomenDropdown /> */}
+                <WomenDropdown
+                  isOpen={currentOpenDropdown === "women"}
+                  onToggle={() => handleToggle("women")}
+                />
               </Link>
               <Link
                 href="#"
@@ -602,10 +612,17 @@ const Header = () => {
                 } text-base font-bold font-karla leading-tight hover:text-pink-500 z-30`}
               >
                 {/* KIDS */}
-                <KidsDropdown />
+                {/* <KidsDropdown /> */}
+                <KidsDropdown
+                  isOpen={currentOpenDropdown === "kids"}
+                  onToggle={() => handleToggle("kids")}
+                />
               </Link>
               <hr />
-              <SettingsDropdown />
+              <SettingsDropdown 
+               isOpen={currentOpenDropdown === "setting"}
+               onToggle={() => handleToggle("setting")}
+              />
             </div>
           </div>
           <div className="flex mx-6 mt-5 justify-between">

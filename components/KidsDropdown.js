@@ -153,10 +153,10 @@ const categories = [
   },
 ];
 
-export default function KidsDropdown() {
+export default function KidsDropdown({ isOpen, onToggle }) {
   const [isKidsHovered, setIsKidsHovered] = useState(false);
   const [isMounted, setIsMounted] = useState(false); // Handle SSR mismatch
-  const [isMainMenuOpen, setIsMainMenuOpen] = useState(false);
+  // const [isMainMenuOpen, setIsMainMenuOpen] = useState(false);
   const [openCategory, setOpenCategory] = useState(null);
   const path = usePathname();
 
@@ -173,18 +173,18 @@ export default function KidsDropdown() {
       {/* Mobile View */}
       <div className="lg:hidden relative z-50">
         <button
-          onClick={() => setIsMainMenuOpen(!isMainMenuOpen)}
+          onClick={onToggle}
           className="flex items-center justify-between w-full p-4 text-black hover:text-pink-500"
         >
           <span className="font-bold z-40">KIDS</span>
-          {isMainMenuOpen ? (
+          {isOpen ? (
             <ChevronUp className="w-5 h-5" />
           ) : (
             <ChevronDown className="w-5 h-5" />
           )}
         </button>
 
-        {isMainMenuOpen && (
+        {isOpen && (
           <div className="absolute top-full left-0 w-full bg-white shadow-lg max-h-[70vh] overflow-y-auto thin-scrollbar">
             {categories.map((category) => (
               <div key={category.title} className="border-t border-gray-100">
