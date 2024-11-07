@@ -174,7 +174,7 @@ export default function KidsDropdown() {
       <div className="lg:hidden relative z-50">
         <button
           onClick={() => setIsMainMenuOpen(!isMainMenuOpen)}
-          className="flex items-center justify-between w-full p-4 text-[#fefae5] hover:text-pink-500"
+          className="flex items-center justify-between w-full p-4 text-black hover:text-pink-500"
         >
           <span className="font-bold z-40">KIDS</span>
           {isMainMenuOpen ? (

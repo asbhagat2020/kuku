@@ -157,7 +157,7 @@ export default function WomenDropdown() {
       <div className="lg:hidden relative z-50">
         <button
           onClick={() => setIsMainMenuOpen(!isMainMenuOpen)}
-          className="flex items-center justify-between w-full p-4 text-[#fefae5] hover:text-pink-500 z-0"
+          className="flex items-center justify-between w-full p-4 text-black hover:text-pink-500 z-0"
         >
           <span className="font-bold ">WOMEN</span>
           {isMainMenuOpen ? (
