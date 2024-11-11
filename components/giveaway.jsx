@@ -53,89 +53,139 @@ const Giveaway = () => {
     setCurrentStep(1);
   };
 
+  const renderLottieAnimation = () => {
+    if (currentStep === 1) {
+      if (isMobileView) {
+        return (
+          <div className="absolute inset-0 w-full h-full">
+            <Lottie
+              loop
+              play
+              rendererSettings={{ preserveAspectRatio: "xMidYMid slice" }}
+              animationData={homeAnimation}
+              style={{
+                width: "100vw",
+                height: "100vh",
+                objectFit: "cover",
+                position: "absolute",
+                left: 0,
+                top: 0,
+              }}
+            />
+          </div>
+        );
+      } else {
+        return (
+          <div className="flex justify-center items-center w-full lg:h-[50vh]">
+            <Lottie
+              loop
+              play
+              animationData={homeAnimation}
+              className="w-full"
+            />
+          </div>
+        );
+      }
+    }
+
+    if (currentStep === 2) {
+      if (isMobileView) {
+        return (
+          <div className="absolute inset-0 w-full h-full">
+            <Lottie
+              loop
+              play
+              rendererSettings={{ preserveAspectRatio: "xMidYMid slice" }}
+              animationData={clothHangerAnimation}
+              style={{
+                width: "100vw",
+                height: "100vh",
+                objectFit: "cover",
+                position: "absolute",
+                left: 0,
+                top: 0,
+              }}
+            />
+          </div>
+        );
+      } else {
+        return (
+          <div className="flex justify-center items-center w-full lg:h-[50vh]">
+            <Lottie
+              loop
+              play
+              animationData={clothHangerAnimation}
+              className="w-full"
+            />
+          </div>
+        );
+      }
+    }
+
+    if (currentStep === 3) {
+      if (isMobileView) {
+        return (
+          <div className="absolute inset-0 w-full h-full">
+            <Lottie
+              loop
+              play
+              rendererSettings={{ preserveAspectRatio: "xMidYMid slice" }}
+              animationData={playgroundAnimation}
+              style={{
+                width: "100vw",
+                height: "100vh",
+                objectFit: "cover",
+                position: "absolute",
+                left: 0,
+                top: 0,
+              }}
+            />
+          </div>
+        );
+      } else {
+        return (
+          <div className="flex justify-center items-center w-full lg:h-[50vh]">
+            <Lottie
+              loop
+              play
+              animationData={playgroundAnimation}
+              className="w-full"
+            />
+          </div>
+        );
+      }
+    }
+
+    return null;
+  };
+
   return (
     <>
       {!showFinalScreen ? (
         <div className="relative flex flex-col items-center min-h-screen w-screen overflow-hidden">
           {/* Background Layer */}
           <div className="fixed inset-0 w-screen h-screen">
-            {currentStep === 1 && (
-              <div className="absolute inset-0 w-full h-full">
-                <Lottie
-                  loop
-                  play
-                  rendererSettings={{
-                    preserveAspectRatio: "xMidYMid slice",
-                  }}
-                  animationData={homeAnimation}
-                  style={{
-                    width: "100vw",
-                    height: "100vh",
-                    objectFit: "cover",
-                    position: "absolute",
-                    left: 0,
-                    top: 0,
-                  }}
-                />
-              </div>
-            )}
-            {currentStep === 2 && (
-              <div className="absolute inset-0 w-full h-auto">
-                <Lottie
-                  loop
-                  play
-                  rendererSettings={{
-                    preserveAspectRatio: "xMidYMid slice",
-                  }}
-                  animationData={clothHangerAnimation}
-                  style={{
-                    width: "100vw",
-                    height: "100vh",
-                    objectFit: "cover",
-                    position: "absolute",
-                    left: 0,
-                    top: 0,
-                  }}
-                />
-              </div>
-            )}
-            {currentStep === 3 && (
-              <div className="absolute inset-0 w-full h-full">
-                <Lottie
-                  loop
-                  play
-                  rendererSettings={{
-                    preserveAspectRatio: "xMidYMid slice",
-                  }}
-                  animationData={playgroundAnimation}
-                  style={{
-                    width: "100vw",
-                    height: "100vh",
-                    objectFit: "cover",
-                    position: "absolute",
-                    left: 0,
-                    top: 0,
-                  }}
-                />
-              </div>
-            )}
+            {renderLottieAnimation()}
           </div>
 
           {/* Content Layer */}
           <div className="relative z-10 w-full max-w-7xl px-6">
             {/* Top Navigation */}
-            <div className="flex justify-between w-[86%]">
-            {/* Back button */}
-            <Link href="/">
-              <button onClick={handleBack} className="text-3xl cursor-pointer">
-                <img src="/gv_arrow.png" alt="Back" className="w-8 h-8" />
+            <div className="flex justify-between w-[86%] mt-4">
+              {/* Back button */}
+              <Link href="/">
+                <button
+                  onClick={handleBack}
+                  className="text-3xl cursor-pointer"
+                >
+                  <img src="/gv_arrow.png" alt="Back" className="w-8 h-8" />
+                </button>
+              </Link>
+              {/* Help button */}
+              <button className="cursor-pointer">
+                <img src="/help_gv.png" alt="Help" className="w-24 h-8" />
               </button>
-            </Link>
-            {/* Help button */}
-            <button className="cursor-pointer">
-              <img src="/help_gv.png" alt="Help" className="w-24 h-8" />
-            </button>
-          </div>
+            </div>
 
             {/* Progress Bar */}
             <div className="w-full md:w-[88%] flex justify-center items-center mt-8 mx-auto">
@@ -156,7 +206,7 @@ const Giveaway = () => {
                 {`Step ${currentStep}: Lorem ipsum dolor sit amet, consectetur.`}
               </h1>
 
-           
+              {/* Action Buttons */}
               <div className="flex justify-center space-x-8 md:space-x-16 mt-6">
                 {currentStep === 3 ? (
                   <>
@@ -185,11 +235,10 @@ const Giveaway = () => {
                 )}
               </div>
             </div>
-
-
           </div>
         </div>
       ) : (
+        // Final Screen
         <div className="final-screen flex flex-col justify-center items-center min-h-screen w-screen p-6">
           <div className="absolute top-4 left-4 w-full max-w-7xl flex justify-start">
             <img
@@ -213,9 +262,7 @@ const Giveaway = () => {
           <Lottie
             loop
             play
-            rendererSettings={{
-              preserveAspectRatio: "xMidYMid slice",
-            }}
+            rendererSettings={{ preserveAspectRatio: "xMidYMid slice" }}
             animationData={giftboxAnimation}
             style={{
               width: "100vw",

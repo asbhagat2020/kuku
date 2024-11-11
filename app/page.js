@@ -15,47 +15,73 @@ import StriteSection from "@/components/home/StriteSection";
 import homeAnimation from "../public/lottieFiles/home.json";
 
 const Page = () => {
-  // State to handle loading
+  // State to handle loading and screen size
   const [isLoading, setIsLoading] = useState(true);
+  const [isMobileView, setIsMobileView] = useState(false);
 
-  // Simulate a loading delay (optional)
+  // Handle screen resize and initial mobile check
   useEffect(() => {
-    // Mimic an API call or data loading
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 2000); // 2-second delay
+    const handleResize = () => {
+      setIsMobileView(window.innerWidth <= 768); // Adjust breakpoint as needed
+    };
 
-    return () => clearTimeout(timer); // Cleanup the timer on component unmount
+    // Set initial value
+    handleResize();
+
+    // Add event listener
+    window.addEventListener('resize', handleResize);
+
+    // Cleanup
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  // Simulate a loading delay
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Loading animation component
+  const LoadingAnimation = () => {
+    if (isMobileView) {
+      return (
+        <div className="absolute inset-0 w-full h-full">
+          <Lottie
+            loop
+            play
+            rendererSettings={{ preserveAspectRatio: "xMidYMid slice" }}
+            animationData={homeAnimation}
+            style={{
+              width: "100vw",
+              height: "100vh",
+              objectFit: "cover",
+              position: "absolute",
+              left: 0,
+              top: 0,
+            }}
+          />
+        </div>
+      );
+    } else {
+      return (
+        <div className="flex justify-center items-center w-full lg:h-[50vh]">
+              <Lottie
+                loop
+                play
+                animationData={homeAnimation}
+                className="w-full"
+              />
+            </div>
+      );
+    }
+  };
   return (
     <>
       {isLoading ? (
-      //   <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100vw', height: '50vh' }}>
-      //   <Lottie
-      //     loop
-      //     animationData={homeAnimation}
-      //     // style={{ width: 300, height: 300 }}
-      //   />
-      // </div>
-      <div className="absolute inset-0 w-full h-full">
-      <Lottie
-        loop
-        play
-        rendererSettings={{
-          preserveAspectRatio: "xMidYMid slice"
-        }}
-        animationData={homeAnimation}
-        style={{
-          width: "100vw",
-          height: "100vh",
-          objectFit: "cover",
-          position: "absolute",
-          left: 0,
-          top: 0,
-        }}
-      />
-    </div>
+        <LoadingAnimation />
       ) : (
         <>
           <Header />

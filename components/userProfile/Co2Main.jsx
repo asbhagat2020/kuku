@@ -4,9 +4,7 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { buildStyles, CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
-// import co2Animation from "/lottieFiles/co2.json";
 import Lottie from "react-lottie-player";
-
 
 const Co2Main = () => {
   const [co2Animation, setCo2Animation] = useState(null);
@@ -21,186 +19,191 @@ const Co2Main = () => {
   }, []);
 
   if (!co2Animation) return null;
-
   const percentage = 68;
+
   return (
-    <div className="max-w-[1550px] mx-auto h-fit mb-[100px]">
-      {/* <div className=' mt-10 lg:mt-[150px] min-h-[860px] max-w-[100%]  mx-5 lg:mx-[73px] relative'
-        style={{
-          backgroundImage: 'url("/co2_bg.png")',
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          paddingInline: "50px",
-          backgroundRepeat: 'no-repeat',
-          borderRadius: "20px"
-        }}
-      >
-        <div className=''>
-          <div className='flex items-center justify-between'>
-            <div className='py-[27px] lg:py-[77px] lg:px-5'>
-              <p className=""><span className="text-white text-[32px] lg:text-[64px] font-bold font-karla">Hi Palak, <br /></span><span className="text-white text-base lg:text-[32px] font-bold font-karla">you have saved 68 kgs of CO<span className="align-text-bottom lg:text-[24px]">2</span> emissions this month  </span></p>
-            </div>
-            <div>
-              <Link href={'#'} className='w-24 h-9 bg-white rounded-3xl px-2 flex gap-2 justify-center items-center'>
-                <Image width={26} height={26} src={'question_green.svg'} alt=''/>
-                <p className='text-green-500 font-karla font-bold'>Help</p>
-              </Link>
+    <div className="w-full max-w-[1550px] mx-auto px-4 sm:px-6 lg:px-8">
+      {/* Main Container */}
+      <div className="mt-4 sm:mt-8 lg:mt-16 min-h-[400px] sm:min-h-[500px] lg:min-h-[860px] relative rounded-[20px] overflow-hidden">
+        {/* Lottie Animation Background */}
+        <div className="absolute inset-0 z-0">
+          <Lottie
+            loop
+            play
+            animationData={co2Animation}
+            className="w-full h-full object-cover"
+            style={{ position: "absolute" }}
+          />
+        </div>
+
+        {/* Content Overlay */}
+        <div className="relative z-10 p-4 pt-6 sm:p-6 lg:p-16">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between">
+            {/* Greeting Section */}
+            <div className="w-[200px] sm:w-auto py-16 lg:pl-[12px] sm:py-6 lg:py-12">
+              <p className="space-y-1 sm:space-y-2">
+                <span className="block text-white text-xl sm:text-2xl lg:text-5xl font-bold font-karla">
+                  Hi Palak,
+                </span>
+                <span className="block text-white text-sm sm:text-base lg:text-2xl font-bold font-karla">
+                  you have saved 68 kgs of CO
+                  <span className="align-text-bottom text-xs sm:text-sm lg:text-xl">
+                    2
+                  </span>{" "}
+                  emissions this month
+                </span>
+              </p>
             </div>
 
+            {/* Help Button */}
+            <Link
+              href={"#"}
+              className="absolute top-4 right-4 pl-[4px] sm:relative top-[100px] sm:top-0 sm:right-0 
+                w-16 sm:w-20 lg:w-24 h-6 sm:h-8 lg:h-10 
+                bg-white rounded-full flex items-center justify-center gap-2"
+            >
+              <Image
+                width={20}
+                height={20}
+                src={"question_green.svg"}
+                alt=""
+                className="w-4 sm:w-4 lg:w-6"
+              />
+              <p className="text-green-500 text-xs sm:text-sm lg:text-base font-karla font-bold">
+                Help
+              </p>
+            </Link>
           </div>
         </div>
-        <div className='absolute top-1/3  lg:left-[40%] font-karla'>
-          <div className='relative'>
+
+        {/* Circular Progress */}
+        {/* Circular Progress with Content */}
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 lg:left-[40%] lg:translate-x-0">
+          <div className="relative w-[120px] sm:w-[220px] lg:w-[300px]">
+            {/* Progress Circle */}
             <CircularProgressbar
               value={percentage}
               text={``}
               className="font-karla text-yellow-300"
               styles={buildStyles({
-                textColor: '#186940',
-                pathColor: '#FBE300',
-                trailColor: '#d6d6d6',
-                textSize: '15px',
+                textColor: "#186940",
+                pathColor: "#FBE300",
+                trailColor: "#d6d6d6",
+                textSize: "15px",
+                strokeLinecap: "round",
               })}
-            >
-            </CircularProgressbar>
-            <div className='absolute top-[60px] left-[75px] '>
-              <h2 className='font-karla text-center text-[50px] lg:text-[94px] font-bold text-[#FBE300] leading-[40px]'>CO <span className="ml-[-18px] align-text-bottom lg:text-[40px]">2</span> <br /><span className='text-[40px] text-[#186940]'>68 Kg</span></h2>
-            </div>
-            <div className='absolute bottom-1/4 left-[85px]'>
-              <h2 className='font-karla text-[15px] font-bold text-[#186940]'>Saved this month</h2>
+            />
+            {/* Center Content Container */}
+            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full">
+              <div className="text-center flex flex-col items-center">
+                {/* CO2 Text Container */}
+                <div
+                  className="relative inline-flex flex-col items-center
+      -mt-4 sm:-mt-6 md:-mt-8 lg:-mt-12"
+                >
+                  <div className="flex items-baseline">
+                    <span
+                      className="font-karla font-bold 
+          text-[24px] sm:text-[48px] md:text-[72px] lg:text-[94px] 
+          leading-none text-[#FBE300]"
+                    >
+                      CO
+                    </span>
+                    <span
+                      className="font-karla font-bold 
+          text-[14px] sm:text-[28px] md:text-[35px] lg:text-[40px]
+          -ml-1 sm:-ml-2 md:-ml-3 lg:-ml-4
+          text-[#FBE300]
+          translate-y-2 sm:translate-y-3 md:translate-y-4 lg:translate-y-6"
+                    >
+                      2
+                    </span>
+                  </div>
+
+                  {/* KG Value and Caption */}
+                  <div
+                    className="flex flex-col items-center 
+        mt-2 sm:mt-3 md:mt-4 lg:mt-6"
+                  >
+                    <div
+                      className="font-karla font-bold 
+          text-[18px] sm:text-[32px] md:text-[36px] lg:text-[40px]
+          text-[#186940]"
+                    >
+                      68 kg
+                    </div>
+                    <div
+                      className="font-karla 
+          text-[10px] sm:text-xs md:text-sm lg:text-base 
+          font-bold text-[#186940] 
+          mt-1 sm:mt-2"
+                    >
+                      Saved this month
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-
-        </div>
-      </div> */}
-
-      <div className="absolute inset-0 mt-[110px] lg:ml-[-6px]  min-h-[860px] max-w-[100%]">
-        <Lottie
-          loop
-          play
-          rendererSettings={{
-            preserveAspectRatio: "xMidYMid slice",
-          }}
-          animationData={co2Animation}
-          style={{
-            width: "100vw",
-            height: "100vh",
-            objectFit: "cover",
-            position: "absolute",
-            left: -2,
-            top: 0,
-          }}
-        />
-      </div>
-
-      <div className="flex items-center justify-between z-500 relative">
-        <div className="py-[27px] lg:py-[77px] lg:px-5">
-          <p className="">
-            <span className="text-white text-[32px] lg:text-[64px] font-bold font-karla">
-              Hi Palak, <br />
-            </span>
-            <span className="text-white text-base lg:text-[32px] font-bold font-karla">
-              you have saved 68 kgs of CO
-              <span className="align-text-bottom lg:text-[24px]">2</span> emissions
-              this month
-            </span>
-          </p>
-        </div>
-        <div className="lg:mt-[-100px] mr-5">
-          <Link
-            href={"#"}
-            className="w-24 h-9 bg-white rounded-3xl px-2 flex gap-2 justify-center items-center"
-          >
-            <Image width={26} height={26} src={"/question_green.svg"} alt="" />
-            <p className="text-green-500 font-karla font-bold">Help</p>
-          </Link>
         </div>
       </div>
-      <div className="pt-[138px] px-6 lg:px-[71px] flex justify-center lg:justify-start mt-[350px]">
-        <p className="text-black text-[32.83px] font-bold font-karla leading-[45.96px] tracking-wider z-40">
+
+      {/* Contribution Section */}
+      <div className="pt-8 sm:pt-12 lg:pt-20">
+        <p className="text-black text-lg sm:text-2xl lg:text-3xl font-bold font-karla mb-6 sm:mb-8 lg:mb-12 px-4">
           Your Contribution 🌎
         </p>
-      </div>
-      <div className="pt-[58px] px-[71px] flex flex-col lg:flex-row gap-5 lg:gap-0 justify-between flex-shrink-0">
-        <div className="flex flex-col gap-5 lg:gap-[54px]">
-          <div className="flex items-center relative">
-            <div className="absolute top-[-6px] left-20 z-20">
-              <Image unoptimized src="/co2.png" alt="" width={36} height={36} />
-            </div>
-            <div className="rounded-full w-[129px] h-[129px] bg-[#d1ffe7] z-10 flex items-center">
-              <Image src="/co2_image.svg" alt="" width={129} height={129} />
-            </div>
-            <div className="w-fit ml-[-30px] h-[107.61px] pl-[98.49px] pr-[61.36px] pt-[16.41px] pb-[17.07px] bg-neutral-50 rounded-tr-[21.89px] rounded-br-[21.89px] border-4 border-[#d1ffe8] justify-end items-center inline-flex">
-              <div className="w-[200px] xl:w-[349px] self-stretch relative">
-                <div className="left-0 top-0 absolute text-black xl:text-[25.53px] font-medium font-karla">
-                  Order Placed: 8th May 2024
-                </div>
-                <div className="left-0 top-[40.13px] absolute text-[#30bd75] xl:text-[29.18px] font-bold font-karla">
-                  Co2 emission saved: 2KG
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="flex items-center relative">
-            <div className="absolute top-[-6px] left-20 z-20">
-              <Image unoptimized src="/co2.png" alt="" width={36} height={36} />
-            </div>
-            <div className="rounded-full w-[129px] h-[129px] bg-[#d1ffe7] z-10 flex items-center">
-              <Image src="/co2_image.svg" alt="" width={129} height={129} />
-            </div>
-            <div className="w-fit ml-[-30px] h-[107.61px] pl-[98.49px] pr-[61.36px] pt-[16.41px] pb-[17.07px] bg-neutral-50 rounded-tr-[21.89px] rounded-br-[21.89px] border-4 border-[#d1ffe8] justify-end items-center inline-flex">
-              <div className="w-[200px] xl:w-[349px] self-stretch relative">
-                <div className="left-0 top-0 absolute text-black xl:text-[25.53px] font-medium font-karla">
-                  Order Placed: 8th May 2024
-                </div>
-                <div className="left-0 top-[40.13px] absolute text-[#30bd75] xl:text-[29.18px] font-bold font-karla">
-                  Co2 emission saved: 2KG
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="flex flex-col gap-5 lg:gap-[54px]">
-          <div className="flex items-center relative">
-            <div className="absolute top-[-6px] left-20 z-20">
-              <Image unoptimized src="/co2.png" alt="" width={36} height={36} />
-            </div>
-            <div className="rounded-full w-[129px] h-[129px] bg-[#d1ffe7] z-10 flex items-center">
-              <Image src="/co2_image.svg" alt="" width={129} height={129} />
-            </div>
-            <div className="w-fit ml-[-30px] h-[107.61px] pl-[98.49px] pr-[61.36px] pt-[16.41px] pb-[17.07px] bg-neutral-50 rounded-tr-[21.89px] rounded-br-[21.89px] border-4 border-[#d1ffe8] justify-end items-center inline-flex">
-              <div className="w-[200px] xl:w-[349px] self-stretch relative">
-                <div className="left-0 top-0 absolute text-black xl:text-[25.53px] font-medium font-karla">
-                  Order Placed: 8th May 2024
-                </div>
-                <div className="left-0 top-[40.13px] absolute text-[#30bd75] xl:text-[29.18px] font-bold font-karla">
-                  Co2 emission saved: 2KG
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="flex items-center relative">
-            <div className="absolute top-[-6px] left-20 z-20">
-              <Image unoptimized src="/co2.png" alt="" width={36} height={36} />
-            </div>
-            <div className="rounded-full w-[129px] h-[129px] bg-[#d1ffe7] z-10 flex items-center">
-              <Image src="/co2_image.svg" alt="" width={129} height={129} />
-            </div>
-            <div className="w-fit ml-[-30px] h-[107.61px] pl-[98.49px] pr-[61.36px] pt-[16.41px] pb-[17.07px] bg-neutral-50 rounded-tr-[21.89px] rounded-br-[21.89px] border-4 border-[#d1ffe8] justify-end items-center inline-flex">
-              <div className="w-[200px] xl:w-[349px] self-stretch relative">
-                <div className="left-0 top-0 absolute text-black xl:text-[25.53px] font-medium font-karla">
-                  Order Placed: 8th May 2024
-                </div>
-                <div className="left-0 top-[40.13px] absolute text-[#30bd75] xl:text-[29.18px] font-bold font-karla">
-                  Co2 emission saved: 2KG
-                </div>
-              </div>
-            </div>
-          </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 lg:gap-8 px-4">
+          {[1, 2, 3, 4].map((_, index) => (
+            <ContributionCard key={index} />
+          ))}
         </div>
       </div>
     </div>
   );
 };
+
+const ContributionCard = () => (
+  <div className="flex items-center relative">
+    <div className="absolute top-[-6px] left-[40px] sm:left-[45px] lg:left-20 z-20">
+      <Image
+        unoptimized
+        src="/co2.png"
+        alt=""
+        width={24}
+        height={24}
+        className="w-4 sm:w-5 lg:w-8"
+      />
+    </div>
+    <div
+      className="rounded-full w-[60px] h-[60px] sm:w-[80px] sm:h-[80px] lg:w-[129px] lg:h-[129px] 
+      bg-[#d1ffe7] z-10 flex items-center justify-center"
+    >
+      <Image
+        src="/co2_image.svg"
+        alt=""
+        width={90}
+        height={90}
+        className="w-[60px] h-[60px] sm:w-[80px] sm:h-[80px] lg:w-[129px] lg:h-[129px]"
+      />
+    </div>
+    <div
+      className="flex-1 ml-[-15px] sm:ml-[-20px] lg:ml-[-30px] 
+      py-2 sm:py-3 lg:py-4 pl-[50px] sm:pl-[70px] lg:pl-[98px] pr-3 sm:pr-4 lg:pr-8
+      bg-neutral-50 rounded-tr-[15px] rounded-br-[15px] 
+      border-4 border-[#d1ffe8]"
+    >
+      <div className="flex flex-col gap-1 sm:gap-2">
+        <div className="text-black text-xs sm:text-sm lg:text-xl font-medium font-karla">
+          Order Placed: 8th May 2024
+        </div>
+        <div className="text-[#30bd75] text-sm sm:text-base lg:text-2xl font-bold font-karla">
+          Co2 emission saved: 2KG
+        </div>
+      </div>
+    </div>
+  </div>
+);
 
 export default Co2Main;
