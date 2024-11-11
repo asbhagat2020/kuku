@@ -2,24 +2,25 @@
 
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
+import Lottie from "react-lottie-player";
+import clothHangerAnimation from "../public/lottieFiles/cloth_hanger.json";
+import playgroundAnimation from "../public/lottieFiles/playground.json";
+import giftboxAnimation from "../public/lottieFiles/giftbox.json";
+import homeAnimation from "../public/lottieFiles/home.json";
 
 const Giveaway = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [showFinalScreen, setShowFinalScreen] = useState(false);
   const [isMobileView, setIsMobileView] = useState(false);
 
-  // Detect mobile screen width
   useEffect(() => {
     const handleResize = () => {
       setIsMobileView(window.innerWidth <= 768);
     };
 
-    // Initialize
     handleResize();
-    // Attach event listener
     window.addEventListener("resize", handleResize);
 
-    // Cleanup event listener on unmount
     return () => {
       window.removeEventListener("resize", handleResize);
     };
@@ -44,31 +45,86 @@ const Giveaway = () => {
   };
 
   const handleFinalScreen = () => {
-    setShowFinalScreen(true); // Move to final screen when button clicked on 3rd step
+    setShowFinalScreen(true);
   };
 
   const handleFinalScreenClick = () => {
-    setShowFinalScreen(false); // Redirect back to first slide
+    setShowFinalScreen(false);
     setCurrentStep(1);
   };
 
   return (
     <>
       {!showFinalScreen ? (
-        <div
-        className="flex flex-col items-center min-h-screen p-6"
-        style={{
-          backgroundImage: "url('/giveaway_bg.png')",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          width: "100vw",  // Ensures full width
-          overflow: "hidden", // Prevents overflow issues
-          padding: isMobileView ? "0" : "6", // Removes padding on mobile to prevent space
-        }}
-      >
-      
-          {/* Top Navigation */}
-          <div className="flex justify-between w-[86%]">
+        <div className="relative flex flex-col items-center min-h-screen w-screen overflow-hidden">
+          {/* Background Layer */}
+          <div className="fixed inset-0 w-screen h-screen">
+            {currentStep === 1 && (
+              <div className="absolute inset-0 w-full h-full">
+                <Lottie
+                  loop
+                  play
+                  rendererSettings={{
+                    preserveAspectRatio: "xMidYMid slice",
+                  }}
+                  animationData={homeAnimation}
+                  style={{
+                    width: "100vw",
+                    height: "100vh",
+                    objectFit: "cover",
+                    position: "absolute",
+                    left: 0,
+                    top: 0,
+                  }}
+                />
+              </div>
+            )}
+            {currentStep === 2 && (
+              <div className="absolute inset-0 w-full h-auto">
+                <Lottie
+                  loop
+                  play
+                  rendererSettings={{
+                    preserveAspectRatio: "xMidYMid slice",
+                  }}
+                  animationData={clothHangerAnimation}
+                  style={{
+                    width: "100vw",
+                    height: "100vh",
+                    objectFit: "cover",
+                    position: "absolute",
+                    left: 0,
+                    top: 0,
+                  }}
+                />
+              </div>
+            )}
+            {currentStep === 3 && (
+              <div className="absolute inset-0 w-full h-full">
+                <Lottie
+                  loop
+                  play
+                  rendererSettings={{
+                    preserveAspectRatio: "xMidYMid slice",
+                  }}
+                  animationData={playgroundAnimation}
+                  style={{
+                    width: "100vw",
+                    height: "100vh",
+                    objectFit: "cover",
+                    position: "absolute",
+                    left: 0,
+                    top: 0,
+                  }}
+                />
+              </div>
+            )}
+          </div>
+
+          {/* Content Layer */}
+          <div className="relative z-10 w-full max-w-7xl px-6">
+            {/* Top Navigation */}
+            <div className="flex justify-between w-[86%]">
             {/* Back button */}
             <Link href="/">
               <button onClick={handleBack} className="text-3xl cursor-pointer">
@@ -81,167 +137,97 @@ const Giveaway = () => {
             </button>
           </div>
 
-          {/* Progress Bar as Slider */}
-          <div className="sticky top-20 w-[88%] flex justify-center items-center">
-            <span
-              onClick={() => goToStep(1)}
-              className={`w-1/3 h-1 cursor-pointer mx-3 ${
-                currentStep >= 1 ? "bg-green-500" : "bg-gray-300"
-              } rounded-full`}
-            ></span>
-            <span
-              onClick={() => goToStep(2)}
-              className={`w-1/3 h-1 cursor-pointer mx-3 ${
-                currentStep >= 2 ? "bg-green-500" : "bg-gray-300"
-              } rounded-full`}
-            ></span>
-            <span
-              onClick={() => goToStep(3)}
-              className={`w-1/3 h-1 cursor-pointer mx-3 ${
-                currentStep === 3 ? "bg-green-500" : "bg-gray-300"
-              } rounded-full`}
-            ></span>
-          </div>
-
-          {/* Main Content */}
-          <div className="text-center my-8 mt-14">
-            <h1 className="text-2xl font-bold mb-4">
-              {currentStep === 1 && (
-                <>
-                  Step 1: Lorem ipsum dolor sit amet <br />
-                  consectetur. Eget neque ultrices?
-                </>
-              )}
-              {currentStep === 2 && (
-                <>
-                  Step 2: Lorem ipsum dolor sit amet <br />
-                  consectetur. Eget neque ultrices?
-                </>
-              )}
-              {currentStep === 3 && (
-                <>
-                  Step 3: Lorem ipsum dolor sit amet <br />
-                  consectetur. Eget neque ultrices?
-                </>
-              )}
-            </h1>
-
-            {/* Buttons */}
-            <div className="flex justify-center space-x-16 mt-6">
-              {currentStep === 3 ? (
-                <>
-                  <button className="px-8 py-2 bg-green-500 text-white font-semibold rounded-md hover:bg-green-600 transition">
-                    LOREM IPSUM
-                  </button>
-                  <button
-                    onClick={handleFinalScreen}
-                    className="px-8 py-2 bg-white text-black font-semibold rounded-md border border-black hover:bg-gray-100 transition"
-                  >
-                    LOREM IPSUM
-                  </button>
-                </>
-              ) : (
-                <>
-                  <button className="px-8 py-2 bg-green-500 text-white font-semibold rounded-md hover:bg-green-600 transition">
-                    LOREM IPSUM
-                  </button>
-                  <button
-                    onClick={handleNext}
-                    className="px-8 py-2 bg-white text-black font-semibold rounded-md border border-black hover:bg-gray-100 transition"
-                  >
-                    LOREM IPSUM
-                  </button>
-                </>
-              )}
+            {/* Progress Bar */}
+            <div className="w-full md:w-[88%] flex justify-center items-center mt-8 mx-auto">
+              {[1, 2, 3].map((step) => (
+                <span
+                  key={step}
+                  onClick={() => goToStep(step)}
+                  className={`w-1/3 h-1 cursor-pointer mx-3 ${
+                    currentStep >= step ? "bg-green-500" : "bg-gray-300"
+                  } rounded-full`}
+                ></span>
+              ))}
             </div>
-          </div>
 
-          {/* Image Section */}
-          <div className="w-full overflow-hidden">
-            {currentStep === 1 && (
-              <div
-                className="flex justify-center min-h-75"
-                style={{ height: "450px" }}
-              >
-                <img
-                  src="/window_kuku.png"
-                  alt="Step 1"
-                  className="w-[404px] h-[430.1px] object-contain"
-                />
+            {/* Step Content */}
+            <div className="text-center my-8">
+              <h1 className="text-2xl font-bold mb-4">
+                {`Step ${currentStep}: Lorem ipsum dolor sit amet, consectetur.`}
+              </h1>
+
+           
+              <div className="flex justify-center space-x-8 md:space-x-16 mt-6">
+                {currentStep === 3 ? (
+                  <>
+                    <button className="px-6 md:px-8 py-2 bg-green-500 text-white font-semibold rounded-md hover:bg-green-600 transition">
+                      LOREM IPSUM
+                    </button>
+                    <button
+                      onClick={handleFinalScreen}
+                      className="px-6 md:px-8 py-2 bg-white text-black font-semibold rounded-md border border-black hover:bg-gray-100 transition"
+                    >
+                      LOREM IPSUM
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <button className="px-6 md:px-8 py-2 bg-green-500 text-white font-semibold rounded-md hover:bg-green-600 transition">
+                      LOREM IPSUM
+                    </button>
+                    <button
+                      onClick={handleNext}
+                      className="px-6 md:px-8 py-2 bg-white text-black font-semibold rounded-md border border-black hover:bg-gray-100 transition"
+                    >
+                      LOREM IPSUM
+                    </button>
+                  </>
+                )}
               </div>
-            )}
-            {currentStep === 2 && (
-              <div
-                className="flex justify-center min-h-75"
-                style={{ height: "370px" }}
-              >
-                <img
-                  src="/cloth_hanger.png"
-                  alt="Step 2"
-                  className="w-[108%] object-cover mt-[70px]"
-                />
-              </div>
-            )}
-            {currentStep === 3 && (
-              <div
-                className={`flex justify-center w-full min-h-75 ${
-                  isMobileView ? "fixed bottom-0" : ""
-                }`}
-              >
-                <img
-                  src="/playgorund.png"
-                  alt="Step 3"
-                  className="w-[113%] object-cover"
-                />
-              </div>
-            )}
+            </div>
+
+
           </div>
         </div>
       ) : (
-        <div
-          className="final-screen flex flex-col justify-center items-center p-6"
-          style={{
-            backgroundImage: "url('/final_bg.png')",
-            height: "100vh",
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-          }}
-        >
-          {/* Arrow at the Top Left */}
-          <div className="w-full flex justify-start">
+        <div className="final-screen flex flex-col justify-center items-center min-h-screen w-screen p-6">
+          <div className="absolute top-4 left-4 w-full max-w-7xl flex justify-start">
             <img
               src="/gv_arrow.png"
               alt="Arrow"
-              className="cursor-pointer w-8 h-8"
+              className="cursor-pointer w-8 h-8 z-50"
               onClick={handleFinalScreenClick}
             />
           </div>
-
-          {/* Final Screen Texts */}
-          <div className="text-center mt-8">
-            <h1 className="text-green-500 text-4xl font-bold">Lorem ipsum dolor</h1>
+          <div className="text-center mt-[-200px] relative z-10">
+            <h1 className="text-green-500 text-4xl font-bold">
+              Lorem ipsum dolor
+            </h1>
             <p className="text-black mt-4 text-lg">
-              Lorem ipsum dolor sit amet consectetur. <br />
-              Eget neque ultrices?
+              Lorem ipsum dolor sit amet consectetur. Eget neque ultrices?
             </p>
           </div>
-
-          {/* Share on Social Button */}
-          <button className="px-8 py-2 mt-8 bg-green-500 text-white font-semibold rounded-md hover:bg-green-600 transition">
+          <button className="px-8 py-2 mt-8 bg-green-500 text-white font-semibold rounded-md hover:bg-green-600 transition relative z-10">
             Share on social
           </button>
-
-          {/* Giftbox Image */}
-          <div className="flex justify-center mt-8">
-            <img
-              src="/giftbox.png"
-              alt="Gift Box"
-              className="w-[340px] h-[399.13px]"
-            />
-          </div>
-
-          {/* Help button in Final Screen */}
-          <button className="absolute top-4 right-4">
+          <Lottie
+            loop
+            play
+            rendererSettings={{
+              preserveAspectRatio: "xMidYMid slice",
+            }}
+            animationData={giftboxAnimation}
+            style={{
+              width: "100vw",
+              height: "100vh",
+              objectFit: "cover",
+              position: "absolute",
+              left: 0,
+              top: 0,
+              marginBottom: "10px",
+            }}
+          />
+          <button className="absolute top-4 right-4 z-10">
             <img src="/help_gv.png" alt="Help" className="w-24 h-8" />
           </button>
         </div>
