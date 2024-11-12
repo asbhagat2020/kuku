@@ -97,7 +97,7 @@ const AnimationSection = () => {
   };
 
   return (
-    <div className="max-w-[1550px] mx-auto mb-[93px] relative h-[800px]">
+    <div className="max-w-[1550px] mx-auto mb-[53px] relative lg:h-[700px]">
       <div className="absolute top-[-50px] right-[20px] sm:top-[-80px] sm:right-[80px] z-30">
         <Image src="list_top_image.svg" width={111} height={121} alt="" />
       </div>

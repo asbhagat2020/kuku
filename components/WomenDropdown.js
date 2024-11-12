@@ -138,7 +138,6 @@ const categories = [
 export default function WomenDropdown({ isOpen, onToggle }) {
   const [isWomenHovered, setIsWomenHovered] = useState(false);
   const [isMounted, setIsMounted] = useState(false); // Prevent SSR mismatch
-  // const [isMainMenuOpen, setIsMainMenuOpen] = useState(false);
   const [openCategory, setOpenCategory] = useState(null);
   const path = usePathname();
 
@@ -149,6 +148,8 @@ export default function WomenDropdown({ isOpen, onToggle }) {
     setIsMounted(true);
   }, []);
 
+
+  
   if (!isMounted) return null; // Avoid rendering on the server
 
   return (
@@ -168,7 +169,26 @@ export default function WomenDropdown({ isOpen, onToggle }) {
         </button>
 
         {isOpen && (
-          <div className="absolute top-full left-0 w-full bg-white shadow-lg max-h-[70vh] overflow-y-auto thin-scrollbar">
+            <div className="w-full bg-white shadow-lg overflow-y-auto">
+            <style jsx>{`
+              .thin-scrollbar {
+                scrollbar-width: thin;
+                scrollbar-color: #e5e7eb transparent;
+              }
+              .thin-scrollbar::-webkit-scrollbar {
+                width: 2px;
+              }
+              .thin-scrollbar::-webkit-scrollbar-track {
+                background: transparent;
+              }
+              .thin-scrollbar::-webkit-scrollbar-thumb {
+                background-color: #e5e7eb;
+                border-radius: 20px;
+              }
+              .thin-scrollbar::-webkit-scrollbar-thumb:hover {
+                background-color: #d1d5db;
+              }
+            `}</style>
             {categories.map((category) => (
               <div key={category.title} className="border-t border-gray-100">
                 <button

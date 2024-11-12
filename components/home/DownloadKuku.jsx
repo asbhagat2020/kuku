@@ -8,9 +8,9 @@ const DownloadKuku = () => {
 
   return (
     <div
-      className="max-w-[1550px] mx-auto h-[890px] px-[70px]"
+      className="max-w-[1550px] mx-auto h-[890px] px-[70px] mb-[0px]"
       style={{
-        backgroundImage: "url('/download_bg.png')",
+        backgroundImage: "url('/download_bg1.png')",
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",

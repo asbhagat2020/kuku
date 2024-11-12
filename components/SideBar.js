@@ -58,7 +58,7 @@ export const SideBar = () => {
         } transition-transform lg:translate-x-0 lg:w-80 lg:mt-10 lg:ml-2 lg:block overflow-y-auto`}
       >
         <div className="p-4 lg:p-4 shadow-md bg-white">
-          <h1 className="text-2xl text-custom-pink font-bold">Filter by</h1>
+          <h1 className="text-2xl pt-1 text-custom-pink font-bold">Filter by</h1>
 
           <div className="mt-4 filter-section flex flex-col space-y-4">
             {/* Category Filter */}

@@ -93,7 +93,7 @@ const Page = () => {
           <StriteSection />
           <AnimationSection />
           <Brands />
-          <DownloadKuku />
+          <DownloadKuku/>
           <Footer />
         </>
       )}
