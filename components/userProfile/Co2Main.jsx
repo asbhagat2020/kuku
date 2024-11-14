@@ -40,7 +40,7 @@ const Co2Main = () => {
         <div className="relative z-10 p-4 pt-6 sm:p-6 lg:p-16">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between">
             {/* Greeting Section */}
-            <div className="w-[200px] sm:w-auto py-16 lg:pl-[12px] sm:py-6 lg:py-12">
+            <div className=" sm:w-auto py-[60px] lg:pl-[12px] sm:py-6 lg:py-12">
               <p className="space-y-1 sm:space-y-2">
                 <span className="block text-white text-xl sm:text-2xl lg:text-5xl font-bold font-karla">
                   Hi Palak,
@@ -58,7 +58,7 @@ const Co2Main = () => {
             {/* Help Button */}
             <Link
               href={"#"}
-              className="absolute top-4 right-4 pl-[4px] sm:relative top-[100px] sm:top-0 sm:right-0 
+              className="absolute top-4 right-4 pl-[4px] sm:relative top-[90px] sm:top-0 sm:right-0 
                 w-16 sm:w-20 lg:w-24 h-6 sm:h-8 lg:h-10 
                 bg-white rounded-full flex items-center justify-center gap-2"
             >
@@ -104,14 +104,14 @@ const Co2Main = () => {
                   <div className="flex items-baseline">
                     <span
                       className="font-karla font-bold 
-          text-[24px] sm:text-[48px] md:text-[72px] lg:text-[94px] 
+          text-[15px] sm:text-[30px] md:text-[72px] lg:text-[94px] 
           leading-none text-[#FBE300]"
                     >
                       CO
                     </span>
                     <span
                       className="font-karla font-bold 
-          text-[14px] sm:text-[28px] md:text-[35px] lg:text-[40px]
+          text-[10px] sm:text-[28px] md:text-[35px] lg:text-[40px]
           -ml-1 sm:-ml-2 md:-ml-3 lg:-ml-4
           text-[#FBE300]
           translate-y-2 sm:translate-y-3 md:translate-y-4 lg:translate-y-6"
@@ -127,14 +127,14 @@ const Co2Main = () => {
                   >
                     <div
                       className="font-karla font-bold 
-          text-[18px] sm:text-[32px] md:text-[36px] lg:text-[40px]
+          text-[14px] sm:text-[22px] md:text-[36px] lg:text-[40px]
           text-[#186940]"
                     >
                       68 kg
                     </div>
                     <div
                       className="font-karla 
-          text-[10px] sm:text-xs md:text-sm lg:text-base 
+          text-[9px] sm:text-xs md:text-sm lg:text-base 
           font-bold text-[#186940] 
           mt-1 sm:mt-2"
                     >

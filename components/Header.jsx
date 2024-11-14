@@ -135,6 +135,7 @@ const Header = () => {
   const wishPath = path === "/wishlist";
   const cartPath = path === "/cart";
   const isHome = path === "/";
+  
   useEffect(() => {
     const handleClickOutside = (event) => {
       // Check if click was outside the search box
@@ -218,8 +219,6 @@ const Header = () => {
               <Link href="/">
                 <Image
                   src="kuku_logo.svg"
-                  // width={56}
-                  // height={61}
                   width={36}
                   height={41}
                   alt=""
@@ -234,7 +233,7 @@ const Header = () => {
               }`}
             >
               <Link
-                href="/selling-page"
+                href="#"
                 className={`${
                   isHome ? "text-[#fefae5]" : "text-black"
                 } text-base font-bold font-karla leading-tight hover:text-pink-500`}
@@ -243,7 +242,7 @@ const Header = () => {
                 <MenDropdown />
               </Link>
               <Link
-                href="/selling-page"
+                href="#"
                 className={`${
                   isHome ? "text-[#fefae5]" : "text-black"
                 } text-base font-bold font-karla leading-tight hover:text-pink-500`}
@@ -252,7 +251,7 @@ const Header = () => {
                 <WomenDropdown />
               </Link>
               <Link
-                href="/selling-page"
+                href="#"
                 className={`${
                   isHome ? "text-[#fefae5]" : "text-black"
                 } text-base font-bold font-karla leading-tight hover:text-pink-500`}
@@ -267,7 +266,7 @@ const Header = () => {
             {isSearchVisible ? (
               <div ref={searchRef} className="relative h-[54px] pl-5">
                 <input
-                  className="xl:w-[550px]  h-full bg-white rounded-lg px-[50px] outline-none appearance-none"
+                  className="w-full sm:w-[300px] md:w-[400px] lg:w-[500px] xl:w-[550px] h-full bg-white rounded-lg px-8 md:px-6 lg:px-8 outline-none appearance-none transition-all duration-300"
                   type="text"
                   placeholder="Search an item"
                   autoFocus
@@ -281,6 +280,7 @@ const Header = () => {
                     display: none;
                   }
                 `}</style>
+
                 <div
                   onClick={toggleSearch}
                   className="absolute left-6 top-1/2 transform -translate-y-1/2"
@@ -567,8 +567,6 @@ const Header = () => {
                 <div onClick={handleBack}>
                   <Image
                     src="/kuku_logo.svg"
-                    // width={50}
-                    // height={50}
                     width={36}
                     height={41}
                     alt="img"
@@ -577,7 +575,27 @@ const Header = () => {
               </Link>
             </div>
           </div>
-          <div className="mx-6 pt-5">
+          <div className="mx-6 pt-5 overflow-y-auto max-h-[80vh] thin-scrollbar">
+            <style jsx>{`
+              .thin-scrollbar {
+                scrollbar-width: thin;
+                scrollbar-color: #eab308 transparent;
+              }
+              .thin-scrollbar::-webkit-scrollbar {
+                width: 6px;
+                height: 6px;
+              }
+              .thin-scrollbar::-webkit-scrollbar-track {
+                background: transparent;
+              }
+              .thin-scrollbar::-webkit-scrollbar-thumb {
+                background-color: #eab308;
+                border-radius: 10px;
+              }
+              .thin-scrollbar::-webkit-scrollbar-thumb:hover {
+                background-color: #eab308;
+              }
+            `}</style>
             <div className="flex flex-col gap-[30px]">
               <Link
                 href="#"
@@ -619,9 +637,9 @@ const Header = () => {
                 />
               </Link>
               <hr />
-              <SettingsDropdown 
-               isOpen={currentOpenDropdown === "setting"}
-               onToggle={() => handleToggle("setting")}
+              <SettingsDropdown
+                isOpen={currentOpenDropdown === "setting"}
+                onToggle={() => handleToggle("setting")}
               />
             </div>
           </div>

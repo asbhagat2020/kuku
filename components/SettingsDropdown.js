@@ -25,7 +25,26 @@ const SettingsDropdown = ({isOpen, onToggle}) => {
       </div>
 
       {isOpen && (
-        <div className="absolute top-full left-0 w-full bg-white shadow-lg max-h-[70vh]">
+          <div className="w-full bg-white shadow-lg overflow-y-auto">
+          <style jsx>{`
+            .thin-scrollbar {
+              scrollbar-width: thin;
+              scrollbar-color: #e5e7eb transparent;
+            }
+            .thin-scrollbar::-webkit-scrollbar {
+              width: 2px;
+            }
+            .thin-scrollbar::-webkit-scrollbar-track {
+              background: transparent;
+            }
+            .thin-scrollbar::-webkit-scrollbar-thumb {
+              background-color: #e5e7eb;
+              border-radius: 20px;
+            }
+            .thin-scrollbar::-webkit-scrollbar-thumb:hover {
+              background-color: #d1d5db;
+            }
+          `}</style>
           <div className="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
             <a
               href="#"

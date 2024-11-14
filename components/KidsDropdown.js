@@ -166,6 +166,24 @@ export default function KidsDropdown({ isOpen, onToggle }) {
     setIsMounted(true);
   }, []);
 
+   // Close the dropdown when clicking outside
+   useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        onToggle(false); // Close the dropdown
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener("click", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, [isOpen, onToggle]);
+
+
   if (!isMounted) return null; // Prevent SSR-client mismatch
 
   return (
@@ -185,7 +203,26 @@ export default function KidsDropdown({ isOpen, onToggle }) {
         </button>
 
         {isOpen && (
-          <div className="absolute top-full left-0 w-full bg-white shadow-lg max-h-[70vh] overflow-y-auto thin-scrollbar">
+            <div className="w-full bg-white shadow-lg overflow-y-auto">
+            <style jsx>{`
+              .thin-scrollbar {
+                scrollbar-width: thin;
+                scrollbar-color: #e5e7eb transparent;
+              }
+              .thin-scrollbar::-webkit-scrollbar {
+                width: 2px;
+              }
+              .thin-scrollbar::-webkit-scrollbar-track {
+                background: transparent;
+              }
+              .thin-scrollbar::-webkit-scrollbar-thumb {
+                background-color: #e5e7eb;
+                border-radius: 20px;
+              }
+              .thin-scrollbar::-webkit-scrollbar-thumb:hover {
+                background-color: #d1d5db;
+              }
+            `}</style>
             {categories.map((category) => (
               <div key={category.title} className="border-t border-gray-100">
                 <button
