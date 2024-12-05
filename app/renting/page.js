@@ -6,9 +6,14 @@ import Header from "@/components/Header";
 import DownloadKuku from "@/components/home/DownloadKuku";
 import { useState } from "react"; // Import useState to track the modal state
 import { useRouter } from 'next/navigation';
-
+import { useSearchParams } from 'next/navigation';
 export default function Renting() {
   const [isModalOpen, setIsModalOpen] = useState(false); // State to control the modal
+  const searchParams = useSearchParams();
+  const startDate = searchParams.get('startDate');
+  const endDate = searchParams.get('endDate');
+  console.log(startDate);
+  console.log(endDate);
 
   const router = useRouter();
   const handleOpenModal = () => {
@@ -97,6 +102,22 @@ export default function Renting() {
                   </div>
                   <div className="text-black text-[16px] font-bold font-karla">
                     AED 70.00
+                  </div>
+                </div>
+                <div className="flex justify-start items-center gap-2">
+                  <div className="text-[#E4086F] text-[16px] font-bold font-karla">
+                    From -
+                  </div>
+                  <div className="text-black text-[16px] font-bold font-karla">
+                    {startDate}
+                  </div>
+                </div>
+                <div className="flex justify-start items-center gap-2">
+                  <div className="text-[#E4086F] text-[16px] font-bold font-karla">
+                    To -
+                  </div>
+                  <div className="text-black text-[16px] font-bold font-karla">
+                    {endDate}
                   </div>
                 </div>
               </div>

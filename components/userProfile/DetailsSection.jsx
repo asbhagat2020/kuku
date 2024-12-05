@@ -80,8 +80,8 @@ const SellingCards = ({ data }) => {
           <div key={item.id} className="flex flex-col gap-3">
             <div className="w-[307px] h-[404px] rounded-[20px] relative mx-2 outline-none">
               <div className="absolute top-2 right-2 z-10">
-                {/* <div className="h-[54px] p-[15px] bg-white/40 rounded-[100px]">  
-            <Image alt="" width={24} height={24} src="wishlist.svg" />  
+                {/* <div className="h-[54px] p-[15px] bg-white/40 rounded-[100px]">
+            <Image alt="" width={24} height={24} src="wishlist.svg" />
            </div> */}
 
                 <div
@@ -247,7 +247,7 @@ const ReviewCards = ({ data }) => {
               className="flex items-center gap-2 cursor-pointer"
               onClick={() => setIsOpen(true)}
             >
-              <IoPencil className="text-xl" /> 
+              <IoPencil className="text-xl" />
               <span className="text-sm font-weight: 900 text-gray-700">
                 Add Review
               </span>
@@ -439,9 +439,8 @@ const StatsCards = ({ data }) => {
             <div className="flex pt-[30px]  gap-[20px]">
               <div className="relative">
                 <select
-                  className={`py-[18px] px-4 rounded-lg font-karla w-[111px] appearance-none ${
-                    fromDisabled ? "bg-gray-200" : ""
-                  }`}
+                  className={`py-[18px] px-4 rounded-lg font-karla w-[111px] appearance-none ${fromDisabled ? "bg-gray-200" : ""
+                    }`}
                   id="fromOptions"
                   name="fromOptions"
                   onChange={handleFromChange}
@@ -463,9 +462,8 @@ const StatsCards = ({ data }) => {
 
               <div className="relative">
                 <select
-                  className={`py-[18px] px-4 rounded-lg font-karla w-[111px] appearance-none ${
-                    toDisabled ? "bg-gray-200" : ""
-                  }`}
+                  className={`py-[18px] px-4 rounded-lg font-karla w-[111px] appearance-none ${toDisabled ? "bg-gray-200" : ""
+                    }`}
                   id="toOptions"
                   name="toOptions"
                   onChange={handleToChange}
@@ -511,6 +509,75 @@ const StatsCards = ({ data }) => {
         </div>
       </div>
     </div>
+  );
+};
+
+const Orders = ({ data }) => {
+  console.log(data);
+
+  const [orderData, setOrderData] = useState(data);
+  return (
+    <>
+      <div className="px-[20px] lg:px-[71px] h-fit py-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 gap-4">
+        {orderData.map((item) => (
+          <>
+            <div className="w-full flex lg:flex-row flex-col mb-3 gap-4 min-h-[150px]  rounded-lg bg-[#F0F1F8] p-4">
+              <div className="w-full lg:w-1/2">
+                <div className="flex gap-2 items-center">
+                  <div className={`w-2 h-2 rounded-full ${item.status === 'Completed'
+                    ? 'bg-green-300 text-green-800'
+                    : item.status === 'Processing'
+                      ? 'bg-yellow-300 text-yellow-800'
+                      : item.status === 'Shipped'
+                        ? 'bg-blue-300 text-blue-800'
+                        : 'bg-red-300 text-red-800'
+                    }`}
+                  ></div>
+                  <p>{item.status}</p>
+                </div>
+                <div className="bg-white shadow-md w-full h-fit p-4 mt-4 rounded-md flex items-center px-2">
+                  {item.items.slice(0, 2).map((data, index) => (
+                    <div
+                      key={index}
+                      className={`relative flex gap-2 mr-2 ${index === 1 && item.items.length > 2 ? 'overflow-visible' : ''}`}
+                    >
+                      <Image
+                        className="object-contain"
+                        src={data.productImg[0]}
+                        alt={data.productName || "Product Image"}
+                        width={60}
+                        height={60}
+                      />
+                      {index === 1 && item.items.length > 2 && (
+                        <div className="absolute top-6 left-[-1px] transform translate-x-1/2 -translate-y-1/2 text-white font-bold text-[20px]  rounded-full w-6 h-6 flex items-center justify-center cursor-pointer">
+                          +{item.items.length - 2}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                  <div className="ml-auto flex flex-col gap-2 w-full h-full">
+                    <p>Order {item.id}</p>
+                    <p>
+                      {item.status === 'Completed' ? 'Delivered on' : 'Ordered on'}{' '}
+                      {new Date(item.orderDate).toLocaleDateString('en-US', {
+                        month: 'short',
+                        day: 'numeric',
+                        year: 'numeric'
+                      })}
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div className="flex w-full flex-col p-4 lg:w-1/2 items-center gap-2">
+                <div className="px-6 py-2 bg-green-500 text-white rounded-md cursor-pointer ">Order Details</div>
+                <div className="px-6 py-2  text-blue-500 rounded-md cursor-pointer">Get Invoice</div>
+                <div className="px-6 py-2 text-blue-500 rounded-md cursor-pointer">Edit order</div>
+              </div>
+            </div>
+          </>
+        ))}
+      </div>
+    </>
   );
 };
 
@@ -604,7 +671,62 @@ export default function DetailsSection() {
     { id: 14, title: "Total Revenue", stat: "$120,000" },
     { id: 15, title: "Average Order Value", stat: "$120" },
   ];
-
+  const orderData = [
+    {
+      id: 1001,
+      customerName: "Emily Johnson",
+      orderDate: "2024-03-15",
+      total: 240,
+      status: "Completed",
+      items: [
+        { productName: "Wireless Headphones", quantity: 1, price: 120, productImg: ["/card_image3.png", "/card_image2.png", "/card_image3.png"], },
+        { productName: "Phone Case", quantity: 2, price: 60, productImg: ["/card_image1.png", "/card_image2.png", "/card_image3.png"], },
+        { productName: "Phone Case", quantity: 2, price: 60, productImg: ["/card_image1.png", "/card_image2.png", "/card_image3.png"], }
+      ]
+    },
+    {
+      id: 1002,
+      customerName: "Michael Chen",
+      orderDate: "2024-03-16",
+      total: 180,
+      status: "Processing",
+      items: [
+        { productName: "Smartwatch", quantity: 1, price: 180, productImg: ["/card_image2.png", "/card_image2.png", "/card_image3.png"], }
+      ]
+    },
+    {
+      id: 1003,
+      customerName: "Sarah Martinez",
+      orderDate: "2024-03-17",
+      total: 300,
+      status: "Shipped",
+      items: [
+        { productName: "Bluetooth Speaker", quantity: 1, price: 150, productImg: ["/card_image3.png", "/card_image2.png", "/card_image3.png"], },
+        { productName: "Portable Charger", quantity: 1, price: 150, productImg: ["/card_image1.png", "/card_image2.png", "/card_image3.png"], }
+      ]
+    },
+    {
+      id: 1004,
+      customerName: "David Kim",
+      orderDate: "2024-03-18",
+      total: 120,
+      status: "Completed",
+      items: [
+        { productName: "Wireless Earbuds", quantity: 1, price: 120, productImg: ["/card_image1.png", "/card_image2.png", "/card_image3.png"], }
+      ]
+    },
+    {
+      id: 1005,
+      customerName: "Rachel Thompson",
+      orderDate: "2024-03-19",
+      total: 360,
+      status: "Shipped",
+      items: [
+        { productName: "Laptop Bag", quantity: 1, price: 120, productImg: ["/card_image1.png", "/card_image2.png", "/card_image3.png"], },
+        { productName: "Wireless Mouse", quantity: 2, price: 120, productImg: ["/card_image1.png", "/card_image2.png", "/card_image3.png"], }
+      ]
+    }
+  ];
   const tabs = [
     {
       label: "Selling",
@@ -615,6 +737,7 @@ export default function DetailsSection() {
     { label: "Sold", component: SoldCards, data: soldData, count: "108" },
     { label: "Reviews", component: ReviewCards, data: reviewData, count: "27" },
     { label: "Stats", component: StatsCards, data: statsData, count: "" },
+    { label: "Orders", component: Orders, data: orderData, count: "" },
   ];
 
   const [selectedTab, setSelectedTab] = useState(tabs[0]);
@@ -626,11 +749,10 @@ export default function DetailsSection() {
           {tabs.map((item) => (
             <li
               key={item.label}
-              className={`w-full p-3 text-center cursor-pointer relative text-[#383838] lg:text-2xl font-normal font-karla leading-[28.80px] ${
-                selectedTab.label === item.label
-                  ? "border-b-[5px] border-[#fde504]"
-                  : ""
-              }`}
+              className={`w-full p-3 text-center cursor-pointer relative text-[#383838] lg:text-2xl font-normal font-karla leading-[28.80px] ${selectedTab.label === item.label
+                ? "border-b-[5px] border-[#fde504]"
+                : ""
+                }`}
               onClick={() => setSelectedTab(item)}
             >
               {item.label} {item.count ? `(${item.count})` : ""}
