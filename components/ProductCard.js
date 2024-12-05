@@ -16,8 +16,10 @@ import {
   FaArrowRight,
 } from "react-icons/fa";
 import { FaHandshake } from "react-icons/fa";
+import { useRouter } from "next/navigation";
 
 const ProductCard = () => {
+  const router = useRouter();
   const [isRentPopupOpen, setRentPopupOpen] = useState(false);
   const [rentalDate, setRentalDate] = useState("");
   const [isOfferPopupOpen, setOfferPopupOpen] = useState(false);
@@ -30,27 +32,47 @@ const ProductCard = () => {
   const images = [amiriImg, amiriImg];
 
   // const [isRentPopupOpen, setIsRentPopupOpen] = useState(false);
-  const [isFormatted, setIsFormatted] = useState(""); // For storing the selected date
+  const [isStartFormatted, setIsStartFormatted] = useState("");
+  const [isEndFormatted, setIsEndFormatted] = useState("");
   const [showCalendar, setShowCalendar] = useState(false);
+  const [showEndCalendar, setShowEndCalendar] = useState(false);
   const modalRef = useRef(null);
+console.log(isStartFormatted);
+console.log(isEndFormatted);
 
   const openCalendar = () => {
-    setShowCalendar(true);
+    setShowCalendar(!showCalendar);
+  };
+  const openEndCalendar = () => {
+    setShowEndCalendar(!showEndCalendar);
   };
 
   const closeCalendar = () => {
     setShowCalendar(false);
   };
+  const closeEndCalendar = () => {
+    setShowEndCalendar(false);
+  };
 
-  const handleDateSelect = (date) => {
+  const handleStartDateSelect = (date) => {
     const formattedDate = new Date(date).toLocaleDateString("en-GB", {
       day: "2-digit",
       month: "2-digit",
       year: "numeric",
     });
     setIsDateSelected(true);
-    setIsFormatted(formattedDate); // Assume date comes formatted from CustomCalendar
+    setIsStartFormatted(formattedDate); // Assume date comes formatted from CustomCalendar
     closeCalendar(); // Close the calendar after selecting a date
+  };
+  const handleEndDateSelect = (date) => {
+    const formattedDate = new Date(date).toLocaleDateString("en-GB", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    });
+    setIsDateSelected(true);
+    setIsEndFormatted(formattedDate); // Assume date comes formatted from CustomCalendar
+    closeEndCalendar(); // Close the calendar after selecting a date
   };
 
   // Close modal when clicking outside of it
@@ -76,6 +98,7 @@ const ProductCard = () => {
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
+
   };
   const handleOpenRentPopup = () => {
     setRentPopupOpen(true);
@@ -84,10 +107,12 @@ const ProductCard = () => {
   const handleCloseRentPopup = () => {
     setRentPopupOpen(false);
     setRentalDate(""); // Reset date when closing
+    openCalendar(false)
+    openEndCalendar(false)
   };
 
   const handleProceed = () => {
-    console.log("Selected rental date:", rentalDate);
+    router.push(`/renting?startDate=${isStartFormatted}&endDate=${isEndFormatted}`);
     handleCloseRentPopup();
   };
 
@@ -441,14 +466,14 @@ const ProductCard = () => {
                   className="block text-left mb-[20px] mt-[20px] cursor-pointer text-[#070707] text-[15px] font-karla font-bold break-words"
                   onClick={openCalendar}
                 >
-                  Choose Date
+                  Choose start Date
                 </label>
                 <div className="flex w-full overflow-hidden items-center justify-between border border-gray-300 rounded-md">
                   <input
                     type="text"
                     id="rentalDate"
                     placeholder="Choose your rental dates"
-                    value={isFormatted}
+                    value={isStartFormatted}
                     onClick={openCalendar} // This is the function to open the calendar
                     readOnly
                     required
@@ -469,8 +494,47 @@ const ProductCard = () => {
                 {showCalendar && (
                   <div className="absolute z-50">
                     <CustomCalendar
-                      onSelectDate={handleDateSelect}
+                      onSelectDate={handleStartDateSelect}
                       closeCalendar={closeCalendar}
+                    />
+                  </div>
+                )}
+                <label
+                  htmlFor="rentalEndDate"
+                  className="block text-left mb-[20px] mt-[20px] cursor-pointer text-[#070707] text-[15px] font-karla font-bold break-words"
+                  onClick={openEndCalendar}
+                >
+                  Choose end Date
+                </label>
+                <div className="flex w-full overflow-hidden items-center justify-between border border-gray-300 rounded-md">
+                  <input
+                    type="text"
+                    id="rentalEndDate"
+                    placeholder="Choose your rental dates"
+                    value={isEndFormatted}
+                    onClick={openEndCalendar} // This is the function to open the calendar
+                    readOnly
+                    required
+                    className="relative p-2 text-[#4C5C6B] text-[16px] font-karla font-normal bg-no-repeat bg-right bg-[length:20px_20px] pr-10 outline-none"
+                    style={{ width: "calc(100% - 34px)" }}
+                  />
+                  <div className="w-[34px] h-[30px] px-[2px] cursor-pointer">
+                    <Image
+                      src={calendarImg}
+                      alt="Calendar Icon"
+                      className="w-[100%] h-[100%]"
+                      onClick={() =>
+                        document.getElementById("rentalEndDate").click()
+                      } // Trigger the input click when image is clicked
+                    />
+                  </div>
+                </div>
+
+                {showEndCalendar && (
+                  <div className="absolute z-50">
+                    <CustomCalendar
+                      onSelectDate={handleEndDateSelect}
+                      closeCalendar={closeEndCalendar}
                     />
                   </div>
                 )}
@@ -482,17 +546,17 @@ const ProductCard = () => {
                 <div className="w-full text-[#E4086F] text-[15px] font-karla font-bold underline break-words mb-[15px]">
                   View our rental policy
                 </div>
-                <Link href="/renting">
+                {/* <Link href="/renting"> */}
                   <button
                     onClick={handleProceed}
                     className={`px-4 py-2 w-full mb-2 text-[#E4086F] text-[20px] font-karla font-bold leading-[24px] break-words flex-1 h-[60px] bg-[#FDE504] rounded-[20px] flex justify-center items-center gap-[10px] ${
-                      !isDateSelected ? "opacity-50 cursor-not-allowed" : ""
+                      (isEndFormatted ==='' || isStartFormatted ==='' )? "opacity-50 cursor-not-allowed" : ""
                     }`}
-                    disabled={!isDateSelected} // Disable the button if no date is selected
+                    disabled={(isEndFormatted ==='' || isStartFormatted ==='' )} // Disable the button if no date is selected
                   >
                     PROCEED
                   </button>
-                </Link>
+                {/* </Link> */}
 
                 <button
                   onClick={handleCloseRentPopup}

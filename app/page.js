@@ -13,11 +13,17 @@ import Popup from "@/components/home/Popup";
 import Selling from "@/components/home/Selling";
 import StriteSection from "@/components/home/StriteSection";
 import homeAnimation from "../public/lottieFiles/home.json";
+import { useDispatch, useSelector } from "react-redux";
+import { getProducts,resetNotificationFlag } from "@/store/product/productSlice";
 
 const Page = () => {
   // State to handle loading and screen size
   const [isLoading, setIsLoading] = useState(true);
   const [isMobileView, setIsMobileView] = useState(false);
+  const dispatch=useDispatch();
+  useEffect(() => {
+    dispatch(getProducts());
+}, [dispatch]);
 
   // Handle screen resize and initial mobile check
   useEffect(() => {
