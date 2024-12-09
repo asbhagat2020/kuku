@@ -203,7 +203,7 @@ const Giveaway = () => {
             {/* Step Content */}
             <div className="text-center my-8">
               <h1 className="text-2xl font-bold mb-4">
-                {`Step ${currentStep}: Lorem ipsum dolor sit amet, consectetur.`}
+                {`Step ${currentStep}: Reuse Repurpose Recycle, let KuKu handle your textile by giving the reusable to charity or recycling them partnered with textile recyclers. `}
               </h1>
 
               {/* Action Buttons */}
@@ -211,25 +211,25 @@ const Giveaway = () => {
                 {currentStep === 3 ? (
                   <>
                     <button className="px-6 md:px-8 py-2 bg-green-500 text-white font-semibold rounded-md hover:bg-green-600 transition">
-                      LOREM IPSUM
+                      BACK
                     </button>
                     <button
                       onClick={handleFinalScreen}
                       className="px-6 md:px-8 py-2 bg-white text-black font-semibold rounded-md border border-black hover:bg-gray-100 transition"
                     >
-                      LOREM IPSUM
+                      NEXT
                     </button>
                   </>
                 ) : (
                   <>
                     <button className="px-6 md:px-8 py-2 bg-green-500 text-white font-semibold rounded-md hover:bg-green-600 transition">
-                      LOREM IPSUM
+                      BACK
                     </button>
                     <button
                       onClick={handleNext}
                       className="px-6 md:px-8 py-2 bg-white text-black font-semibold rounded-md border border-black hover:bg-gray-100 transition"
                     >
-                      LOREM IPSUM
+                      NEXT
                     </button>
                   </>
                 )}
@@ -249,12 +249,7 @@ const Giveaway = () => {
             />
           </div>
           <div className="text-center mt-[-200px] relative z-10">
-            <h1 className="text-green-500 text-4xl font-bold">
-              Lorem ipsum dolor
-            </h1>
-            <p className="text-black mt-4 text-lg">
-              Lorem ipsum dolor sit amet consectetur. Eget neque ultrices?
-            </p>
+            <h1 className="text-green-500 text-4xl font-bold">Giveaway</h1>
           </div>
           <button className="px-8 py-2 mt-8 bg-green-500 text-white font-semibold rounded-md hover:bg-green-600 transition relative z-10">
             Share on social
