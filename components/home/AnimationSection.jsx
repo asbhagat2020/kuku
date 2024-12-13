@@ -28,7 +28,7 @@ const PrevArrow = ({ onClick }) => (
 const AnimationCard = ({ step, heading, imageSrc }) => (
   <div className="relative rounded-[20px] mx-5 lg:mx-[70px] lg:h-[640px] bg-[#FDE504] py-[40px] sm:py-[60px] flex flex-col items-center shadow-lg transition-transform duration-500">
     <div className="flex flex-col sm:flex-row mx-5 sm:mx-[50px] lg:mx-[180px] gap-[30px] sm:gap-[130px] items-center">
-      <div className="flex flex-col space-y-5 sm:space-y-[50px] justify-center text-center sm:text-left">
+      <div className="flex flex-col space-y-5 sm:space-y-[50px] justify-center xl:w-[60%] text-center sm:text-left">
         <p className="text-[#202020] text-sm sm:text-base font-bold font-karla leading-tight">
           {step}
         </p>
@@ -38,9 +38,10 @@ const AnimationCard = ({ step, heading, imageSrc }) => (
       </div>
       <div className="mt-5 sm:mt-0">
         <Image
+          unoptimized
           width={250}
           height={250}
-          className="sm:w-[305px] sm:h-[305px] lg:w-[405px] lg:h-[405px]"
+          className="sm:w-[305px] sm:h-[305px] lg:w-[405px] lg:h-[405px] object-contain"
           src={imageSrc}
           alt=""
         />
@@ -77,7 +78,7 @@ const AnimationSection = () => {
     beforeChange: (current, next) => setActiveIndex(next),
     appendDots: (dots) => (
       <div className="bottom-4">
-        <ul className="m-0"> 
+        <ul className="m-0">
           {dots}
         </ul>
       </div>
@@ -101,22 +102,27 @@ const AnimationSection = () => {
       <div className="absolute top-[-50px] right-[20px] sm:top-[-80px] sm:right-[80px] z-30">
         <Image src="list_top_image.svg" width={111} height={121} alt="" />
       </div>
-      
+
       <div className="relative">
         <Slider {...settings}>
           <AnimationCard
             step="Step-1"
-            heading="List what you no longer need"
+            heading="List clothes you no longer need"
             imageSrc="/mobile.png"
           />
           <AnimationCard
             step="Step-2"
-            heading="Find a buyer easily"
+            heading=" Buyer purchases your item"
             imageSrc="/mobile.png"
           />
           <AnimationCard
             step="Step-3"
-            heading="Get paid quickly"
+            heading="KuKu picks up your item from your doorstep"
+            imageSrc="/mobile.png"
+          />
+          <AnimationCard
+            step="Step-4"
+            heading="Leave the rest on KuKu and wait for the money in your account."
             imageSrc="/mobile.png"
           />
         </Slider>

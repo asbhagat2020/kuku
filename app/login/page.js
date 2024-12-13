@@ -1,6 +1,9 @@
 "use client"; // Ensure Client-Side rendering
 
+import { signinOtp, verifySigninOtp } from "@/store/auth/authSlice";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
 
 export default function Login() {
   const [emailOrPhone, setEmailOrPhone] = useState("");
@@ -8,23 +11,20 @@ export default function Login() {
   const [isChecked, setIsChecked] = useState(false);
   const [isOtpSent, setIsOtpSent] = useState(false); // State to track if OTP is sent
   const [timer, setTimer] = useState(120); // Timer for 2 minutes (120 seconds)
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Handle OTP logic here
-    if (isOtpSent) {
-      // If OTP is already sent, handle continue logic
-      console.log("Continuing...", { emailOrPhone, otp });
-    } else {
-      sendOtp(); // Send OTP if not sent
-    }
-  };
-
-  const sendOtp = () => {
-    console.log("Sending OTP to:", emailOrPhone);
+  const dispatch = useDispatch();
+  const router = useRouter();
+  const handleSendOtp = () => {
+    dispatch(signinOtp({ emailOrPhone }));
     setIsOtpSent(true);
-    setTimer(120); // Reset timer
-    startTimer(); // Start the countdown timer
+    setTimer(60); // Reset timer
+    startTimer();
+  };
+  const handleContinue = async () => {
+    console.log("heree");
+    const res = await dispatch(verifySigninOtp({ emailOrPhone, otp }));
+    if (res.type === "auth/otpSignIn/fulfilled") {
+      router.push("/");
+    }
   };
 
   const startTimer = () => {
@@ -59,7 +59,9 @@ export default function Login() {
         {/* Logo Section */}
         <div className="flex items-center gap-2 mb-8">
           <img src="/Group1.svg" alt="KUKU Logo" className="h-14 w-14" />
-          <div className="text-black text-3xl font-palanquin_dark font-bold">KUKU</div>
+          <div className="text-black text-3xl font-palanquin_dark font-bold">
+            KUKU
+          </div>
         </div>
 
         <div className="text-black text-xl font-karla font-bold mb-6">
@@ -67,14 +69,14 @@ export default function Login() {
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="w-full max-w-md">
+        <form className="w-full max-w-md">
           {/* Email or Phone Number */}
           <div className="mb-4">
             <label className="text-black text-base font-karla font-bold mb-2 block">
               Email or Phone Number
             </label>
             <input
-            className="w-full p-3 border border-gray-300 bg-gray-100 rounded-lg text-start text-black text-sm font-normal font-karla leading-none"
+              className="w-full p-3 border border-gray-300 bg-gray-100 rounded-lg text-start text-black text-sm font-normal font-karla leading-none"
               type="text"
               placeholder="Enter your e-mail or phone number"
               value={emailOrPhone}
@@ -98,10 +100,14 @@ export default function Login() {
               disabled={!isOtpSent} // Disable input until OTP is sent
             />
           </div>
-           {/* Timer Display */}
-           {isOtpSent && (
+          {/* Timer Display */}
+          {isOtpSent && (
             <div className="mt-1 text-[#e4086f] text-sm font-normal font-karla underline leading-none ">
-              {timer > 0 ? `Resend OTP in ${Math.floor(timer / 60)}:${timer % 60 < 10 ? '0' : ''}${timer % 60}` : "You can resend the OTP now."}
+              {timer > 0
+                ? `Resend OTP in ${Math.floor(timer / 60)}:${
+                    timer % 60 < 10 ? "0" : ""
+                  }${timer % 60}`
+                : "You can resend the OTP now."}
             </div>
           )}
 
@@ -114,38 +120,79 @@ export default function Login() {
                 onChange={handleCheckboxChange}
                 className="mr-2"
               />
-              <span className=" text-black text-sm font-normal font-karla leading-none">Stay signed in</span>
+              <span className=" text-black text-sm font-normal font-karla leading-none">
+                Stay signed in
+              </span>
             </label>
           </div>
 
-<button
-  type="submit"
-  className={`w-full p-3 ${isOtpSent && otp === "" ? "bg-yellow-300 cursor-not-allowed opacity-50" : "bg-yellow-400"} text-black font-semibold font-karla rounded-lg`}
-  disabled={isOtpSent && otp === ""} // Disable when OTP is sent but the OTP field is empty
->
-  {isOtpSent ? "Continue" : "Send OTP"}
-</button>
-        
+          <div className="flex flex-col space-y-4">
+            {/* Send OTP Button */}
+            <button
+              type="button" // Keep this button as type="button" since it's not submitting a form
+              className={`w-full p-3 ${
+                isOtpSent
+                  ? "bg-gray-300 cursor-not-allowed opacity-50"
+                  : "bg-yellow-400"
+              } text-black font-semibold font-karla rounded-lg`}
+              onClick={handleSendOtp} // Function to send OTP
+              disabled={isOtpSent} // Disable this button when OTP is already sent
+            >
+              {isOtpSent ? "OTP Sent" : "Send OTP"}
+            </button>
+
+            {/* Continue Button */}
+            <button
+              type="button" // Ensure this button does not submit the form
+              onClick={handleContinue} // Call handleContinue when clicked
+              className={`w-full p-3 ${
+                otp === ""
+                  ? "bg-yellow-300 cursor-not-allowed opacity-50"
+                  : "bg-yellow-400"
+              } text-black font-semibold font-karla rounded-lg`}
+              disabled={otp === ""} // Disable when OTP field is empty
+            >
+              Continue
+            </button>
+          </div>
         </form>
 
         {/* Social Login */}
         <div className="w-full max-w-md mt-6">
           {/* Google Login */}
           <button className="w-full flex items-center justify-center p-3 bg-gray-100 border border-gray-300 rounded-lg mb-4">
-            <img src="/devicon_google.png" alt="Google" className="h-5 w-5 mr-3" />
-            <span className="text-gray-800 font-bold font-karla ">Sign in with Google</span>
+            <img
+              src="/devicon_google.png"
+              alt="Google"
+              className="h-5 w-5 mr-3"
+            />
+            <span className="text-gray-800 font-bold font-karla ">
+              Sign in with Google
+            </span>
           </button>
 
           {/* Facebook Login */}
           <button className="w-full flex items-center justify-center p-3 bg-gray-100 border border-gray-300 rounded-lg mb-4">
-            <img src="/devicon_facebook.svg" alt="Facebook" className="h-5 w-5 mr-3" />
-            <span className="text-gray-800 font-bold font-karla">Continue with Facebook</span>
+            <img
+              src="/devicon_facebook.svg"
+              alt="Facebook"
+              className="h-5 w-5 mr-3"
+            />
+            <span className="text-gray-800 font-bold font-karla">
+              Continue with Facebook
+            </span>
           </button>
 
           {/* Apple Login */}
           <button className="w-full flex items-center justify-center p-3 bg-gray-100 border border-gray-300 rounded-lg">
-            <img src="/ic_round-apple.svg" alt="Apple" className="h-5 w-5 mr-3" />
-            <span className="text-gray-800 font-bold font-karla">Continue with Apple</span>
+            <img
+              src="/ic_round-apple.svg"
+              alt="Apple"
+              className="h-5 w-5 mr-3"
+            />
+            <span className="text-gray-800 font-bold font-karla">
+              Continue with Apple
+            </span>
           </button>
         </div>
 

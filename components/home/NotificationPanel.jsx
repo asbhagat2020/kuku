@@ -89,7 +89,7 @@ const NotificationPanel = ({ notifications, offers, onClose }) => {
               )}
               <div className="flex items-center gap-4 mt-2">
                 <img
-                  src="Ellipse 4427.svg"
+                  src="/Ellipse 4427.svg"
                   alt="notify"
                   className="w-[10px] h-[10px]"
                 />
@@ -109,7 +109,7 @@ const NotificationPanel = ({ notifications, offers, onClose }) => {
           offers.map((offer, index) => (
             <li key={index} className="mb-4 flex gap-4 items-start">
               <img
-                src="image 139.png"
+                src="/image 139.png"
                 alt="offer"
                 className="w-[30px] h-[30px] rounded-full p-1 bg-[#ffdbac]"
               />

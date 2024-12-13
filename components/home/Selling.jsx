@@ -10,7 +10,7 @@ const Selling = () => {
             <Image className='absolute right-[430px] top-[188px]' width={44} height={44} src='/cube.svg' alt='cube' />
             <div className="h-[70px] w-full justify-between items-center inline-flex px-[20px] lg:px-[73px] ">
                 <div className='flex gap-4'>
-                    <h1 className="text-[#e4086f] text-[25px] lg:text-[46px] font-normal font-luckiest lg:leading-[55.20px]">SEE WHAT’S SELLING</h1>
+                    <h1 className="text-[#e4086f] text-[25px] lg:text-[3rem] font-normal font-luckiest lg:leading-[55.20px]">SEE WHAT’S SELLING</h1>
                     <Image width={73} height={73} src='/Frame.svg' className='mt-[-80px]' alt='' />
                 </div>
                 <Link href="/selling-page">

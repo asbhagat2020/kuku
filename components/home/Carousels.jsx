@@ -9,6 +9,8 @@ import Link from "next/link";
 import { OfferPopup } from "@/components/OfferPopup";
 import { FcLike } from "react-icons/fc";
 import { GoHeart } from "react-icons/go";
+import { useDispatch, useSelector } from "react-redux";
+import { toggleWishlist } from "@/store/wishlist/wishlistSlice";
 
 const Carousels = () => {
   const [isOfferPopupOpen, setIsOfferPopupOpen] = useState(false);
@@ -19,7 +21,12 @@ const Carousels = () => {
   const [likedCards, setLikedCards] = useState({});
 
 
+  const dispatch = useDispatch();
+  const wishlist = useSelector((state) => state.wishlist.items);
 
+  const handleLikeClick = (cardId) => {
+    dispatch(toggleWishlist(cardId));
+  };
   const handleOpenOfferPopup = () => {
     setIsOfferPopupOpen(true);
   };
@@ -35,12 +42,12 @@ const Carousels = () => {
   };
 
 
-  const handleLikeClick = (cardId) => {
-    setLikedCards((prevLikedCards) => ({
-      ...prevLikedCards,
-      [cardId]: !prevLikedCards[cardId],
-    }));
-  };
+  // const handleLikeClick = (cardId) => {
+  //   setLikedCards((prevLikedCards) => ({
+  //     ...prevLikedCards,
+  //     [cardId]: !prevLikedCards[cardId],
+  //   }));
+  // };
 
   const product = [
     {
@@ -241,12 +248,13 @@ const Carousels = () => {
                   className="absolute top-4 right-4 w-12 h-12 flex items-center justify-center rounded-full bg-custom-gray cursor-pointer"
                   onClick={() => handleLikeClick(item.id)}
                 >
-                  {likedCards[item.id] ? (
-                    <FcLike className="text-2xl w-8 h-8" /> // Filled heart icon if liked
+                  {wishlist.includes(item.id) ? (
+                    <FcLike className="text-2xl w-8 h-8" /> // Filled heart icon if in wishlist
                   ) : (
-                    <GoHeart className="text-2xl text-gray-300" /> // Outline heart icon if not liked
+                    <GoHeart className="text-2xl text-gray-300" /> // Outline heart icon otherwise
                   )}
                 </div>
+
                 {/* </Link> */}
               </div>
               <Link href={item.link}>
