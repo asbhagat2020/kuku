@@ -56,9 +56,6 @@ const productSlice = createSlice({
                 state.isLoading = false;
                 state.error = null;
                 state.products = action.payload;
-
-                // Check if notification has not been shown
-
             })
             .addCase(getProducts.rejected, (state, action) => {
                 state.isLoading = false;

@@ -4,7 +4,7 @@ import Image from "next/image";
 import React, { useState, useEffect, useRef } from "react";
 import NotificationPanel from "./home/NotificationPanel"; // Import the NotificationPanel component
 
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import WomenDropdown from "./WomenDropdown";
 import MenDropdown from "./MenDropdown";
@@ -12,8 +12,11 @@ import KidsDropdown from "./KidsDropdown";
 import LanguageSelector from "./LanguageSelector";
 import { BottomNavigation } from "./BottomNavigation";
 import SettingsDropdown from "./SettingsDropdown";
+import { signIn, signOut, useSession } from "next-auth/react";
+import Cookies from "js-cookie";
 
 const Header = () => {
+
   const [isSearchVisible, setIsSearchVisible] = useState(false);
   const [isMobileSearchVisible, setIsMobileSearchVisible] = useState(false);
   const [isNotificationVisible, setIsNotificationVisible] = useState(false);
@@ -29,6 +32,18 @@ const Header = () => {
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const [isFixed, setIsFixed] = useState(false);
   const [currentOpenDropdown, setCurrentOpenDropdown] = useState(null);
+  const [isLocalToken, setIsLocalToken] = useState(false);
+  const { data: session, status } = useSession();
+  const router=useRouter()
+  useEffect(() => {
+    const token = Cookies.get('authToken');
+    if (token) {
+      setIsLocalToken(true)
+    }
+    else {
+      setIsLocalToken(false)
+    }
+  }, [session])
 
   const handleToggle = (dropdown) => {
     setCurrentOpenDropdown(currentOpenDropdown === dropdown ? null : dropdown);
@@ -135,7 +150,7 @@ const Header = () => {
   const wishPath = path === "/wishlist";
   const cartPath = path === "/cart";
   const isHome = path === "/";
-  
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       // Check if click was outside the search box
@@ -177,14 +192,21 @@ const Header = () => {
     setHamburger(!hamburger);
     setIsMobileSearchVisible(false); // Close mobile search when closing menu
   };
+  const handleLocalSignOut = () => {
+    Cookies.remove('authToken');
+    setIsLocalToken(false);
+  };
+  const handleLocalSignIn=()=>{
+    router.push('/login')
+  }
+
   return (
     <header>
       <LanguageSelector />
       <div
         id="header"
-        className={`w-full transition-all duration-300 ${
-          isFixed ? "fixed top-0 left-0 right-0 shadow-md" : "relative"
-        } max-w-full lg:px-[70px] py-[23px] h-[80px] lg:h-[108px] z-40`}
+        className={`w-full transition-all duration-300 ${isFixed ? " top-0 left-0 right-0 shadow-md" : "relative"
+          } max-w-full lg:px-[70px] py-[23px] h-[80px] lg:h-[108px] z-40`}
         style={{
           backgroundColor: isSpecialPath ? "#FFF" : "#EDA702",
         }}
@@ -193,7 +215,7 @@ const Header = () => {
           <div className="flex items-center sm:gap-[20px] lg:gap-[60px] lg:ml-[-40px]">
             <Link href="/" className="flex gap-[1rem] items-center pl-0">
               <Image
-                src="kuku_logo.svg"
+                src="/kuku_logo.svg"
                 width={56}
                 height={61}
                 alt=""
@@ -205,20 +227,19 @@ const Header = () => {
             </Link>
             <Image
               onClick={handleHandburger}
-              src="menu.svg"
+              src="/menu.svg"
               width={30}
               height={30}
               alt=""
               className="pl-2 lg:hidden"
             />
             <div
-              className={`lg:hidden pl-4 ${
-                isSearchVisible ? "lg:block hidden" : ""
-              }`}
+              className={`lg:hidden pl-4 ${isSearchVisible ? "lg:block hidden" : ""
+                }`}
             >
               <Link href="/">
                 <Image
-                  src="kuku_logo.svg"
+                  src="/kuku_logo.svg"
                   width={36}
                   height={41}
                   alt=""
@@ -228,33 +249,29 @@ const Header = () => {
             </div>
 
             <div
-              className={`lg:flex gap-[30px] items-center hidden ${
-                isSearchVisible ? "lg:hidden xl:flex" : ""
-              }`}
+              className={`lg:flex gap-[30px] items-center hidden ${isSearchVisible ? "lg:hidden xl:flex" : ""
+                }`}
             >
               <Link
                 href="#"
-                className={`${
-                  isHome ? "text-[#fefae5]" : "text-black"
-                } text-base font-bold font-karla leading-tight hover:text-pink-500`}
+                className={`${isHome ? "text-[#fefae5]" : "text-black"
+                  } text-base font-bold font-karla leading-tight hover:text-pink-500`}
               >
                 {/* Men */}
                 <MenDropdown />
               </Link>
               <Link
                 href="#"
-                className={`${
-                  isHome ? "text-[#fefae5]" : "text-black"
-                } text-base font-bold font-karla leading-tight hover:text-pink-500`}
+                className={`${isHome ? "text-[#fefae5]" : "text-black"
+                  } text-base font-bold font-karla leading-tight hover:text-pink-500`}
               >
                 {/* Women */}
                 <WomenDropdown />
               </Link>
               <Link
                 href="#"
-                className={`${
-                  isHome ? "text-[#fefae5]" : "text-black"
-                } text-base font-bold font-karla leading-tight hover:text-pink-500`}
+                className={`${isHome ? "text-[#fefae5]" : "text-black"
+                  } text-base font-bold font-karla leading-tight hover:text-pink-500`}
               >
                 {/* Kids */}
                 <KidsDropdown />
@@ -289,7 +306,7 @@ const Header = () => {
                     alt="search icon"
                     width={24}
                     height={24}
-                    src="search_button.svg"
+                    src="/search_button.svg"
                   />
                 </div>
 
@@ -302,7 +319,7 @@ const Header = () => {
                             <Image
                               width={24}
                               height={24}
-                              src="search_button.svg"
+                              src="/search_button.svg"
                               alt=""
                             />
                             <p className="text-[#070707] text-base font-normal font-karla leading-snug tracking-tight">
@@ -312,7 +329,7 @@ const Header = () => {
                           <Image
                             width={24}
                             height={24}
-                            src="arrow-up-right.svg"
+                            src="/arrow-up-right.svg"
                             alt=""
                           />
                         </div>
@@ -335,7 +352,7 @@ const Header = () => {
                   alt="search icon"
                   width={24}
                   height={24}
-                  src="search.svg"
+                  src="/search.svg"
                   className="w-4 h-4 lg:w-6 lg:h-6"
                 />
               </div>
@@ -343,16 +360,15 @@ const Header = () => {
 
             {!isNotificationDisabled && (
               <div
-                className={`h-10 w-10 lg:h-[54px] lg:w-[54px] flex items-center justify-center bg-white/40 rounded-full cursor-pointer ${
-                  isSearchVisible ? "block" : ""
-                }`}
+                className={`h-10 w-10 lg:h-[54px] lg:w-[54px] flex items-center justify-center bg-white/40 rounded-full cursor-pointer ${isSearchVisible ? "block" : ""
+                  }`}
                 onClick={toggleNotifications}
               >
                 <Image
                   alt="notification icon"
                   width={24}
                   height={24}
-                  src="notification.svg"
+                  src="/notification.svg"
                   className="w-5 h-5 lg:w-6 lg:h-6"
                 />
               </div>
@@ -369,44 +385,41 @@ const Header = () => {
             {/* Cart, Wishlist, Profile Icons */}
             <Link href="/cart">
               <div
-                className={`${
-                  cartPath ? "bg-[#393939]" : "bg-white/40"
-                } h-[54px] p-[15px] rounded-[100px] hidden lg:block`}
+                className={`${cartPath ? "bg-[#393939]" : "bg-white/40"
+                  } h-[54px] p-[15px] rounded-[100px] hidden lg:block`}
               >
                 <Image
                   alt="cart icon"
                   width={24}
                   height={24}
-                  src={cartPath ? "cart_white.svg" : "cart.svg"}
+                  src={cartPath ? "/cart_white.svg" : "/cart.svg"}
                 />
               </div>
             </Link>
             <Link href="/wishlist">
               <div
-                className={` h-10 w-10 lg:h-[54px] lg:w-[54px] flex items-center justify-center rounded-full cursor-pointer  ${
-                  wishPath ? "bg-[#393939]" : "bg-white/40"
-                } ml-[-10px] lg:ml-0`}
+                className={` h-10 w-10 lg:h-[54px] lg:w-[54px] flex items-center justify-center rounded-full cursor-pointer  ${wishPath ? "bg-[#393939]" : "bg-white/40"
+                  } ml-[-10px] lg:ml-0`}
               >
                 <Image
                   alt="wishlist icon"
                   width={24}
                   height={24}
-                  src={wishPath ? "wishlist_white.svg" : "wishlist.svg"}
+                  src={wishPath ? "/wishlist_white.svg" : "/wishlist.svg"}
                   className="w-5 h-5 lg:w-6 lg:h-6"
                 />
               </div>
             </Link>
             <Link href="/user_profile">
               <div
-                className={`${
-                  iconsPath ? "bg-[#393939]" : "bg-white/40"
-                } h-[54px] p-[15px]  rounded-[100px] hidden lg:block`}
+                className={`${iconsPath ? "bg-[#393939]" : "bg-white/40"
+                  } h-[54px] p-[15px]  rounded-[100px] hidden lg:block`}
               >
                 <Image
                   alt="profile icon"
                   width={24}
                   height={24}
-                  src={iconsPath ? "profile_white.svg" : "profile_black.svg"}
+                  src={iconsPath ? "/profile_white.svg" : "/profile_black.svg"}
                 />
               </div>
             </Link>
@@ -420,7 +433,7 @@ const Header = () => {
                   alt="dropdown"
                   width={14}
                   height={14}
-                  src="heade_drop_down.svg"
+                  src="/heade_drop_down.svg"
                 />
               </div>
 
@@ -456,12 +469,31 @@ const Header = () => {
                       Setting
                     </div>
                   </Link>
+                  {session || isLocalToken ? (
 
-                  <Link href="/login">
-                    <div className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold">
+                    <button
+                    onClick={() => {
+                      // Check which authentication method is active
+                      if (session) {
+                        signOut();
+                      } else {
+                        handleLocalSignOut();
+                      }
+                    }}
+                      className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold"
+                    >
                       Sign out
-                    </div>
-                  </Link>
+                    </button>
+                  ) : (
+                    <button
+                    onClick={() => {
+                        handleLocalSignIn();
+                    }}
+                      className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold"
+                    >
+                      Sign in
+                    </button>
+                  )}
                 </div>
               )}
             </div>
@@ -469,11 +501,10 @@ const Header = () => {
         </div>
         <BottomNavigation />
         <div
-          className={`w-full h-screen bg-yellow-500 lg:hidden fixed  px-[20px] py-[20px] top-[-2px] left-0 right-0 bottom-0 z-[1000] transition-transform ease-in-out duration-300 ${
-            hamburger
+          className={`w-full h-screen bg-yellow-500 lg:hidden fixed  px-[20px] py-[20px] top-[-2px] left-0 right-0 bottom-0 z-[1000] transition-transform ease-in-out duration-300 ${hamburger
               ? "transform translate-x-0 z-50"
               : "transform translate-x-full z-0"
-          }`}
+            }`}
         >
           <div className="flex px-[24px] mt-[20px] justify-between">
             <div
@@ -512,7 +543,7 @@ const Header = () => {
                       alt="search icon"
                       width={20}
                       height={20}
-                      src="search_button.svg"
+                      src="/search_button.svg"
                     />
                   </div>
 
@@ -526,7 +557,7 @@ const Header = () => {
                               <Image
                                 width={20}
                                 height={20}
-                                src="search_button.svg"
+                                src="/search_button.svg"
                                 alt=""
                               />
                               <p className="text-[#070707] text-sm font-normal font-karla leading-snug tracking-tight">
@@ -536,7 +567,7 @@ const Header = () => {
                             <Image
                               width={20}
                               height={20}
-                              src="arrow-up-right.svg"
+                              src="/arrow-up-right.svg"
                               alt=""
                             />
                           </div>
@@ -557,7 +588,7 @@ const Header = () => {
                     alt="search icon"
                     width={24}
                     height={24}
-                    src="search.svg"
+                    src="/search.svg"
                     className="w-4 h-4"
                   />
                 </div>
@@ -599,9 +630,8 @@ const Header = () => {
             <div className="flex flex-col gap-[30px]">
               <Link
                 href="#"
-                className={`${
-                  isHome ? "text-white" : "text-black"
-                } text-base font-bold font-karla leading-tight hover:text-pink-500 z-50`}
+                className={`${isHome ? "text-white" : "text-black"
+                  } text-base font-bold font-karla leading-tight hover:text-pink-500 z-50`}
               >
                 {/* MEN */}
                 {/* <MenDropdown /> */}
@@ -612,9 +642,8 @@ const Header = () => {
               </Link>
               <Link
                 href="#"
-                className={`${
-                  isHome ? "text-white" : "text-black"
-                } text-base font-bold font-karla leading-tight hover:text-pink-500 z-40`}
+                className={`${isHome ? "text-white" : "text-black"
+                  } text-base font-bold font-karla leading-tight hover:text-pink-500 z-40`}
               >
                 {/* WOMEN */}
                 {/* <WomenDropdown /> */}
@@ -625,9 +654,8 @@ const Header = () => {
               </Link>
               <Link
                 href="#"
-                className={`${
-                  isHome ? "text-white" : "text-black"
-                } text-base font-bold font-karla leading-tight hover:text-pink-500 z-30`}
+                className={`${isHome ? "text-white" : "text-black"
+                  } text-base font-bold font-karla leading-tight hover:text-pink-500 z-30`}
               >
                 {/* KIDS */}
                 {/* <KidsDropdown /> */}
@@ -646,43 +674,40 @@ const Header = () => {
           <div className="flex mx-6 mt-5 justify-between">
             <Link href="/cart">
               <div
-                className={`${
-                  cartPath ? "bg-[#393939]" : "bg-white/40"
-                } h-[54px] p-[15px] rounded-[100px]`}
+                className={`${cartPath ? "bg-[#393939]" : "bg-white/40"
+                  } h-[54px] p-[15px] rounded-[100px]`}
               >
                 <Image
                   alt="cart icon"
                   width={24}
                   height={24}
-                  src={cartPath ? "cart_white.svg" : "cart.svg"}
+                  src={cartPath ? "/cart_white.svg" : "/cart.svg"}
                 />
               </div>
             </Link>
             <Link href="/wishlist">
               <div
-                className={`${
-                  wishPath ? "bg-[#393939]" : "bg-white/40"
-                } h-[54px] p-[15px] rounded-[100px]`}
+                className={`${wishPath ? "bg-[#393939]" : "bg-white/40"
+                  } h-[54px] p-[15px] rounded-[100px]`}
               >
                 <Image
                   alt="wishlist icon"
                   width={24}
                   height={24}
-                  src={wishPath ? "wishlist_white.svg" : "wishlist.svg"}
+                  src={wishPath ? "/wishlist_white.svg" : "/wishlist.svg"}
                 />
               </div>
             </Link>
             <Link href="/user_profile">
               <div
-                className={`${
-                  iconsPath ? "bg-[#393939]" : "bg-white/40"
-                } h-[54px] p-[15px]  rounded-[100px]`}
+                className={`${iconsPath ? "bg-[#393939]" : "bg-white/40"
+                  } h-[54px] p-[15px]  rounded-[100px]`}
               >
                 <Image
                   alt="profile icon"
                   width={24}
                   height={24}
-                  src={iconsPath ? "profile_white.svg" : "profile_black.svg"}
+                  src={iconsPath ? "/profile_white.svg" : "/profile_black.svg"}
                 />
               </div>
             </Link>

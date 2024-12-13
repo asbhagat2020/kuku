@@ -17,8 +17,10 @@ import {
 } from "react-icons/fa";
 import { FaHandshake } from "react-icons/fa";
 import { useRouter } from "next/navigation";
+import { useDispatch } from "react-redux";
+import { addToCart } from "@/store/cart/cartSlice";
 
-const ProductCard = () => {
+const ProductCard = ({ product }) => {
   const router = useRouter();
   const [isRentPopupOpen, setRentPopupOpen] = useState(false);
   const [rentalDate, setRentalDate] = useState("");
@@ -29,7 +31,9 @@ const ProductCard = () => {
   const [isModalOpen, setIsModalOpen] = useState(false); // State to control the modal
   const [currentImageIndex, setCurrentImageIndex] = useState(0); // State to keep track of the current image
   const [isDateSelected, setIsDateSelected] = useState(false);
-  const images = [amiriImg, amiriImg];
+  // const images = [amiriImg, amiriImg];
+  const images = product.images;
+  console.log(images);
 
   // const [isRentPopupOpen, setIsRentPopupOpen] = useState(false);
   const [isStartFormatted, setIsStartFormatted] = useState("");
@@ -37,8 +41,12 @@ const ProductCard = () => {
   const [showCalendar, setShowCalendar] = useState(false);
   const [showEndCalendar, setShowEndCalendar] = useState(false);
   const modalRef = useRef(null);
-console.log(isStartFormatted);
-console.log(isEndFormatted);
+  const dispatch = useDispatch();
+
+  const handleBuy = () => {
+    dispatch(addToCart(product));
+    router.push('/cart')
+  };
 
   const openCalendar = () => {
     setShowCalendar(!showCalendar);
@@ -98,7 +106,6 @@ console.log(isEndFormatted);
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
-
   };
   const handleOpenRentPopup = () => {
     setRentPopupOpen(true);
@@ -107,12 +114,14 @@ console.log(isEndFormatted);
   const handleCloseRentPopup = () => {
     setRentPopupOpen(false);
     setRentalDate(""); // Reset date when closing
-    openCalendar(false)
-    openEndCalendar(false)
+    openCalendar(false);
+    openEndCalendar(false);
   };
 
   const handleProceed = () => {
-    router.push(`/renting?startDate=${isStartFormatted}&endDate=${isEndFormatted}`);
+    router.push(
+      `/renting?startDate=${isStartFormatted}&endDate=${isEndFormatted}`
+    );
     handleCloseRentPopup();
   };
 
@@ -167,9 +176,9 @@ console.log(isEndFormatted);
         </Link>{" "}
         |
         <Link href="/" className="hover">
-          Tshirt
+          {product?.productInfo.category}
         </Link>{" "}
-        | <span className="font-bold">AMIRI Men Oversize T-shirt</span>
+        | <span className="font-bold">{product?.productInfo.title}</span>
       </div>
 
       <hr className="border-gray-300 mb-4" />
@@ -178,6 +187,9 @@ console.log(isEndFormatted);
         <div className="w-full md:w-1/2 relative">
           {/* Display the current image based on index */}
           <Image
+            unoptimized
+            width={650}
+            height={500}
             src={images[currentImageIndex]}
             alt="AMIRI Men Oversize T-shirt"
             className="object-cover rounded-md"
@@ -191,6 +203,9 @@ console.log(isEndFormatted);
             }}
           />
           <Image
+            unoptimized
+            width={650}
+            height={500}
             src={images[(currentImageIndex + 1) % images.length]} // Show the next image below
             alt="AMIRI Men Oversize T-shirt"
             className="object-cover rounded-md absolute top-0 left-0" // Position on top
@@ -262,32 +277,32 @@ console.log(isEndFormatted);
               className="inline-block px-4 py-2 text-black rounded-full text-xs font-semibold border  shadow-sm"
               style={{ backgroundColor: "#E6E6E6" }}
             >
-              T-shirt
+              {product?.productInfo.category}
             </span>
             <span
               className="inline-block px-4 py-2 text-black rounded-full text-xs font-semibold border  shadow-sm"
               style={{ backgroundColor: "#E6E6E6" }}
             >
-              Men
+              {product?.productInfo.gender}
             </span>
           </div>
 
-          <h1 className="text-3xl font-bold">AMIRI | Men Oversize T-shirt</h1>
+          <h1 className="text-3xl font-bold">{product?.productInfo.title}</h1>
 
           <p className="text-gray-400" style={{ marginTop: "0.2rem" }}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+            {product?.productInfo.description}
           </p>
 
           <div className="text-2xl font-bold">
-            AED250.00{" "}
+            AED {product?.pricing.currentPrice}{" "}
             <span style={{ color: "#30BD75", fontSize: "1.50rem" }}>
-              (55% OFF)
+              ({product?.pricing.discountPercentage}% OFF)
             </span>
             <p
               className="text-gray-400 line-through"
               style={{ fontSize: "0.985rem", margin: 0, fontWeight: "normal" }}
             >
-              MRP AED650
+              MRP AED{product?.pricing.originalPrice}
             </p>
           </div>
 
@@ -295,12 +310,14 @@ console.log(isEndFormatted);
             <div>
               <span className="font-bold">SIZE</span>
               <span className="inline-block ml-2 px-2 py-1 border border-pink-500 text-red-500 rounded">
-                OS
+                {product?.productInfo.size}
               </span>
             </div>
             <div>
               <span className="font-bold">CONDITION:</span>
-              <span className="font-bold"> GOOD</span>
+              <span className="font-bold">
+                {product?.productInfo.condition}
+              </span>
             </div>
           </div>
 
@@ -342,18 +359,19 @@ console.log(isEndFormatted);
             </button>
           </div>
 
-          <Link href="/cart">
-            <button
-              className="mt-4 text-black w-full font-bold flex items-center justify-center bg-yellow-300 hover:bg-yellow-400 transition-all duration-300"
-              style={{
-                height: "72px",
-                borderRadius: "16px",
-              }}
-            >
-              <FaShoppingBag className="mr-2" />
-              ADD TO BAG
-            </button>
-          </Link>
+          {/* <Link href="/cart"> */}
+          <button
+            onClick={handleBuy}
+            className="mt-4 text-black w-full font-bold flex items-center justify-center bg-yellow-300 hover:bg-yellow-400 transition-all duration-300"
+            style={{
+              height: "72px",
+              borderRadius: "16px",
+            }}
+          >
+            <FaShoppingBag className="mr-2" />
+            ADD TO BAG
+          </button>
+          {/* </Link> */}
 
           <div className="flex flex-col mt-2">
             <div className="text-center font-bold text-black">
@@ -547,15 +565,17 @@ console.log(isEndFormatted);
                   View our rental policy
                 </div>
                 {/* <Link href="/renting"> */}
-                  <button
-                    onClick={handleProceed}
-                    className={`px-4 py-2 w-full mb-2 text-[#E4086F] text-[20px] font-karla font-bold leading-[24px] break-words flex-1 h-[60px] bg-[#FDE504] rounded-[20px] flex justify-center items-center gap-[10px] ${
-                      (isEndFormatted ==='' || isStartFormatted ==='' )? "opacity-50 cursor-not-allowed" : ""
-                    }`}
-                    disabled={(isEndFormatted ==='' || isStartFormatted ==='' )} // Disable the button if no date is selected
-                  >
-                    PROCEED
-                  </button>
+                <button
+                  onClick={handleProceed}
+                  className={`px-4 py-2 w-full mb-2 text-[#E4086F] text-[20px] font-karla font-bold leading-[24px] break-words flex-1 h-[60px] bg-[#FDE504] rounded-[20px] flex justify-center items-center gap-[10px] ${
+                    isEndFormatted === "" || isStartFormatted === ""
+                      ? "opacity-50 cursor-not-allowed"
+                      : ""
+                  }`}
+                  disabled={isEndFormatted === "" || isStartFormatted === ""} // Disable the button if no date is selected
+                >
+                  PROCEED
+                </button>
                 {/* </Link> */}
 
                 <button

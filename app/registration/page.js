@@ -2,6 +2,11 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { signIn, useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { googleSignUp, otpSignup, registerOtp} from "@/store/auth/authSlice";
 
 export default function Home() {
   const [emailOrPhone, setEmailOrPhone] = useState("");
@@ -9,16 +14,87 @@ export default function Home() {
   const [isChecked, setIsChecked] = useState(false);
   const [isOtpSent, setIsOtpSent] = useState(false); // State to track if OTP is sent
   const [timer, setTimer] = useState(120); // Timer for 2 minutes (120 seconds)
+  const router=useRouter()
+  const dispatch=useDispatch()
+  const { data: session, status } = useSession();
+  const OtpSent=useSelector((state)=>state.auth.otpSend)
+  useEffect(() => {
+    console.log("OtpSent updated:", OtpSent);
+    setIsOtpSent(OtpSent);
+  }, [OtpSent]);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Handle OTP logic here
-    if (isOtpSent) {
-      // If OTP is already sent, handle continue logic
-      console.log("Continuing...", { emailOrPhone, otp });
-    } else {
-      sendOtp(); // Send OTP if not sent
+
+  // const handleSubmit = async(e) => {
+  //   e.preventDefault();
+  //   console.log(isOtpSent,'23');
+  //   if (isOtpSent) {
+  //     console.log("Hiiiiiiiiiiiiiiiiiiii");
+  //    dispatch(otpSignup({emailOrPhone,otp}))
+  //   } else {
+  //     console.log(emailOrPhone);
+  //     dispatch(registerOtp({emailOrPhone}));
+  //     setIsOtpSent(true);
+  //   }
+  // };
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+
+  //   if (!isOtpSent) {
+  //     // First stage: Request OTP
+  //     const result = dispatch(registerOtp({emailOrPhone}));
+  //     result.then((response) => {
+  //       if (response.payload) {
+  //         // Successfully sent OTP
+  //         setIsOtpSent(true);
+  //       }
+  //     }).catch((error) => {
+  //       console.error('OTP Send Error:', error);
+  //     });
+  //   }
+  //     // Second stage: Verify OTP
+  //     console.log(otp);
+
+  //     if (otp) {
+  //       const result = dispatch(otpSignup({emailOrPhone, otp}));
+  //       result.then((response) => {
+  //         if (response.payload) {
+  //           // Successful signup
+  //           router.push('/account');
+  //         }
+  //       }).catch((error) => {
+  //         console.error('OTP Verification Error:', error);
+  //         // Handle error (show message to user)
+  //       });
+  //     }
+
+  // };
+  const handleOtpsend=()=>{
+    dispatch(registerOtp({emailOrPhone}))
+    setIsOtpSent(true)
+  }
+  const handleRegister=()=>{
+    dispatch(otpSignup({emailOrPhone,otp}))
+  }
+  const sendSessionToServer = async () => {
+    if (session) {
+      console.log(session);
+      const res=await dispatch(googleSignUp({session,status}))
+      if(res.type==='auth/googleSignUp/fulfilled'){
+        router.push('/account')
+      }
+
     }
+  };
+
+  // Watch session status and send data to server when authenticated
+  useEffect(() => {
+    if (session) {
+      sendSessionToServer();
+    }
+  }, [!session]);
+
+  const handleSignIn = async () => {
+    await signIn("google", { redirect: false });
   };
 
   const sendOtp = () => {
@@ -70,7 +146,7 @@ export default function Home() {
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="w-full max-w-md">
+        <form  className="w-full max-w-md">
           {/* Email or Phone Number */}
           <div className="mb-4">
             <label className="text-black text-base font-Karla font-bold mb-2 block">
@@ -130,11 +206,11 @@ export default function Home() {
           </div>
 
           {isOtpSent ? (
-            <Link href={otp ? "/account" : "#"}>
+            <div>
               {" "}
               {/* Link should only be active when OTP is filled */}
               <button
-                type="submit"
+                onClick={handleRegister}
                 className={`w-full p-3 ${
                   otp === ""
                     ? "bg-yellow-300 cursor-not-allowed opacity-50"
@@ -144,10 +220,10 @@ export default function Home() {
               >
                 Register
               </button>
-            </Link>
+            </div>
           ) : (
             <button
-              type="submit"
+              onClick={handleOtpsend}
               className="w-full p-3 bg-yellow-400 rounded-lg text-[#070707] text-xl font-normal font-karla leading-[23px]"
             >
               Send OTP
@@ -158,7 +234,7 @@ export default function Home() {
         {/* Social Login */}
         <div className="w-full max-w-md mt-6">
           {/* Google Login */}
-          <button className="w-full flex items-center justify-center p-3 bg-gray-100 border border-gray-300 rounded-lg mb-4">
+          <button onClick={handleSignIn} className="w-full flex items-center justify-center p-3 bg-gray-100 border border-gray-300 rounded-lg mb-4">
             <img
               src="/devicon_google.png"
               alt="Google"

@@ -1,6 +1,9 @@
 "use client"; // Ensure Client-Side rendering
 
-import { useState } from "react";
+import { updateDetails } from "@/store/auth/authSlice";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function Account() {
   // State variables for form inputs
@@ -9,12 +12,27 @@ export default function Account() {
   const [Description, setDescription] = useState("");
   const [location, setLocation] = useState("");
   const [isChecked, setIsChecked] = useState(false);
+  const [id,setId]=useState('')
+  const dispatch = useDispatch();
+  const data = useSelector((state) => state?.auth?.user);
+  const router=useRouter()
+  // Fetch user data from Redux and update local state on component load
+  useEffect(() => {
+    if (data?.user) {
+      setKukuUsername(data?.user?.username || "");
+      setFullName(data?.user?.name || "");
+      setId(data?.user?._id || "")
+    }
+  }, [data]);
 
   // Handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
-    // Add logic to handle form data
     console.log({ KukuUsername, fullName, Description, location, isChecked });
+    const res=await dispatch(updateDetails({ KukuUsername, fullName, Description, location, isChecked,id}))
+    if(res.type==="auth/updateDetails/fulfilled"){
+      router.push('/')
+    }
   };
 
   const handleCheckboxChange = (e) => {
@@ -56,7 +74,7 @@ export default function Account() {
               placeholder="Enter your Kuku username"
               value={KukuUsername}
               onChange={(e) => setKukuUsername(e.target.value)}
-              className="w-full p-3 border border-gray-300 bg-gray-100 rounded-lg text-start text-black text-sm font-normal font-karla leading-none"
+              className="w-full p-3 border border-gray-300 bg-gray-100 rounded-lg text-start text-black text-sm font-normal font-karla leading-none outline-none"
               required
             />
           </div>
@@ -71,7 +89,7 @@ export default function Account() {
               placeholder="Enter your full name"
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
-              className="w-full p-3 border border-gray-300 bg-gray-100 rounded-lg text-start text-black text-sm font-normal font-karla leading-none"
+              className="w-full p-3 border border-gray-300 bg-gray-100 rounded-lg text-start text-black text-sm font-normal font-karla leading-none outline-none"
               required
             />
           </div>
@@ -86,7 +104,7 @@ export default function Account() {
               placeholder="Enter a brief description"
               value={Description}
               onChange={(e) => setDescription(e.target.value)}
-              className="w-full p-3 border border-gray-300 bg-gray-100 rounded-lg text-start text-black text-sm font-normal font-karla leading-none"
+              className="w-full p-3 border border-gray-300 bg-gray-100 rounded-lg text-start text-black text-sm font-normal font-karla leading-none outline-none"
             />
           </div>
 
@@ -100,7 +118,7 @@ export default function Account() {
               placeholder="Enter your location"
               value={location}
               onChange={(e) => setLocation(e.target.value)}
-              className="w-full p-3 border border-gray-300 bg-gray-100 rounded-lg text-start text-black text-sm font-normal font-karla leading-none"
+              className="w-full p-3 border border-gray-300 bg-gray-100 rounded-lg text-start text-black text-sm font-normal font-karla leading-none outline-none"
               required
             />
           </div>

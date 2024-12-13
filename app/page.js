@@ -21,9 +21,9 @@ const Page = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isMobileView, setIsMobileView] = useState(false);
   const dispatch=useDispatch();
-  useEffect(() => {
-    dispatch(getProducts());
-}, [dispatch]);
+//   useEffect(() => {
+//     dispatch(getProducts());
+// }, [dispatch]);
 
   // Handle screen resize and initial mobile check
   useEffect(() => {

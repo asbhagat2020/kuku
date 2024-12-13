@@ -10,6 +10,8 @@ import Image from "next/image";
 import { OfferPopup } from "./OfferPopup";
 import { FcLike } from "react-icons/fc";
 import { GoHeart } from "react-icons/go";
+import { useDispatch, useSelector } from "react-redux";
+import { toggleWishlist } from "@/store/wishlist/wishlistSlice";
 
 const cardData = [
   {
@@ -189,7 +191,8 @@ export const ImagesComponent = () => {
   const indexOfFirstCard = indexOfLastCard - cardsPerPage;
   const currentCards = cardData.slice(indexOfFirstCard, indexOfLastCard);
   const [isLiked, setIsLiked] = useState(false);
-
+  const dispatch = useDispatch();
+  const wishlist = useSelector((state) => state.wishlist.items);
   const handleClick = () => {
     setIsLiked(!isLiked);
   };
@@ -222,11 +225,15 @@ export const ImagesComponent = () => {
     handleCloseOfferPopup();
   };
 
+  // const handleLikeClick = (cardId) => {
+  //   setLikedCards((prevLikedCards) => ({
+  //     ...prevLikedCards,
+  //     [cardId]: !prevLikedCards[cardId],
+  //   }));
+  // };
+
   const handleLikeClick = (cardId) => {
-    setLikedCards((prevLikedCards) => ({
-      ...prevLikedCards,
-      [cardId]: !prevLikedCards[cardId],
-    }));
+    dispatch(toggleWishlist(cardId));
   };
 
   const innerSliderSettings = {
@@ -289,10 +296,10 @@ export const ImagesComponent = () => {
                 className="absolute top-4 right-4 w-12 h-12 flex items-center justify-center rounded-full bg-custom-gray cursor-pointer z-10"
                 onClick={() => handleLikeClick(card.id)}
               >
-                {likedCards[card.id] ? (
-                  <FcLike className="text-2xl w-8 h-8" /> // Filled heart icon if liked
+                {wishlist.includes(card.id)  ? (
+                  <FcLike className="text-2xl text-red-500" /> // Filled heart for wishlist items
                 ) : (
-                  <GoHeart className="text-2xl text-gray-300" /> // Outline heart icon if not liked
+                  <GoHeart className="text-2xl text-gray-300" /> // Outline heart for non-wishlist items
                 )}
               </div>
 
@@ -313,7 +320,7 @@ export const ImagesComponent = () => {
 
               {/* Buy Now button and handshake icon - fixed position */}
               <div className="absolute w-full bottom-4 flex justify-evenly items-center px-4">
-                <Link href="/product" className="w-[70%]">
+                <Link href={`/selling-page/${card.id}`} className="w-[70%]">
                   <button className="w-full p-2 py-[15px] sm:px-10 bg-custom-yellow text-black rounded-2xl font-bold mr-1">
                     Buy Now
                   </button>

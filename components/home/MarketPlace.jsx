@@ -68,20 +68,19 @@ const MarketPlace = () => {
     const cardData = [
         {
             number: "1",
-            title: " Your Sustainable Fashion Marketplace",
+            title: "$500 Billion is lost each year because of under-wearing and failure to recycle clothes",
+            url:"marketPlace_BG.png"
         },
         {
             number: "2",
-            title: " Your Sustainable Fashion Marketplace",
+            title: "Nearly 10% of microplastics dispersed in the ocean each year come from textiles",
+            url:"marketPlaceBg2.png"
         },
-        // {
-        //     number: "3",
-        //     title: " Your Sustainable Fashion Marketplace",
-        // },
-        // {
-        //     number: "4",
-        //     title: " Your Sustainable Fashion Marketplace",
-        // }
+        {
+            number: "3",
+            title: "but You are going to help us avoid doing that :)",
+            url:"marketPlaceBg3.png"
+        }
 
     ];
 
@@ -90,20 +89,20 @@ const MarketPlace = () => {
             <div className='absolute top-[-10px] right-0 z-10'>
                 <Image width={100} height={100} src='/market_flower.png' alt=""/>
             </div>
-            <div ref={sectionRef} className={`flex ${isMobile ? 'w-[200%]' : 'w-[200%]'} h-[906px] transform`}>
+            <div ref={sectionRef} className={`flex ${isMobile ? 'w-[300%]' : 'w-[300%]'} h-[906px] transform`}>
 
                 {/* Panels for cards */}
                 {cardData.map((card, index) => (
                     <div key={index} className="panel w-full h-full bg-white  relative overflow-hidden flex items-center justify-center "
-                        style={{
-                            backgroundImage: "url('marketPlace_BG.png')",
-                            backgroundSize: 'cover',
-                            backgroundPosition: 'center',
-                            backgroundRepeat: 'no-repeat'
-                        }}
+                    style={{
+                        backgroundImage: `url(${card.url})`,
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center',
+                        backgroundRepeat: 'no-repeat',
+                    }}
                     >
-                        <div className="px-[27px] lg:px-0 lg:w-[600px]">
-                            <div className="text-white  text-center text-2xl lg:text-5xl font-bold font-luckiest">
+                        <div className="px-[27px] lg:px-0 lg:w-[650px]">
+                            <div className="text-white  text-center text-2xl lg:text-5xl tracking-wide font-bold font-luckiest">
                                {card.title}
                             </div>
                         </div>

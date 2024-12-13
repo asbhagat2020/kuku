@@ -36,10 +36,10 @@ export const BottomNavigation = () => {
         <div className="flex flex-col items-center">
           <div className={`${cartPath ? "bg-[#393939]" : "bg-[#EDA702]/40"} h-[35px] w-[35px] flex items-center justify-center rounded-full`}>
             <Image
-              alt="cart icon"
+              alt="/cart icon"
               width={20}
               height={20}
-              src={cartPath ? "cart_white.svg" : "cart.svg"}
+              src={cartPath ? "/cart_white.svg" : "/cart.svg"}
             />
           </div>
           <span className={`text-xs mt-1 font-karla ${cartPath ? 'text-pink-500 font-bold border-b-2 border-pink-500' : 'text-gray-500'}`}>
@@ -47,15 +47,15 @@ export const BottomNavigation = () => {
           </span>
         </div>
       </Link>
-      
+
       <Link href="/user_profile">
         <div className="flex flex-col items-center">
           <div className={`${iconsPath ? "bg-[#393939]" : "bg-[#EDA702]/40"} h-[35px] w-[35px] flex items-center justify-center rounded-full`}>
             <Image
-              alt="profile icon"
+              alt="/profile icon"
               width={20}
               height={20}
-              src={iconsPath ? "profile_white.svg" : "profile_black.svg"}
+              src={iconsPath ? "/profile_white.svg" : "/profile_black.svg"}
             />
           </div>
           <span className={`text-xs mt-1 font-karla ${iconsPath ? 'text-pink-500 font-bold border-b-2 border-pink-500' : 'text-gray-500'}`}>

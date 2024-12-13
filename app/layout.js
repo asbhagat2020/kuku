@@ -2,6 +2,8 @@ import { Toaster } from "react-hot-toast";
 import "./globals.css";
 import { Karla, Luckiest_Guy, Palanquin_Dark } from "next/font/google";
 import ReduxProvider from "./ReduxProvider/ReduxProvider";
+import ClientSessionProvider from "@/components/sessionProvider";
+import { getServerSession } from "next-auth";
 
 const karla = Karla({
   subsets: ["latin"],
@@ -23,16 +25,19 @@ const palanquinDark = Palanquin_Dark({
   variable: "--font-palanquin-dark",
 });
 
-export default function RootLayout({ children }) {
+export default async function RootLayout({ children }) {
+  const session = await getServerSession();
   return (
     <html lang="en">
       <body
         className={`${karla.variable} ${luckiestGuy.variable} ${palanquinDark.variable}`}
       >
-        <ReduxProvider>
-          {children}
-          <Toaster />
-        </ReduxProvider>
+        <ClientSessionProvider session={session}>
+          <ReduxProvider>
+            {children}
+            <Toaster />
+          </ReduxProvider>
+        </ClientSessionProvider>
       </body>
     </html>
   );
