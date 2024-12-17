@@ -386,7 +386,7 @@ const ProductCard = ({ product }) => {
                 borderRadius: "16px",
               }}
             >
-              AED 70
+              AED 36
             </button>
           </div>
 
