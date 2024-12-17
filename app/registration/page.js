@@ -6,7 +6,9 @@ import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { googleSignUp, otpSignup, registerOtp} from "@/store/auth/authSlice";
+import { clearOtp, googleSignUp, otpSignup, registerOtp} from "@/store/auth/authSlice";
+import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
+import { auth } from "@/firebase";
 
 export default function Home() {
   const [emailOrPhone, setEmailOrPhone] = useState("");
@@ -14,6 +16,8 @@ export default function Home() {
   const [isChecked, setIsChecked] = useState(false);
   const [isOtpSent, setIsOtpSent] = useState(false); // State to track if OTP is sent
   const [timer, setTimer] = useState(120); // Timer for 2 minutes (120 seconds)
+  const [error, setError]=useState(false)
+  const [confirmationResult, setConfirmationResult] = useState(null);
   const router=useRouter()
   const dispatch=useDispatch()
   const { data: session, status } = useSession();
@@ -22,63 +26,97 @@ export default function Home() {
     console.log("OtpSent updated:", OtpSent);
     setIsOtpSent(OtpSent);
   }, [OtpSent]);
+  const validateInput = (input) => {
+    // Email regex
+    console.log(input);
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    // Phone number regex (supports various international formats)
+    const phoneRegex = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/;
+
+    if (emailRegex.test(input)) {
+      return 'email';
+    } else if (phoneRegex.test(input)) {
+      return 'phone';
+    } else {
+      return 'invalid';
+    }
+  };
+  const setupRecaptchaVerifier = () => {
+    if (typeof window !== 'undefined') {
+      window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
+        'size': 'invisible',
+        'callback': (response) => {
+          // reCAPTCHA solved, allow signInWithPhoneNumber.
+          console.log('Recaptcha resolved');
+        }
+      });
+    }
+  };
+  const sendPhoneOTP = async () => {
+    try {
+      setupRecaptchaVerifier();
+
+      const phoneNumber = emailOrPhone.startsWith('+')
+        ? emailOrPhone
+        : `+1${emailOrPhone}`; // Assumes US phone numbers, modify as needed
+
+      const appVerifier = window.recaptchaVerifier;
+
+      const result = await signInWithPhoneNumber(auth, phoneNumber, appVerifier);
+      setConfirmationResult(result);
+      setIsOtpSent(true);
+      setError("");
+      console.log(result);
 
 
-  // const handleSubmit = async(e) => {
-  //   e.preventDefault();
-  //   console.log(isOtpSent,'23');
-  //   if (isOtpSent) {
-  //     console.log("Hiiiiiiiiiiiiiiiiiiii");
-  //    dispatch(otpSignup({emailOrPhone,otp}))
-  //   } else {
-  //     console.log(emailOrPhone);
-  //     dispatch(registerOtp({emailOrPhone}));
-  //     setIsOtpSent(true);
-  //   }
-  // };
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
+    } catch (error) {
+      console.error("Error sending OTP:", error)
+      setError("Failed to send OTP. Please try again.");
+    }
+  };
+  const verifyOTP = async () => {
+    try {
+      if (!confirmationResult) {
+        setError("Please send OTP first");
+        return;
+      }
 
-  //   if (!isOtpSent) {
-  //     // First stage: Request OTP
-  //     const result = dispatch(registerOtp({emailOrPhone}));
-  //     result.then((response) => {
-  //       if (response.payload) {
-  //         // Successfully sent OTP
-  //         setIsOtpSent(true);
-  //       }
-  //     }).catch((error) => {
-  //       console.error('OTP Send Error:', error);
-  //     });
-  //   }
-  //     // Second stage: Verify OTP
-  //     console.log(otp);
+      const result = await confirmationResult.confirm(otp);
+      // User successfully signed in
+      console.log("User signed in:", result.user);
 
-  //     if (otp) {
-  //       const result = dispatch(otpSignup({emailOrPhone, otp}));
-  //       result.then((response) => {
-  //         if (response.payload) {
-  //           // Successful signup
-  //           router.push('/account');
-  //         }
-  //       }).catch((error) => {
-  //         console.error('OTP Verification Error:', error);
-  //         // Handle error (show message to user)
-  //       });
-  //     }
+      // Redirect or perform further actions
+      router.push('/account');
+    } catch (error) {
+      console.error("Error verifying OTP:", error);
+      setError("Invalid OTP. Please try again.");
+    }
+  };
+  const handleOtpsend = () => {
+    const inputType = validateInput(emailOrPhone);
+    console.log(inputType);
 
-  // };
-  const handleOtpsend=()=>{
-    dispatch(registerOtp({emailOrPhone}))
-    setIsOtpSent(true)
-  }
-  const handleRegister=()=>{
-    dispatch(otpSignup({emailOrPhone,otp}))
+    if (inputType == 'phone') {
+      sendPhoneOTP();
+    } else if (inputType =='email') {
+      // Existing email OTP logic
+      console.log('dispaching');
+
+      dispatch(registerOtp({emailOrPhone}));
+    } else {
+      setError("Please enter a valid email or phone number");
+    }
+  };
+  const handleRegister=async()=>{
+    const res=await dispatch(otpSignup({emailOrPhone,otp}))
+    dispatch(clearOtp())
   }
   const sendSessionToServer = async () => {
     if (session) {
       console.log(session);
-      const res=await dispatch(googleSignUp({session,status}))
+      const res= await dispatch(googleSignUp({session,status}))
       if(res.type==='auth/googleSignUp/fulfilled'){
         router.push('/account')
       }
@@ -91,10 +129,13 @@ export default function Home() {
     if (session) {
       sendSessionToServer();
     }
-  }, [!session]);
+  }, [session,dispatch,router]);
 
   const handleSignIn = async () => {
-    await signIn("google", { redirect: false });
+    const res=await signIn("google", { redirect: false });
+    if(res.type==='auth/signIn/fullfilled'){
+      router.push('/')
+    }
   };
 
   const sendOtp = () => {
@@ -148,6 +189,7 @@ export default function Home() {
         {/* Form */}
         <form  className="w-full max-w-md">
           {/* Email or Phone Number */}
+          <div id="recaptcha-container"></div>
           <div className="mb-4">
             <label className="text-black text-base font-Karla font-bold mb-2 block">
               Email or Phone Number
@@ -210,6 +252,7 @@ export default function Home() {
               {" "}
               {/* Link should only be active when OTP is filled */}
               <button
+              type="button"
                 onClick={handleRegister}
                 className={`w-full p-3 ${
                   otp === ""
@@ -223,6 +266,7 @@ export default function Home() {
             </div>
           ) : (
             <button
+              type="button"
               onClick={handleOtpsend}
               className="w-full p-3 bg-yellow-400 rounded-lg text-[#070707] text-xl font-normal font-karla leading-[23px]"
             >

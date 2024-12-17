@@ -1,4 +1,7 @@
-import { showErrorNotification, showSuccessNotification } from "@/utils/Notification/notif";
+import {
+  showErrorNotification,
+  showSuccessNotification,
+} from "@/utils/Notification/notif";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { signIn } from "next-auth/react";
@@ -15,7 +18,11 @@ export const registerOtp = createAsyncThunk(
       return response.data;
     } catch (error) {
       console.log(error);
-      showSuccessNotification("Registration",error.response?.data?.message,2000)
+      showSuccessNotification(
+        "Registration",
+        error.response?.data?.message,
+        2000
+      );
       return rejectWithValue(error.response?.data?.message || "Signup failed"); // Return error message
     }
   }
@@ -24,19 +31,48 @@ export const registerOtp = createAsyncThunk(
 export const googleSignUp = createAsyncThunk(
   "auth/googleSignUp",
   async ({ session, status }, { rejectWithValue }) => {
-    console.log(session.user.email)
+    console.log(session.user.email);
     try {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/register/social`, {
-        email:session.user.email,
-        name:session.user.name,
-      });
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/register/social`,
+        {
+          email: session.user.email,
+          name: session.user.name,
+        }
+      );
       console.log(response.data);
-      showSuccessNotification("Google signup","Sign up succesfull",2000)
+      showSuccessNotification("Google signup", "Sign up succesfull", 2000);
       return response.data;
     } catch (error) {
-      console.log(error)
-      showErrorNotification("Google signup",error?.response?.data?.message)
-      return rejectWithValue(error.response?.data?.error || "An error occurred");
+      console.log(error);
+      showErrorNotification("Google signup", error?.response?.data?.message);
+      return rejectWithValue(
+        error.response?.data?.error || "An error occurred"
+      );
+    }
+  }
+);
+export const googleSignIn = createAsyncThunk(
+  "auth/googleSignIn",
+  async ({ session }, { rejectWithValue }) => {
+    console.log(session);
+
+    try {
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/login/social`,
+        {
+          email: session?.user?.email,
+        }
+      );
+      console.log(response.data);
+      showSuccessNotification("Google signup", "Sign up succesfull", 2000);
+      return response.data;
+    } catch (error) {
+      console.log(error);
+      showErrorNotification("Google signup", error?.response?.data?.message);
+      return rejectWithValue(
+        error.response?.data?.error || "An error occurred"
+      );
     }
   }
 );
@@ -52,8 +88,14 @@ export const signinOtp = createAsyncThunk(
       return response.data;
     } catch (error) {
       console.error(error);
-      showErrorNotification("Sign-In", error.response?.data?.message || "Failed to send OTP", 2000);
-      return rejectWithValue(error.response?.data?.message || "Sign-In OTP failed");
+      showErrorNotification(
+        "Sign-In",
+        error.response?.data?.message || "Failed to send OTP",
+        2000
+      );
+      return rejectWithValue(
+        error.response?.data?.message || "Sign-In OTP failed"
+      );
     }
   }
 );
@@ -61,13 +103,16 @@ export const signinOtp = createAsyncThunk(
 export const verifySigninOtp = createAsyncThunk(
   "auth/otpSignIn",
   async ({ emailOrPhone, otp }, { rejectWithValue }) => {
-    console.log(emailOrPhone,otp);
+    console.log(emailOrPhone, otp);
 
     try {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/otp/login/verify`, {
-        email:emailOrPhone,
-        otp:+otp,
-      });
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/otp/login/verify`,
+        {
+          email: emailOrPhone,
+          otp: +otp,
+        }
+      );
       const token = response.data?.token;
 
       if (token) {
@@ -82,10 +127,10 @@ export const verifySigninOtp = createAsyncThunk(
         throw new Error("Token not received");
       }
 
-     showSuccessNotification("Login", "Login successfull",2000)
+      showSuccessNotification("Login", "Login successfull", 2000);
     } catch (error) {
-      console.log(error)
-      showErrorNotification("Login",error?.response?.data?.message)
+      console.log(error);
+      showErrorNotification("Login", error?.response?.data?.message);
       return rejectWithValue(
         error.response?.data?.message || "OTP Sign-In failed"
       );
@@ -96,20 +141,18 @@ export const verifySigninOtp = createAsyncThunk(
 export const otpSignup = createAsyncThunk(
   "auth/otpSignup",
   async ({ emailOrPhone, otp }, { rejectWithValue }) => {
-
     try {
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/otp/register/verify`,
         {
-          email:emailOrPhone,
-          otp : +otp
+          email: emailOrPhone,
+          otp: +otp,
         }
       );
-        showSuccessNotification("Signup", response.data.message, 2000);
-        return response.data.user;
-
+      showSuccessNotification("Signup", response.data.message, 2000);
+      return response.data.user;
     } catch (error) {
-      showErrorNotification("Signup",error.response?.data?.message)
+      showErrorNotification("Signup", error.response?.data?.message);
       console.error(error);
       return rejectWithValue(
         error.response?.data?.message || "OTP Signup failed"
@@ -133,33 +176,33 @@ export const facebookSignIn = createAsyncThunk(
   }
 );
 
-export const updateDetails=createAsyncThunk(
+export const updateDetails = createAsyncThunk(
   "auth/updateDetails",
-  async({ KukuUsername, fullName, Description, location, isChecked ,id},{rejectWithValue})=>{
+  async (
+    { KukuUsername, fullName, Description, location, isChecked, id },
+    { rejectWithValue }
+  ) => {
     console.log(fullName);
 
     try {
       const response = await axios.patch(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/update/details/${id}`,
         {
-          username:KukuUsername,
-          name:fullName,
-          description:Description,
-          location:location
+          username: KukuUsername,
+          name: fullName,
+          description: Description,
+          location: location,
         }
       );
-      showSuccessNotification("Signup",response.data.message)
+      showSuccessNotification("Signup", response.data.message);
       console.log(response.data.message);
-      showSuccessNotification("Update",response.data.message)
-      return response.data.user
-
+      showSuccessNotification("Update", response.data.message);
+      return response.data.user;
     } catch (error) {
-      return rejectWithValue(
-        error.response?.data?.message || "update failed"
-      );
+      return rejectWithValue(error.response?.data?.message || "update failed");
     }
   }
-)
+);
 
 // 2. Create the slice
 const authSlice = createSlice({
@@ -178,6 +221,9 @@ const authSlice = createSlice({
       state.isAuthenticated = false;
       state.signupSuccess = false;
     },
+    clearOtp:(state)=>{
+      state.otpSend=false
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -194,7 +240,7 @@ const authSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       });
-      builder
+    builder
       .addCase(otpSignup.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -274,10 +320,22 @@ const authSlice = createSlice({
         state.error = action.payload;
         state.loading = false;
       });
-
+    builder
+      .addCase(googleSignIn.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(googleSignIn.fulfilled, (state, action) => {
+        state.user = action.payload;
+        state.isAuthenticated = true;
+        state.loading = false;
+      })
+      .addCase(googleSignIn.rejected, (state, action) => {
+        state.error = action.payload;
+        state.loading = false;
+      });
   },
-
 });
 
-export const { logout } = authSlice.actions;
+export const { logout ,clearOtp} = authSlice.actions;
 export default authSlice.reducer;
