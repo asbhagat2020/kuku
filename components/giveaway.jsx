@@ -6,7 +6,7 @@ import Lottie from "react-lottie-player";
 import clothHangerAnimation from "../public/lottieFiles/cloth_hanger.json";
 import playgroundAnimation from "../public/lottieFiles/playground.json";
 import giftboxAnimation from "../public/lottieFiles/giftbox.json";
-import homeAnimation from "../public/lottieFiles/home.json";
+import homeAnimation from "../public/lottieFiles/homes.json";
 
 const Giveaway = () => {
   const [currentStep, setCurrentStep] = useState(1);

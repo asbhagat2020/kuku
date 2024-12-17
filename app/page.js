@@ -12,7 +12,7 @@ import MarketPlace from "@/components/home/MarketPlace";
 import Popup from "@/components/home/Popup";
 import Selling from "@/components/home/Selling";
 import StriteSection from "@/components/home/StriteSection";
-import homeAnimation from "../public/lottieFiles/home.json";
+import homeAnimation from "../public/lottieFiles/homes.json";
 import { useDispatch, useSelector } from "react-redux";
 import { getProducts,resetNotificationFlag } from "@/store/product/productSlice";
 
