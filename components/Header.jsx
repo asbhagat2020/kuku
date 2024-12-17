@@ -14,6 +14,8 @@ import { BottomNavigation } from "./BottomNavigation";
 import SettingsDropdown from "./SettingsDropdown";
 import { signIn, signOut, useSession } from "next-auth/react";
 import Cookies from "js-cookie";
+import { useDispatch } from "react-redux";
+import { logout } from "@/store/auth/authSlice";
 
 const Header = () => {
 
@@ -35,6 +37,7 @@ const Header = () => {
   const [isLocalToken, setIsLocalToken] = useState(false);
   const { data: session, status } = useSession();
   const router=useRouter()
+  const dispatch=useDispatch()
   useEffect(() => {
     const token = Cookies.get('authToken');
     if (token) {
@@ -138,7 +141,10 @@ const Header = () => {
       setSuggestions([]);
     }
   };
-
+  const handleGoogleSignOut=()=>{
+    signOut()
+    dispatch(logout())
+  }
   // Paths where the notification icon should be disabled
   const disabledNotificationPaths = [""];
   const isNotificationDisabled = disabledNotificationPaths.includes(path);
@@ -195,6 +201,7 @@ const Header = () => {
   const handleLocalSignOut = () => {
     Cookies.remove('authToken');
     setIsLocalToken(false);
+    dispatch(logout())
   };
   const handleLocalSignIn=()=>{
     router.push('/login')
@@ -475,7 +482,7 @@ const Header = () => {
                     onClick={() => {
                       // Check which authentication method is active
                       if (session) {
-                        signOut();
+                        handleGoogleSignOut()
                       } else {
                         handleLocalSignOut();
                       }

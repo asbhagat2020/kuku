@@ -1,8 +1,9 @@
 "use client"; // Ensure Client-Side rendering
 
-import { signinOtp, verifySigninOtp } from "@/store/auth/authSlice";
+import { googleSignIn, signinOtp, verifySigninOtp } from "@/store/auth/authSlice";
+import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 
 export default function Login() {
@@ -13,6 +14,8 @@ export default function Login() {
   const [timer, setTimer] = useState(120); // Timer for 2 minutes (120 seconds)
   const dispatch = useDispatch();
   const router = useRouter();
+  const { data: session, status } = useSession();
+
   const handleSendOtp = () => {
     dispatch(signinOtp({ emailOrPhone }));
     setIsOtpSent(true);
@@ -42,6 +45,21 @@ export default function Login() {
   const handleCheckboxChange = (e) => {
     setIsChecked(e.target.checked);
   };
+  const handleGoogleSignIn = async () => {
+    signIn('google')
+  };
+  useEffect(() => {
+    const handleGoogleSignIn = async () => {
+      if (session) {
+        const res = await dispatch(googleSignIn({ session }));
+        if (res.type === "auth/googleSignIn/fulfilled") {
+          router.push("/");
+        }
+      }
+    };
+
+    handleGoogleSignIn(); // Call the async function inside useEffect
+  }, [session, dispatch, router]);
 
   return (
     <div className="flex flex-col md:flex-row h-[800px]">
@@ -160,7 +178,7 @@ export default function Login() {
         {/* Social Login */}
         <div className="w-full max-w-md mt-6">
           {/* Google Login */}
-          <button className="w-full flex items-center justify-center p-3 bg-gray-100 border border-gray-300 rounded-lg mb-4">
+          <button onClick={handleGoogleSignIn} className="w-full flex items-center justify-center p-3 bg-gray-100 border border-gray-300 rounded-lg mb-4">
             <img
               src="/devicon_google.png"
               alt="Google"
