@@ -7,6 +7,7 @@ import DownloadKuku from "@/components/home/DownloadKuku";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { removeFromCart } from "@/store/cart/cartSlice";
+import { useRouter } from "next/navigation";
 
 export default function Cart() {
   const [isCouponPopupVisible, setIsCouponPopupVisible] = useState(false);
@@ -77,6 +78,13 @@ export default function Cart() {
   useEffect(() => {
     setSubtotal(subTotal);
   }, [cartItems, discount]);
+const token = useSelector((store)=>store.auth.token)
+const router = useRouter()
+  useEffect(() => {
+    if (!token) {
+      router.push("/");
+    }
+  }, [token]);
 
   return (
     <>

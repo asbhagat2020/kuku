@@ -11,17 +11,26 @@ export default function Login() {
   const [otp, setOtp] = useState("");
   const [isChecked, setIsChecked] = useState(false);
   const [isOtpSent, setIsOtpSent] = useState(false); // State to track if OTP is sent
-  const [timer, setTimer] = useState(120); // Timer for 2 minutes (120 seconds)
+  const [timer, setTimer] = useState(0); // Timer for 2 minutes (120 seconds)
   const dispatch = useDispatch();
   const router = useRouter();
   const { data: session, status } = useSession();
+  
 
-  const handleSendOtp = () => {
-    dispatch(signinOtp({ emailOrPhone }));
+  const handleSendOtp = async () => {
+    const res = await dispatch(signinOtp({ emailOrPhone }));
+ 
     setIsOtpSent(true);
-    setTimer(60); // Reset timer
+  
+    // Calculate remaining time to expire
+    const currentTime = Date.now(); // Current time in milliseconds
+    const remainingTimeInMs = +res.payload.otpExpires - currentTime; // Remaining time in milliseconds
+    const remainingTimeInSeconds = Math.ceil(remainingTimeInMs / 1000); // Convert to seconds and round up
+  console.log({remainingTimeInSeconds,remainingTimeInMs})
+    setTimer(remainingTimeInSeconds);
     startTimer();
   };
+  
   const handleContinue = async () => {
     console.log("heree");
     const res = await dispatch(verifySigninOtp({ emailOrPhone, otp }));
@@ -48,6 +57,7 @@ export default function Login() {
   const handleGoogleSignIn = async () => {
     signIn('google')
   };
+
   useEffect(() => {
     const handleGoogleSignIn = async () => {
       if (session) {
@@ -147,17 +157,23 @@ export default function Login() {
           <div className="flex flex-col space-y-4">
             {/* Send OTP Button */}
             <button
-              type="button" // Keep this button as type="button" since it's not submitting a form
-              className={`w-full p-3 ${
-                isOtpSent
-                  ? "bg-gray-300 cursor-not-allowed opacity-50"
-                  : "bg-yellow-400"
-              } text-black font-semibold font-karla rounded-lg`}
-              onClick={handleSendOtp} // Function to send OTP
-              disabled={isOtpSent} // Disable this button when OTP is already sent
-            >
-              {isOtpSent ? "OTP Sent" : "Send OTP"}
-            </button>
+            type="button"
+            className={`w-full p-3 ${
+            isOtpSent && timer > 0
+            ? "bg-gray-300 cursor-not-allowed opacity-50"
+            : "bg-yellow-400"
+           } text-black font-semibold font-karla rounded-lg`}
+            onClick={handleSendOtp}
+            disabled={isOtpSent && timer > 0} // Disable when timer is running
+          >
+          {isOtpSent && timer > 0
+          ? `Resend OTP`
+          : isOtpSent
+          ? "Resend OTP"
+          : "Send OTP"}
+        </button>
+
+
 
             {/* Continue Button */}
             <button

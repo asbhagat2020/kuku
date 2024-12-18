@@ -14,8 +14,9 @@ import { BottomNavigation } from "./BottomNavigation";
 import SettingsDropdown from "./SettingsDropdown";
 import { signIn, signOut, useSession } from "next-auth/react";
 import Cookies from "js-cookie";
-import { useDispatch } from "react-redux";
-import { logout } from "@/store/auth/authSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { logout, token } from "@/store/auth/authSlice";
+
 
 const Header = () => {
 
@@ -38,15 +39,12 @@ const Header = () => {
   const { data: session, status } = useSession();
   const router=useRouter()
   const dispatch=useDispatch()
+
+
+  const { token } = useSelector((store) => store.auth);
   useEffect(() => {
-    const token = Cookies.get('authToken');
-    if (token) {
-      setIsLocalToken(true)
-    }
-    else {
-      setIsLocalToken(false)
-    }
-  }, [session])
+      setIsLocalToken(token)
+  }, [token])
 
   const handleToggle = (dropdown) => {
     setCurrentOpenDropdown(currentOpenDropdown === dropdown ? null : dropdown);
@@ -141,10 +139,25 @@ const Header = () => {
       setSuggestions([]);
     }
   };
-  const handleGoogleSignOut=()=>{
+  const handleGoogleSignOut = () => {
+    // Remove cookies
+    Cookies.remove('auth');
+    Cookies.remove('user');
+  
+    // Perform signOut and dispatch logout, then chain actions
     signOut()
-    dispatch(logout())
-  }
+      .then(() => {
+        // Dispatch Redux logout action after successful signOut
+        dispatch(logout());
+  
+        // Optional: Log a success message
+        console.log('Google sign out successful');
+      })
+      .catch((error) => {
+        // Handle any errors during signOut
+        console.error('Google sign out failed:', error);
+      });
+  };
   // Paths where the notification icon should be disabled
   const disabledNotificationPaths = [""];
   const isNotificationDisabled = disabledNotificationPaths.includes(path);
@@ -199,9 +212,20 @@ const Header = () => {
     setIsMobileSearchVisible(false); // Close mobile search when closing menu
   };
   const handleLocalSignOut = () => {
-    Cookies.remove('authToken');
-    setIsLocalToken(false);
+    // Remove cookies
+    Cookies.remove('auth');
+    Cookies.remove('user');
+  
+    // Dispatch logout and redirect on success
     dispatch(logout())
+      .then(() => {
+        // Optional: Redirect the user to the login page or homepage after logout
+        router.push('/login');
+      })
+      .catch((error) => {
+        // Handle any errors during the logout process (if any)
+        console.error('Logout failed:', error);
+      });
   };
   const handleLocalSignIn=()=>{
     router.push('/login')
@@ -480,7 +504,6 @@ const Header = () => {
 
                     <button
                     onClick={() => {
-                      // Check which authentication method is active
                       if (session) {
                         handleGoogleSignOut()
                       } else {
