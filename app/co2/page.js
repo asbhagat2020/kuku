@@ -3,7 +3,9 @@ import Header from "@/components/Header";
 import Co2Main from "@/components/userProfile/Co2Main";
 import React from "react";
 
+
 const page = () => {
+
     return (
     <>
     <Header/>

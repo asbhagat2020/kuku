@@ -2,12 +2,17 @@
 import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { buildStyles, CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import Lottie from "react-lottie-player";
+import { useRouter } from "next/navigation";
+
 
 const Co2Main = () => {
   const [co2Animation, setCo2Animation] = useState(null);
+
+ 
 
   useEffect(() => {
     const loadAnimation = async () => {
@@ -17,6 +22,14 @@ const Co2Main = () => {
     };
     loadAnimation();
   }, []);
+
+  const token = useSelector((store)=>store.auth.token)
+  const router = useRouter()
+    useEffect(() => {
+      if (!token) {
+        router.push("/");
+      }
+    }, [token]);
 
   if (!co2Animation) return null;
   const percentage = 68;

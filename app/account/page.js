@@ -9,27 +9,30 @@ export default function Account() {
   // State variables for form inputs
   const [KukuUsername, setKukuUsername] = useState("");
   const [fullName, setFullName] = useState("");
+  const [phone, setPhone] = useState("");
   const [Description, setDescription] = useState("");
   const [location, setLocation] = useState("");
   const [isChecked, setIsChecked] = useState(false);
   const [id,setId]=useState('')
   const dispatch = useDispatch();
-  const data = useSelector((state) => state?.auth?.user);
+  const name=useSelector((state)=>state.auth.user)
+
+
   const router=useRouter()
   // Fetch user data from Redux and update local state on component load
   useEffect(() => {
-    if (data?.user) {
-      setKukuUsername(data?.user?.username || "");
-      setFullName(data?.user?.name || "");
-      setId(data?.user?._id || "")
+    if (name) {
+      setKukuUsername(name?.username || "");
+      setFullName(name?.name || "");
+      setId(name?._id || "")
     }
-  }, [data]);
+  }, [name]);
 
   // Handle form submission
   const handleSubmit = async(e) => {
     e.preventDefault();
-    console.log({ KukuUsername, fullName, Description, location, isChecked });
-    const res=await dispatch(updateDetails({ KukuUsername, fullName, Description, location, isChecked,id}))
+    console.log({ KukuUsername, fullName, Description,phone, location, isChecked });
+    const res=await dispatch(updateDetails({ KukuUsername, fullName,phone, Description, location, isChecked,id}))
     if(res.type==="auth/updateDetails/fulfilled"){
       router.push('/')
     }
@@ -89,6 +92,21 @@ export default function Account() {
               placeholder="Enter your full name"
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
+              className="w-full p-3 border border-gray-300 bg-gray-100 rounded-lg text-start text-black text-sm font-normal font-karla leading-none outline-none"
+              required
+            />
+          </div>
+
+          <div className="mb-4">
+            <label className="text-black text-base font-karla font-bold mb-2 block">
+              Phone Number
+            </label>
+            <input
+              type="tel"           
+  pattern="[\+]{0,1}[0-9]{10,15}"
+              placeholder="Enter your phone number"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
               className="w-full p-3 border border-gray-300 bg-gray-100 rounded-lg text-start text-black text-sm font-normal font-karla leading-none outline-none"
               required
             />

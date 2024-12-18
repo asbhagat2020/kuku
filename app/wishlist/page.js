@@ -4,8 +4,19 @@ import Link from 'next/link';
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import DownloadKuku from "@/components/home/DownloadKuku";
+import { useRouter } from "next/navigation";
+import { useEffect} from "react";
+import { useSelector } from "react-redux";
 
 export default function Wishlist() {
+
+  const token = useSelector((store)=>store.auth.token)
+const router = useRouter()
+  useEffect(() => {
+    if (!token) {
+      router.push("/");
+    }
+  }, [token]);
   return (
     <>
       <Header />

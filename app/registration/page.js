@@ -1,6 +1,6 @@
 "use client"; // Ensure Client-Side rendering
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef  } from "react";
 import Link from "next/link";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -21,6 +21,9 @@ export default function Home() {
   const router=useRouter()
   const dispatch=useDispatch()
   const { data: session, status } = useSession();
+;
+  const hasSentRef = useRef(false);
+
   const OtpSent=useSelector((state)=>state.auth.otpSend)
   useEffect(() => {
     console.log("OtpSent updated:", OtpSent);
@@ -110,32 +113,53 @@ export default function Home() {
     }
   };
   const handleRegister=async()=>{
-    const res=await dispatch(otpSignup({emailOrPhone,otp}))
-    dispatch(clearOtp())
-  }
-  const sendSessionToServer = async () => {
-    if (session) {
-      console.log(session);
-      const res= await dispatch(googleSignUp({session,status}))
-      if(res.type==='auth/googleSignUp/fulfilled'){
-        router.push('/account')
-      }
-
+    const res = await dispatch(otpSignup({emailOrPhone,otp}))
+    if(res.type=="auth/otpSignup/fulfilled"){
+      router.push('/account')
     }
-  };
+ 
+  }
+  // const sendSessionToServer = async () => {
+  //   if (session) {
+  //     console.log(session);
+  //     const res= await dispatch(googleSignUp({session,status}))
+  //     if(res.type==='auth/googleSignUp/fulfilled'){
+  //       router.push('/account')
+  //     }
+
+  //   }
+  // };
 
   // Watch session status and send data to server when authenticated
   useEffect(() => {
-    if (session) {
+    const sendSessionToServer = async () => {
+      console.log(session);
+      const res = await dispatch(googleSignUp({ session, status }));
+      if (res.type === "auth/googleSignUp/fulfilled") {
+        router.push("/account");
+      }
+    };
+
+    if (session && !hasSentRef.current) {
+      hasSentRef.current = true; // Mark the call as already made
       sendSessionToServer();
     }
-  }, [session,dispatch,router]);
+  }, [session, status, dispatch, router]);
+
+  useEffect(() => {
+    let interval = null;
+    if (isOtpSent && timer > 0) {
+      interval = setInterval(() => {
+        setTimer((prev) => prev - 1);
+      }, 1000);
+    } else if (timer === 0) {
+      clearInterval(interval);
+    }
+    return () => clearInterval(interval); // Clean up the interval
+  }, [isOtpSent, timer]);
 
   const handleSignIn = async () => {
-    const res=await signIn("google", { redirect: false });
-    if(res.type==='auth/signIn/fullfilled'){
-      router.push('/')
-    }
+    const res = await signIn("google", { redirect: false });
   };
 
   const sendOtp = () => {
