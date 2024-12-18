@@ -18,9 +18,11 @@ const CustomDateInput = ({ placeholder, name, value, onChange, error }) => {
         className="lg:w-[400px] h-[50px] px-5 rounded-lg border-2 border-gray-300 focus:border-blue-500 outline-none"
         readOnly
       />
-      <span className={`absolute left-5 transition-all ${
-        value ? 'text-xs text-blue-500 -translate-y-3 bg-white px-1' : 'text-gray-500 top-3 font-karla'
-      }`}>
+      <span
+        className={`absolute left-5 transition-all ${
+          value ? 'text-xs text-blue-500 -translate-y-3 bg-white px-1' : 'text-gray-500 top-3 font-karla'
+        }`}
+      >
         {placeholder}
       </span>
       <Calendar className="absolute right-5 top-3 text-pink-600" size={20} />
@@ -36,6 +38,24 @@ const CustomDateInput = ({ placeholder, name, value, onChange, error }) => {
         onChange={handleChange}
         customInput={<CustomInput />}
         dateFormat="yyyy-MM-dd"
+        minDate={new Date()} // Ensure only current and future dates can be selected
+        popperPlacement="bottom-start" // Ensure the calendar appears below the input
+        popperProps={{
+          modifiers: [
+            {
+              name: 'preventOverflow',
+              options: {
+                boundary: 'viewport',
+              },
+            },
+            {
+              name: 'offset',
+              options: {
+                offset: [0, 8], // Adjust spacing if necessary
+              },
+            },
+          ],
+        }}
       />
       {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
     </div>

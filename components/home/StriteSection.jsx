@@ -4,16 +4,16 @@ import Marquee from "react-fast-marquee";
 
 const StriteSection = () => {
   const texts = [
-    { title: "Strite" },
-    { title: "Stylish" },
-    { title: "Stylish" },
-    { title: "Strite" },
-    { title: "Stylish" },
-    { title: "Strite" },
-    { title: "Stylish" },
-    { title: "Strite" },
-    { title: "Stylish" },
-    { title: "Stylish" },
+    { title: "Sustainable" },
+    { title: "Circular Economy" },
+    { title: "Circular Economy" },
+    { title: "Sustainable" },
+    { title: "Circular Economy" },
+    { title: "Sustainable" },
+    { title: "Circular Economy" },
+    { title: "Sustainable" },
+    { title: "Circular Economy" },
+    { title: "Circular Economy" },
   ];
 
   return (
