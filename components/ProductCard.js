@@ -176,9 +176,9 @@ const ProductCard = ({ product }) => {
         </Link>{" "}
         |
         <Link href="/" className="hover">
-          {product?.productInfo.category}
+          {product?.category}
         </Link>{" "}
-        | <span className="font-bold">{product?.productInfo.title}</span>
+        | <span className="font-bold">{product?.title}</span>
       </div>
 
       <hr className="border-gray-300 mb-4" />
@@ -277,32 +277,32 @@ const ProductCard = ({ product }) => {
               className="inline-block px-4 py-2 text-black rounded-full text-xs font-semibold border  shadow-sm"
               style={{ backgroundColor: "#E6E6E6" }}
             >
-              {product?.productInfo.category}
+              {product?.category}
             </span>
             <span
               className="inline-block px-4 py-2 text-black rounded-full text-xs font-semibold border  shadow-sm"
               style={{ backgroundColor: "#E6E6E6" }}
             >
-              {product?.productInfo.gender}
+              UNISEX
             </span>
           </div>
 
-          <h1 className="text-3xl font-bold">{product?.productInfo.title}</h1>
+          <h1 className="text-3xl font-bold">{product?.name}</h1>
 
           <p className="text-gray-400" style={{ marginTop: "0.2rem" }}>
-            {product?.productInfo.description}
+            {product?.description}
           </p>
 
           <div className="text-2xl font-bold">
-            AED {product?.pricing.currentPrice}{" "}
+            AED {product?.price}{" "}
             <span style={{ color: "#30BD75", fontSize: "1.50rem" }}>
-              ({product?.pricing.discountPercentage}% OFF)
+              20% OFF
             </span>
             <p
               className="text-gray-400 line-through"
               style={{ fontSize: "0.985rem", margin: 0, fontWeight: "normal" }}
             >
-              MRP AED{product?.pricing.originalPrice}
+              MRP AED{product?.price}
             </p>
           </div>
 
@@ -310,13 +310,13 @@ const ProductCard = ({ product }) => {
             <div>
               <span className="font-bold">SIZE</span>
               <span className="inline-block ml-2 px-2 py-1 border border-pink-500 text-red-500 rounded">
-                {product?.productInfo.size}
+                {product?.size}
               </span>
             </div>
             <div>
-              <span className="font-bold">CONDITION:</span>
+              <span className="font-bold">CONDITION: </span>
               <span className="font-bold">
-                {product?.productInfo.condition}
+                {product?.usage}
               </span>
             </div>
           </div>

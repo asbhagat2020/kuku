@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Pagination } from "./Pagination"; // Import the Pagination component
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
@@ -12,6 +12,7 @@ import { FcLike } from "react-icons/fc";
 import { GoHeart } from "react-icons/go";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleWishlist } from "@/store/wishlist/wishlistSlice";
+import axios from 'axios';
 
 const cardData = [
   {
@@ -178,25 +179,30 @@ const cardData = [
   },
 ];
 
-
 export const ImagesComponent = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [isOfferPopupOpen, setIsOfferPopupOpen] = useState(false);
   const [offerSubmitted, setOfferSubmitted] = useState(false);
   const [likedCards, setLikedCards] = useState({});
+  const [data, setData] = useState([]);
 
   const cardsPerPage = 9;
 
   const indexOfLastCard = currentPage * cardsPerPage;
   const indexOfFirstCard = indexOfLastCard - cardsPerPage;
-  const currentCards = cardData.slice(indexOfFirstCard, indexOfLastCard);
+  const currentCards = data.slice(indexOfFirstCard, indexOfLastCard);
+
   const [isLiked, setIsLiked] = useState(false);
   const dispatch = useDispatch();
   const wishlist = useSelector((state) => state.wishlist.items);
   const handleClick = () => {
     setIsLiked(!isLiked);
   };
-  const totalPages = Math.ceil(cardData.length / cardsPerPage);
+  const totalPages = Math.ceil(data.length / cardsPerPage);
+
+  useEffect(()=>{
+    fetchProducts();
+  },[])
 
   const handleNextPage = () => {
     if (currentPage < totalPages) setCurrentPage(currentPage + 1);
@@ -271,19 +277,33 @@ export const ImagesComponent = () => {
     ),
   };
 
+  const fetchProducts = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/products`
+      );
+      const datavalue = response.data.products;
+      console.log(datavalue,"dddddddd")
+      setData(datavalue || []);
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+
+
   return (
     <div className="p-6 ml-8 h-auto w-auto font-karla z-10">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-        {currentCards.map((card) => (
-          <div key={card.id} className="flex flex-col">
+        {data.map((card) => (
+          <div key={card._id} className="flex flex-col">
             <div className="flex justify-between items-center space-x-4">
               <div className="flex space-x-4 items-center">
                 <img
-                  src={card.img}
+                  src="/profile_icon.svg"
                   alt="User avatar"
                   className="object-contain h-12 w-12"
                 />
-                <p className="font-bold text-sm">{card.user}</p>
+                <p className="font-bold text-sm">{card.seller.username}</p>
               </div>
               <button className="mt-2 px-4 sm:px-6 py-1 bg-custom-green text-white rounded-full">
                 Follow
@@ -294,9 +314,9 @@ export const ImagesComponent = () => {
               {/* Heart icon for like functionality */}
               <div
                 className="absolute top-4 right-4 w-12 h-12 flex items-center justify-center rounded-full bg-custom-gray cursor-pointer z-10"
-                onClick={() => handleLikeClick(card.id)}
+                onClick={() => handleLikeClick(card._id)}
               >
-                {wishlist.includes(card.id)  ? (
+                {wishlist.includes(card._id)  ? (
                   <FcLike className="text-2xl text-red-500" /> // Filled heart for wishlist items
                 ) : (
                   <GoHeart className="text-2xl text-gray-300" /> // Outline heart for non-wishlist items
@@ -305,7 +325,7 @@ export const ImagesComponent = () => {
 
               {/* Slider for product images */}
               <Slider {...innerSliderSettings}>
-                {card.productImg.map((imgSrc, imgIndex) => (
+                {card.images.map((imgSrc, imgIndex) => (
                   <div key={imgIndex}>
                     <Image
                       src={imgSrc}
@@ -320,7 +340,7 @@ export const ImagesComponent = () => {
 
               {/* Buy Now button and handshake icon - fixed position */}
               <div className="absolute w-full bottom-4 flex justify-evenly items-center px-4">
-                <Link href={`/selling-page/${card.id}`} className="w-[70%]">
+                <Link href={`/selling-page/${card._id}`} className="w-[70%]">
                   <button className="w-full p-2 py-[15px] sm:px-10 bg-custom-yellow text-black rounded-2xl font-bold mr-1">
                     Buy Now
                   </button>
@@ -347,7 +367,7 @@ export const ImagesComponent = () => {
             />
 
             <h5 className="text-sm font-medium text-gray-700 mt-4">
-              {card.title}
+              {card.name}
             </h5>
             <h2 className="text-lg sm:text-2xl font-bold text-gray-800">
               {card.price}
