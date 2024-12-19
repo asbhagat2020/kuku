@@ -3,7 +3,7 @@
 import { googleSignIn, signinOtp, verifySigninOtp } from "@/store/auth/authSlice";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useDispatch } from "react-redux";
 
 export default function Login() {
@@ -15,6 +15,7 @@ export default function Login() {
   const dispatch = useDispatch();
   const router = useRouter();
   const { data: session, status } = useSession();
+  const hasSentRef = useRef(false);
   
 
   const handleSendOtp = async () => {
@@ -61,15 +62,20 @@ export default function Login() {
   useEffect(() => {
     const handleGoogleSignIn = async () => {
       if (session) {
-        const res = await dispatch(googleSignIn({ session }));
+        const res = await dispatch(googleSignIn({ session,status }));
         if (res.type === "auth/googleSignIn/fulfilled") {
           router.push("/");
         }
       }
     };
+    if (session && !hasSentRef.current) {
+      hasSentRef.current = true; // Mark the call as already made
+      handleGoogleSignIn();
+    }
 
-    handleGoogleSignIn(); // Call the async function inside useEffect
-  }, [session, dispatch, router]);
+    // Call the async function inside useEffect
+  }, [session, dispatch,status, router]);
+
 
   return (
     <div className="flex flex-col md:flex-row h-[800px]">

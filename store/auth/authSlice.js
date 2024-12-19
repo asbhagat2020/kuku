@@ -7,6 +7,7 @@ import axios from "axios";
 import { signIn } from "next-auth/react";
 import Cookies from "js-cookie";
 
+
 const user =
   typeof window !== "undefined" && Cookies.get("user")
     ? JSON.parse(Cookies.get("user"))
@@ -15,20 +16,20 @@ const user =
         username: "",
         name: "",
       };
-     const token =
-     typeof window !== "undefined" && Cookies.get("auth")
-       ? JSON.parse(Cookies.get("auth"))
-       : null;
+const token =
+  typeof window !== "undefined" && Cookies.get("auth")
+    ? JSON.parse(Cookies.get("auth"))
+    : null;
 
-const initialState ={
+const initialState = {
   user: user,
-  token:token,
+  token: token,
   isAuthenticated: false,
   loading: false,
   error: null,
   otpSend: false,
   signupSuccess: false,
-}
+};
 
 export const registerOtp = createAsyncThunk(
   "auth/sendRegistrationOtp",
@@ -88,9 +89,9 @@ export const googleSignIn = createAsyncThunk(
           email: session?.user?.email,
         }
       );
-      
-      Cookies.set("auth",JSON.stringify(response.data.token))
-      Cookies.set("user",JSON.stringify(response.data.user))
+
+      Cookies.set("auth", JSON.stringify(response.data.token));
+      Cookies.set("user", JSON.stringify(response.data.user));
       showSuccessNotification("Google signup", "Sign up succesfull", 2000);
       return response.data;
     } catch (error) {
@@ -139,11 +140,10 @@ export const verifySigninOtp = createAsyncThunk(
           otp: +otp,
         }
       );
-      Cookies.set("auth",JSON.stringify(response.data.token))
-      Cookies.set("user",JSON.stringify(response.data.user))
+      Cookies.set("auth", JSON.stringify(response.data.token));
+      Cookies.set("user", JSON.stringify(response.data.user));
       showSuccessNotification("Login", "Login successfull", 2000);
-    return response.data
-
+      return response.data;
     } catch (error) {
       console.log(error);
       showErrorNotification("Login", error?.response?.data?.message);
@@ -165,7 +165,7 @@ export const otpSignup = createAsyncThunk(
           otp: +otp,
         }
       );
-console.log(response,"iiiiiiii")
+
       showSuccessNotification("Signup", response.data.message, 2000);
       return response.data.user;
     } catch (error) {
@@ -196,7 +196,7 @@ export const facebookSignIn = createAsyncThunk(
 export const updateDetails = createAsyncThunk(
   "auth/updateDetails",
   async (
-    { KukuUsername, fullName, Description, phone,location, isChecked, id },
+    { KukuUsername, fullName, Description, phone, location, isChecked, id },
     { rejectWithValue }
   ) => {
     console.log(fullName);
@@ -207,9 +207,10 @@ export const updateDetails = createAsyncThunk(
         {
           username: KukuUsername,
           name: fullName,
-          phone:phone,
+          phone: phone,
           description: Description,
           location: location,
+          anonymous: !isChecked,
         }
       );
       console.log(response.data.message);
@@ -230,9 +231,9 @@ const authSlice = createSlice({
       state.user = null;
       state.token = null;
     },
-    clearOtp:(state)=>{
-      state.otpSend=false
-    }
+    clearOtp: (state) => {
+      state.otpSend = false;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -344,5 +345,5 @@ const authSlice = createSlice({
   },
 });
 
-export const { logout ,clearOtp} = authSlice.actions;
+export const { logout, clearOtp } = authSlice.actions;
 export default authSlice.reducer;
