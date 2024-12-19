@@ -3,19 +3,6 @@ import React from "react";
 import Marquee from "react-fast-marquee";
 
 const StriteSection = () => {
-  const texts = [
-    { title: "Sustainable" },
-    { title: "Circular Economy" },
-    { title: "Circular Economy" },
-    { title: "Sustainable" },
-    { title: "Circular Economy" },
-    { title: "Sustainable" },
-    { title: "Circular Economy" },
-    { title: "Sustainable" },
-    { title: "Circular Economy" },
-    { title: "Circular Economy" },
-  ];
-
   return (
     <div
       className="relative max-w-[1550px] mx-auto min-h-[600px] md:min-h-[800px] lg:min-h-[1050px] overflow-hidden"
@@ -47,11 +34,11 @@ const StriteSection = () => {
             direction="left"
             loop={0}
           >
-            {texts.map((item, index) => (
+            {[...Array(10)].map((_, index) => (
               <div key={index} className="flex items-center">
                 <div>
                   <p className="mx-5 text-[#fde504] text-[36px] sm:text-[48px] md:text-[65px] lg:text-[90px] font-luckiest whitespace-nowrap">
-                    {item.title} -
+                    Sustainable -
                   </p>
                 </div>
               </div>
@@ -69,11 +56,11 @@ const StriteSection = () => {
             direction="left"
             loop={0}
           >
-            {texts.map((item, index) => (
+            {[...Array(10)].map((_, index) => (
               <div key={index} className="flex items-center">
                 <div>
                   <p className="mx-5 text-[#fde504] text-[36px] sm:text-[48px] md:text-[65px] lg:text-[90px] font-luckiest whitespace-nowrap">
-                    {item.title} -
+                    Circular Economy -
                   </p>
                 </div>
               </div>
