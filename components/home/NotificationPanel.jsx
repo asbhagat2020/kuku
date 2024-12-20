@@ -182,11 +182,11 @@ const NotificationPanel = ({ notifications, offers, onClose }) => {
           Price Information
         </p>
         <div className="flex justify-between text-sm text-gray-700 mb-2">
-          <p>Buyer's Offer</p>
+          <p>Buyer&apos;s Offer</p>
           <p className="font-bold text-[#FDE504]">₹120.00</p>
         </div>
         <div className="flex justify-between text-sm text-gray-700">
-          <p>Seller's Offer</p>
+          <p>Seller&apos;s Offer</p>
           <p className="font-bold text-[#FDE504]">₹140.00</p>
         </div>
       </div>
