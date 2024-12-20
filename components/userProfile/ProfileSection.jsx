@@ -1,19 +1,29 @@
 "use client";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Modal from "./Modal"; // Adjust the import path as needed
 import Link from "next/link";
+import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
+import Cookies from "js-cookie";
+import { format } from "timeago.js";
 
 const ProfileSection = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [imageSrc, setImageSrc] = useState("/kuku-suit 2.png");
+  const [image, setImage] = useState("/profile_icon.svg");
+  const [loading, setLoading] = useState();
+  const [error, setError] = useState();
+  const [user, setUser] = useState();
+
+  const details = useSelector((state) => state.auth.user);
+  const id = details._id;
 
   const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const imageUrl = URL.createObjectURL(file);
-      setImageSrc(imageUrl);
-    }
+    setFormData((prevState) => ({
+      ...prevState,
+      avatar: e.target.files[0],
+    }));
   };
 
   const handleEditClick = () => {
@@ -24,17 +34,20 @@ const ProfileSection = () => {
     setIsModalOpen(false);
   };
   const [formData, setFormData] = useState({
-    fullName: "",
+    avatar: null,
+    name: "",
     email: "",
-    phoneNumber: "",
-    address: "",
+    phone: "",
+    location: "",
   });
   const [formErrors, setFormErrors] = useState({
-    fullName: "",
+    avatar: null,
+    name: "",
     email: "",
-    phoneNumber: "",
-    address: "",
+    phone: "",
+    location: "",
   });
+
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -46,46 +59,126 @@ const ProfileSection = () => {
 
   const validateForm = () => {
     let errors = {};
-    if (!formData.fullName.trim()) {
-      errors.fullName = "Full Name is required";
+    if (!formData.name.trim()) {
+      errors.name = "Full Name is required";
     }
     if (!formData.email.trim()) {
       errors.email = "Email is required";
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
       errors.email = "Email address is invalid";
     }
-    if (!formData.phoneNumber.trim()) {
-      errors.phoneNumber = "Phone Number is required";
-    } else if (!/^\d{10}$/.test(formData.phoneNumber)) {
-      errors.phoneNumber = "Phone Number must be 10 digits";
+    if (!String(formData.phone).trim()) {
+      errors.phone = "Phone Number is required";
+    } else if (!/^\d{10}$/.test(String(formData.phone).trim())) {
+      errors.phone = "Phone Number must be 10 digits";
     }
-    if (!formData.address.trim()) {
-      errors.address = "Address is required";
+    if (!formData.location.trim()) {
+      errors.location = "Address is required";
     }
     return errors;
   };
 
-  const handleSubmit = (e) => {
+  const uploadImage = async (imageFile) => {
+   
+
+    const imageData = new FormData();
+    imageData.append("file", imageFile);
+    imageData.append("folder", "avatar"); // Append the folder field to the FormData
+
+    try {
+      const token = JSON.parse(Cookies.get("auth"));
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/upload/single`,
+        imageData, // Pass the FormData directly
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      console.log("Image upload successful:", response.data);
+      return response.data.fileUrl; // Assuming the response contains the image URL or relevant data
+    } catch (error) {
+      console.error("Image upload failed:", error);
+      throw error; // Re-throw the error for handling in the calling function
+    }
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const errors = validateForm();
+    const token = JSON.parse(Cookies.get("auth"));
+
     if (Object.keys(errors).length === 0) {
-      // No errors, proceed to submit the form
-      console.log("Form data:", formData);
-      setIsModalOpen(false);
-      setFormData({
-        fullName: "",
-        email: "",
-        phoneNumber: "",
-        address: "",
-      });
-      setFormErrors({
-        fullName: "",
-        email: "",
-        phoneNumber: "",
-        address: "",
-      });
+      try {
+        let uploadedImage = formData.avatar; 
+
+
+        if (uploadedImage && typeof uploadedImage !== "string") {
+          uploadedImage = await uploadImage(uploadedImage);
+        }
+      
+        // Create the data object, excluding avatar if no imageUrl is generated
+        let data = { ...formData };
+      
+        if (uploadedImage) {
+          data.avatar = uploadedImage; // Add avatar only if imageUrl is generated
+        } else {
+          delete data.avatar; // Remove avatar if no imageUrl is generated or if it's null
+        }
+ 
+        // Replace with your actual API endpoint URL
+        const apiUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/profile/edit/${id}`;
+
+        // Make the PATCH request with the updated formData
+        const response = await axios.patch(apiUrl, data, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        console.log("Form submission successful:", response.data);
+
+        // Close modal and reset form state
+        setIsModalOpen(false);
+        setUser(response.data.profile);
+        setFormData(response.data.profile);
+    
+        setFormErrors({
+          fullName: "",
+          email: "",
+          phoneNumber: "",
+          address: "",
+          api: "", // clear API error message
+        });
+      } catch (error) {
+        console.error("Error during form submission:", error);
+
+        // Handle errors (e.g., display error message)
+        setFormErrors({ api: "An error occurred while submitting the form." });
+      }
     } else {
-      setFormErrors(errors);
+      setFormErrors(errors); // Show form validation errors if any
+    }
+  };
+
+  useEffect(() => {
+    fetchUser();
+  }, []);
+
+  const fetchUser = async () => {
+    try {
+      const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/profile/details/${id}`;
+
+      const response = await axios.get(url);
+      setUser(response.data.profile);
+      setFormData(response.data.profile);
+      
+    } catch (err) {
+      setError("Failed to fetch product details");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -120,7 +213,7 @@ const ProfileSection = () => {
         <div className="flex flex-col lg:flex-row gap-[21px] mt-[103px]">
           <div className="lg:w-1/2 w-full min-h-[302px] rounded-lg shadow relative flex flex-col gap-[80px] ">
             <Image
-              src="profile_icon.svg"
+              src={user?.avatar || image}
               width={155}
               height={155}
               layout=""
@@ -130,15 +223,15 @@ const ProfileSection = () => {
             <div className="flex px-[37px] lg:px-[64px] pt-[93px] gap-2 lg:gap-4 xl:gap-[52px]">
               <div className="flex flex-col">
                 <p className="text-black xl:text-[28px] font-bold font-karla">
-                  Rohan
+                  {user?.name}
                 </p>
                 <p className="text-black/40 xl:text-[20px] font-normal font-karla">
-                  Kuku1222
+                  {user?.username}
                 </p>
               </div>
               <div className="flex flex-col">
                 <p className="text-black xl:text-[28px] font-bold font-karla">
-                  53
+                  {user?.followers?.length}
                 </p>
                 <p className="text-black xl:text-xl font-normal font-karla leading-normal">
                   Followers
@@ -146,7 +239,7 @@ const ProfileSection = () => {
               </div>
               <div className="flex flex-col">
                 <p className="text-black xl:text-[28px] font-bold font-karla">
-                  453
+                  {user?.following?.length}
                 </p>
                 <p className="text-black xl:text-[20px] font-normal font-karla">
                   Following
@@ -155,7 +248,7 @@ const ProfileSection = () => {
               <div className="flex flex-col">
                 <div className="flex gap-[16px]">
                   <p className="text-black xl:text-[28px] font-bold font-karla">
-                    4.7
+                    {user?.rating}
                   </p>
                   <Image width={23} height={23} src="rating.svg" alt="" />
                 </div>
@@ -186,22 +279,19 @@ const ProfileSection = () => {
                 Description
               </p>
               <p className="text-[#515151] text-base font-medium font-karla leading-normal">
-                Discover your unique style with our curated collection at my
-                feed. I offer a diverse range of trendy and timeless pieces,
-                from chic dresses and casual wear to statement accessories and
-                footwear.
+                {user?.description}
               </p>
               <p className="text-black text-base font-bold font-karla leading-tight ">
                 Lives In
               </p>
               <p className=" text-[#515151] text-base font-medium font-karla leading-normal">
-                Dubai, UAE
+                {user?.location}
               </p>
               <p className="text-black text-base font-bold font-karla leading-tight ">
                 Joined Kuku
               </p>
               <p className=" text-[#515151] text-base font-medium font-karla leading-normal">
-                1 year Ago
+                {format(user?.joinedOn)}
               </p>
             </div>
           </div>
@@ -216,13 +306,20 @@ const ProfileSection = () => {
           <div className="w-[80px] h-[80px] md:w-[114px] md:h-[114px] rounded-full bg-[#fde504] flex justify-center items-center relative">
             {/* Profile Image */}
             <Image
-              unoptimized
-              width={100}
-              height={100}
-              className="rounded-full object-cover"
-              src={imageSrc}
-              alt="Profile Picture"
-            />
+  unoptimized
+  width={100}
+  height={100}
+  className="rounded-full object-cover"
+  src={
+    typeof window !== 'undefined' && formData.avatar instanceof File
+      ? URL.createObjectURL(formData.avatar)
+      : user?.avatar
+      ? user.avatar
+      : imageSrc
+  }
+  alt="Profile Picture"
+/>
+
 
             {/* Hidden file input to change the image */}
             <input
@@ -257,14 +354,14 @@ const ProfileSection = () => {
             <div>
               <input
                 type="text"
-                name="fullName"
-                value={formData.fullName}
+                name="name"
+                value={formData.name}
                 onChange={handleInputChange}
                 className="border rounded-[13px] w-full p-2 bg-[#F7F7F7]"
                 placeholder="Full Name"
               />
-              {formErrors.fullName && (
-                <p className="text-red-500 text-sm">{formErrors.fullName}</p>
+              {formErrors.name && (
+                <p className="text-red-500 text-sm">{formErrors.name}</p>
               )}
             </div>
             <div className="mt-4">
@@ -283,14 +380,14 @@ const ProfileSection = () => {
             <div className="mt-4">
               <input
                 type="text"
-                name="phoneNumber"
-                value={formData.phoneNumber}
+                name="phone"
+                value={formData.phone}
                 onChange={handleInputChange}
                 className="border rounded-[13px] w-full p-2 bg-[#F7F7F7]"
                 placeholder="Phone Number"
               />
-              {formErrors.phoneNumber && (
-                <p className="text-red-500 text-sm">{formErrors.phoneNumber}</p>
+              {formErrors.phone && (
+                <p className="text-red-500 text-sm">{formErrors.phone}</p>
               )}
             </div>
             <div className="mt-4">
@@ -298,12 +395,12 @@ const ProfileSection = () => {
                 rows={2}
                 className="border rounded-[13px] w-full p-2 bg-[#F7F7F7] resize-none"
                 placeholder="Address"
-                name="address"
-                value={formData.address}
+                name="location"
+                value={formData.location}
                 onChange={handleInputChange}
               />
-              {formErrors.address && (
-                <p className="text-red-500 text-sm">{formErrors.address}</p>
+              {formErrors.location && (
+                <p className="text-red-500 text-sm">{formErrors.location}</p>
               )}
             </div>
             <div className="mt-4 flex justify-center w-full">

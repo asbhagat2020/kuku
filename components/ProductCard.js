@@ -32,7 +32,7 @@ const ProductCard = ({ product }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0); // State to keep track of the current image
   const [isDateSelected, setIsDateSelected] = useState(false);
   // const images = [amiriImg, amiriImg];
-  const images = product.images;
+  const images = product?.images;
   console.log(images);
 
   // const [isRentPopupOpen, setIsRentPopupOpen] = useState(false);
