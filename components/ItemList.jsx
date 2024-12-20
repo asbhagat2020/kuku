@@ -11,6 +11,8 @@ const ItemList = () => {
     description: "",
     category: "",
     subCategory:"",
+    gender:"",
+    condition:"",
     brand: "",
     size: "",
     usage: "",
@@ -74,6 +76,8 @@ const ItemList = () => {
     if (!formData.description.trim())
       newErrors.description = "Description is required";
     if (!formData.category.trim()) newErrors.category = "Category is required";
+    if (!formData.gender) newErrors.gender = "gender is required";
+    if (!formData.condition) newErrors.condition = "condition is required";
     if (!formData.brand) newErrors.brand = "Brand is required";
     if (!formData.size) newErrors.size = "Size is required";
     if (!formData.usage) newErrors.usage = "Usage is required";
@@ -109,6 +113,8 @@ const ItemList = () => {
           description:formData.description,
           category: formData.category,
           subCategory: formData.subCategory,
+          gender: formData.gender,
+          condition:formData.condition,
           brand: formData.brand,
           size: formData.size,
           usage: formData.usage,
@@ -334,6 +340,51 @@ const ItemList = () => {
             />
             {errors.subCategory && (
               <p className="text-red-500 mt-1">{errors.subCategory}</p>
+            )}
+          </div>
+          <div>
+            <label className="block text-[#151515] text-base font-bold font-karla mb-2">
+              Gender
+            </label>
+            <select
+              name="brand"
+              value={formData.gender}
+              onChange={handleChange}
+              className={`w-full p-2 border ${
+                errors.gender ? "border-red-500" : "border-[#868686]"
+              } rounded-lg max-w-[500px]`}
+            >
+              <option value="">Select Gender</option>
+              <option value="Men">Men</option>
+              <option value="Women">Women</option>
+              <option value="Kids">Kids</option>
+            </select>
+            {errors.gender && (
+              <p className="text-red-500 mt-1">{errors.gender}</p>
+            )}
+          </div>
+
+          <div>
+            <label className="block text-[#151515] text-base font-bold font-karla mb-2">
+              Condition
+            </label>
+            <select
+              name="brand"
+              value={formData.condition}
+              onChange={handleChange}
+              className={`w-full p-2 border ${
+                errors.condition ? "border-red-500" : "border-[#868686]"
+              } rounded-lg max-w-[500px]`}
+            >
+              <option value="">Select Condition</option>
+              <option value="Excellent">Excellent</option>
+              <option value="Good">Good</option>
+              <option value="Bad">Bad</option>
+              <option value="Needs Repair">Needs Repair</option>
+              <option value="Like New">Like New</option>
+            </select>
+            {errors.condition && (
+              <p className="text-red-500 mt-1">{errors.condition}</p>
             )}
           </div>
 
