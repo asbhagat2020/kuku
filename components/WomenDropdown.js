@@ -231,7 +231,7 @@ export default function WomenDropdown({ isOpen, onToggle }) {
         onMouseEnter={() => setIsWomenHovered(true)}
         onMouseLeave={() => setIsWomenHovered(false)}
       >
-        <div className="relative lg:py-[33px]">
+        <div className="relative lg">
           <a href="#" className={`${
                   isHome ? "text-[#fefae5]" : "text-black"
                 } text-base font-bold font-karla leading-tight hover:text-pink-500`}>

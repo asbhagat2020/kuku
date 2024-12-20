@@ -247,7 +247,7 @@ export default function MenDropdown({ isOpen, onToggle }) {
         onMouseEnter={() => setIsMenHovered(true)}
         onMouseLeave={() => setIsMenHovered(false)}
       >
-        <div className="relative lg:py-[33px]">
+        <div className="relative lg">
           <a
             href="#"
             className={`${
