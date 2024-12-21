@@ -492,9 +492,11 @@ const Header = () => {
                       Co2 Savings
                     </div>
                   </Link>
+                  <Link href="/addresslist">
                   <div className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold">
                     Address List
                   </div>
+                  </Link>
                   <Link href="#">
                     <div className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold">
                       Setting
