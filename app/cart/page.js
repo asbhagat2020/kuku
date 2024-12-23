@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { removeFromCart } from "@/store/cart/cartSlice";
 import { useRouter } from "next/navigation";
+import axios from "axios";
 
 export default function Cart() {
   const [isCouponPopupVisible, setIsCouponPopupVisible] = useState(false);
@@ -15,8 +16,12 @@ export default function Cart() {
   const [isCouponApplied, setisCouponApplied] = useState(false);
   const [subtotal, setSubtotal] = useState(250); // Initial subtotal
   const [discount, setDiscount] = useState(0);
+  const [error, setError] = useState({});
+  const [loading, setLoading] = useState({});
+  const [cart, setCart] = useState({});
   const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.cart.items);
+ 
   const handleRemoveCoupon = () => {
     setAppliedCoupon("");
     setisCouponApplied(false);
@@ -71,20 +76,52 @@ export default function Cart() {
 
   // const total = subtotal - discount;
 
-  const subTotal = cartItems.reduce((total, item) => total + item.pricing.currentPrice, 0);
+  const subTotal = cartItems.reduce(
+    (total, item) => total + item?.pricing?.currentPrice,
+    0
+  );
   const total = subtotal - discount;
 
   // Update state dynamically
   useEffect(() => {
     setSubtotal(subTotal);
   }, [cartItems, discount]);
-const token = useSelector((store)=>store.auth.token)
-const router = useRouter()
-  useEffect(() => {
-    if (!token) {
-      router.push("/");
+
+  const token = useSelector((store) => store.auth.token);
+  const username = useSelector((store) => store.auth.user);
+ 
+  const router = useRouter();
+  // useEffect(() => {
+  //   if (!token) {
+  //     router.push("/");
+  //   }
+  // }, [token]);
+
+  const fetchCartDetails = async () => {
+ 
+    try {
+      const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/product/cart`;
+
+      const response = await axios.get(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setCart(response.data);
+      console.log(response.data, "Product Data");
+    } catch (err) {
+      setError("Failed to fetch product details");
+    } finally {
+      setLoading(false);
     }
-  }, [token]);
+  };
+
+  useEffect(() => {
+    if (token) {
+   
+      fetchCartDetails();
+    }
+  }, [token]); 
 
   return (
     <>
@@ -96,9 +133,9 @@ const router = useRouter()
         </div>
 
         {/* Checkbox and Selected Items */}
-        {cartItems.length>0 ? (
+        {cartItems.length > 0 ? (
           <>
-              <div className="flex items-center gap-2 mb-4">
+            <div className="flex items-center gap-2 mb-4">
               <label className="custom-checkbox">
                 <input type="checkbox" />
                 <span className="checkmark"></span>
@@ -131,10 +168,10 @@ const router = useRouter()
                         <div className="flex flex-col justify-start items-start gap-3 w-full">
                           <div>
                             <div className="text-black text-lg md:text-[18px] font-bold font-karla">
-                              {item?.productInfo.title}
+                              {item?.productInfo?.title}
                             </div>
                             <div className="text-[#b4b4b4] text-sm md:text-base font-normal font-karla">
-                              {item?.productInfo.description}
+                              {item?.productInfo?.description}
                             </div>
                           </div>
 
@@ -145,7 +182,7 @@ const router = useRouter()
                               </div>
                               <div className="w-8 h-8 md:w-[29.6px] border border-[#e4086f] flex justify-center items-center">
                                 <div className="text-[#e4086f] text-sm md:text-[16px] font-normal font-karla">
-                                  {item?.productInfo.size}
+                                  {item?.productInfo?.size}
                                 </div>
                               </div>
                             </div>
@@ -302,24 +339,35 @@ const router = useRouter()
                   {/* Payment Methods */}
                   <div className="flex justify-around mt-3">
                     <img className="h-5" src="/payment1.png" alt="Payment1" />
-                    <img className="h-5" src="/mastercard.png" alt="MasterCard" />
+                    <img
+                      className="h-5"
+                      src="/mastercard.png"
+                      alt="MasterCard"
+                    />
                     <img className="h-5" src="/paypal.png" alt="PayPal" />
                     <img className="h-5" src="/visa.png" alt="Visa" />
                   </div>
                 </div>
               </div>
             </div>
-            </>
-        ):(<>
-        <div className="w-full h-[50vh] flex justify-center items-center">
-          <div className="text-center ">
-            <h2 className="font-luckiest text-4xl mb-4">No items here :(</h2>
-            <Link className="text-pink-400 font-karla text-xl" href={'/selling-page'}>Continue purchase</Link>
+          </>
+        ) : (
+          <>
+            <div className="w-full h-[50vh] flex justify-center items-center">
+              <div className="text-center ">
+                <h2 className="font-luckiest text-4xl mb-4">
+                  No items here :(
+                </h2>
+                <Link
+                  className="text-pink-400 font-karla text-xl"
+                  href={"/selling-page"}
+                >
+                  Continue purchase
+                </Link>
+              </div>
             </div>
-        </div>
-        </>
-      )}
-
+          </>
+        )}
       </div>
       {isCouponPopupVisible && (
         <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-50">

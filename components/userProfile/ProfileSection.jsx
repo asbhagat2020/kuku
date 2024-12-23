@@ -8,13 +8,14 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { format } from "timeago.js";
 
-const ProfileSection = () => {
+const ProfileSection = (user) => {
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [imageSrc, setImageSrc] = useState("/kuku-suit 2.png");
   const [image, setImage] = useState("/profile_icon.svg");
   const [loading, setLoading] = useState();
   const [error, setError] = useState();
-  const [user, setUser] = useState();
+  // const [user, setUser] = useState();
 
   const details = useSelector((state) => state.auth.user);
   const id = details._id;
@@ -28,6 +29,7 @@ const ProfileSection = () => {
 
   const handleEditClick = () => {
     setIsModalOpen(true);
+    setFormData(user.user);
   };
 
   const handleCloseModal = () => {
@@ -163,24 +165,7 @@ const ProfileSection = () => {
     }
   };
 
-  useEffect(() => {
-    fetchUser();
-  }, []);
-
-  const fetchUser = async () => {
-    try {
-      const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/profile/details/${id}`;
-
-      const response = await axios.get(url);
-      setUser(response.data.profile);
-      setFormData(response.data.profile);
-      
-    } catch (err) {
-      setError("Failed to fetch product details");
-    } finally {
-      setLoading(false);
-    }
-  };
+ 
 
   return (
     <div className="max-w-[1550px] mx-auto">
@@ -213,7 +198,7 @@ const ProfileSection = () => {
         <div className="flex flex-col lg:flex-row gap-[21px] mt-[103px]">
           <div className="lg:w-1/2 w-full min-h-[302px] rounded-lg shadow relative flex flex-col gap-[80px] ">
             <Image
-              src={user?.avatar || image}
+              src={user?.user?.avatar || image}
               width={155}
               height={155}
               layout=""
@@ -223,15 +208,15 @@ const ProfileSection = () => {
             <div className="flex px-[37px] lg:px-[64px] pt-[93px] gap-2 lg:gap-4 xl:gap-[52px]">
               <div className="flex flex-col">
                 <p className="text-black xl:text-[28px] font-bold font-karla">
-                  {user?.name}
+                  {user?.user?.name}
                 </p>
                 <p className="text-black/40 xl:text-[20px] font-normal font-karla">
-                  {user?.username}
+                  {user?.user?.username}
                 </p>
               </div>
               <div className="flex flex-col">
                 <p className="text-black xl:text-[28px] font-bold font-karla">
-                  {user?.followers?.length}
+                  {user?.user?.followers?.length}
                 </p>
                 <p className="text-black xl:text-xl font-normal font-karla leading-normal">
                   Followers
@@ -239,7 +224,7 @@ const ProfileSection = () => {
               </div>
               <div className="flex flex-col">
                 <p className="text-black xl:text-[28px] font-bold font-karla">
-                  {user?.following?.length}
+                  {user?.user?.following?.length}
                 </p>
                 <p className="text-black xl:text-[20px] font-normal font-karla">
                   Following
@@ -248,7 +233,7 @@ const ProfileSection = () => {
               <div className="flex flex-col">
                 <div className="flex gap-[16px]">
                   <p className="text-black xl:text-[28px] font-bold font-karla">
-                    {user?.rating}
+                    {user?.user?.rating}
                   </p>
                   <Image width={23} height={23} src="rating.svg" alt="" />
                 </div>
@@ -279,19 +264,19 @@ const ProfileSection = () => {
                 Description
               </p>
               <p className="text-[#515151] text-base font-medium font-karla leading-normal">
-                {user?.description}
+                {user?.user?.description}
               </p>
               <p className="text-black text-base font-bold font-karla leading-tight ">
                 Lives In
               </p>
               <p className=" text-[#515151] text-base font-medium font-karla leading-normal">
-                {user?.location}
+                {user?.user?.location}
               </p>
               <p className="text-black text-base font-bold font-karla leading-tight ">
                 Joined Kuku
               </p>
               <p className=" text-[#515151] text-base font-medium font-karla leading-normal">
-                {format(user?.joinedOn)}
+                {format(user?.user?.joinedOn)}
               </p>
             </div>
           </div>
@@ -313,8 +298,8 @@ const ProfileSection = () => {
   src={
     typeof window !== 'undefined' && formData.avatar instanceof File
       ? URL.createObjectURL(formData.avatar)
-      : user?.avatar
-      ? user.avatar
+      : user?.user?.avatar
+      ? user?.user?.avatar
       : imageSrc
   }
   alt="Profile Picture"

@@ -90,10 +90,46 @@ const ItemList = () => {
     return Object.keys(newErrors).length === 0;
   };
 
+  const uploadImage = async (imageFile) => {
+    const imageData = new FormData();
+    for(let i=0; i<imageFile?.length;i++){
+    imageData.append("files", imageFile[i]);
+    imageData.append("folder", "avatar");
+    }
+    
+
+    try {
+          const token = JSON.parse(Cookies.get("auth"));
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/upload/multiple`,
+        imageData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      return response.data.fileUrls;
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      throw new Error("Failed to upload image");
+    }
+  };
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (validateForm()) {
       try {
+
+        let imageUrl = null;
+
+        if (formData.images) {
+          imageUrl = await uploadImage(formData.images);
+        }
+
+     
         // Retrieve the token from cookies
         const token = JSON.parse(Cookies.get('auth')); // Assuming 'auth' is the key used to store the token
   
@@ -121,7 +157,7 @@ const ItemList = () => {
           price: formData.price,
           damages: formData.damages,
           openToRent: formData.rentOption,
-          images: [],
+          images: imageUrl,
         };
 
         const payload = {
@@ -347,7 +383,7 @@ const ItemList = () => {
               Gender
             </label>
             <select
-              name="brand"
+              name="gender"
               value={formData.gender}
               onChange={handleChange}
               className={`w-full p-2 border ${
@@ -369,7 +405,7 @@ const ItemList = () => {
               Condition
             </label>
             <select
-              name="brand"
+              name="condition"
               value={formData.condition}
               onChange={handleChange}
               className={`w-full p-2 border ${

@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import { useState, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import ReviewItem from "./ReviewItem";
 import { Chart } from "./Chart";
 import Slider from "react-slick/lib/slider";
@@ -96,7 +96,7 @@ const SellingCards = ({ data }) => {
                   )}
                 </div>
               </div>
-              <Link href={item.link}>
+              <Link href={`/selling-page/${item._id}`}>
                 <div className="absolute min-w-[204px] bottom-4 left-4 text-center z-10 bg-[#fde504] px-[50px] py-[20px] rounded-[20px]">
                   <button className="text-[#202020] text-base font-bold font-karla leading-tight">
                     Buy Now
@@ -120,22 +120,22 @@ const SellingCards = ({ data }) => {
                 onSubmit={handleOfferSubmit}
               />
               <Slider {...innerSliderSettings}>
-                {item.productImg.map((imgSrc, imgIndex) => (
+                {item.images.map((imgSrc, imgIndex) => (
                   <div key={imgIndex}>
                     <Image
                       src={imgSrc}
                       width={307}
                       height={404}
                       layout="responsive"
-                      alt={item.title}
+                      alt={item.name}
                     />
                   </div>
                 ))}
               </Slider>
             </div>
             <div className="flex flex-col gap-3">
-              <p className="w-[68px] h-2.5 text-black text-base font-bold font-karla leading-tight">
-                {item.title}
+              <p className=" h-2.5 text-black text-base font-bold font-karla leading-tight">
+                {item.name}
               </p>
               <p className="text-black text-[25px] font-bold font-karla leading-[30px]">
                 {item.price}
@@ -149,6 +149,7 @@ const SellingCards = ({ data }) => {
 };
 
 const SoldCards = ({ data }) => (
+
   <div className="px-[71px] mb-10 opacity-50">
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-4 relative place-items-center">
       {data.map((i) => (
@@ -170,22 +171,22 @@ const SoldCards = ({ data }) => (
               </div>
             </div>
             <Slider {...innerSliderSettings}>
-              {i.productImg.map((imgSrc, imgIndex) => (
+              {i.images.map((imgSrc, imgIndex) => (
                 <div key={imgIndex}>
                   <Image
                     src={imgSrc}
                     width={307}
                     height={404}
                     layout="responsive"
-                    alt={i.title}
+                    alt={i.name}
                   />
                 </div>
               ))}
             </Slider>
           </div>
-          <div className="flex flex-col gap-3">
-            <p className="w-[68px] h-2.5 text-black text-base font-bold font-karla leading-tight">
-              {i.title}
+          <div className="flex flex-col gap-3 ">
+            <p className=" h-2.5 text-black text-base font-bold font-karla leading-tight">
+              {i.name}
             </p>
             <p className="text-black text-[25px] font-bold font-karla leading-[30px]">
               {i.price}
@@ -734,89 +735,93 @@ const Orders = () => {
   );
 };
 
-export default function DetailsSection() {
-  const sellingData = [
-    {
-      id: 1,
-      productImg: ["/card_image2.png", "/card_image2.png", "/card_image3.png"],
-      title: "Dress",
-      price: "AED 120.00",
-      link: "/product",
-    },
-    {
-      id: 2,
-      productImg: ["/card_image1.png", "/card_image2.png", "/card_image3.png"],
-      title: "Dress",
-      price: "AED 120.00",
-      link: "/product",
-    },
-    {
-      id: 3,
-      productImg: ["/card_image3.png", "/card_image2.png", "/card_image3.png"],
-      title: "Dress",
-      price: "AED 120.00",
-      link: "/product",
-    },
-    {
-      id: 4,
-      productImg: ["/card_image2.png", "/card_image2.png", "/card_image3.png"],
-      title: "Dress",
-      price: "AED 120.00",
-      link: "/product",
-    },
-    {
-      id: 5,
-      productImg: ["/card_image1.png", "/card_image2.png", "/card_image3.png"],
-      title: "Dress",
-      price: "AED 120.00",
-      link: "/product",
-    },
-    {
-      id: 6,
-      productImg: ["/card_image3.png", "/card_image2.png", "/card_image3.png"],
-      title: "Dress",
-      price: "AED 120.00",
-      link: "/product",
-    },
-  ];
-  const soldData = [
-    {
-      id: 7,
-      productImg: ["/card_image2.png", "/card_image2.png", "/card_image3.png"],
-      title: "Dress",
-      price: "AED 120.00",
-    },
-    {
-      id: 8,
-      productImg: ["/card_image1.png", "/card_image2.png", "/card_image3.png"],
-      title: "Dress",
-      price: "AED 120.00",
-    },
-    {
-      id: 9,
-      productImg: ["/card_image3.png", "/card_image2.png", "/card_image3.png"],
-      title: "Dress",
-      price: "AED 120.00",
-    },
-    {
-      id: 10,
-      productImg: ["/card_image2.png", "/card_image2.png", "/card_image3.png"],
-      title: "Dress",
-      price: "AED 120.00",
-    },
-    {
-      id: 11,
-      productImg: ["/card_image1.png", "/card_image2.png", "/card_image3.png"],
-      title: "Dress",
-      price: "AED 120.00",
-    },
-    {
-      id: 12,
-      productImg: ["/card_image3.png", "/card_image2.png", "/card_image3.png"],
-      title: "Dress",
-      price: "AED 120.00",
-    },
-  ];
+export default function DetailsSection({data}) {
+
+
+  const sellingData = data.products;
+
+    // {
+    //   id: 1,
+    //   productImg: ["/card_image2.png", "/card_image2.png", "/card_image3.png"],
+    //   title: "Dress",
+    //   price: "AED 120.00",
+    //   link: "/product",
+    // },
+    // {
+    //   id: 2,
+    //   productImg: ["/card_image1.png", "/card_image2.png", "/card_image3.png"],
+    //   title: "Dress",
+    //   price: "AED 120.00",
+    //   link: "/product",
+    // },
+    // {
+    //   id: 3,
+    //   productImg: ["/card_image3.png", "/card_image2.png", "/card_image3.png"],
+    //   title: "Dress",
+    //   price: "AED 120.00",
+    //   link: "/product",
+    // },
+    // {
+    //   id: 4,
+    //   productImg: ["/card_image2.png", "/card_image2.png", "/card_image3.png"],
+    //   title: "Dress",
+    //   price: "AED 120.00",
+    //   link: "/product",
+    // },
+    // {
+    //   id: 5,
+    //   productImg: ["/card_image1.png", "/card_image2.png", "/card_image3.png"],
+    //   title: "Dress",
+    //   price: "AED 120.00",
+    //   link: "/product",
+    // },
+    // {
+    //   id: 6,
+    //   productImg: ["/card_image3.png", "/card_image2.png", "/card_image3.png"],
+    //   title: "Dress",
+    //   price: "AED 120.00",
+    //   link: "/product",
+    // },
+  
+  const soldData = data.products;
+
+    // {
+    //   id: 7,
+    //   productImg: ["/card_image2.png", "/card_image2.png", "/card_image3.png"],
+    //   title: "Dress",
+    //   price: "AED 120.00",
+    // },
+    // {
+    //   id: 8,
+    //   productImg: ["/card_image1.png", "/card_image2.png", "/card_image3.png"],
+    //   title: "Dress",
+    //   price: "AED 120.00",
+    // },
+    // {
+    //   id: 9,
+    //   productImg: ["/card_image3.png", "/card_image2.png", "/card_image3.png"],
+    //   title: "Dress",
+    //   price: "AED 120.00",
+    // },
+    // {
+    //   id: 10,
+    //   productImg: ["/card_image2.png", "/card_image2.png", "/card_image3.png"],
+    //   title: "Dress",
+    //   price: "AED 120.00",
+    // },
+    // {
+    //   id: 11,
+    //   productImg: ["/card_image1.png", "/card_image2.png", "/card_image3.png"],
+    //   title: "Dress",
+    //   price: "AED 120.00",
+    // },
+    // {
+    //   id: 12,
+    //   productImg: ["/card_image3.png", "/card_image2.png", "/card_image3.png"],
+    //   title: "Dress",
+    //   price: "AED 120.00",
+    // },
+  
   const reviewData = { rating: 4.8, reviews: 27, review: [1, 2, 3] };
 
   const statsData = [
