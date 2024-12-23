@@ -10,7 +10,7 @@ import { OfferPopup } from "./OfferPopup";
 import { FcLike } from "react-icons/fc";
 import { GoHeart } from "react-icons/go";
 
-const RecommendationCard = ({id, imageList, price }) => {
+const RecommendationCard = ({id, product, price }) => {
   const [isOfferPopupOpen, setIsOfferPopupOpen] = useState(false);
   const [offerSubmitted, setOfferSubmitted] = useState(false);
   const [likedCards, setLikedCards] = useState({});
@@ -81,7 +81,7 @@ const RecommendationCard = ({id, imageList, price }) => {
     <div className="p-2 w-64 shrink-0 relative">
       {/* Image Slider */}
       <Slider {...sliderSettings} className="relative">
-        {imageList.map((image, index) => (
+        {product?.images?.map((image, index) => (
           <div key={index}>
             <img
               src={image}
@@ -158,7 +158,10 @@ const RecommendationCard = ({id, imageList, price }) => {
   );
 };
 
-const Recommendations = () => {
+const Recommendations = ({product}) => {
+
+  const productList = Array.isArray(product) ? product : [];
+
   const scrollRef = useRef(null);
   const [scrollProgress, setScrollProgress] = useState(0);
 
@@ -206,46 +209,13 @@ const Recommendations = () => {
           className="flex gap-4 overflow-x-scroll scrollbar-hide"
           style={{ scrollBehavior: "smooth", paddingBottom: "60px" }}
         >
-          <RecommendationCard
-            imageList={["/product1.png", "/product2.png", "/product3.png"]}
-            price="120.00"
-          />
-          <RecommendationCard
-            imageList={["/product2.png", "/product3.png", "/product1.png"]}
-            price="120.00"
-          />
-          <RecommendationCard
-            imageList={["/product3.png", "/product1.png", "/product2.png"]}
-            price="120.00"
-          />
-          <RecommendationCard
-            imageList={["/product4.png", "/product5.png", "/product6.png"]}
-            price="120.00"
-          />
-          <RecommendationCard
-            imageList={["/product1.png", "/product2.png", "/product3.png"]}
-            price="120.00"
-          />
-          <RecommendationCard
-            imageList={["/product2.png", "/product3.png", "/product1.png"]}
-            price="120.00"
-          />
-          <RecommendationCard
-            imageList={["/product3.png", "/product1.png", "/product2.png"]}
-            price="120.00"
-          />
-          <RecommendationCard
-            imageList={["/product1.png", "/product2.png", "/product3.png"]}
-            price="120.00"
-          />
-          <RecommendationCard
-            imageList={["/product2.png", "/product3.png", "/product1.png"]}
-            price="120.00"
-          />
-          <RecommendationCard
-            imageList={["/product3.png", "/product1.png", "/product2.png"]}
-            price="120.00"
-          />
+         {productList?.map((prod) => (
+            <RecommendationCard
+              key={prod._id}
+              imageList={prod.images}
+              price={prod.price}
+            />
+          ))}
           {/* Add more cards as needed */}
         </div>
 

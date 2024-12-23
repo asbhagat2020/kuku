@@ -21,7 +21,7 @@ const ProductDetail = () => {
       
       const response = await axios.get(url);
       setProduct(response.data.product);
-      console.log(response.data, "Product Data");
+    
     } catch (err) {
       setError("Failed to fetch product details");
     } finally {
@@ -39,7 +39,7 @@ const ProductDetail = () => {
     <div>
       <Header />
       {product ? <ProductCard product={product} /> : null}
-      <Recommendations />
+      <Recommendations product={product}/>
       <DownloadKuku />
       <Footer />
     </div>

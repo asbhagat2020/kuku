@@ -19,8 +19,12 @@ import { FaHandshake } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
 import { addToCart } from "@/store/cart/cartSlice";
+import axios from 'axios';
+import Cookies from 'js-cookie';
+
 
 const ProductCard = ({ product }) => {
+
   const router = useRouter();
   const [isRentPopupOpen, setRentPopupOpen] = useState(false);
   const [rentalDate, setRentalDate] = useState("");
@@ -33,7 +37,7 @@ const ProductCard = ({ product }) => {
   const [isDateSelected, setIsDateSelected] = useState(false);
   // const images = [amiriImg, amiriImg];
   const images = product?.images;
-  console.log(images);
+
 
   // const [isRentPopupOpen, setIsRentPopupOpen] = useState(false);
   const [isStartFormatted, setIsStartFormatted] = useState("");
@@ -43,9 +47,35 @@ const ProductCard = ({ product }) => {
   const modalRef = useRef(null);
   const dispatch = useDispatch();
 
-  const handleBuy = () => {
-    dispatch(addToCart(product));
-    router.push('/cart')
+  const handleBuy = async() => {
+    try {
+
+       const token = JSON.parse(Cookies.get('auth'));
+      
+      // Make the POST request to your API
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/product/cart/${product._id}`, 
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        } // or any other data you need to send
+      );
+   
+      if (response.status === 201) {
+        // If the request is successful, dispatch the action to add to cart
+        dispatch(addToCart(product));
+  
+        // Navigate to the cart page
+        router.push('/cart');
+      } else {
+        // Handle the case where the request is not successful
+        console.error('Failed to add product to cart:', response.statusText);
+      }
+    } catch (error) {
+      // Handle any errors that occur during the request
+      console.error('An error occurred while adding product to cart:', error);
+    }
   };
 
   const openCalendar = () => {

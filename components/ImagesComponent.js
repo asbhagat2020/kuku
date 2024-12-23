@@ -185,6 +185,7 @@ export const ImagesComponent = () => {
   const [offerSubmitted, setOfferSubmitted] = useState(false);
   const [likedCards, setLikedCards] = useState({});
   const [data, setData] = useState([]);
+  const [isFollowing, setIsFollowing] = useState(false);
 
   const cardsPerPage = 9;
 
@@ -283,13 +284,28 @@ export const ImagesComponent = () => {
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/products`
       );
       const datavalue = response.data.products;
-      console.log(datavalue,"dddddddd")
+     
       setData(datavalue || []);
     } catch (error) {
       alert(error.message);
     }
   };
 
+  const handleFollow = async () => {
+
+    try {
+      const endpoint = isFollowing ? "/unfollow" : "/follow";
+      const response = await axios.post(`http://localhost:3000${endpoint}`, {
+        userId,
+        targetId,
+      });
+
+      console.log(response.data.message);
+      setIsFollowing(!isFollowing);
+    } catch (error) {
+      console.error(error.response?.data?.message || "An error occurred.");
+    }
+  }
 
   return (
     <div className="p-6 ml-8 h-auto w-auto font-karla z-10">
@@ -305,9 +321,14 @@ export const ImagesComponent = () => {
                 />
                 <p className="font-bold text-sm">{card.seller.username}</p>
               </div>
-              <button className="mt-2 px-4 sm:px-6 py-1 bg-custom-green text-white rounded-full">
-                Follow
-              </button>
+              <button
+      className={`mt-2 px-4 sm:px-6 py-1 ${
+        isFollowing ? "bg-gray-500" : "bg-custom-green"
+      } text-white rounded-full`}
+      onClick={handleFollow}
+    >
+      {isFollowing ? "Unfollow" : "Follow"}
+    </button>
             </div>
 
             <div className="relative mt-4">
