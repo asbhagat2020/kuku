@@ -46,6 +46,9 @@ const Header = () => {
       setIsLocalToken(token)
   }, [token])
 
+   const details = useSelector((state) => state.auth.user);
+    const id = details?._id;
+
   const handleToggle = (dropdown) => {
     setCurrentOpenDropdown(currentOpenDropdown === dropdown ? null : dropdown);
   };
@@ -441,7 +444,7 @@ const Header = () => {
                 />
               </div>
             </Link>
-            <Link href="/user_profile">
+            <Link href={`/user_profile/${id}`}>
               <div
                 className={`${iconsPath ? "bg-[#393939]" : "bg-white/40"
                   } h-[54px] p-[15px]  rounded-[100px] hidden lg:block`}

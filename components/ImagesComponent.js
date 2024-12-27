@@ -13,6 +13,8 @@ import { GoHeart } from "react-icons/go";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleWishlist } from "@/store/wishlist/wishlistSlice";
 import axios from 'axios';
+import Cookies from 'js-cookie';
+
 
 const cardData = [
   {
@@ -185,7 +187,9 @@ export const ImagesComponent = () => {
   const [offerSubmitted, setOfferSubmitted] = useState(false);
   const [likedCards, setLikedCards] = useState({});
   const [data, setData] = useState([]);
+
   const [isFollowing, setIsFollowing] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const cardsPerPage = 9;
 
@@ -200,6 +204,11 @@ export const ImagesComponent = () => {
     setIsLiked(!isLiked);
   };
   const totalPages = Math.ceil(data.length / cardsPerPage);
+
+
+  const details = useSelector((state) => state.auth.user);
+      const id = details?._id;
+   
 
   useEffect(()=>{
     fetchProducts();
@@ -291,21 +300,33 @@ export const ImagesComponent = () => {
     }
   };
 
-  const handleFollow = async () => {
-
+  const handleFollow = async (id) => {
+    setLoading(true);
+   
     try {
-      const endpoint = isFollowing ? "/unfollow" : "/follow";
-      const response = await axios.post(`http://localhost:3000${endpoint}`, {
-        userId,
-        targetId,
-      });
-
-      console.log(response.data.message);
+      const token = JSON.parse(Cookies.get('auth'));
+     
+  
+      const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/profile/${isFollowing ? 'unfollow' : 'follow'}/${id}`;
+      await axios.post(
+        url,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+  
       setIsFollowing(!isFollowing);
     } catch (error) {
-      console.error(error.response?.data?.message || "An error occurred.");
+      console.error("Error while following/unfollowing", error);
+    } finally {
+      setLoading(false);
     }
-  }
+  };
+
+
 
   return (
     <div className="p-6 ml-8 h-auto w-auto font-karla z-10">
@@ -315,7 +336,7 @@ export const ImagesComponent = () => {
             <div className="flex justify-between items-center space-x-4">
               <div className="flex space-x-4 items-center">
                 <img
-                  src="/profile_icon.svg"
+                  src={card.seller.avatar}
                   alt="User avatar"
                   className="object-contain h-12 w-12"
                 />
@@ -325,9 +346,10 @@ export const ImagesComponent = () => {
       className={`mt-2 px-4 sm:px-6 py-1 ${
         isFollowing ? "bg-gray-500" : "bg-custom-green"
       } text-white rounded-full`}
-      onClick={handleFollow}
+      onClick={() => handleFollow(card.seller._id)}
+      disabled={loading}
     >
-      {isFollowing ? "Unfollow" : "Follow"}
+     {loading ? "Processing..." : isFollowing ? "Unfollow" : "Follow"}
     </button>
             </div>
 
