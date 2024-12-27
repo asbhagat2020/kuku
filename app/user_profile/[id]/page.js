@@ -7,14 +7,15 @@ import ProfileSection from '@/components/userProfile/ProfileSection';
 import { useSelector } from "react-redux";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { useParams } from "next/navigation";
+
 
 const Page = () => {
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
+  const { id } = useParams();
 
-  const details = useSelector((state) => state.auth.user);
-  const id = details?._id;
 
   useEffect(() => {
     if (id) {
@@ -24,9 +25,11 @@ const Page = () => {
 
   const fetchUser = async () => {
     try {
+
       const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/profile/details/${id}`;
+    
       const response = await axios.get(url);
-   
+
       setData(response.data.profile);
     } catch (err) {
       setError("Failed to fetch user details");

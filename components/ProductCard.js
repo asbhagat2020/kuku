@@ -17,7 +17,7 @@ import {
 } from "react-icons/fa";
 import { FaHandshake } from "react-icons/fa";
 import { useRouter } from "next/navigation";
-import { useDispatch } from "react-redux";
+import { useDispatch ,useSelector} from "react-redux";
 import { addToCart } from "@/store/cart/cartSlice";
 import axios from 'axios';
 import Cookies from 'js-cookie';
@@ -35,17 +35,23 @@ const ProductCard = ({ product }) => {
   const [isModalOpen, setIsModalOpen] = useState(false); // State to control the modal
   const [currentImageIndex, setCurrentImageIndex] = useState(0); // State to keep track of the current image
   const [isDateSelected, setIsDateSelected] = useState(false);
+
   // const images = [amiriImg, amiriImg];
   const images = product?.images;
-
+  console.log(product,"hhhhh")
 
   // const [isRentPopupOpen, setIsRentPopupOpen] = useState(false);
   const [isStartFormatted, setIsStartFormatted] = useState("");
   const [isEndFormatted, setIsEndFormatted] = useState("");
   const [showCalendar, setShowCalendar] = useState(false);
   const [showEndCalendar, setShowEndCalendar] = useState(false);
+  const [isFollowing, setIsFollowing] = useState(false);
+  const [loading, setLoading] = useState(false);
   const modalRef = useRef(null);
   const dispatch = useDispatch();
+
+  const details = useSelector((state) => state.auth.user);
+  const id = details?._id;
 
   const handleBuy = async() => {
     try {
@@ -53,7 +59,7 @@ const ProductCard = ({ product }) => {
        const token = JSON.parse(Cookies.get('auth'));
       
       // Make the POST request to your API
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/product/cart/${product._id}`, 
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/product/add/cart/${product._id}`, 
         {},
         {
           headers: {
@@ -75,6 +81,69 @@ const ProductCard = ({ product }) => {
     } catch (error) {
       // Handle any errors that occur during the request
       console.error('An error occurred while adding product to cart:', error);
+    }
+  };
+
+  const handleWish = async() => {
+    try {
+
+       const token = JSON.parse(Cookies.get('auth'));
+      
+      // Make the POST request to your API
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/product/wishlist/${product._id}`, 
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        } // or any other data you need to send
+      );
+   
+      if (response.status === 201) {
+        // If the request is successful, dispatch the action to add to cart
+      
+  
+        // Navigate to the cart page
+        router.push('/wishlist');
+      } else {
+        // Handle the case where the request is not successful
+        console.error('Failed to add product to wishlist:', response.statusText);
+      }
+    } catch (error) {
+      // Handle any errors that occur during the request
+      console.error('An error occurred while adding product to wishlist:', error);
+    }
+  };
+
+  const handleFollow = async () => {
+    setLoading(true);
+  
+    try {
+      const token = JSON.parse(Cookies.get('auth'));
+      if (product?.seller?.followers.includes(id)) {
+        await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/profile/unfollow/${product.seller._id}`, 
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          } // or any other data you need to send
+        );
+      } else {
+        await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/profile/follow/${product.seller._id}`, 
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          } // or any other data you need to send
+        );
+      }
+      setIsFollowing(!isFollowing);
+    } catch (error) {
+      console.error("Error while following/unfollowing", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -346,14 +415,15 @@ const ProductCard = ({ product }) => {
             <div>
               <span className="font-bold">CONDITION: </span>
               <span className="font-bold">
-                {product?.usage}
+                {product?.condition}
               </span>
             </div>
           </div>
 
           <div className="flex gap-4 mt-4">
-            <Link href="/wishlist">
+            {/* <Link href="/wishlist"> */}
               <button
+               onClick={handleWish}
                 className="border-2 rounded-md px-6 py-3 flex items-center justify-center font-bold text-pink-500 hover:bg-[#E4086F] hover:text-white transition-all duration-300"
                 style={{
                   borderColor: "#E4086F",
@@ -365,7 +435,7 @@ const ProductCard = ({ product }) => {
                 <FaRegHeart className="mr-2 w-5 h-5" />
                 WISHLIST
               </button>
-            </Link>
+            {/* </Link> */}
 
             <button
               onClick={handleOpenOfferPopup}
@@ -427,32 +497,29 @@ const ProductCard = ({ product }) => {
             <p className="font-bold mb-3">Sold by</p>
             <div className="flex items-center justify-between">
               <div className="flex items-center">
-                <div
-                  className="flex items-center justify-center rounded-full"
-                  style={{
-                    backgroundColor: "#AF65E6",
-                    width: "70px",
-                    height: "70px",
-                  }}
-                >
-                  <Image
-                    src={kukuLogo}
-                    alt="Kuku Logo"
-                    className="object-contain w-12 h-12"
-                  />
-                </div>
+              <Link href={`/user_profile/${product?.seller?._id}`}>
+        <Image
+          src={product?.seller?.avatar}
+          alt="Kuku Logo"
+          className="object-contain w-12 h-12"
+          width={48} // specify the width (in pixels)
+          height={48} // specify the height (in pixels)
+        />
+      </Link>
 
                 <div className="ml-3">
-                  <p className="font-bold">Kuku1222</p>
+                  <p className="font-bold">{product?.seller?.username}</p>
                 </div>
               </div>
 
               <button
-                className="ml-auto rounded-md px-4 py-2 bg-green-500 text-white w-full max-w-[136px] font-bold"
-                style={{ borderRadius: "20px" }}
-              >
-                Follow
-              </button>
+      className={`ml-auto rounded-md px-4 py-2 text-white w-full max-w-[136px] font-bold ${ product?.seller?.followers.includes(id) ? 'bg-red-500' : 'bg-green-500'}`}
+      style={{ borderRadius: "20px" }}
+      onClick={handleFollow}
+      disabled={loading}
+    >
+      {loading ? "Processing..." : product?.seller?.followers.includes(id) ? "Unfollow" : "Follow"}
+    </button>
             </div>
 
             <div className="mt-6">
@@ -464,7 +531,7 @@ const ProductCard = ({ product }) => {
                   Seller rating based on 100+ reviews
                 </p>
                 <div className="flex items-center">
-                  <span className="text-black font-bold">4.7</span>
+                  <span className="text-black font-bold">{product?.seller?.rating}</span>
                   <FaStar className="text-[#69D3FA] ml-1" />
                 </div>
               </div>
@@ -477,7 +544,7 @@ const ProductCard = ({ product }) => {
                   className="text-black-500 text-sm font-medium"
                   style={{ marginBottom: "10px", marginTop: "10px" }}
                 >
-                  106 Products Sold
+                  {product?.seller?.products.length} Products Sold
                 </p>
 
                 <button

@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { removeFromCart } from "@/store/cart/cartSlice";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import Cookies from 'js-cookie';
 
 export default function Cart() {
   const [isCouponPopupVisible, setIsCouponPopupVisible] = useState(false);
@@ -21,14 +22,31 @@ export default function Cart() {
   const [cart, setCart] = useState({});
   const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.cart.items);
+
+
  
   const handleRemoveCoupon = () => {
     setAppliedCoupon("");
     setisCouponApplied(false);
     setDiscount(0); // Reset discount
   };
-  const handleRemove = (itemId) => {
-    dispatch(removeFromCart(itemId));
+  const handleRemove = async(id) => {
+    try {
+      const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/product/cart/${id}`;
+
+      const response = await axios.delete(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log(response.data, "Cart Data");
+    
+     
+    } catch (err) {
+      setError("Failed to fetch product details");
+    } finally {
+      setLoading(false);
+    }
   };
   const coupons = [
     {
@@ -88,6 +106,7 @@ export default function Cart() {
   }, [cartItems, discount]);
 
   const token = useSelector((store) => store.auth.token);
+ 
   const username = useSelector((store) => store.auth.user);
  
   const router = useRouter();
@@ -100,21 +119,54 @@ export default function Cart() {
   const fetchCartDetails = async () => {
  
     try {
-      const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/product/cart`;
+      const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/product/get/cart`;
 
       const response = await axios.get(url, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-      setCart(response.data);
-      console.log(response.data, "Product Data");
+      console.log(response.data, "Cart Data");
+      setCart(response.data.cart);
+     
     } catch (err) {
       setError("Failed to fetch product details");
     } finally {
       setLoading(false);
     }
   };
+  
+  const handleAddToWishlist = async(id) =>{
+    try {
+
+      const token = JSON.parse(Cookies.get('auth'));
+     
+     // Make the POST request to your API
+     const response = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/product/wishlist/${id}`, 
+       {},
+       {
+         headers: {
+           Authorization: `Bearer ${token}`,
+         },
+       } // or any other data you need to send
+     );
+  
+     if (response.status === 201) {
+       // If the request is successful, dispatch the action to add to cart
+     
+ 
+       // Navigate to the cart page
+       router.push('/wishlist');
+     } else {
+       // Handle the case where the request is not successful
+       console.error('Failed to add product to wishlist:', response.statusText);
+     }
+   } catch (error) {
+     // Handle any errors that occur during the request
+     console.error('An error occurred while adding product to wishlist:', error);
+   }
+  }
+  
 
   useEffect(() => {
     if (token) {
@@ -133,7 +185,7 @@ export default function Cart() {
         </div>
 
         {/* Checkbox and Selected Items */}
-        {cartItems.length > 0 ? (
+        {cart.length > 0 ? (
           <>
             <div className="flex items-center gap-2 mb-4">
               <label className="custom-checkbox">
@@ -148,7 +200,7 @@ export default function Cart() {
             <div className="flex flex-col lg:flex-row justify-between items-start gap-4">
               {/* Left Section: Cart */}
               <div className="w-full lg:w-2/3">
-                {cartItems.map((item) => {
+                {cart.map((item) => {
                   return (
                     <>
                       <div className="flex flex-col md:flex-row items-start gap-4 mb-4">
@@ -168,10 +220,10 @@ export default function Cart() {
                         <div className="flex flex-col justify-start items-start gap-3 w-full">
                           <div>
                             <div className="text-black text-lg md:text-[18px] font-bold font-karla">
-                              {item?.productInfo?.title}
+                              {item?.name}
                             </div>
                             <div className="text-[#b4b4b4] text-sm md:text-base font-normal font-karla">
-                              {item?.productInfo?.description}
+                              {item?.description}
                             </div>
                           </div>
 
@@ -180,11 +232,11 @@ export default function Cart() {
                               <div className="text-[#383838] text-sm md:text-[16px] font-bold font-karla">
                                 SIZE
                               </div>
-                              <div className="w-8 h-8 md:w-[29.6px] border border-[#e4086f] flex justify-center items-center">
-                                <div className="text-[#e4086f] text-sm md:text-[16px] font-normal font-karla">
-                                  {item?.productInfo?.size}
-                                </div>
-                              </div>
+                              <div className="inline-flex border border-[#e4086f] justify-center items-center px-2 py-1">
+  <div className="text-[#e4086f] text-sm md:text-[16px] font-normal font-karla">
+    {item?.size}
+  </div>
+</div>
                             </div>
 
                             <div className="flex items-center gap-3">
@@ -192,7 +244,7 @@ export default function Cart() {
                                 CONDITION:
                               </span>
                               <span className="text-[#383838] text-sm md:text-[16px] font-bold font-karla">
-                                GOOD
+                                {item?.condition}
                               </span>
                             </div>
                           </div>
@@ -201,7 +253,7 @@ export default function Cart() {
                           <div className="flex flex-col md:flex-row mt-2 gap-4 w-full">
                             {/* <Link href="/selling-page"> */}
                             <button
-                              onClick={() => handleRemove(item.id)}
+                              onClick={() => handleRemove(item._id)}
                               className="w-full md:w-[200px] h-[40px] md:h-[50px] rounded-lg hover:border-white hover:text-white text-black border-2 border-[#0f0f0f] flex justify-center items-center hover:bg-[#e4086f]"
                             >
                               <span className="text-sm md:text-[14px] font-bold font-karla uppercase">
@@ -209,13 +261,16 @@ export default function Cart() {
                               </span>
                             </button>
                             {/* </Link> */}
-                            <Link href="/wishlist">
-                              <button className="w-full md:w-[200px] h-[40px] md:h-[50px] rounded-lg text-black hover:border-white hover:text-white border-2 border-[#0f0f0f] flex justify-center items-center hover:bg-[#e4086f]">
-                                <span className="text-sm md:text-[14px] font-bold font-karla uppercase">
-                                  Add to Wishlist
-                                </span>
-                              </button>
-                            </Link>
+                            {/* <Link href="/wishlist"> */}
+                            <button
+  className="w-full md:w-[200px] h-[40px] md:h-[50px] rounded-lg text-black hover:border-white hover:text-white border-2 border-[#0f0f0f] flex justify-center items-center hover:bg-[#e4086f]"
+  onClick={() =>handleAddToWishlist(item._id)}
+>
+  <span className="text-sm md:text-[14px] font-bold font-karla uppercase">
+    Add to Wishlist
+  </span>
+</button>
+                            {/* </Link> */}
                           </div>
                         </div>
 
@@ -225,14 +280,14 @@ export default function Cart() {
                             {" "}
                             {/* Adjusted with a negative margin */}
                             <div className="text-black text-sm md:text-[16px] font-bold font-karla">
-                              AED{item.pricing.currentPrice}
+                              AED{item?.pricing?.currentPrice}
                             </div>
                             <div className="text-[#30bd75] text-sm md:text-[16px] font-bold font-karla whitespace-nowrap">
-                              ({item.pricing.discountPercentage}% OFF)
+                              ({item?.pricing?.discountPercentage}% OFF)
                             </div>
                           </div>
                           <div className="text-[#b4b4b4] text-sm md:text-xl font-normal font-karla line-through">
-                            MRP AED{item.pricing.originalPrice}
+                            MRP AED{item?.pricing?.originalPrice}
                           </div>
                         </div>
                       </div>

@@ -39,7 +39,7 @@ const ProductDetail = () => {
     <div>
       <Header />
       {product ? <ProductCard product={product} /> : null}
-      <Recommendations product={product}/>
+      <Recommendations product={product}/> 
       <DownloadKuku />
       <Footer />
     </div>
