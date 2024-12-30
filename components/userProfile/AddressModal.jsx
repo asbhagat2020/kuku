@@ -2,6 +2,8 @@
 
 import React, { useState, useEffect } from "react";
 import { X } from "lucide-react";
+import axios from "axios";
+import Cookies from 'js-cookie';
 
 const AddressModal = ({
   isOpen,
@@ -11,22 +13,29 @@ const AddressModal = ({
   initialData = null,
 }) => {
   const [formData, setFormData] = useState({
-    name: "",
-    phone: "",
-    address1: "",
-    address2: "",
+    addressName: "",
+    phoneNumber: "",
+    street: "",
+    city: "",
+    state:"",
+    country:"",
+    postalCode:"",
   });
 
   useEffect(() => {
     if (mode === "edit" && initialData) {
       setFormData({
-        name: initialData.name || "",
-        phone: initialData.phone || "",
-        address1: initialData.address || "",
-        address2: initialData.address2 || "",
+        addressName: initialData.addressName || "",
+        phoneNumber: initialData.phoneNumber || "",
+        street: initialData.street || "",
+        city: initialData.city || "",
+        state: initialData.state || "",
+        country: initialData.country || "",
+        postalCode: initialData.postalCode || "",
       });
     }
   }, [initialData, mode]);
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -37,22 +46,89 @@ const AddressModal = ({
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault();
-    onSave(formData);
-    onClose();
-    setFormData({
-      name: "",
-      phone: "",
-      address1: "",
-      address2: "",
-    });
+    if (mode === "add") {
+      addAddress(e); // Call the addAddress function for "add" mode
+    } else if (mode === "edit") {
+      editAddress(e); // Call the editAddress function for "edit" mode
+    }
   };
 
+  const addAddress = async (e) => {
+    e.preventDefault();
+  
+    try {
+      const token = JSON.parse(Cookies.get("auth"));
+      const apiUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/address/add`;
+  
+      const response = await axios.post(apiUrl, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+  
+      if (response.status === 201) {
+        console.log("Address added successfully");
+        setFormData(response.data.address);
+        onSave(formData); // Optionally call onSave if needed
+        onClose();
+        resetForm();
+      } else {
+        console.error("Failed to add address");
+      }
+    } catch (error) {
+      console.error("An error occurred while adding the address:", error);
+    }
+  };
+  
+  const editAddress = async (e) => {
+    e.preventDefault();
+  
+    try {
+      const token = JSON.parse(Cookies.get("auth"));
+    
+      const apiUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/address/edit/${initialData._id}`; // Use the ID of the address to update
+  
+      const response = await axios.put(apiUrl, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+    
+  
+      if (response.status === 200) {
+        console.log("Address updated successfully");
+        setFormData(response.data.address);
+        onSave(formData); 
+      // Optionally call onSave if needed
+        onClose();
+        resetForm();
+      } else {
+        console.error("Failed to update address");
+      }
+    } catch (error) {
+      console.error("An error occurred while updating the address:", error);
+    }
+  };
+  
+  const resetForm = () => {
+    setFormData({
+      addressName: "",
+      phoneNumber: "",
+      street: "",
+      city: "",
+      state: "",
+      country: "",
+      postalCode: "",
+    });
+  };
+  
+
+  
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg w-full max-w-2xl mx-4 relative">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 ">
+      <div className="bg-white rounded-lg w-full max-w-2xl mx-4  overflow-y-auto max-h-[90vh] relative ">
         {/* Header */}
         <div className="px-8 py-6 border-b border-gray-100">
           <div className="flex justify-between items-center">
@@ -78,8 +154,8 @@ const AddressModal = ({
               </label>
               <input
                 type="text"
-                name="name"
-                value={formData.name}
+                name="addressName"
+                value={formData.addressName}
                 onChange={handleChange}
                 placeholder="Full Name"
                 className="w-full h-12 px-4 bg-gray-50 rounded-2xl focus:outline-none focus:ring-2 focus:ring-yellow-500"
@@ -94,27 +170,27 @@ const AddressModal = ({
               </label>
               <input
                 type="tel"
-                name="phone"
-                value={formData.phone}
+                name="phoneNumber"
+                value={formData.phoneNumber}
                 onChange={handleChange}
                 placeholder="Enter Phone Number"
                 className="w-full h-12 px-4 bg-gray-50 rounded-2xl focus:outline-none focus:ring-2 focus:ring-yellow-500"
                 required
               />
             </div>
-          </div>
+          
 
           {/* Address 1 */}
           <div className="space-y-2">
             <label className="block text-sm font-medium text-gray-700">
-              Address 1
+              Street
             </label>
             <input
               type="text"
-              name="address1"
-              value={formData.address1}
+              name="street"
+              value={formData.street}
               onChange={handleChange}
-              placeholder="Enter Address 1"
+              placeholder="Enter Street"
               className="w-full h-20 px-4 bg-gray-50 rounded-2xl focus:outline-none focus:ring-2 focus:ring-yellow-500"
               required
             />
@@ -123,16 +199,56 @@ const AddressModal = ({
           {/* Address 2 */}
           <div className="space-y-2">
             <label className="block text-sm font-medium text-gray-700">
-              Address 2
+              City
             </label>
             <input
               type="text"
-              name="address2"
-              value={formData.address2}
+              name="city"
+              value={formData.city}
               onChange={handleChange}
-              placeholder="Enter Address 2"
+              placeholder="Enter City"
               className="w-full h-20 px-4 bg-gray-50 rounded-2xl focus:outline-none focus:ring-2 focus:ring-yellow-500"
             />
+          </div>
+          <div className="space-y-2">
+            <label className="block text-sm font-medium text-gray-700">
+              State
+            </label>
+            <input
+              type="text"
+              name="state"
+              value={formData.state}
+              onChange={handleChange}
+              placeholder="Enter State"
+              className="w-full h-20 px-4 bg-gray-50 rounded-2xl focus:outline-none focus:ring-2 focus:ring-yellow-500"
+            />
+          </div>
+          <div className="space-y-2">
+            <label className="block text-sm font-medium text-gray-700">
+              Country
+            </label>
+            <input
+              type="text"
+              name="country"
+              value={formData.country}
+              onChange={handleChange}
+              placeholder="Enter Country"
+              className="w-full h-20 px-4 bg-gray-50 rounded-2xl focus:outline-none focus:ring-2 focus:ring-yellow-500"
+            />
+          </div>
+          <div className="space-y-2">
+            <label className="block text-sm font-medium text-gray-700">
+              Postal Code
+            </label>
+            <input
+              type="text"
+              name="postalCode"
+              value={formData.postalCode}
+              onChange={handleChange}
+              placeholder="Enter Postal Code"
+              className="w-full h-20 px-4 bg-gray-50 rounded-2xl focus:outline-none focus:ring-2 focus:ring-yellow-500"
+            />
+          </div>
           </div>
 
           {/* Action Buttons */}

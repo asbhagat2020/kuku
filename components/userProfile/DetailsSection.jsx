@@ -13,6 +13,9 @@ import { GoHeart } from "react-icons/go";
 import { IoPencil } from "react-icons/io5";
 import AddModal from "./AddModal";
 import { FaStar } from "react-icons/fa";
+import { AiFillDelete } from "react-icons/ai";
+import Cookies from "js-cookie";
+import axios from "axios";
 
 const innerSliderSettings = {
   dots: true,
@@ -53,6 +56,11 @@ const SellingCards = ({ data }) => {
   const [isOfferPopupOpen, setIsOfferPopupOpen] = useState(false);
   const [offerSubmitted, setOfferSubmitted] = useState(false);
   const [likedCards, setLikedCards] = useState({});
+  const [isPopupOpen, setPopupOpen] = useState(false);
+  const [productIdToDelete, setProductIdToDelete] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
   const handleOpenOfferPopup = () => {
     setIsOfferPopupOpen(true);
   };
@@ -74,6 +82,42 @@ const SellingCards = ({ data }) => {
       [cardId]: !prevLikedCards[cardId],
     }));
   };
+
+  const openPopup = (id) => {
+    setProductIdToDelete(id);
+    setPopupOpen(true);
+  };
+
+  const closePopup = () => {
+    setProductIdToDelete(null);
+    setPopupOpen(false);
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      const token = JSON.parse(Cookies.get("auth"));
+      const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/product/delete/${id}`;
+
+      const response = await axios.delete(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      console.log(response.data, "Product Deleted");
+      closePopup();
+    } catch (err) {
+      setError("Failed to delete Product");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const confirmDelete = () => {
+    setLoading(true);
+    handleDelete(productIdToDelete);
+  };
+
   return (
     <div className="px-[71px] mb-10">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-4 relative place-items-center">
@@ -96,6 +140,17 @@ const SellingCards = ({ data }) => {
                   )}
                 </div>
               </div>
+              <div className="absolute  right-5 top-[250px] z-10">
+                <div className="h-[54px] p-[15px] bg-white rounded-[100px]">
+                  <AiFillDelete
+                    size={24} // Set the size of the icon
+                    color="red" // Optionally set the color
+                    onClick={() => openPopup(item._id)} // Call handleDelete on click
+                    style={{ cursor: "pointer" }} // Add pointer cursor
+                  />
+                </div>
+              </div>
+
               <Link href={`/selling-page/${item._id}`}>
                 <div className="absolute min-w-[204px] bottom-4 left-4 text-center z-10 bg-[#fde504] px-[50px] py-[20px] rounded-[20px]">
                   <button className="text-[#202020] text-base font-bold font-karla leading-tight">
@@ -114,6 +169,7 @@ const SellingCards = ({ data }) => {
                   />
                 </div>
               </div>
+
               <OfferPopup
                 isOpen={isOfferPopupOpen}
                 onClose={handleCloseOfferPopup}
@@ -144,12 +200,35 @@ const SellingCards = ({ data }) => {
           </div>
         ))}
       </div>
+      {isPopupOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-[400px] text-center">
+            <h2 className="text-lg font-bold mb-4">Confirm Deletion</h2>
+            <p>Are you sure you want to delete this product?</p>
+            <div className="mt-6 flex justify-center space-x-4">
+              <button
+                onClick={confirmDelete}
+                className="bg-red-500 text-white px-4 py-2 rounded-md"
+                disabled={loading}
+              >
+                {loading ? "Deleting..." : "Yes"}
+              </button>
+              <button
+                onClick={closePopup}
+                className="bg-gray-300 text-black px-4 py-2 rounded-md"
+              >
+                No
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      {error && <div className="text-red-500">{error}</div>}
     </div>
   );
 };
 
 const SoldCards = ({ data }) => (
-
   <div className="px-[71px] mb-10 opacity-50">
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-4 relative place-items-center">
       {data.map((i) => (
@@ -735,93 +814,91 @@ const Orders = () => {
   );
 };
 
-export default function DetailsSection({data}) {
-
-
+export default function DetailsSection({ data }) {
   const sellingData = data.products;
 
-    // {
-    //   id: 1,
-    //   productImg: ["/card_image2.png", "/card_image2.png", "/card_image3.png"],
-    //   title: "Dress",
-    //   price: "AED 120.00",
-    //   link: "/product",
-    // },
-    // {
-    //   id: 2,
-    //   productImg: ["/card_image1.png", "/card_image2.png", "/card_image3.png"],
-    //   title: "Dress",
-    //   price: "AED 120.00",
-    //   link: "/product",
-    // },
-    // {
-    //   id: 3,
-    //   productImg: ["/card_image3.png", "/card_image2.png", "/card_image3.png"],
-    //   title: "Dress",
-    //   price: "AED 120.00",
-    //   link: "/product",
-    // },
-    // {
-    //   id: 4,
-    //   productImg: ["/card_image2.png", "/card_image2.png", "/card_image3.png"],
-    //   title: "Dress",
-    //   price: "AED 120.00",
-    //   link: "/product",
-    // },
-    // {
-    //   id: 5,
-    //   productImg: ["/card_image1.png", "/card_image2.png", "/card_image3.png"],
-    //   title: "Dress",
-    //   price: "AED 120.00",
-    //   link: "/product",
-    // },
-    // {
-    //   id: 6,
-    //   productImg: ["/card_image3.png", "/card_image2.png", "/card_image3.png"],
-    //   title: "Dress",
-    //   price: "AED 120.00",
-    //   link: "/product",
-    // },
-  
+  // {
+  //   id: 1,
+  //   productImg: ["/card_image2.png", "/card_image2.png", "/card_image3.png"],
+  //   title: "Dress",
+  //   price: "AED 120.00",
+  //   link: "/product",
+  // },
+  // {
+  //   id: 2,
+  //   productImg: ["/card_image1.png", "/card_image2.png", "/card_image3.png"],
+  //   title: "Dress",
+  //   price: "AED 120.00",
+  //   link: "/product",
+  // },
+  // {
+  //   id: 3,
+  //   productImg: ["/card_image3.png", "/card_image2.png", "/card_image3.png"],
+  //   title: "Dress",
+  //   price: "AED 120.00",
+  //   link: "/product",
+  // },
+  // {
+  //   id: 4,
+  //   productImg: ["/card_image2.png", "/card_image2.png", "/card_image3.png"],
+  //   title: "Dress",
+  //   price: "AED 120.00",
+  //   link: "/product",
+  // },
+  // {
+  //   id: 5,
+  //   productImg: ["/card_image1.png", "/card_image2.png", "/card_image3.png"],
+  //   title: "Dress",
+  //   price: "AED 120.00",
+  //   link: "/product",
+  // },
+  // {
+  //   id: 6,
+  //   productImg: ["/card_image3.png", "/card_image2.png", "/card_image3.png"],
+  //   title: "Dress",
+  //   price: "AED 120.00",
+  //   link: "/product",
+  // },
+
   const soldData = data.products;
 
-    // {
-    //   id: 7,
-    //   productImg: ["/card_image2.png", "/card_image2.png", "/card_image3.png"],
-    //   title: "Dress",
-    //   price: "AED 120.00",
-    // },
-    // {
-    //   id: 8,
-    //   productImg: ["/card_image1.png", "/card_image2.png", "/card_image3.png"],
-    //   title: "Dress",
-    //   price: "AED 120.00",
-    // },
-    // {
-    //   id: 9,
-    //   productImg: ["/card_image3.png", "/card_image2.png", "/card_image3.png"],
-    //   title: "Dress",
-    //   price: "AED 120.00",
-    // },
-    // {
-    //   id: 10,
-    //   productImg: ["/card_image2.png", "/card_image2.png", "/card_image3.png"],
-    //   title: "Dress",
-    //   price: "AED 120.00",
-    // },
-    // {
-    //   id: 11,
-    //   productImg: ["/card_image1.png", "/card_image2.png", "/card_image3.png"],
-    //   title: "Dress",
-    //   price: "AED 120.00",
-    // },
-    // {
-    //   id: 12,
-    //   productImg: ["/card_image3.png", "/card_image2.png", "/card_image3.png"],
-    //   title: "Dress",
-    //   price: "AED 120.00",
-    // },
-  
+  // {
+  //   id: 7,
+  //   productImg: ["/card_image2.png", "/card_image2.png", "/card_image3.png"],
+  //   title: "Dress",
+  //   price: "AED 120.00",
+  // },
+  // {
+  //   id: 8,
+  //   productImg: ["/card_image1.png", "/card_image2.png", "/card_image3.png"],
+  //   title: "Dress",
+  //   price: "AED 120.00",
+  // },
+  // {
+  //   id: 9,
+  //   productImg: ["/card_image3.png", "/card_image2.png", "/card_image3.png"],
+  //   title: "Dress",
+  //   price: "AED 120.00",
+  // },
+  // {
+  //   id: 10,
+  //   productImg: ["/card_image2.png", "/card_image2.png", "/card_image3.png"],
+  //   title: "Dress",
+  //   price: "AED 120.00",
+  // },
+  // {
+  //   id: 11,
+  //   productImg: ["/card_image1.png", "/card_image2.png", "/card_image3.png"],
+  //   title: "Dress",
+  //   price: "AED 120.00",
+  // },
+  // {
+  //   id: 12,
+  //   productImg: ["/card_image3.png", "/card_image2.png", "/card_image3.png"],
+  //   title: "Dress",
+  //   price: "AED 120.00",
+  // },
+
   const reviewData = { rating: 4.8, reviews: 27, review: [1, 2, 3] };
 
   const statsData = [

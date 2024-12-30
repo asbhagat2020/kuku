@@ -248,14 +248,21 @@ const ProfileSection = (user) => {
                   Share
                 </div>
               </div>
-              <div
+              {user?.self ? <div
                 className="w-[250px] h-[39.40px] p-[13.70px] bg-[#2fbc74] rounded-[20px] justify-center items-center gap-[13.70px] inline-flex cursor-pointer"
                 onClick={handleEditClick}
               >
                 <div className="text-white text-[19.18px] font-bold font-karla leading-[23.02px]">
                   Edit
                 </div>
-              </div>
+              </div>:
+              <div
+                className="w-[250px] h-[39.40px] p-[13.70px] bg-[#2fbc74] rounded-[20px] justify-center items-center gap-[13.70px] inline-flex cursor-pointer"
+              >
+                <div className="text-white text-[19.18px] font-bold font-karla leading-[23.02px]">
+                  Follow
+                </div>
+              </div>}
             </div>
           </div>
           <div className="lg:w-1/2 w-full min-h-[302px] rounded-lg shadow ">

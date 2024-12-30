@@ -8,6 +8,7 @@ import { useSelector } from "react-redux";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "next/navigation";
+import Cookies from 'js-cookie';
 
 
 const Page = () => {
@@ -15,7 +16,7 @@ const Page = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const { id } = useParams();
-
+ 
 
   useEffect(() => {
     if (id) {
@@ -25,10 +26,18 @@ const Page = () => {
 
   const fetchUser = async () => {
     try {
+    const token = JSON.parse(Cookies.get('auth'));
 
       const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/profile/details/${id}`;
+     
+      
     
-      const response = await axios.get(url);
+      const response = await axios.get(url ,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
       setData(response.data.profile);
     } catch (err) {
