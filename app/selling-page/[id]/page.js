@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 
 const ProductDetail = () => {
   const [product, setProduct] = useState(null);
+  const [recommendedProducts,setRecomendation] = useState(null);
   const [loading, setLoading] = useState(null);
   const [error, setError] = useState(null);
   const { id } = useParams();
@@ -21,6 +22,7 @@ const ProductDetail = () => {
       
       const response = await axios.get(url);
       setProduct(response.data.product);
+      setRecomendation(response.data.recommendedProducts);
     
     } catch (err) {
       setError("Failed to fetch product details");
@@ -39,7 +41,7 @@ const ProductDetail = () => {
     <div>
       <Header />
       {product ? <ProductCard product={product} /> : null}
-      <Recommendations product={product}/> 
+      <Recommendations product={recommendedProducts}/> 
       <DownloadKuku />
       <Footer />
     </div>

@@ -3,42 +3,36 @@
 // import React, { useState } from "react";
 import { Search } from "lucide-react";
 import AddressModal from "./AddressModal";
-import Cookies from 'js-cookie';
+import Cookies from "js-cookie";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
 const AddressList = () => {
   const [addresses, setAddresses] = useState([]);
-
-
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalMode, setModalMode] = useState('add');
+  const [modalMode, setModalMode] = useState("add");
   const [editingAddress, setEditingAddress] = useState(null);
-    const [error, setError] = useState(null);
-    const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-    
-      fetchAddress();
-      
-    }, []);
+ 
+  useEffect(() => {
+    fetchAddress();
+  }, []);
 
   const fetchAddress = async () => {
     try {
-    const token = JSON.parse(Cookies.get('auth'));
+      const token = JSON.parse(Cookies.get("auth"));
 
       const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/address/get`;
-     
-      
-    
-      const response = await axios.get(url ,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
 
-        setAddresses(response.data.addresses);
+      const response = await axios.get(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      setAddresses(response.data.addresses);
     } catch (err) {
       setError("Failed to fetch user details");
     } finally {
@@ -46,24 +40,49 @@ const AddressList = () => {
     }
   };
 
-  const handleSelect = (id) => {
-    setAddresses(
-      addresses.map((address) =>
-        address.id === id
-          ? { ...address, selected: true }
-          : { ...address, selected: false }
-      )
-    );
+  const handleSelect = async (id) => {
+    try {
+      const token = JSON.parse(Cookies.get("auth"));
+    
+
+      const apiUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/address/default/${id}`; // Use the ID of the address to update
+
+      const response = await axios.patch(
+        apiUrl,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        setAddresses(response.data.address)
+        console.log("Default Address updated successfully");
+      } else {
+        console.error("Failed to update default address");
+      }
+    } catch (error) {
+      console.error("An error occurred while updating the address:", error);
+    }
   };
 
   const handleEdit = (address) => {
-    setModalMode('edit');
+  
+    setModalMode("edit");
+    setAddresses([...addresses.filter((elem)=> {
+      if(elem?._id == address._id){
+        return address
+      }
+      return elem
+    })]);
     setEditingAddress(address);
+   
     setIsModalOpen(true);
   };
 
   const handleDelete = async (id) => {
-    
     try {
       const token = JSON.parse(Cookies.get("auth"));
       const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/address/delete/${id}`;
@@ -73,49 +92,64 @@ const AddressList = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-
+      setAddresses(response.data.address)
       console.log(response.data, "Address Deleted");
+     
       closePopup();
     } catch (err) {
       setError("Failed to delete Address");
     } finally {
       setLoading(false);
     }
-   
   };
 
   const handleAddNew = () => {
-    setModalMode('add');
+    setModalMode("add");
     setEditingAddress(null);
     setIsModalOpen(true);
   };
 
-  const handleSaveAddress = (formData) => {
-    if (modalMode === 'add') {
-      const newAddress = {
-        id: addresses.length + 1,
-        name: formData.name,
-        phone: formData.phone,
-        address: formData.address1,
-        address2: formData.address2,
-        selected: false,
-      };
-      setAddresses([...addresses, newAddress]);
-    } else {
-      setAddresses(addresses.map(addr => 
-        addr.id === editingAddress.id
-          ? {
-              ...addr,
-              name: formData.name,
-              phone: formData.phone,
-              address: formData.address1,
-              address2: formData.address2,
-            }
-          : addr
-      ));
+  // const handleSaveAddress = (formData) => {
+  //   console.log(formData,"ddddddddddd")
+  //   if (modalMode === "add") {
+  //     const newAddress = {
+  //       id: addresses.length + 1,
+  //       addressName: formData.addressName,
+  //       phoneNumber: formData.phoneNumber,
+  //       street: formData.street,
+  //       city: formData.city,
+  //       state: formData.state,
+  //       country: formData.country,
+  //       postalCode: formData.postalCode,
+  //       selected: false,
+  //     };
+  //     setAddresses([...addresses, newAddress]);
+  //   } else {
+  //     setAddresses(
+  //       addresses.map((addr) =>
+  //         addr.id === editingAddress.id
+  //           ? {
+  //               ...addr,
+  //               addressName: formData.addressName,
+  //               phoneNumber: formData.phoneNumber,
+  //               street: formData.street,
+  //               city: formData.city,
+  //               state: formData.state,
+  //               country: formData.country,
+  //               postalCode: formData.postalCode,
+  //             }
+  //           : addr
+  //       )
+  //     );
+  //   }
+  // };
+  const handleSave = (address) => {
+    if (modalMode === "add") {
+      setAddresses([...addresses, address]);
+    } else if (modalMode === "edit") {
+      setAddresses(addresses.map((addr) => (addr._id === address._id ? address : addr)));
     }
   };
-
   return (
     <div className="container mx-auto px-4 py-8 font-karla">
       {/* Heading */}
@@ -134,7 +168,7 @@ const AddressList = () => {
           </button>
         </div>
 
-        <button 
+        <button
           onClick={handleAddNew}
           className="bg-[#FDE504] hover:bg-yellow-500 text-black px-6 py-3 rounded-lg flex items-center gap-2 shadow-md"
         >
@@ -160,20 +194,30 @@ const AddressList = () => {
       <div className="space-y-4">
         {addresses.map((address) => (
           <div
-            key={address.id}
+            key={address._id}
             className={`border rounded-lg p-4 ${
-              address.selected ? "border-green-500" : "border-gray-200"
+              address.isDefault ? "border-green-500" : "border-gray-200"
             }`}
           >
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
               <div className="space-y-1">
-                <h2 className="text-lg font-medium">{address.addressName}</h2>
-                <p className="text-gray-600 text-sm">{address.phoneNumber}</p>
-                <p className="text-gray-600 text-sm">{address.street}</p>
-                <p className="text-gray-600 text-sm">{address.city}</p>
-                <p className="text-gray-600 text-sm">{address.states}</p>
-                <p className="text-gray-600 text-sm">{address.country}</p>
-                <p className="text-gray-600 text-sm">{address.postalCode}</p>
+                <h2 className="text-lg font-medium">
+                  Name: {address.addressName}
+                </h2>
+                <p className="text-gray-600 text-sm">
+                  Phone: {address.phoneNumber}
+                </p>
+                <p className="text-gray-600 text-sm">
+                  Street: {address.street}
+                </p>
+                <p className="text-gray-600 text-sm">City: {address.city}</p>
+                <p className="text-gray-600 text-sm">State: {address.state}</p>
+                <p className="text-gray-600 text-sm">
+                  Country: {address.country}
+                </p>
+                <p className="text-gray-600 text-sm">
+                  Postal Code: {address.postalCode}
+                </p>
                 <div className="flex gap-6 mt-3">
                   <button
                     onClick={() => handleEdit(address)}
@@ -194,8 +238,8 @@ const AddressList = () => {
                 <input
                   type="radio"
                   name="address"
-                  checked={address.selected}
-                  onChange={() => handleSelect(address.id)}
+                  checked={address.isDefault}
+                  onChange={() => handleSelect(address._id)}
                   className="w-5 h-5 border-2 border-gray-300 rounded-full checked:border-green-500 checked:bg-green-500 appearance-none cursor-pointer"
                 />
                 <span className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 block w-2 h-2 rounded-full bg-white opacity-0 checked:opacity-100" />
@@ -209,7 +253,7 @@ const AddressList = () => {
       <AddressModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        onSave={handleSaveAddress}
+        onSave={handleSave}
         mode={modalMode}
         initialData={editingAddress}
       />

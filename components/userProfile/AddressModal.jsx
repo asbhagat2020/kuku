@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { X } from "lucide-react";
 import axios from "axios";
-import Cookies from 'js-cookie';
+import Cookies from "js-cookie";
 
 const AddressModal = ({
   isOpen,
@@ -17,9 +17,9 @@ const AddressModal = ({
     phoneNumber: "",
     street: "",
     city: "",
-    state:"",
-    country:"",
-    postalCode:"",
+    state: "",
+    country: "",
+    postalCode: "",
   });
 
   useEffect(() => {
@@ -36,7 +36,6 @@ const AddressModal = ({
     }
   }, [initialData, mode]);
 
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -46,30 +45,28 @@ const AddressModal = ({
   };
 
   const handleSubmit = (e) => {
+    e.preventDefault();
     if (mode === "add") {
-      addAddress(e); // Call the addAddress function for "add" mode
+      addAddress();
     } else if (mode === "edit") {
-      editAddress(e); // Call the editAddress function for "edit" mode
+      editAddress();
     }
   };
 
-  const addAddress = async (e) => {
-    e.preventDefault();
-  
+  const addAddress = async () => {
     try {
       const token = JSON.parse(Cookies.get("auth"));
       const apiUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/address/add`;
-  
+
       const response = await axios.post(apiUrl, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-  
+
       if (response.status === 201) {
         console.log("Address added successfully");
-        setFormData(response.data.address);
-        onSave(formData); // Optionally call onSave if needed
+        onSave(response.data.address); // Notify parent component with the new address
         onClose();
         resetForm();
       } else {
@@ -79,27 +76,21 @@ const AddressModal = ({
       console.error("An error occurred while adding the address:", error);
     }
   };
-  
-  const editAddress = async (e) => {
-    e.preventDefault();
-  
+
+  const editAddress = async () => {
     try {
       const token = JSON.parse(Cookies.get("auth"));
-    
-      const apiUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/address/edit/${initialData._id}`; // Use the ID of the address to update
-  
+      const apiUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/address/edit/${initialData._id}`;
+
       const response = await axios.put(apiUrl, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-    
-  
+
       if (response.status === 200) {
         console.log("Address updated successfully");
-        setFormData(response.data.address);
-        onSave(formData); 
-      // Optionally call onSave if needed
+        onSave(response.data.address); // Notify parent component with the updated address
         onClose();
         resetForm();
       } else {
@@ -109,7 +100,7 @@ const AddressModal = ({
       console.error("An error occurred while updating the address:", error);
     }
   };
-  
+
   const resetForm = () => {
     setFormData({
       addressName: "",
@@ -121,9 +112,7 @@ const AddressModal = ({
       postalCode: "",
     });
   };
-  
 
-  
   if (!isOpen) return null;
 
   return (
@@ -178,77 +167,76 @@ const AddressModal = ({
                 required
               />
             </div>
-          
 
-          {/* Address 1 */}
-          <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-700">
-              Street
-            </label>
-            <input
-              type="text"
-              name="street"
-              value={formData.street}
-              onChange={handleChange}
-              placeholder="Enter Street"
-              className="w-full h-20 px-4 bg-gray-50 rounded-2xl focus:outline-none focus:ring-2 focus:ring-yellow-500"
-              required
-            />
-          </div>
+            {/* Address 1 */}
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">
+                Street
+              </label>
+              <input
+                type="text"
+                name="street"
+                value={formData.street}
+                onChange={handleChange}
+                placeholder="Enter Street"
+                className="w-full h-20 px-4 bg-gray-50 rounded-2xl focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                required
+              />
+            </div>
 
-          {/* Address 2 */}
-          <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-700">
-              City
-            </label>
-            <input
-              type="text"
-              name="city"
-              value={formData.city}
-              onChange={handleChange}
-              placeholder="Enter City"
-              className="w-full h-20 px-4 bg-gray-50 rounded-2xl focus:outline-none focus:ring-2 focus:ring-yellow-500"
-            />
-          </div>
-          <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-700">
-              State
-            </label>
-            <input
-              type="text"
-              name="state"
-              value={formData.state}
-              onChange={handleChange}
-              placeholder="Enter State"
-              className="w-full h-20 px-4 bg-gray-50 rounded-2xl focus:outline-none focus:ring-2 focus:ring-yellow-500"
-            />
-          </div>
-          <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-700">
-              Country
-            </label>
-            <input
-              type="text"
-              name="country"
-              value={formData.country}
-              onChange={handleChange}
-              placeholder="Enter Country"
-              className="w-full h-20 px-4 bg-gray-50 rounded-2xl focus:outline-none focus:ring-2 focus:ring-yellow-500"
-            />
-          </div>
-          <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-700">
-              Postal Code
-            </label>
-            <input
-              type="text"
-              name="postalCode"
-              value={formData.postalCode}
-              onChange={handleChange}
-              placeholder="Enter Postal Code"
-              className="w-full h-20 px-4 bg-gray-50 rounded-2xl focus:outline-none focus:ring-2 focus:ring-yellow-500"
-            />
-          </div>
+            {/* Address 2 */}
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">
+                City
+              </label>
+              <input
+                type="text"
+                name="city"
+                value={formData.city}
+                onChange={handleChange}
+                placeholder="Enter City"
+                className="w-full h-20 px-4 bg-gray-50 rounded-2xl focus:outline-none focus:ring-2 focus:ring-yellow-500"
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">
+                State
+              </label>
+              <input
+                type="text"
+                name="state"
+                value={formData.state}
+                onChange={handleChange}
+                placeholder="Enter State"
+                className="w-full h-20 px-4 bg-gray-50 rounded-2xl focus:outline-none focus:ring-2 focus:ring-yellow-500"
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">
+                Country
+              </label>
+              <input
+                type="text"
+                name="country"
+                value={formData.country}
+                onChange={handleChange}
+                placeholder="Enter Country"
+                className="w-full h-20 px-4 bg-gray-50 rounded-2xl focus:outline-none focus:ring-2 focus:ring-yellow-500"
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">
+                Postal Code
+              </label>
+              <input
+                type="text"
+                name="postalCode"
+                value={formData.postalCode}
+                onChange={handleChange}
+                placeholder="Enter Postal Code"
+                className="w-full h-20 px-4 bg-gray-50 rounded-2xl focus:outline-none focus:ring-2 focus:ring-yellow-500"
+              />
+            </div>
           </div>
 
           {/* Action Buttons */}
