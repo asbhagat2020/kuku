@@ -1,30 +1,50 @@
 "use client";
 
-import React, { useState } from "react";
+// import React, { useState } from "react";
 import { Search } from "lucide-react";
 import AddressModal from "./AddressModal";
+import Cookies from 'js-cookie';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 
 const AddressList = () => {
-  const [addresses, setAddresses] = useState([
-    {
-      id: 1,
-      name: "Alma Lawson",
-      phone: "+971 24353532",
-      address: "1/4, Sheikh Zayed Bin Hamdan Al Nahyan Street",
-      selected: true,
-    },
-    {
-      id: 2,
-      name: "Alma Lawson",
-      phone: "+971 24353532",
-      address: "1/4, Sheikh Zayed Bin Hamdan Al Nahyan Street",
-      selected: false,
-    },
-  ]);
+  const [addresses, setAddresses] = useState([]);
+
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMode, setModalMode] = useState('add');
   const [editingAddress, setEditingAddress] = useState(null);
+    const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+    
+      fetchAddress();
+      
+    }, []);
+
+  const fetchAddress = async () => {
+    try {
+    const token = JSON.parse(Cookies.get('auth'));
+
+      const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/address/get`;
+     
+      
+    
+      const response = await axios.get(url ,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        setAddresses(response.data.addresses);
+    } catch (err) {
+      setError("Failed to fetch user details");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleSelect = (id) => {
     setAddresses(
@@ -42,8 +62,26 @@ const AddressList = () => {
     setIsModalOpen(true);
   };
 
-  const handleDelete = (id) => {
-    setAddresses(addresses.filter((address) => address.id !== id));
+  const handleDelete = async (id) => {
+    
+    try {
+      const token = JSON.parse(Cookies.get("auth"));
+      const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/address/delete/${id}`;
+
+      const response = await axios.delete(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      console.log(response.data, "Address Deleted");
+      closePopup();
+    } catch (err) {
+      setError("Failed to delete Address");
+    } finally {
+      setLoading(false);
+    }
+   
   };
 
   const handleAddNew = () => {
@@ -129,9 +167,13 @@ const AddressList = () => {
           >
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
               <div className="space-y-1">
-                <h2 className="text-lg font-medium">{address.name}</h2>
-                <p className="text-gray-600 text-sm">{address.phone}</p>
-                <p className="text-gray-600 text-sm">{address.address}</p>
+                <h2 className="text-lg font-medium">{address.addressName}</h2>
+                <p className="text-gray-600 text-sm">{address.phoneNumber}</p>
+                <p className="text-gray-600 text-sm">{address.street}</p>
+                <p className="text-gray-600 text-sm">{address.city}</p>
+                <p className="text-gray-600 text-sm">{address.states}</p>
+                <p className="text-gray-600 text-sm">{address.country}</p>
+                <p className="text-gray-600 text-sm">{address.postalCode}</p>
                 <div className="flex gap-6 mt-3">
                   <button
                     onClick={() => handleEdit(address)}
@@ -140,7 +182,7 @@ const AddressList = () => {
                     Edit
                   </button>
                   <button
-                    onClick={() => handleDelete(address.id)}
+                    onClick={() => handleDelete(address._id)}
                     className="text-red-500 text-sm hover:underline"
                   >
                     Delete

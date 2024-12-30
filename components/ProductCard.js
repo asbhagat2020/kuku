@@ -38,7 +38,7 @@ const ProductCard = ({ product }) => {
 
   // const images = [amiriImg, amiriImg];
   const images = product?.images;
-  console.log(product,"hhhhh")
+
 
   // const [isRentPopupOpen, setIsRentPopupOpen] = useState(false);
   const [isStartFormatted, setIsStartFormatted] = useState("");
@@ -264,7 +264,7 @@ const ProductCard = ({ product }) => {
 
   return (
     <div className="max-w-screen-xl mx-auto pl-1 pr-6 font-karla">
-      {/* Breadcrumbs */}
+      
       <div className="breadcrumb text-gray-500 text-sm mb-3 mt-2">
         <Link href="/" className="hover">
           Home
@@ -284,7 +284,7 @@ const ProductCard = ({ product }) => {
 
       <div className="flex flex-col md:flex-row items-start gap-6 relative">
         <div className="w-full md:w-1/2 relative">
-          {/* Display the current image based on index */}
+          Display the current image based on index
           <Image
             unoptimized
             width={650}
@@ -305,7 +305,7 @@ const ProductCard = ({ product }) => {
             unoptimized
             width={650}
             height={500}
-            src={images[(currentImageIndex + 1) % images.length]} // Show the next image below
+            src={images[(currentImageIndex + 1) % images.length] } // Show the next image below
             alt="AMIRI Men Oversize T-shirt"
             className="object-cover rounded-md absolute top-0 left-0" // Position on top
             style={{
@@ -388,9 +388,7 @@ const ProductCard = ({ product }) => {
 
           <h1 className="text-3xl font-bold">{product?.name}</h1>
 
-          <p className="text-gray-400" style={{ marginTop: "0.2rem" }}>
-            {product?.description}
-          </p>
+          /
 
           <div className="text-2xl font-bold">
             AED {product?.price}{" "}
@@ -499,7 +497,7 @@ const ProductCard = ({ product }) => {
               <div className="flex items-center">
               <Link href={`/user_profile/${product?.seller?._id}`}>
         <Image
-          src={product?.seller?.avatar}
+          src={product?.seller?.avatar|| kukuLogo}
           alt="Kuku Logo"
           className="object-contain w-12 h-12"
           width={48} // specify the width (in pixels)
