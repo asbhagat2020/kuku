@@ -10,7 +10,7 @@ import { OfferPopup } from "./OfferPopup";
 import { FcLike } from "react-icons/fc";
 import { GoHeart } from "react-icons/go";
 
-const RecommendationCard = ({id, product, price }) => {
+const RecommendationCard = ({ id, product, price }) => {
   const [isOfferPopupOpen, setIsOfferPopupOpen] = useState(false);
   const [offerSubmitted, setOfferSubmitted] = useState(false);
   const [likedCards, setLikedCards] = useState({});
@@ -25,25 +25,25 @@ const RecommendationCard = ({id, product, price }) => {
 
   const handleOfferSubmit = (price) => {
     console.log("Offer submitted:", price);
-    // Add your submission logic here
     setOfferSubmitted(true);
     handleCloseOfferPopup();
   };
+
   const sliderSettings = {
     dots: true,
     infinite: true,
     speed: 500,
     slidesToShow: 1,
     slidesToScroll: 1,
-    arrows: false, // Disable arrows to keep the design clean
+    arrows: false,
     customPaging: (i) => (
       <div
         style={{
-          width: i === 0 ? "50px" : "26px", // Adjust width for the first dot and smaller width for others
+          width: i === 0 ? "50px" : "26px",
           height: "5px",
           borderRadius: "20px",
-          background: i === 0 ? "white" : "#eee", // First dot white, others light gray
-          marginRight: i === 0 ? "10px" : "0", // Add spacing after the first dot
+          background: i === 0 ? "white" : "#eee",
+          marginRight: i === 0 ? "10px" : "0",
           cursor: "pointer",
         }}
       />
@@ -54,16 +54,14 @@ const RecommendationCard = ({id, product, price }) => {
           padding: "15px",
           display: "flex",
           justifyContent: "center",
-          position: "absolute", // Make the dots absolute
-          bottom: "60px", // Position above the button
+          position: "absolute",
+          bottom: "60px",
           left: "50%",
           transform: "translateX(-50%)",
-          zIndex: 20, // Ensure it's above other elements
+          zIndex: 20,
         }}
       >
         <ul style={{ display: "flex", gap: "25px" }}>
-          {" "}
-          {/* Adjust gap here */}
           {dots}
         </ul>
       </div>
@@ -79,45 +77,39 @@ const RecommendationCard = ({id, product, price }) => {
 
   return (
     <div className="p-2 w-64 shrink-0 relative">
-      {/* Image Slider */}
       <Slider {...sliderSettings} className="relative">
-        {product?.images?.map((image, index) => (
-          <div key={index}>
+        {product.images && product.images.length > 0 ? (
+          product.images.map((image, index) => (
+            <div key={index}>
+              <img
+                src={image}
+                alt={`Product ${index + 1}`}
+                className="h-80 w-full object-cover rounded-lg"
+              />
+            </div>
+          ))
+        ) : (
+          <div>
             <img
-              src={image}
-              alt={`Product ${index + 1}`}
-              className="h-80 w-full object-cover rounded-lg" // Set a consistent height here
+              src="/placeholder-image.jpg"
+              alt="Placeholder"
+              className="h-80 w-full object-cover rounded-lg"
             />
           </div>
-        ))}
+        )}
       </Slider>
-      {/* <Link href="/wishlist">
-       
-        <div className="absolute top-4 right-4 flex items-center justify-center">
-          <div
-            className="rounded-full p-2"
-            style={{
-              background: "rgba(32, 31, 31, 0.30)",
-              borderRadius: "100px",
-              opacity: 0.7,
-            }}
-          >
-            <IoHeartOutline className="text-white w-5 h-5" />
-          </div>
-        </div>
-      </Link> */}
+
       <div
         className="absolute top-4 right-4 w-12 h-12 flex items-center justify-center rounded-full bg-custom-gray cursor-pointer"
         onClick={() => handleLikeClick(id)}
       >
         {likedCards[id] ? (
-          <FcLike className="text-2xl w-8 h-8" /> // Filled heart icon if liked
+          <FcLike className="text-2xl w-8 h-8" />
         ) : (
-          <GoHeart className="text-2xl text-gray-300" /> // Outline heart icon if not liked
+          <GoHeart className="text-2xl text-gray-300" />
         )}
       </div>
 
-      {/* Buy Now Button and Handshake Image */}
       <div
         className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex items-center justify-center"
         style={{ marginBottom: "5rem" }}
@@ -137,35 +129,33 @@ const RecommendationCard = ({id, product, price }) => {
             alt="Handshake"
             className="w-6 h-6 hover:scale-110 transition-transform duration-300"
             style={{ width: "24px", height: "24px" }}
-            onClick={() => handleOpenOfferPopup()}
+            onClick={handleOpenOfferPopup}
           />
         </div>
       </div>
+
       <OfferPopup
         isOpen={isOfferPopupOpen}
         onClose={handleCloseOfferPopup}
         onSubmit={handleOfferSubmit}
       />
 
-      {/* Dress and Price */}
       <div className="mt-4">
-        <p className="text-sm font-semibold text-left">Dress</p>{" "}
-        {/* Aligned to the left */}
-        <p className="text-lg font-semibold text-left">AED {price}</p>{" "}
-        {/* Aligned to the left */}
+        <p className="text-sm font-semibold text-left">
+          {product.name || "Dress"}
+        </p>
+        <p className="text-lg font-semibold text-left">
+          AED {product.price || price}
+        </p>
       </div>
     </div>
   );
 };
 
-const Recommendations = ({product}) => {
-
-  const productList = Array.isArray(product) ? product : [];
-
+const Recommendations = ({ product }) => {
   const scrollRef = useRef(null);
   const [scrollProgress, setScrollProgress] = useState(0);
 
-  // Update progress based on scroll
   const handleScroll = () => {
     if (scrollRef.current) {
       const scrollLeft = scrollRef.current.scrollLeft;
@@ -178,12 +168,13 @@ const Recommendations = ({product}) => {
 
   useEffect(() => {
     const scrollContainer = scrollRef.current;
-    scrollContainer.addEventListener("scroll", handleScroll);
-
-    return () => {
-      scrollContainer.removeEventListener("scroll", handleScroll);
-    };
+    if (scrollContainer) {
+      scrollContainer.addEventListener("scroll", handleScroll);
+      return () => scrollContainer.removeEventListener("scroll", handleScroll);
+    }
   }, []);
+
+  const productList = Array.isArray(product) ? product : [];
 
   return (
     <div className="mt-8 flex flex-col items-center mb-20">
@@ -202,24 +193,22 @@ const Recommendations = ({product}) => {
         </Link>
       </div>
 
-      {/* Carousel */}
       <div className="relative w-full max-w-screen-xl">
         <div
           ref={scrollRef}
           className="flex gap-4 overflow-x-scroll scrollbar-hide"
           style={{ scrollBehavior: "smooth", paddingBottom: "60px" }}
         >
-         {productList?.map((prod) => (
+          {productList.map((prod) => (
             <RecommendationCard
               key={prod._id}
-              imageList={prod.images}
+              id={prod._id}
+              product={prod}
               price={prod.price}
             />
           ))}
-          {/* Add more cards as needed */}
         </div>
 
-        {/* Progress Bar */}
         <div className="absolute bottom-0 left-0 w-full h-2 bg-gray-200">
           <div
             className="h-full bg-[#E4086F] transition-all duration-300 ease-out"
@@ -228,7 +217,6 @@ const Recommendations = ({product}) => {
         </div>
       </div>
 
-      {/* Hide default scrollbar */}
       <style>
         {`
           .scrollbar-hide::-webkit-scrollbar {

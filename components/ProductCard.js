@@ -40,6 +40,7 @@ const ProductCard = ({ product }) => {
   const images = product?.images;
 
 
+
   // const [isRentPopupOpen, setIsRentPopupOpen] = useState(false);
   const [isStartFormatted, setIsStartFormatted] = useState("");
   const [isEndFormatted, setIsEndFormatted] = useState("");
@@ -388,7 +389,7 @@ const ProductCard = ({ product }) => {
 
           <h1 className="text-3xl font-bold">{product?.name}</h1>
 
-          /
+          
 
           <div className="text-2xl font-bold">
             AED {product?.price}{" "}

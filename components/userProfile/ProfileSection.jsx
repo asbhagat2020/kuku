@@ -9,7 +9,6 @@ import Cookies from "js-cookie";
 import { format } from "timeago.js";
 
 const ProfileSection = (user) => {
-
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [imageSrc, setImageSrc] = useState("/kuku-suit 2.png");
   const [image, setImage] = useState("/profile_icon.svg");
@@ -50,7 +49,6 @@ const ProfileSection = (user) => {
     location: "",
   });
 
-
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -81,8 +79,6 @@ const ProfileSection = (user) => {
   };
 
   const uploadImage = async (imageFile) => {
-   
-
     const imageData = new FormData();
     imageData.append("file", imageFile);
     imageData.append("folder", "avatar"); // Append the folder field to the FormData
@@ -114,22 +110,21 @@ const ProfileSection = (user) => {
 
     if (Object.keys(errors).length === 0) {
       try {
-        let uploadedImage = formData.avatar; 
-
+        let uploadedImage = formData.avatar;
 
         if (uploadedImage && typeof uploadedImage !== "string") {
           uploadedImage = await uploadImage(uploadedImage);
         }
-      
+
         // Create the data object, excluding avatar if no imageUrl is generated
         let data = { ...formData };
-      
+
         if (uploadedImage) {
           data.avatar = uploadedImage; // Add avatar only if imageUrl is generated
         } else {
           delete data.avatar; // Remove avatar if no imageUrl is generated or if it's null
         }
- 
+
         // Replace with your actual API endpoint URL
         const apiUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/profile/edit/${id}`;
 
@@ -146,7 +141,7 @@ const ProfileSection = (user) => {
         setIsModalOpen(false);
         setUser(response.data.profile);
         setFormData(response.data.profile);
-    
+
         setFormErrors({
           fullName: "",
           email: "",
@@ -164,8 +159,6 @@ const ProfileSection = (user) => {
       setFormErrors(errors); // Show form validation errors if any
     }
   };
-
- 
 
   return (
     <div className="max-w-[1550px] mx-auto">
@@ -248,21 +241,24 @@ const ProfileSection = (user) => {
                   Share
                 </div>
               </div>
-              {user?.self ? <div
-                className="w-[250px] h-[39.40px] p-[13.70px] bg-[#2fbc74] rounded-[20px] justify-center items-center gap-[13.70px] inline-flex cursor-pointer"
-                onClick={handleEditClick}
-              >
-                <div className="text-white text-[19.18px] font-bold font-karla leading-[23.02px]">
-                  Edit
-                </div>
-              </div>:
-              <div
-                className="w-[250px] h-[39.40px] p-[13.70px] bg-[#2fbc74] rounded-[20px] justify-center items-center gap-[13.70px] inline-flex cursor-pointer"
-              >
-                <div className="text-white text-[19.18px] font-bold font-karla leading-[23.02px]">
-                  Follow
-                </div>
-              </div>}
+              {user?.user?.self ? (
+        <div
+          className="w-[250px] h-[39.40px] p-[13.70px] bg-[#2fbc74] rounded-[20px] justify-center items-center gap-[13.70px] inline-flex cursor-pointer"
+          onClick={handleEditClick}
+        >
+          <div className="text-white text-[19.18px] font-bold font-karla leading-[23.02px]">
+            Edit
+          </div>
+        </div>
+      ) : (
+        <div
+          className="w-[250px] h-[39.40px] p-[13.70px] bg-[#2fbc74] rounded-[20px] justify-center items-center gap-[13.70px] inline-flex cursor-pointer"
+        >
+          <div className="text-white text-[19.18px] font-bold font-karla leading-[23.02px]">
+            Follow
+          </div>
+        </div>
+      )}
             </div>
           </div>
           <div className="lg:w-1/2 w-full min-h-[302px] rounded-lg shadow ">
@@ -298,20 +294,19 @@ const ProfileSection = (user) => {
           <div className="w-[80px] h-[80px] md:w-[114px] md:h-[114px] rounded-full bg-[#fde504] flex justify-center items-center relative">
             {/* Profile Image */}
             <Image
-  unoptimized
-  width={100}
-  height={100}
-  className="rounded-full object-cover"
-  src={
-    typeof window !== 'undefined' && formData.avatar instanceof File
-      ? URL.createObjectURL(formData.avatar)
-      : user?.user?.avatar
-      ? user?.user?.avatar
-      : imageSrc
-  }
-  alt="Profile Picture"
-/>
-
+              unoptimized
+              width={100}
+              height={100}
+              className="rounded-full object-cover"
+              src={
+                typeof window !== "undefined" && formData.avatar instanceof File
+                  ? URL.createObjectURL(formData.avatar)
+                  : user?.user?.avatar
+                  ? user?.user?.avatar
+                  : imageSrc
+              }
+              alt="Profile Picture"
+            />
 
             {/* Hidden file input to change the image */}
             <input

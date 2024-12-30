@@ -336,11 +336,11 @@ export const ImagesComponent = () => {
             <div className="flex justify-between items-center space-x-4">
               <div className="flex space-x-4 items-center">
                 <img
-                  src={card.seller.avatar}
+                  src={card?.seller?.avatar}
                   alt="User avatar"
                   className="object-contain h-12 w-12"
                 />
-                <p className="font-bold text-sm">{card.seller.username}</p>
+                <p className="font-bold text-sm">{card?.seller?.username}</p>
               </div>
               <button
       className={`mt-2 px-4 sm:px-6 py-1 ${
@@ -357,7 +357,7 @@ export const ImagesComponent = () => {
               {/* Heart icon for like functionality */}
               <div
                 className="absolute top-4 right-4 w-12 h-12 flex items-center justify-center rounded-full bg-custom-gray cursor-pointer z-10"
-                onClick={() => handleLikeClick(card._id)}
+                onClick={() => handleLikeClick(card?._id)}
               >
                 {wishlist.includes(card._id)  ? (
                   <FcLike className="text-2xl text-red-500" /> // Filled heart for wishlist items
