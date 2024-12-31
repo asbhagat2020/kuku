@@ -8,6 +8,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { format } from "timeago.js";
 
+
 const ProfileSection = (user) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [imageSrc, setImageSrc] = useState("/kuku-suit 2.png");
@@ -401,6 +402,7 @@ const ProfileSection = (user) => {
           </form>
         </div>
       </Modal>
+    
     </div>
   );
 };

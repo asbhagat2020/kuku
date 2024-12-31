@@ -114,7 +114,7 @@ const RecommendationCard = ({ id, product, price }) => {
         className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex items-center justify-center"
         style={{ marginBottom: "5rem" }}
       >
-        <Link href="/product" passHref>
+        <Link href={`/selling-page/${product._id}`}  passHref>
           <button className="bg-[#FDE504] w-[150px] h-[48px] rounded-[1rem] font-semibold hover:opacity-80 transition-opacity mr-1">
             Buy Now
           </button>

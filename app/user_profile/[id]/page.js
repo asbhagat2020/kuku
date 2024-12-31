@@ -3,6 +3,7 @@ import Footer from '@/components/Footer';
 import Header from '@/components/Header';
 import DetailsSection from '@/components/userProfile/DetailsSection';
 import ProfileSection from '@/components/userProfile/ProfileSection';
+import ReviewItem from '@/components/userProfile/ReviewItem';
 
 import { useSelector } from "react-redux";
 import React, { useEffect, useState } from "react";
@@ -60,6 +61,7 @@ const Page = () => {
       <Header />
       <ProfileSection user={data} />
       <DetailsSection data={data} />
+      <ReviewItem user={data} />
       <Footer />
     </>
   );
