@@ -61,7 +61,6 @@ const Page = () => {
       <Header />
       <ProfileSection user={data} />
       <DetailsSection data={data} />
-      <ReviewItem user={data} />
       <Footer />
     </>
   );

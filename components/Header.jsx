@@ -481,74 +481,82 @@ const Header = () => {
     />
   </div>
 
-  {isDropdownVisible && (
-    <div className="absolute py-[26px] px-[10px] right-0 top-[40px] min-w-[178px] h-[380px] bg-white border border-gray-300 rounded-lg shadow-lg z-10 overflow-y-auto">
-      {/* Dropdown content goes here */}
-      <div className="px-4 py-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold">
-        Account
-      </div>
-      <Link href="/user_profile">
-        <div className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold">
-          Your Profile
-        </div>
-      </Link>
-      <Link href="/orderdetails">
-        <div className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold">
-          Purchases
-        </div>
-      </Link>
-      <Link href="/wishlist">
-        <div className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold">
-          Wishlist
-        </div>
-      </Link>
-      <Link href="/co2">
-        <div className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-bold font-karla hover:text-pink-500">
-          Co2 Savings
-        </div>
-      </Link>
-      <Link href="/addresslist">
-        <div className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold">
-          Address List
-        </div>
-      </Link>
-      <Link href="/emergencyrequirement">
+
+
+
+              {isDropdownVisible && (
+                <div className="absolute py-[26px] px-[10px] right-0 top-[40px] min-w-[188px] h-[350px] bg-white border border-gray-300 rounded-lg shadow-lg z-10 ">
+                  {/* Dropdown content goes here */}
+                  <div className="px-4 py-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold">
+                    Account
+                  </div>
+                  <Link href={`/user_profile/${id}`}>
+                    <div className="px-4  pb-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold">
+                      Your Profile
+                    </div>
+                  </Link>
+                  <Link href="/orderdetails">
+                  <div className="px-4 pb-2  hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold">
+                    Purchases
+                  </div>
+                  </Link>
+                  <Link href="/wishlist">
+                    <div className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold">
+                      Wishlist
+                    </div>
+                  </Link>
+                  <Link href="/co2">
+                    <div className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-bold font-karla hover:text-pink-500">
+                      Co2 Savings
+                    </div>
+                  </Link>
+                  <Link href="/addresslist">
+                  <div className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold">
+                    Shiping Address
+                  </div>
+                  </Link>
+                  <Link href="/pickupaddress">
+                  <div className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold">
+                    Pickup Address
+                  </div>
+                  </Link>
+                   <Link href="/emergencyrequirement">
         <div className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold">
           Emergency Requirement
         </div>
       </Link>
-      <Link href="#">
-        <div className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold">
-          Setting
-        </div>
-      </Link>
-      {session || isLocalToken ? (
-        <button
-          onClick={() => {
-            if (session) {
-              handleGoogleSignOut();
-            } else {
-              handleLocalSignOut();
-            }
-          }}
-          className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold"
-        >
-          Sign out
-        </button>
-      ) : (
-        <button
-          onClick={() => {
-            handleLocalSignIn();
-          }}
-          className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold"
-        >
-          Sign in
-        </button>
-      )}
-    </div>
-  )}
-</div>
+                  <Link href="#">
+                    <div className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold">
+                      Setting
+                    </div>
+                  </Link>
+                  {session || isLocalToken ? (
 
+                    <button
+                    onClick={() => {
+                      if (session) {
+                        handleGoogleSignOut()
+                      } else {
+                        handleLocalSignOut();
+                      }
+                    }}
+                      className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold"
+                    >
+                      Sign out
+                    </button>
+                  ) : (
+                    <button
+                    onClick={() => {
+                        handleLocalSignIn();
+                    }}
+                      className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold"
+                    >
+                      Sign in
+                    </button>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
         </div>
         <BottomNavigation />

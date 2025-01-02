@@ -229,7 +229,7 @@ const ProfileSection = (user) => {
                   <p className="text-black xl:text-[28px] font-bold font-karla">
                     {user?.user?.rating}
                   </p>
-                  <Image width={23} height={23} src="rating.svg" alt="" />
+                  <Image width={23} height={23} src="/rating.svg" alt="" />
                 </div>
                 <p className="text-black xl:text-[20px] font-normal font-karla">
                   Rating

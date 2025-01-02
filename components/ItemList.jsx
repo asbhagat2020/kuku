@@ -177,7 +177,7 @@ const ItemList = () => {
   
         // Handle the success response
         if (response.status === 200) {
-          setSuccessPopup(true);
+          setSuccessPopup(false);
         }
       } catch (error) {
         // Handle any errors that occur during the API call

@@ -16,170 +16,170 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 
 
-const cardData = [
-  {
-    id: 1,
-    user: "Kuku1222",
-    img: "/profile_icon.svg",
-    productImg: ["/card_image1.png", "/card_image2.png", "/card_image3.png"],
-    heard_img: "/heard_img.png",
-    title: "Dress",
-    price: "AED 120.00",
-  },
-  {
-    id: 2,
-    user: "Kuku1222",
-    img: "/profile_icon.svg",
-    productImg: ["/card_image2.png", "/card_image3.png", "/card_image1.png"],
-    heard_img: "/heard_img.png",
-    title: "Dress",
-    price: "AED 120.00",
-  },
-  {
-    id: 3,
-    user: "Kuku1222",
-    img: "/profile_icon.svg",
-    productImg: ["/card_image3.png", "/card_image1.png", "/card_image2.png"],
-    heard_img: "/heard_img.png",
-    title: "Dress",
-    price: "AED 120.00",
-  },
-  {
-    id: 4,
-    user: "Kuku1222",
-    img: "/profile_icon.svg",
-    productImg: ["/card_image4.png", "/card_image5.png", "/card_image6.png"],
-    heard_img: "/heard_img.png",
-    title: "Dress",
-    price: "AED 120.00",
-  },
-  {
-    id: 5,
-    user: "Kuku1222",
-    img: "/profile_icon.svg",
-    productImg: ["/card_image5.png", "/card_image6.png", "/card_image4.png"],
-    heard_img: "/heard_img.png",
-    title: "Dress",
-    price: "AED 120.00",
-  },
-  {
-    id: 6,
-    user: "Kuku1222",
-    img: "/profile_icon.svg",
-    productImg: ["/card_image6.png", "/card_image4.png", "/card_image5.png"],
-    heard_img: "/heard_img.png",
-    title: "Dress",
-    price: "AED 120.00",
-  },
-  {
-    id: 7,
-    user: "Kuku1222",
-    img: "/profile_icon.svg",
-    productImg: ["/card_image1.png", "/card_image2.png", "/card_image3.png"],
-    heard_img: "/heard_img.png",
-    title: "Dress",
-    price: "AED 120.00",
-  },
-  {
-    id: 8,
-    user: "Kuku1222",
-    img: "/profile_icon.svg",
-    productImg: ["/card_image2.png", "/card_image3.png", "/card_image1.png"],
-    heard_img: "/heard_img.png",
-    title: "Dress",
-    price: "AED 120.00",
-  },
-  {
-    id: 9,
-    user: "Kuku1222",
-    img: "/profile_icon.svg",
-    productImg: ["/card_image3.png", "/card_image1.png", "/card_image2.png"],
-    heard_img: "/heard_img.png",
-    title: "Dress",
-    price: "AED 120.00",
-  },
-  {
-    id: 10,
-    user: "Kuku1222",
-    img: "/profile_icon.svg",
-    productImg: ["/card_image1.png", "/card_image2.png", "/card_image3.png"],
-    heard_img: "/heard_img.png",
-    title: "Dress",
-    price: "AED 120.00",
-  },
-  {
-    id: 11,
-    user: "Kuku1222",
-    img: "/profile_icon.svg",
-    productImg: ["/card_image2.png", "/card_image3.png", "/card_image1.png"],
-    heard_img: "/heard_img.png",
-    title: "Dress",
-    price: "AED 120.00",
-  },
-  {
-    id: 12,
-    user: "Kuku1222",
-    img: "/profile_icon.svg",
-    productImg: ["/card_image3.png", "/card_image1.png", "/card_image2.png"],
-    heard_img: "/heard_img.png",
-    title: "Dress",
-    price: "AED 120.00",
-  },
-  {
-    id: 13,
-    user: "Kuku1222",
-    img: "/profile_icon.svg",
-    productImg: ["/card_image4.png", "/card_image5.png", "/card_image6.png"],
-    heard_img: "/heard_img.png",
-    title: "Dress",
-    price: "AED 120.00",
-  },
-  {
-    id: 14,
-    user: "Kuku1222",
-    img: "/profile_icon.svg",
-    productImg: ["/card_image5.png", "/card_image6.png", "/card_image4.png"],
-    heard_img: "/heard_img.png",
-    title: "Dress",
-    price: "AED 120.00",
-  },
-  {
-    id: 15,
-    user: "Kuku1222",
-    img: "/profile_icon.svg",
-    productImg: ["/card_image6.png", "/card_image4.png", "/card_image5.png"],
-    heard_img: "/heard_img.png",
-    title: "Dress",
-    price: "AED 120.00",
-  },
-  {
-    id: 16,
-    user: "Kuku1222",
-    img: "/profile_icon.svg",
-    productImg: ["/card_image1.png", "/card_image2.png", "/card_image3.png"],
-    heard_img: "/heard_img.png",
-    title: "Dress",
-    price: "AED 120.00",
-  },
-  {
-    id: 17,
-    user: "Kuku1222",
-    img: "/profile_icon.svg",
-    productImg: ["/card_image2.png", "/card_image3.png", "/card_image1.png"],
-    heard_img: "/heard_img.png",
-    title: "Dress",
-    price: "AED 120.00",
-  },
-  {
-    id: 18,
-    user: "Kuku1222",
-    img: "/profile_icon.svg",
-    productImg: ["/card_image3.png", "/card_image1.png", "/card_image2.png"],
-    heard_img: "/heard_img.png",
-    title: "Dress",
-    price: "AED 120.00",
-  },
-];
+// const cardData = [
+//   {
+//     id: 1,
+//     user: "Kuku1222",
+//     img: "/profile_icon.svg",
+//     productImg: ["/card_image1.png", "/card_image2.png", "/card_image3.png"],
+//     heard_img: "/heard_img.png",
+//     title: "Dress",
+//     price: "AED 120.00",
+//   },
+//   {
+//     id: 2,
+//     user: "Kuku1222",
+//     img: "/profile_icon.svg",
+//     productImg: ["/card_image2.png", "/card_image3.png", "/card_image1.png"],
+//     heard_img: "/heard_img.png",
+//     title: "Dress",
+//     price: "AED 120.00",
+//   },
+//   {
+//     id: 3,
+//     user: "Kuku1222",
+//     img: "/profile_icon.svg",
+//     productImg: ["/card_image3.png", "/card_image1.png", "/card_image2.png"],
+//     heard_img: "/heard_img.png",
+//     title: "Dress",
+//     price: "AED 120.00",
+//   },
+//   {
+//     id: 4,
+//     user: "Kuku1222",
+//     img: "/profile_icon.svg",
+//     productImg: ["/card_image4.png", "/card_image5.png", "/card_image6.png"],
+//     heard_img: "/heard_img.png",
+//     title: "Dress",
+//     price: "AED 120.00",
+//   },
+//   {
+//     id: 5,
+//     user: "Kuku1222",
+//     img: "/profile_icon.svg",
+//     productImg: ["/card_image5.png", "/card_image6.png", "/card_image4.png"],
+//     heard_img: "/heard_img.png",
+//     title: "Dress",
+//     price: "AED 120.00",
+//   },
+//   {
+//     id: 6,
+//     user: "Kuku1222",
+//     img: "/profile_icon.svg",
+//     productImg: ["/card_image6.png", "/card_image4.png", "/card_image5.png"],
+//     heard_img: "/heard_img.png",
+//     title: "Dress",
+//     price: "AED 120.00",
+//   },
+//   {
+//     id: 7,
+//     user: "Kuku1222",
+//     img: "/profile_icon.svg",
+//     productImg: ["/card_image1.png", "/card_image2.png", "/card_image3.png"],
+//     heard_img: "/heard_img.png",
+//     title: "Dress",
+//     price: "AED 120.00",
+//   },
+//   {
+//     id: 8,
+//     user: "Kuku1222",
+//     img: "/profile_icon.svg",
+//     productImg: ["/card_image2.png", "/card_image3.png", "/card_image1.png"],
+//     heard_img: "/heard_img.png",
+//     title: "Dress",
+//     price: "AED 120.00",
+//   },
+//   {
+//     id: 9,
+//     user: "Kuku1222",
+//     img: "/profile_icon.svg",
+//     productImg: ["/card_image3.png", "/card_image1.png", "/card_image2.png"],
+//     heard_img: "/heard_img.png",
+//     title: "Dress",
+//     price: "AED 120.00",
+//   },
+//   {
+//     id: 10,
+//     user: "Kuku1222",
+//     img: "/profile_icon.svg",
+//     productImg: ["/card_image1.png", "/card_image2.png", "/card_image3.png"],
+//     heard_img: "/heard_img.png",
+//     title: "Dress",
+//     price: "AED 120.00",
+//   },
+//   {
+//     id: 11,
+//     user: "Kuku1222",
+//     img: "/profile_icon.svg",
+//     productImg: ["/card_image2.png", "/card_image3.png", "/card_image1.png"],
+//     heard_img: "/heard_img.png",
+//     title: "Dress",
+//     price: "AED 120.00",
+//   },
+//   {
+//     id: 12,
+//     user: "Kuku1222",
+//     img: "/profile_icon.svg",
+//     productImg: ["/card_image3.png", "/card_image1.png", "/card_image2.png"],
+//     heard_img: "/heard_img.png",
+//     title: "Dress",
+//     price: "AED 120.00",
+//   },
+//   {
+//     id: 13,
+//     user: "Kuku1222",
+//     img: "/profile_icon.svg",
+//     productImg: ["/card_image4.png", "/card_image5.png", "/card_image6.png"],
+//     heard_img: "/heard_img.png",
+//     title: "Dress",
+//     price: "AED 120.00",
+//   },
+//   {
+//     id: 14,
+//     user: "Kuku1222",
+//     img: "/profile_icon.svg",
+//     productImg: ["/card_image5.png", "/card_image6.png", "/card_image4.png"],
+//     heard_img: "/heard_img.png",
+//     title: "Dress",
+//     price: "AED 120.00",
+//   },
+//   {
+//     id: 15,
+//     user: "Kuku1222",
+//     img: "/profile_icon.svg",
+//     productImg: ["/card_image6.png", "/card_image4.png", "/card_image5.png"],
+//     heard_img: "/heard_img.png",
+//     title: "Dress",
+//     price: "AED 120.00",
+//   },
+//   {
+//     id: 16,
+//     user: "Kuku1222",
+//     img: "/profile_icon.svg",
+//     productImg: ["/card_image1.png", "/card_image2.png", "/card_image3.png"],
+//     heard_img: "/heard_img.png",
+//     title: "Dress",
+//     price: "AED 120.00",
+//   },
+//   {
+//     id: 17,
+//     user: "Kuku1222",
+//     img: "/profile_icon.svg",
+//     productImg: ["/card_image2.png", "/card_image3.png", "/card_image1.png"],
+//     heard_img: "/heard_img.png",
+//     title: "Dress",
+//     price: "AED 120.00",
+//   },
+//   {
+//     id: 18,
+//     user: "Kuku1222",
+//     img: "/profile_icon.svg",
+//     productImg: ["/card_image3.png", "/card_image1.png", "/card_image2.png"],
+//     heard_img: "/heard_img.png",
+//     title: "Dress",
+//     price: "AED 120.00",
+//   },
+// ];
 
 export const ImagesComponent = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -187,7 +187,8 @@ export const ImagesComponent = () => {
   const [offerSubmitted, setOfferSubmitted] = useState(false);
   const [likedCards, setLikedCards] = useState({});
   const [data, setData] = useState([]);
-
+  const [selectedProductId,setSelectedProductId] = useState([]);
+  const [selectedSellerId,setSelectedSellerId] = useState([]);
   const [isFollowing, setIsFollowing] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -226,7 +227,9 @@ export const ImagesComponent = () => {
     setCurrentPage(selectedPage);
   };
 
-  const handleOpenOfferPopup = () => {
+  const handleOpenOfferPopup = (id,sellerid) => {
+    setSelectedProductId(id);
+    setSelectedSellerId(sellerid);
     setIsOfferPopupOpen(true);
   };
 
@@ -234,12 +237,37 @@ export const ImagesComponent = () => {
     setIsOfferPopupOpen(false);
   };
 
-  const handleOfferSubmit = (price) => {
-    console.log("Offer submitted:", price);
+  const handleOfferSubmit = async(price) => {
+   
     // Add your submission logic here
-    setOfferSubmitted(true);
+    try {
+
+  
+      const token = JSON.parse(Cookies.get('auth'));
+      const data = { offerPrice: price, seller:selectedSellerId};
+  
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/offer/add/${selectedProductId}`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+  
+      if (response.status === 201) {
+        setOfferSubmitted(true);
     handleCloseOfferPopup();
+      } else {
+        console.error("Failed to submit offer:", response.statusText);
+      }
+    } catch (error) {
+      console.error("An error occurred:", error.message);
+    }
   };
+
+  
 
   // const handleLikeClick = (cardId) => {
   //   setLikedCards((prevLikedCards) => ({
@@ -397,7 +425,7 @@ export const ImagesComponent = () => {
                     src="handshake_img.png"
                     alt="Open Offer Popup"
                     className="cursor-pointer"
-                    onClick={() => handleOpenOfferPopup(card)}
+                    onClick={() => handleOpenOfferPopup(card._id,card.seller._id)}
                   />
                 </div>
               </div>
