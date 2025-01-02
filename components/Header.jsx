@@ -17,9 +17,7 @@ import Cookies from "js-cookie";
 import { useDispatch, useSelector } from "react-redux";
 import { logout, token } from "@/store/auth/authSlice";
 
-
 const Header = () => {
-
   const [isSearchVisible, setIsSearchVisible] = useState(false);
   const [isMobileSearchVisible, setIsMobileSearchVisible] = useState(false);
   const [isNotificationVisible, setIsNotificationVisible] = useState(false);
@@ -37,17 +35,16 @@ const Header = () => {
   const [currentOpenDropdown, setCurrentOpenDropdown] = useState(null);
   const [isLocalToken, setIsLocalToken] = useState(false);
   const { data: session, status } = useSession();
-  const router=useRouter()
-  const dispatch=useDispatch()
-
+  const router = useRouter();
+  const dispatch = useDispatch();
 
   const { token } = useSelector((store) => store.auth);
   useEffect(() => {
-      setIsLocalToken(token)
-  }, [token])
+    setIsLocalToken(token);
+  }, [token]);
 
-   const details = useSelector((state) => state.auth.user);
-    const id = details?._id;
+  const details = useSelector((state) => state.auth.user);
+  const id = details?._id;
 
   const handleToggle = (dropdown) => {
     setCurrentOpenDropdown(currentOpenDropdown === dropdown ? null : dropdown);
@@ -144,21 +141,21 @@ const Header = () => {
   };
   const handleGoogleSignOut = () => {
     // Remove cookies
-    Cookies.remove('auth');
-    Cookies.remove('user');
-  
+    Cookies.remove("auth");
+    Cookies.remove("user");
+
     // Perform signOut and dispatch logout, then chain actions
     signOut()
       .then(() => {
         // Dispatch Redux logout action after successful signOut
         dispatch(logout());
-  
+
         // Optional: Log a success message
-        console.log('Google sign out successful');
+        console.log("Google sign out successful");
       })
       .catch((error) => {
         // Handle any errors during signOut
-        console.error('Google sign out failed:', error);
+        console.error("Google sign out failed:", error);
       });
   };
   // Paths where the notification icon should be disabled
@@ -167,7 +164,10 @@ const Header = () => {
 
   // Determine background color based on the path
   const isSpecialPath =
-    path === "/listingproduct" || path === "/kukuit" || path === "/renting" || path === "/emergencyrequirement";
+    path === "/listingproduct" ||
+    path === "/kukuit" ||
+    path === "/renting" ||
+    path === "/emergencyrequirement";
   const iconsPath = path === "/user_profile";
   const wishPath = path === "/wishlist";
   const cartPath = path === "/cart";
@@ -216,31 +216,32 @@ const Header = () => {
   };
   const handleLocalSignOut = () => {
     // Remove cookies
-    Cookies.remove('auth');
-    Cookies.remove('user');
-  
+    Cookies.remove("auth");
+    Cookies.remove("user");
+
     // Dispatch logout and redirect on success
     dispatch(logout())
       .then(() => {
         // Optional: Redirect the user to the login page or homepage after logout
-        router.push('/login');
+        router.push("/login");
       })
       .catch((error) => {
         // Handle any errors during the logout process (if any)
-        console.error('Logout failed:', error);
+        console.error("Logout failed:", error);
       });
   };
-  const handleLocalSignIn=()=>{
-    router.push('/login')
-  }
+  const handleLocalSignIn = () => {
+    router.push("/login");
+  };
 
   return (
     <header>
       <LanguageSelector />
       <div
         id="header"
-        className={`w-full transition-all duration-300 ${isFixed ? " top-0 left-0 right-0 shadow-md" : "relative"
-          } max-w-full lg:px-[70px] py-[23px] h-[80px] lg:h-[108px] z-40`}
+        className={`w-full transition-all duration-300 ${
+          isFixed ? " top-0 left-0 right-0 shadow-md" : "relative"
+        } max-w-full lg:px-[70px] py-[23px] h-[80px] lg:h-[108px] z-40`}
         style={{
           backgroundColor: isSpecialPath ? "#FFF" : "#EDA702",
         }}
@@ -268,8 +269,9 @@ const Header = () => {
               className="pl-2 lg:hidden"
             />
             <div
-              className={`lg:hidden pl-4 ${isSearchVisible ? "lg:block hidden" : ""
-                }`}
+              className={`lg:hidden pl-4 ${
+                isSearchVisible ? "lg:block hidden" : ""
+              }`}
             >
               <Link href="/">
                 <Image
@@ -283,29 +285,33 @@ const Header = () => {
             </div>
 
             <div
-              className={`lg:flex gap-[30px] items-center hidden ${isSearchVisible ? "lg:hidden xl:flex" : ""
-                }`}
+              className={`lg:flex gap-[30px] items-center hidden ${
+                isSearchVisible ? "lg:hidden xl:flex" : ""
+              }`}
             >
               <Link
                 href="#"
-                className={`${isHome ? "text-[#fefae5]" : "text-black"
-                  } text-base font-bold font-karla leading-tight hover:text-pink-500`}
+                className={`${
+                  isHome ? "text-[#fefae5]" : "text-black"
+                } text-base font-bold font-karla leading-tight hover:text-pink-500`}
               >
                 {/* Men */}
                 <MenDropdown />
               </Link>
               <Link
                 href="#"
-                className={`${isHome ? "text-[#fefae5]" : "text-black"
-                  } text-base font-bold font-karla leading-tight hover:text-pink-500`}
+                className={`${
+                  isHome ? "text-[#fefae5]" : "text-black"
+                } text-base font-bold font-karla leading-tight hover:text-pink-500`}
               >
                 {/* Women */}
                 <WomenDropdown />
               </Link>
               <Link
                 href="#"
-                className={`${isHome ? "text-[#fefae5]" : "text-black"
-                  } text-base font-bold font-karla leading-tight hover:text-pink-500`}
+                className={`${
+                  isHome ? "text-[#fefae5]" : "text-black"
+                } text-base font-bold font-karla leading-tight hover:text-pink-500`}
               >
                 {/* Kids */}
                 <KidsDropdown />
@@ -394,8 +400,9 @@ const Header = () => {
 
             {!isNotificationDisabled && (
               <div
-                className={`h-10 w-10 lg:h-[54px] lg:w-[54px] flex items-center justify-center bg-white/40 rounded-full cursor-pointer ${isSearchVisible ? "block" : ""
-                  }`}
+                className={`h-10 w-10 lg:h-[54px] lg:w-[54px] flex items-center justify-center bg-white/40 rounded-full cursor-pointer ${
+                  isSearchVisible ? "block" : ""
+                }`}
                 onClick={toggleNotifications}
               >
                 <Image
@@ -419,8 +426,9 @@ const Header = () => {
             {/* Cart, Wishlist, Profile Icons */}
             <Link href="/cart">
               <div
-                className={`${cartPath ? "bg-[#393939]" : "bg-white/40"
-                  } h-[54px] p-[15px] rounded-[100px] hidden lg:block`}
+                className={`${
+                  cartPath ? "bg-[#393939]" : "bg-white/40"
+                } h-[54px] p-[15px] rounded-[100px] hidden lg:block`}
               >
                 <Image
                   alt="cart icon"
@@ -432,8 +440,9 @@ const Header = () => {
             </Link>
             <Link href="/wishlist">
               <div
-                className={` h-10 w-10 lg:h-[54px] lg:w-[54px] flex items-center justify-center rounded-full cursor-pointer  ${wishPath ? "bg-[#393939]" : "bg-white/40"
-                  } ml-[-10px] lg:ml-0`}
+                className={` h-10 w-10 lg:h-[54px] lg:w-[54px] flex items-center justify-center rounded-full cursor-pointer  ${
+                  wishPath ? "bg-[#393939]" : "bg-white/40"
+                } ml-[-10px] lg:ml-0`}
               >
                 <Image
                   alt="wishlist icon"
@@ -446,8 +455,9 @@ const Header = () => {
             </Link>
             <Link href={`/user_profile/${id}`}>
               <div
-                className={`${iconsPath ? "bg-[#393939]" : "bg-white/40"
-                  } h-[54px] p-[15px]  rounded-[100px] hidden lg:block`}
+                className={`${
+                  iconsPath ? "bg-[#393939]" : "bg-white/40"
+                } h-[54px] p-[15px]  rounded-[100px] hidden lg:block`}
               >
                 <Image
                   alt="profile icon"
@@ -459,89 +469,95 @@ const Header = () => {
             </Link>
 
             <div ref={dropdownRef} className="relative">
-              <div
-                onClick={toggleDropdown}
-                className="cursor-pointer hidden lg:block"
-              >
-                <Image
-                  alt="dropdown"
-                  width={14}
-                  height={14}
-                  src="/heade_drop_down.svg"
-                />
-              </div>
+  <div
+    onClick={toggleDropdown}
+    className="cursor-pointer hidden lg:block"
+  >
+    <Image
+      alt="dropdown"
+      width={14}
+      height={14}
+      src="/heade_drop_down.svg"
+    />
+  </div>
 
-              {isDropdownVisible && (
-                <div className="absolute py-[26px] px-[10px] right-0 top-[40px] min-w-[178px] h-[300px] bg-white border border-gray-300 rounded-lg shadow-lg z-10 ">
-                  {/* Dropdown content goes here */}
-                  <div className="px-4 py-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold">
-                    Account
-                  </div>
-                  <Link href="/user_profile">
-                    <div className="px-4  pb-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold">
-                      Your Profile
-                    </div>
-                  </Link>
-                  <Link href="/orderdetails">
-                  <div className="px-4 pb-2  hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold">
-                    Purchases
-                  </div>
-                  </Link>
-                  <Link href="/wishlist">
-                    <div className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold">
-                      Wishlist
-                    </div>
-                  </Link>
-                  <Link href="/co2">
-                    <div className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-bold font-karla hover:text-pink-500">
-                      Co2 Savings
-                    </div>
-                  </Link>
-                  <Link href="/addresslist">
-                  <div className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold">
-                    Address List
-                  </div>
-                  </Link>
-                  <Link href="#">
-                    <div className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold">
-                      Setting
-                    </div>
-                  </Link>
-                  {session || isLocalToken ? (
+  {isDropdownVisible && (
+    <div className="absolute py-[26px] px-[10px] right-0 top-[40px] min-w-[178px] h-[380px] bg-white border border-gray-300 rounded-lg shadow-lg z-10 overflow-y-auto">
+      {/* Dropdown content goes here */}
+      <div className="px-4 py-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold">
+        Account
+      </div>
+      <Link href="/user_profile">
+        <div className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold">
+          Your Profile
+        </div>
+      </Link>
+      <Link href="/orderdetails">
+        <div className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold">
+          Purchases
+        </div>
+      </Link>
+      <Link href="/wishlist">
+        <div className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold">
+          Wishlist
+        </div>
+      </Link>
+      <Link href="/co2">
+        <div className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-bold font-karla hover:text-pink-500">
+          Co2 Savings
+        </div>
+      </Link>
+      <Link href="/addresslist">
+        <div className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold">
+          Address List
+        </div>
+      </Link>
+      <Link href="/emergencyrequirement">
+        <div className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold">
+          Emergency Requirement
+        </div>
+      </Link>
+      <Link href="#">
+        <div className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold">
+          Setting
+        </div>
+      </Link>
+      {session || isLocalToken ? (
+        <button
+          onClick={() => {
+            if (session) {
+              handleGoogleSignOut();
+            } else {
+              handleLocalSignOut();
+            }
+          }}
+          className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold"
+        >
+          Sign out
+        </button>
+      ) : (
+        <button
+          onClick={() => {
+            handleLocalSignIn();
+          }}
+          className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold"
+        >
+          Sign in
+        </button>
+      )}
+    </div>
+  )}
+</div>
 
-                    <button
-                    onClick={() => {
-                      if (session) {
-                        handleGoogleSignOut()
-                      } else {
-                        handleLocalSignOut();
-                      }
-                    }}
-                      className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold"
-                    >
-                      Sign out
-                    </button>
-                  ) : (
-                    <button
-                    onClick={() => {
-                        handleLocalSignIn();
-                    }}
-                      className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold"
-                    >
-                      Sign in
-                    </button>
-                  )}
-                </div>
-              )}
-            </div>
           </div>
         </div>
         <BottomNavigation />
         <div
-          className={`w-full h-screen bg-yellow-500 lg:hidden fixed  px-[20px] py-[20px] top-[-2px] left-0 right-0 bottom-0 z-[1000] transition-transform ease-in-out duration-300 ${hamburger
+          className={`w-full h-screen bg-yellow-500 lg:hidden fixed  px-[20px] py-[20px] top-[-2px] left-0 right-0 bottom-0 z-[1000] transition-transform ease-in-out duration-300 ${
+            hamburger
               ? "transform translate-x-0 z-50"
               : "transform translate-x-full z-0"
-            }`}
+          }`}
         >
           <div className="flex px-[24px] mt-[20px] justify-between">
             <div
@@ -667,8 +683,9 @@ const Header = () => {
             <div className="flex flex-col gap-[30px]">
               <Link
                 href="#"
-                className={`${isHome ? "text-white" : "text-black"
-                  } text-base font-bold font-karla leading-tight hover:text-pink-500 z-50`}
+                className={`${
+                  isHome ? "text-white" : "text-black"
+                } text-base font-bold font-karla leading-tight hover:text-pink-500 z-50`}
               >
                 {/* MEN */}
                 {/* <MenDropdown /> */}
@@ -679,8 +696,9 @@ const Header = () => {
               </Link>
               <Link
                 href="#"
-                className={`${isHome ? "text-white" : "text-black"
-                  } text-base font-bold font-karla leading-tight hover:text-pink-500 z-40`}
+                className={`${
+                  isHome ? "text-white" : "text-black"
+                } text-base font-bold font-karla leading-tight hover:text-pink-500 z-40`}
               >
                 {/* WOMEN */}
                 {/* <WomenDropdown /> */}
@@ -691,8 +709,9 @@ const Header = () => {
               </Link>
               <Link
                 href="#"
-                className={`${isHome ? "text-white" : "text-black"
-                  } text-base font-bold font-karla leading-tight hover:text-pink-500 z-30`}
+                className={`${
+                  isHome ? "text-white" : "text-black"
+                } text-base font-bold font-karla leading-tight hover:text-pink-500 z-30`}
               >
                 {/* KIDS */}
                 {/* <KidsDropdown /> */}
@@ -711,8 +730,9 @@ const Header = () => {
           <div className="flex mx-6 mt-5 justify-between">
             <Link href="/cart">
               <div
-                className={`${cartPath ? "bg-[#393939]" : "bg-white/40"
-                  } h-[54px] p-[15px] rounded-[100px]`}
+                className={`${
+                  cartPath ? "bg-[#393939]" : "bg-white/40"
+                } h-[54px] p-[15px] rounded-[100px]`}
               >
                 <Image
                   alt="cart icon"
@@ -724,8 +744,9 @@ const Header = () => {
             </Link>
             <Link href="/wishlist">
               <div
-                className={`${wishPath ? "bg-[#393939]" : "bg-white/40"
-                  } h-[54px] p-[15px] rounded-[100px]`}
+                className={`${
+                  wishPath ? "bg-[#393939]" : "bg-white/40"
+                } h-[54px] p-[15px] rounded-[100px]`}
               >
                 <Image
                   alt="wishlist icon"
@@ -737,8 +758,9 @@ const Header = () => {
             </Link>
             <Link href="/user_profile">
               <div
-                className={`${iconsPath ? "bg-[#393939]" : "bg-white/40"
-                  } h-[54px] p-[15px]  rounded-[100px]`}
+                className={`${
+                  iconsPath ? "bg-[#393939]" : "bg-white/40"
+                } h-[54px] p-[15px]  rounded-[100px]`}
               >
                 <Image
                   alt="profile icon"
