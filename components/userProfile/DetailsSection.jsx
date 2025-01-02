@@ -60,8 +60,15 @@ const SellingCards = ({ data }) => {
   const [productIdToDelete, setProductIdToDelete] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [selectedProductId, setSelectedProductId] = useState(null);
+  const [selectedSellerId, setSelectedSellerId] = useState(null);
+  console.log(selectedSellerId,"uuuuuuuu");
 
-  const handleOpenOfferPopup = () => {
+  const handleOpenOfferPopup = (id, seller) => {
+    console.log(id, "Product ID for offer");
+    setSelectedProductId(id);
+    setSelectedSellerId(seller);
+     // Store the selected product ID
     setIsOfferPopupOpen(true);
   };
 
@@ -69,13 +76,42 @@ const SellingCards = ({ data }) => {
     setIsOfferPopupOpen(false);
   };
 
-  const handleOfferSubmit = (price) => {
-    console.log("Offer submitted:", price);
-    // Add your submission logic here
-    setOfferSubmitted(true);
-    handleCloseOfferPopup();
-  };
+  const handleOfferSubmit = async (price) => {
+    console.log("Offer submitted with price:", price);
 
+    if (!selectedProductId) {
+      console.error("No product ID selected.");
+      return;
+    }
+
+    try {
+      const token = JSON.parse(Cookies.get("auth"));
+      const data = { offerPrice: price, seller:selectedSellerId};
+
+      console.log(data, "Offer data");
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/offer/add/${selectedProductId}`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.status === 201) {
+        setOfferSubmitted(true);
+        handleCloseOfferPopup();
+      } else {
+        console.error("Failed to submit offer:", response.statusText);
+      }
+    } catch (error) {
+      console.error(
+        "An error occurred while submitting the offer:",
+        error.message
+      );
+    }
+  };
   const handleLikeClick = (cardId) => {
     setLikedCards((prevLikedCards) => ({
       ...prevLikedCards,
@@ -117,7 +153,7 @@ const SellingCards = ({ data }) => {
     setLoading(true);
     handleDelete(productIdToDelete);
   };
-
+console.log(data,"nnnnnnnnnn");
   return (
     <div className="px-[71px] mb-10">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-4 relative place-items-center">
@@ -150,6 +186,18 @@ const SellingCards = ({ data }) => {
                   />
                 </div>
               </div>
+              <Link href={`/editproduct/${item._id}`}>
+              <div className="absolute  right-5 top-[180px] z-10">
+                <div className="h-[54px] p-[15px] bg-white rounded-[100px]">
+                  <AiFillDelete
+                    size={24} // Set the size of the icon
+                    color="red" // Optionally set the color
+                    onClick={() => openPopup(item._id)} // Call handleDelete on click
+                    style={{ cursor: "pointer" }} // Add pointer cursor
+                  />
+                </div>
+              </div>
+              </Link>
 
               <Link href={`/selling-page/${item._id}`}>
                 <div className="absolute min-w-[204px] bottom-4 left-4 text-center z-10 bg-[#fde504] px-[50px] py-[20px] rounded-[20px]">
@@ -164,8 +212,8 @@ const SellingCards = ({ data }) => {
                     alt=""
                     width={24}
                     height={24}
-                    src="hand_shake.svg"
-                    onClick={() => handleOpenOfferPopup()}
+                    src="/hand_shake.svg"
+                    onClick={() => handleOpenOfferPopup(item._id,item.seller)}
                   />
                 </div>
               </div>
@@ -298,13 +346,26 @@ const ReviewCards = ({ data }) => {
               Customer Reviews
             </p>
             <div className="flex items-center justify-center gap-2">
-              <Image width={26} height={26} src="/rating.svg" alt="" />
+              <Image
+                width={26}
+                height={26}
+                src="/rating.svg"
+                alt="Rating Icon"
+              />
               <p className="text-center text-[#9c9c9c] text-[26.92px] font-normal font-karla leading-loose">
-                {data.rating}
+                {data.length > 0
+                  ? (
+                      data.reduce(
+                        (total, item) => total + (item.rating || 0),
+                        0
+                      ) / data.length
+                    ).toFixed(1)
+                  : 0}
+                Rating
               </p>
               <div className="w-2 h-2 rounded-full bg-[#9c9c9c]"></div>
               <div className="text-center text-[#9c9c9c] lg:text-[26.92px] font-normal font-karla leading-loose">
-                ({data.reviews} Reviews)
+                {data.length > 0 ? `${data.length} Reviews` : "No Reviews"}
               </div>
             </div>
           </div>
@@ -360,8 +421,8 @@ const ReviewCards = ({ data }) => {
         </div>
       </div>
       <div className="py-[56px] flex flex-col gap-[56px] pl-5">
-        {[1, 2, 3].map((_, index) => (
-          <ReviewItem key={index} />
+        {[1].map((_, index) => (
+          <ReviewItem key={index} data={data} />
         ))}
       </div>
     </div>
@@ -899,7 +960,7 @@ export default function DetailsSection({ data }) {
   //   price: "AED 120.00",
   // },
 
-  const reviewData = { rating: 4.8, reviews: 27, review: [1, 2, 3] };
+  const reviewData = data.reviews;
 
   const statsData = [
     { id: 13, title: "Total Sales", stat: "1,000" },

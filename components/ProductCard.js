@@ -35,6 +35,7 @@ const ProductCard = ({ product }) => {
   const [isModalOpen, setIsModalOpen] = useState(false); // State to control the modal
   const [currentImageIndex, setCurrentImageIndex] = useState(0); // State to keep track of the current image
   const [isDateSelected, setIsDateSelected] = useState(false);
+console.log(selectedPrice,"ooooooooo");
 
   // const images = [amiriImg, amiriImg];
   const images = product?.images;
@@ -198,11 +199,35 @@ const ProductCard = ({ product }) => {
     };
   }, []);
 
-  const handleOpenModal = () => {
-    setIsModalOpen(true);
-
-    setOfferPopupOpen(false);
+  const handleOpenModal = async () => {
+    
+    try {
+   
+  
+      const token = JSON.parse(Cookies.get('auth'));
+      const data = { offerPrice: selectedPrice, seller:product.seller };
+  
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/offer/add/${product._id}`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+  
+      if (response.status === 201) {
+        setIsModalOpen(true);
+        setOfferPopupOpen(false);
+      } else {
+        console.error("Failed to submit offer:", response.statusText);
+      }
+    } catch (error) {
+      console.error("An error occurred:", error.message);
+    }
   };
+  
 
   const handleCloseModal = () => {
     setIsModalOpen(false);

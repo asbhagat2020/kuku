@@ -4,6 +4,8 @@ import DraggableProgressBar from "./DraggableProgressBar";
 import Link from "next/link";  
 import { useRouter } from "next/navigation";  
 import CustomDateInput from "./CustomDateInput";  
+import Cookies from 'js-cookie';
+import axios from "axios";
   
 const KukuitMain = () => {  
   const Modal = ({ onClose }) => {  
@@ -56,6 +58,8 @@ const KukuitMain = () => {
    time: "",  
    agreeTerms: false,  
   });  
+
+
   const [errors, setErrors] = useState({});  
   
   const handleInputChange = (e) => {  
@@ -123,11 +127,58 @@ const KukuitMain = () => {
    }  
   };  
   
-  const handleConfirmClick = () => {  
-   if (validateForm()) {  
-    setModal(true);  
-   }  
-  };  
+  const handleConfirmClick = async () => {
+    if (!validateForm()) return; // Exit if the form is invalid
+  
+    try {
+      // Prepare the data to be sent
+      const details = {
+        numberOfItems:customNumber || selectedScale,
+        pickupDate:new Date(formData.date).getTime(),
+        pickupTime:formData.time,
+       
+       // Replace with your form data
+      };
+
+      const pickupLocation = {
+        country:formData.country,
+        city:formData.city,
+        addressLine1:formData.addressLine1,
+        addressLine2:formData.addressLine2,
+        firstName:formData.firstName, // Replace with your form data
+        lastName: formData.lastName,
+        email: formData.email, // Replace with your form data
+        phone: formData.phone,
+       
+      };
+  
+    
+      // Get token from cookies
+      const token = JSON.parse(Cookies.get('auth'));
+  
+      // Make the API call
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/kukuit/add`, // Replace with your endpoint
+        {details,pickupLocation},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+  
+      // Handle successful response
+      if (response.status === 201 || response.status === 200) {
+        setModal(true); // Show the modal on success
+      } else {
+        console.error("Failed to add kukuit:", response.statusText);
+      }
+    } catch (error) {
+      // Handle errors
+      console.error("An error occurred:", error.message);
+    }
+  };
+    
   
   const handleCloseModal = () => {  
    setModal(false);  
@@ -294,7 +345,7 @@ const KukuitMain = () => {
         <p className="text-[#a8a8a8] text-sm sm:text-base font-normal font-karla">  
           Please enter your pickup details  
         </p>  
-        <div className="w-full h-[200px] sm:h-[392px] mt-6 sm:mt-[36px] shadow">  
+        {/* <div className="w-full h-[200px] sm:h-[392px] mt-6 sm:mt-[36px] shadow">  
           <iframe  
            className="w-full h-full"  
            src="https://www.google.com/maps/embed?pb=!1m10!1m8!1m3!1d3613.8073542448806!2d55.1406664!3d25.0745178!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sin!4v1728306215066!5m2!1sen!2sin"  
@@ -302,7 +353,7 @@ const KukuitMain = () => {
            loading="lazy"  
            referrerPolicy="no-referrer-when-downgrade"  
           ></iframe>  
-        </div>  
+        </div>   */}
         <div className="flex flex-col lg:flex-row mt-6 sm:mt-[36px] gap-6 lg:gap-[54px]">  
           <div className="w-full lg:w-1/2 flex flex-col gap-6">  
            <div className="flex flex-col">  
