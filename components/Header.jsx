@@ -167,7 +167,7 @@ const Header = () => {
 
   // Determine background color based on the path
   const isSpecialPath =
-    path === "/listingproduct" || path === "/kukuit" || path === "/renting";
+    path === "/listingproduct" || path === "/kukuit" || path === "/renting" || path === "/emergencyrequirement";
   const iconsPath = path === "/user_profile";
   const wishPath = path === "/wishlist";
   const cartPath = path === "/cart";
