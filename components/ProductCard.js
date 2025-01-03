@@ -17,15 +17,13 @@ import {
 } from "react-icons/fa";
 import { FaHandshake } from "react-icons/fa";
 import { useRouter } from "next/navigation";
-import { useDispatch ,useSelector} from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addToCart } from "@/store/cart/cartSlice";
-import axios from 'axios';
-import Cookies from 'js-cookie';
+import axios from "axios";
+import Cookies from "js-cookie";
 import { showSuccessNotification } from "@/utils/Notification/notif";
 
-
 const ProductCard = ({ product }) => {
-
   const router = useRouter();
   const [isRentPopupOpen, setRentPopupOpen] = useState(false);
   const [rentalDate, setRentalDate] = useState("");
@@ -36,12 +34,10 @@ const ProductCard = ({ product }) => {
   const [isModalOpen, setIsModalOpen] = useState(false); // State to control the modal
   const [currentImageIndex, setCurrentImageIndex] = useState(0); // State to keep track of the current image
   const [isDateSelected, setIsDateSelected] = useState(false);
-console.log(selectedPrice,"ooooooooo");
+ 
 
   // const images = [amiriImg, amiriImg];
   const images = product?.images;
-
-
 
   // const [isRentPopupOpen, setIsRentPopupOpen] = useState(false);
   const [isStartFormatted, setIsStartFormatted] = useState("");
@@ -53,64 +49,26 @@ console.log(selectedPrice,"ooooooooo");
   const modalRef = useRef(null);
   const dispatch = useDispatch();
   const [errorPopupOpen, setErrorPopupOpen] = useState(false);
-const [errorMessage, setErrorMessage] = useState("");
-console.log(errorMessage,"hhhhhhh");
+  const [errorMessage, setErrorMessage] = useState("");
+ 
 
   const details = useSelector((state) => state.auth.user);
   const id = details?._id;
 
-  const handleBuy = async() => {
+  const handleBuy = async () => {
     try {
-
-      const rawToken = Cookies.get('auth');
-    const token = rawToken ? JSON.parse(rawToken) : null;
-
-    // Check for token and show notification if missing
-    if (!token) {
-      showSuccessNotification("Please Login!");
-      return; // Stop further execution
-    }
-      
-      // Make the POST request to your API
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/product/add/cart/${product._id}`, 
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        } // or any other data you need to send
-      );
-   
-      if (response.status === 201) {
-        // If the request is successful, dispatch the action to add to cart
-        dispatch(addToCart(product));
-  
-        // Navigate to the cart page
-        router.push('/cart');
-      } else {
-        // Handle the case where the request is not successful
-        console.error('Failed to add product to cart:', response.statusText);
-      }
-    } catch (error) {
-      // Handle any errors that occur during the request
-      console.error('An error occurred while adding product to cart:', error);
-    }
-  };
-
-  const handleWish = async() => {
-    try {
-
-      const rawToken = Cookies.get('auth');
+      const rawToken = Cookies.get("auth");
       const token = rawToken ? JSON.parse(rawToken) : null;
-  
+
       // Check for token and show notification if missing
       if (!token) {
         showSuccessNotification("Please Login!");
         return; // Stop further execution
       }
-      
+
       // Make the POST request to your API
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/product/wishlist/${product._id}`, 
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/product/add/cart/${product._id}`,
         {},
         {
           headers: {
@@ -118,30 +76,74 @@ console.log(errorMessage,"hhhhhhh");
           },
         } // or any other data you need to send
       );
-   
+
       if (response.status === 201) {
         // If the request is successful, dispatch the action to add to cart
-      
-  
+        dispatch(addToCart(product));
+
         // Navigate to the cart page
-        router.push('/wishlist');
+        router.push("/cart");
       } else {
         // Handle the case where the request is not successful
-        console.error('Failed to add product to wishlist:', response.statusText);
+        console.error("Failed to add product to cart:", response.statusText);
       }
     } catch (error) {
       // Handle any errors that occur during the request
-      console.error('An error occurred while adding product to wishlist:', error);
+      console.error("An error occurred while adding product to cart:", error);
+    }
+  };
+
+  const handleWish = async () => {
+    try {
+      const rawToken = Cookies.get("auth");
+      const token = rawToken ? JSON.parse(rawToken) : null;
+
+      // Check for token and show notification if missing
+      if (!token) {
+        showSuccessNotification("Please Login!");
+        return; // Stop further execution
+      }
+
+      // Make the POST request to your API
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/product/wishlist/${product._id}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        } // or any other data you need to send
+      );
+
+      if (response.status === 201) {
+        // If the request is successful, dispatch the action to add to cart
+
+        // Navigate to the cart page
+        router.push("/wishlist");
+      } else {
+        // Handle the case where the request is not successful
+        console.error(
+          "Failed to add product to wishlist:",
+          response.statusText
+        );
+      }
+    } catch (error) {
+      // Handle any errors that occur during the request
+      console.error(
+        "An error occurred while adding product to wishlist:",
+        error
+      );
     }
   };
 
   const handleFollow = async () => {
     setLoading(true);
-  
+
     try {
-      const token = JSON.parse(Cookies.get('auth'));
+      const token = JSON.parse(Cookies.get("auth"));
       if (product?.seller?.followers.includes(id)) {
-        await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/profile/unfollow/${product.seller._id}`, 
+        await axios.post(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/profile/unfollow/${product.seller._id}`,
           {},
           {
             headers: {
@@ -150,7 +152,8 @@ console.log(errorMessage,"hhhhhhh");
           } // or any other data you need to send
         );
       } else {
-        await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/profile/follow/${product.seller._id}`, 
+        await axios.post(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/profile/follow/${product.seller._id}`,
           {},
           {
             headers: {
@@ -219,9 +222,9 @@ console.log(errorMessage,"hhhhhhh");
 
   const handleOpenModal = async () => {
     try {
-      const token = JSON.parse(Cookies.get('auth'));
+      const token = JSON.parse(Cookies.get("auth"));
       const data = { offerPrice: selectedPrice, seller: product.seller };
-  
+
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/offer/add/${product._id}`,
         data,
@@ -231,7 +234,7 @@ console.log(errorMessage,"hhhhhhh");
           },
         }
       );
-  
+
       if (response.status === 201) {
         setIsModalOpen(true);
         setOfferPopupOpen(false);
@@ -246,7 +249,6 @@ console.log(errorMessage,"hhhhhhh");
       setErrorPopupOpen(true);
     }
   };
-  
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
@@ -309,7 +311,6 @@ console.log(errorMessage,"hhhhhhh");
 
   return (
     <div className="max-w-screen-xl mx-auto pl-1 pr-6 font-karla">
-      
       <div className="breadcrumb text-gray-500 text-sm mb-3 mt-2">
         <Link href="/" className="hover">
           Home
@@ -329,7 +330,6 @@ console.log(errorMessage,"hhhhhhh");
 
       <div className="flex flex-col md:flex-row items-start gap-6 relative">
         <div className="w-full md:w-1/2 relative">
-          Display the current image based on index
           <Image
             unoptimized
             width={650}
@@ -350,7 +350,7 @@ console.log(errorMessage,"hhhhhhh");
             unoptimized
             width={650}
             height={500}
-            src={images[(currentImageIndex + 1) % images.length] } // Show the next image below
+            src={images[(currentImageIndex + 1) % images.length]} // Show the next image below
             alt="AMIRI Men Oversize T-shirt"
             className="object-cover rounded-md absolute top-0 left-0" // Position on top
             style={{
@@ -433,8 +433,6 @@ console.log(errorMessage,"hhhhhhh");
 
           <h1 className="text-3xl font-bold">{product?.name}</h1>
 
-          
-
           <div className="text-2xl font-bold">
             AED {product?.price}{" "}
             <span style={{ color: "#30BD75", fontSize: "1.50rem" }}>
@@ -457,27 +455,25 @@ console.log(errorMessage,"hhhhhhh");
             </div>
             <div>
               <span className="font-bold">CONDITION: </span>
-              <span className="font-bold">
-                {product?.condition}
-              </span>
+              <span className="font-bold">{product?.condition}</span>
             </div>
           </div>
 
           <div className="flex gap-4 mt-4">
             {/* <Link href="/wishlist"> */}
-              <button
-               onClick={handleWish}
-                className="border-2 rounded-md px-6 py-3 flex items-center justify-center font-bold text-pink-500 hover:bg-[#E4086F] hover:text-white transition-all duration-300"
-                style={{
-                  borderColor: "#E4086F",
-                  height: "60px", // Set to match the height in the image
-                  width: "200px", // Set width to be consistent
-                  borderRadius: "16px",
-                }}
-              >
-                <FaRegHeart className="mr-2 w-5 h-5" />
-                WISHLIST
-              </button>
+            <button
+              onClick={handleWish}
+              className="border-2 rounded-md px-6 py-3 flex items-center justify-center font-bold text-pink-500 hover:bg-[#E4086F] hover:text-white transition-all duration-300"
+              style={{
+                borderColor: "#E4086F",
+                height: "60px", // Set to match the height in the image
+                width: "200px", // Set width to be consistent
+                borderRadius: "16px",
+              }}
+            >
+              <FaRegHeart className="mr-2 w-5 h-5" />
+              WISHLIST
+            </button>
             {/* </Link> */}
 
             <button
@@ -540,15 +536,15 @@ console.log(errorMessage,"hhhhhhh");
             <p className="font-bold mb-3">Sold by</p>
             <div className="flex items-center justify-between">
               <div className="flex items-center">
-              <Link href={`/user_profile/${product?.seller?._id}`}>
-        <Image
-          src={product?.seller?.avatar|| kukuLogo}
-          alt="Kuku Logo"
-          className="object-contain w-12 h-12"
-          width={48} // specify the width (in pixels)
-          height={48} // specify the height (in pixels)
-        />
-      </Link>
+                <Link href={`/user_profile/${product?.seller?._id}`}>
+                  <Image
+                    src={product?.seller?.avatar || kukuLogo}
+                    alt="Kuku Logo"
+                    className="object-contain w-12 h-12"
+                    width={48} // specify the width (in pixels)
+                    height={48} // specify the height (in pixels)
+                  />
+                </Link>
 
                 <div className="ml-3">
                   <p className="font-bold">{product?.seller?.username}</p>
@@ -556,13 +552,21 @@ console.log(errorMessage,"hhhhhhh");
               </div>
 
               <button
-      className={`ml-auto rounded-md px-4 py-2 text-white w-full max-w-[136px] font-bold ${ product?.seller?.followers.includes(id) ? 'bg-red-500' : 'bg-green-500'}`}
-      style={{ borderRadius: "20px" }}
-      onClick={handleFollow}
-      disabled={loading}
-    >
-      {loading ? "Processing..." : product?.seller?.followers.includes(id) ? "Unfollow" : "Follow"}
-    </button>
+                className={`ml-auto rounded-md px-4 py-2 text-white w-full max-w-[136px] font-bold ${
+                  product?.seller?.followers.includes(id)
+                    ? "bg-red-500"
+                    : "bg-green-500"
+                }`}
+                style={{ borderRadius: "20px" }}
+                onClick={handleFollow}
+                disabled={loading}
+              >
+                {loading
+                  ? "Processing..."
+                  : product?.seller?.followers.includes(id)
+                  ? "Unfollow"
+                  : "Follow"}
+              </button>
             </div>
 
             <div className="mt-6">
@@ -574,7 +578,9 @@ console.log(errorMessage,"hhhhhhh");
                   Seller rating based on 100+ reviews
                 </p>
                 <div className="flex items-center">
-                  <span className="text-black font-bold">{product?.seller?.rating}</span>
+                  <span className="text-black font-bold">
+                    {product?.seller?.rating}
+                  </span>
                   <FaStar className="text-[#69D3FA] ml-1" />
                 </div>
               </div>
@@ -893,18 +899,20 @@ console.log(errorMessage,"hhhhhhh");
         </div>
       )}
       {errorPopupOpen && (
-  <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-    <div className="bg-white rounded-lg shadow-lg p-6 w-11/12 max-w-md">
-      <p className="text-red-600 font-semibold text-center">{errorMessage}</p>
-      <button
-        onClick={() => setErrorPopupOpen(false)}
-        className="mt-4 w-full bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded transition"
-      >
-        Close
-      </button>
-    </div>
-  </div>
-)}
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white rounded-lg shadow-lg p-6 w-11/12 max-w-md">
+            <p className="text-red-600 font-semibold text-center">
+              {errorMessage}
+            </p>
+            <button
+              onClick={() => setErrorPopupOpen(false)}
+              className="mt-4 w-full bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded transition"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
