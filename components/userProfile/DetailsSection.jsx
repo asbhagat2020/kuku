@@ -1110,10 +1110,10 @@ export default function DetailsSection({ data }) {
       label: "Selling",
       component: SellingCards,
       data: sellingData,
-      count: "38",
+      count: "",
     },
-    { label: "Sold", component: SoldCards, data: soldData, count: "108" },
-    { label: "Reviews", component: ReviewCards, data: reviewData, count: "27" },
+    { label: "Sold", component: SoldCards, data: soldData, count: "" },
+    { label: "Reviews", component: ReviewCards, data: reviewData, count: "" },
     { label: "Stats", component: StatsCards, data: statsData, count: "" },
     { label: "Orders", component: Orders, data: orderData, count: "" },
   ];
