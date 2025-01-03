@@ -41,7 +41,7 @@ const OrdersPage = () => {
           </h1>
       {/* Sidebar */}
      
-        <div className="bg-white rounded-lg shadow-sm p-8">
+        <div className="bg-white rounded-lg shadow-sm p-8 w-[300px]">
         
           
           <div className="space-y-8">
@@ -58,7 +58,7 @@ const OrdersPage = () => {
                 </button>
               </div>
             </div>
-
+            <hr className="border-gray-200" />
             <div>
               <p className="text-[11px] text-gray-400 font-medium tracking-wide uppercase mb-4">CREDITS</p>
               <div>
@@ -72,7 +72,7 @@ const OrdersPage = () => {
                 </button>
               </div>
             </div>
-
+            <hr className="border-gray-200" />
             <div>
               <p className="text-[11px] text-gray-400 font-medium tracking-wide uppercase mb-4">ACCOUNTS</p>
               <div className="space-y-2">
@@ -99,7 +99,7 @@ const OrdersPage = () => {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 md:ml-8">
+      <div className="flex-1 md:ml-16 mt-[70px]">
         <div className="space-y-4">
           {orders.map((order) => (
             <div key={order.id} className="bg-white rounded-lg p-6 shadow-sm">
@@ -109,7 +109,7 @@ const OrdersPage = () => {
                   alt="Delivery"
                   width={20}
                   height={20}
-                  className="w-5 h-5"
+                  className="w-8 h-8"
                 />
                 <div>
                   <span className="text-pink-500 font-medium">Delivered</span>
@@ -131,12 +131,12 @@ const OrdersPage = () => {
                 <div className="flex-1">
                   <div className="flex justify-between items-start">
                     <div>
-                      <h3 className="font-medium text-gray-900 mb-1">{order.productName}</h3>
+                      <h3 className="font-karla font-semibold text-gray-900 mb-1">{order.productName}</h3>
                       <p className="text-sm text-gray-500">{order.description}</p>
                     </div>
                     <div className="text-right">
-                      <p className="font-medium text-[15px]">AED{order.price.toFixed(2)}</p>
-                      <p className="text-sm text-gray-400">MRP AED{order.mrp}</p>
+                      <p className="font-medium text-[15px] font-semibold">AED{order.price.toFixed(2)}</p>
+                      <p className="text-sm text-gray-400 line-through">MRP AED{order.mrp}</p>
                       <span className="text-green-500 text-sm">({order.discount})</span>
                     </div>
                   </div>
@@ -144,13 +144,13 @@ const OrdersPage = () => {
                   <div className="flex gap-8 mt-6 mb-6">
                     <div className="flex items-center gap-2">
                       <span className="text-gray-500 text-sm">SIZE</span>
-                      <span className="px-2 py-0.5 border border-gray-200 rounded text-sm bg-white">
+                      <span className="px-2 py-0.5 border border-[#E4086F] text-[#E4086F] rounded text-sm bg-white">
                         {order.size}
                       </span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="text-gray-500 text-sm">CONDITION:</span>
-                      <span className="text-sm">{order.condition}</span>
+                      <span className="font-karla text-sm font-semibold">CONDITION:</span>
+                      <span className="text-sm text-gray-500 font-semibold">{order.condition}</span>
                     </div>
                   </div>
 
