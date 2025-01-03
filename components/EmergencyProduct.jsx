@@ -1,90 +1,89 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Search } from "lucide-react";
+import axios from "axios";
+import Cookies from "js-cookie";
 
-const products = [
-  {
-    id: 1,
-    title: "Yellow Blue Top",
-    size: "XS",
-    reqDate: "24/07/2024",
-    postedBy: "Moksha Pratap",
-    category: "Women",
-    color: "Dark Blue",
-    location: "Dubai",
-    description:
-      "Dark Blue top of any brand with the specified size required urgently before 24th of August, 2024",
-    images: [
-      "https://images.unsplash.com/photo-1564257631407-4deb1f99d992?q=80&w=300&h=300",
-      "https://images.unsplash.com/photo-1564257631407-4deb1f99d992?q=80&w=300&h=300",
-      "https://images.unsplash.com/photo-1564257631407-4deb1f99d992?q=80&w=300&h=300",
-      "https://images.unsplash.com/photo-1564257631407-4deb1f99d992?q=80&w=300&h=300",
-    ],
-  },
-  {
-    id: 2,
-    title: "Dark Blue Top",
-    size: "XS",
-    reqDate: "24/07/2024",
-    postedBy: "Moksha Pratap",
-    category: "Women",
-    color: "Dark Blue",
-    location: "Dubai",
-    description:
-      "Dark Blue top of any brand with the specified size required urgently before 24th of August, 2024",
-    images: [
-      "https://images.unsplash.com/photo-1564257631407-4deb1f99d992?q=80&w=300&h=300",
-      "https://images.unsplash.com/photo-1564257631407-4deb1f99d992?q=80&w=300&h=300",
-      "https://images.unsplash.com/photo-1564257631407-4deb1f99d992?q=80&w=300&h=300",
-      "https://images.unsplash.com/photo-1564257631407-4deb1f99d992?q=80&w=300&h=300",
-    ],
-  },
-  {
-    id: 3,
-    title: "Dark Blue Top",
-    size: "XS",
-    reqDate: "24/07/2024",
-    postedBy: "Moksha Pratap",
-    category: "Women",
-    color: "Dark Blue",
-    location: "Dubai",
-    description:
-      "Dark Blue top of any brand with the specified size required urgently before 24th of August, 2024",
-    images: [
-      "https://images.unsplash.com/photo-1564257631407-4deb1f99d992?q=80&w=300&h=300",
-      "https://images.unsplash.com/photo-1564257631407-4deb1f99d992?q=80&w=300&h=300",
-      "https://images.unsplash.com/photo-1564257631407-4deb1f99d992?q=80&w=300&h=300",
-      "https://images.unsplash.com/photo-1564257631407-4deb1f99d992?q=80&w=300&h=300",
-    ],
-  },
-  {
-    id: 4,
-    title: "Dark Blue Top",
-    size: "XS",
-    reqDate: "24/07/2024",
-    postedBy: "Moksha Pratap",
-    category: "Women",
-    color: "Dark Blue",
-    location: "Dubai",
-    description:
-      "Dark Blue top of any brand with the specified size required urgently before 24th of August, 2024",
-    images: [
-      "https://images.unsplash.com/photo-1564257631407-4deb1f99d992?q=80&w=300&h=300",
-      "https://images.unsplash.com/photo-1564257631407-4deb1f99d992?q=80&w=300&h=300",
-      "https://images.unsplash.com/photo-1564257631407-4deb1f99d992?q=80&w=300&h=300",
-      "https://images.unsplash.com/photo-1564257631407-4deb1f99d992?q=80&w=300&h=300",
-    ],
-  },
-];
+const InfoRow = ({ label, value }) => (
+  <div className="flex justify-between items-center py-2 border-b border-gray-200">
+    <span className="text-gray-600">{label}</span>
+    <span className="font-medium">{value}</span>
+  </div>
+);
 
 export default function EmergencyProduct() {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
+  const fetchProducts = async () => {
+    try {
+      const token = JSON.parse(Cookies.get("auth"));
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/requirement/get`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setProducts(response.data);
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching products:", error);
+      setError("Failed to load products");
+      setLoading(false);
+    }
+  };
+
+  const fetchProductDetails = async (id) => {
+    try {
+      const token = JSON.parse(Cookies.get("auth"));
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/requirement/get/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setSelectedProduct(response.data);
+    } catch (error) {
+      console.error("Error fetching product details:", error);
+      setError("Failed to load product details");
+    }
+  };
+
+  const handleProductClick = async (product) => {
+    await fetchProductDetails(product._id);
+  };
 
   const filteredProducts = products.filter((product) =>
     product.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-xl">Loading...</div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-xl text-red-500">{error}</div>
+      </div>
+    );
+  }
 
   if (selectedProduct) {
     return (
@@ -115,7 +114,6 @@ export default function EmergencyProduct() {
               marginTop: "86px",
             }}
           />
-
           <div
             className="absolute top-16 right-6 w-12 h-12 rounded-full border-2 border-black border-dotted flex items-center justify-center p-[2px] hidden md:flex"
             style={{
@@ -143,7 +141,7 @@ export default function EmergencyProduct() {
                 Item Image References
               </h2>
               <div className="grid grid-cols-2 gap-4">
-                {selectedProduct.images.map((img, idx) => (
+                {selectedProduct.images?.map((img, idx) => (
                   <div
                     key={idx}
                     className="rounded-lg overflow-hidden bg-gray-100"
@@ -170,7 +168,7 @@ export default function EmergencyProduct() {
                 <InfoRow label="Location" value={selectedProduct.location} />
                 <InfoRow
                   label="Required within"
-                  value={selectedProduct.reqDate}
+                  value={selectedProduct.requiredBy}
                 />
               </div>
 
@@ -249,7 +247,7 @@ export default function EmergencyProduct() {
           {filteredProducts.map((product) => (
             <div
               key={product.id}
-              onClick={() => setSelectedProduct(product)}
+              onClick={() => handleProductClick(product)}
               className="bg-yellow-50 rounded-lg p-6 cursor-pointer hover:shadow-lg transition-shadow"
             >
               <div className="flex justify-between items-start">
@@ -257,7 +255,7 @@ export default function EmergencyProduct() {
                   <h3 className="text-lg font-semibold">{product.title}</h3>
                   <p className="text-sm text-gray-600">Size: {product.size}</p>
                   <p className="text-sm text-gray-600">
-                    Req within: {product.reqDate}
+                    Req within: {product.requiredBy}
                   </p>
                 </div>
                 <div className="text-right">
@@ -274,10 +272,3 @@ export default function EmergencyProduct() {
     </div>
   );
 }
-
-const InfoRow = ({ label, value }) => (
-  <div className="flex justify-between items-center py-2 border-b border-gray-200">
-    <span className="text-gray-600">{label}</span>
-    <span className="font-medium">{value}</span>
-  </div>
-);
