@@ -4,9 +4,7 @@ import {
 } from "@/utils/Notification/notif";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-import { signIn } from "next-auth/react";
 import Cookies from "js-cookie";
-
 
 const user =
   typeof window !== "undefined" && Cookies.get("user")
@@ -334,7 +332,7 @@ const authSlice = createSlice({
         state.error = null;
       })
       .addCase(googleSignIn.fulfilled, (state, action) => {
-        state.user = action.payload;
+        state.user = action.payload.user;
         state.isAuthenticated = true;
         state.loading = false;
       })

@@ -34,6 +34,7 @@ const Header = () => {
   const [isFixed, setIsFixed] = useState(false);
   const [currentOpenDropdown, setCurrentOpenDropdown] = useState(null);
   const [isLocalToken, setIsLocalToken] = useState(false);
+  const [userID, setUserID] = useState();
   const { data: session, status } = useSession();
   const router = useRouter();
   const dispatch = useDispatch();
@@ -44,7 +45,11 @@ const Header = () => {
   }, [token]);
 
   const details = useSelector((state) => state.auth.user);
+  console.log(details);
   const id = details?._id;
+  useEffect(() => {
+    setUserID(id);
+  }, [id]);
 
   const handleToggle = (dropdown) => {
     setCurrentOpenDropdown(currentOpenDropdown === dropdown ? null : dropdown);
@@ -65,7 +70,6 @@ const Header = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Notifications data
   const notifications = [
     {
       text: "A Seller has posted item for your emergency requirement",
@@ -453,7 +457,7 @@ const Header = () => {
                 />
               </div>
             </Link>
-            <Link href={`/user_profile/${id}`}>
+            <Link href={`/user_profile/${userID}`}>
               <div
                 className={`${
                   iconsPath ? "bg-[#393939]" : "bg-white/40"
@@ -469,23 +473,20 @@ const Header = () => {
             </Link>
 
             <div ref={dropdownRef} className="relative">
-  <div
-    onClick={toggleDropdown}
-    className="cursor-pointer hidden lg:block"
-  >
-    <Image
-      alt="dropdown"
-      width={14}
-      height={14}
-      src="/heade_drop_down.svg"
-    />
-  </div>
-
-
-
+              <div
+                onClick={toggleDropdown}
+                className="cursor-pointer hidden lg:block"
+              >
+                <Image
+                  alt="dropdown"
+                  width={14}
+                  height={14}
+                  src="/heade_drop_down.svg"
+                />
+              </div>
 
               {isDropdownVisible && (
-                <div className="absolute py-[26px] px-[10px] right-0 top-[40px] min-w-[188px] h-[350px] bg-white border border-gray-300 rounded-lg shadow-lg z-10 ">
+                <div className="absolute py-[26px] px-[10px] right-0 top-[40px] min-w-[188px] bg-white border border-gray-300 rounded-lg shadow-lg z-10 ">
                   {/* Dropdown content goes here */}
                   <div className="px-4 py-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold">
                     Account
@@ -496,9 +497,9 @@ const Header = () => {
                     </div>
                   </Link>
                   <Link href="/orderdetails">
-                  <div className="px-4 pb-2  hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold">
-                    Purchases
-                  </div>
+                    <div className="px-4 pb-2  hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold">
+                      Purchases
+                    </div>
                   </Link>
                   <Link href="/wishlist">
                     <div className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold">
@@ -511,44 +512,43 @@ const Header = () => {
                     </div>
                   </Link>
                   <Link href="/addresslist">
-                  <div className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold">
-                    Shiping Address
-                  </div>
+                    <div className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold">
+                      Shiping Address
+                    </div>
                   </Link>
                   <Link href="/pickupaddress">
-                  <div className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold">
-                    Pickup Address
-                  </div>
+                    <div className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold">
+                      Pickup Address
+                    </div>
                   </Link>
-                   <Link href="/emergencyrequirement">
-        <div className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold">
-          Emergency Requirement
-        </div>
-      </Link>
+                  <Link href="/emergencyrequirement">
+                    <div className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold">
+                      Emergency Requirement
+                    </div>
+                  </Link>
                   <Link href="#">
                     <div className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold">
                       Setting
                     </div>
                   </Link>
                   {session || isLocalToken ? (
-
                     <button
-                    onClick={() => {
-                      if (session) {
-                        handleGoogleSignOut()
-                      } else {
-                        handleLocalSignOut();
-                      }
-                    }}
+                      onClick={() => {
+                        if (session) {
+                          handleGoogleSignOut();
+                        } else {
+                          handleLocalSignOut();
+                        }
+                      }}
                       className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold"
                     >
                       Sign out
                     </button>
                   ) : (
                     <button
-                    onClick={() => {
+                      onClick={() => {
                         handleLocalSignIn();
-                    }}
+                      }}
                       className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold"
                     >
                       Sign in
