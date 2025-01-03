@@ -63,10 +63,10 @@ const SellingCards = ({ data }) => {
   const [error, setError] = useState(null);
   const [selectedProductId, setSelectedProductId] = useState(null);
   const [selectedSellerId, setSelectedSellerId] = useState(null);
-  console.log(selectedSellerId,"uuuuuuuu");
+
 
   const handleOpenOfferPopup = (id, seller) => {
-    console.log(id, "Product ID for offer");
+   
     setSelectedProductId(id);
     setSelectedSellerId(seller);
      // Store the selected product ID
@@ -89,7 +89,7 @@ const SellingCards = ({ data }) => {
       const token = JSON.parse(Cookies.get("auth"));
       const data = { offerPrice: price, seller:selectedSellerId};
 
-      console.log(data, "Offer data");
+     
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/offer/add/${selectedProductId}`,
         data,
@@ -154,7 +154,7 @@ const SellingCards = ({ data }) => {
     setLoading(true);
     handleDelete(productIdToDelete);
   };
-console.log(data,"nnnnnnnnnn");
+
   return (
     <div className="px-[71px] mb-10">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-4 relative place-items-center">

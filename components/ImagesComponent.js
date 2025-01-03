@@ -12,9 +12,8 @@ import { FcLike } from "react-icons/fc";
 import { GoHeart } from "react-icons/go";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleWishlist } from "@/store/wishlist/wishlistSlice";
-import axios from 'axios';
-import Cookies from 'js-cookie';
-
+import axios from "axios";
+import Cookies from "js-cookie";
 
 // const cardData = [
 //   {
@@ -187,8 +186,8 @@ export const ImagesComponent = () => {
   const [offerSubmitted, setOfferSubmitted] = useState(false);
   const [likedCards, setLikedCards] = useState({});
   const [data, setData] = useState([]);
-  const [selectedProductId,setSelectedProductId] = useState([]);
-  const [selectedSellerId,setSelectedSellerId] = useState([]);
+  const [selectedProductId, setSelectedProductId] = useState([]);
+  const [selectedSellerId, setSelectedSellerId] = useState([]);
   const [isFollowing, setIsFollowing] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -206,14 +205,12 @@ export const ImagesComponent = () => {
   };
   const totalPages = Math.ceil(data.length / cardsPerPage);
 
-
   const details = useSelector((state) => state.auth.user);
-      const id = details?._id;
-   
+  const id = details?._id;
 
-  useEffect(()=>{
+  useEffect(() => {
     fetchProducts();
-  },[])
+  }, []);
 
   const handleNextPage = () => {
     if (currentPage < totalPages) setCurrentPage(currentPage + 1);
@@ -227,7 +224,7 @@ export const ImagesComponent = () => {
     setCurrentPage(selectedPage);
   };
 
-  const handleOpenOfferPopup = (id,sellerid) => {
+  const handleOpenOfferPopup = (id, sellerid) => {
     setSelectedProductId(id);
     setSelectedSellerId(sellerid);
     setIsOfferPopupOpen(true);
@@ -237,15 +234,12 @@ export const ImagesComponent = () => {
     setIsOfferPopupOpen(false);
   };
 
-  const handleOfferSubmit = async(price) => {
-   
+  const handleOfferSubmit = async (price) => {
     // Add your submission logic here
     try {
+      const token = JSON.parse(Cookies.get("auth"));
+      const data = { offerPrice: price, seller: selectedSellerId };
 
-  
-      const token = JSON.parse(Cookies.get('auth'));
-      const data = { offerPrice: price, seller:selectedSellerId};
-  
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/offer/add/${selectedProductId}`,
         data,
@@ -255,10 +249,10 @@ export const ImagesComponent = () => {
           },
         }
       );
-  
+
       if (response.status === 201) {
         setOfferSubmitted(true);
-    handleCloseOfferPopup();
+        handleCloseOfferPopup();
       } else {
         console.error("Failed to submit offer:", response.statusText);
       }
@@ -266,8 +260,6 @@ export const ImagesComponent = () => {
       console.error("An error occurred:", error.message);
     }
   };
-
-  
 
   // const handleLikeClick = (cardId) => {
   //   setLikedCards((prevLikedCards) => ({
@@ -321,7 +313,7 @@ export const ImagesComponent = () => {
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/products`
       );
       const datavalue = response.data.products;
-     
+
       setData(datavalue || []);
     } catch (error) {
       alert(error.message);
@@ -330,12 +322,13 @@ export const ImagesComponent = () => {
 
   const handleFollow = async (id) => {
     setLoading(true);
-   
+
     try {
-      const token = JSON.parse(Cookies.get('auth'));
-     
-  
-      const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/profile/${isFollowing ? 'unfollow' : 'follow'}/${id}`;
+      const token = JSON.parse(Cookies.get("auth"));
+
+      const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/profile/${
+        isFollowing ? "unfollow" : "follow"
+      }/${id}`;
       await axios.post(
         url,
         {},
@@ -345,7 +338,7 @@ export const ImagesComponent = () => {
           },
         }
       );
-  
+
       setIsFollowing(!isFollowing);
     } catch (error) {
       console.error("Error while following/unfollowing", error);
@@ -354,8 +347,6 @@ export const ImagesComponent = () => {
     }
   };
 
-
-
   return (
     <div className="p-6 ml-8 h-auto w-auto font-karla z-10">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -363,22 +354,28 @@ export const ImagesComponent = () => {
           <div key={card._id} className="flex flex-col">
             <div className="flex justify-between items-center space-x-4">
               <div className="flex space-x-4 items-center">
+              <Link href={`/user_profile/${card?.seller?._id}`}>
                 <img
-                  src={card?.seller?.avatar}
+                  src={card?.seller?.avatar || "/profile_icon.svg"}
                   alt="User avatar"
                   className="object-contain h-12 w-12"
                 />
+                  </Link>
                 <p className="font-bold text-sm">{card?.seller?.username}</p>
               </div>
               <button
-      className={`mt-2 px-4 sm:px-6 py-1 ${
-        isFollowing ? "bg-gray-500" : "bg-custom-green"
-      } text-white rounded-full`}
-      onClick={() => handleFollow(card.seller._id)}
-      disabled={loading}
-    >
-     {loading ? "Processing..." : isFollowing ? "Unfollow" : "Follow"}
-    </button>
+                className={`mt-2 px-4 sm:px-6 py-1 ${
+                  isFollowing ? "bg-gray-500" : "bg-custom-green"
+                } text-white rounded-full`}
+                onClick={() => handleFollow(card.seller._id)}
+                disabled={loading}
+              >
+                {loading
+                  ? "Processing..."
+                  : isFollowing
+                  ? "Unfollow"
+                  : "Follow"}
+              </button>
             </div>
 
             <div className="relative mt-4">
@@ -387,7 +384,7 @@ export const ImagesComponent = () => {
                 className="absolute top-4 right-4 w-12 h-12 flex items-center justify-center rounded-full bg-custom-gray cursor-pointer z-10"
                 onClick={() => handleLikeClick(card?._id)}
               >
-                {wishlist.includes(card._id)  ? (
+                {wishlist.includes(card._id) ? (
                   <FcLike className="text-2xl text-red-500" /> // Filled heart for wishlist items
                 ) : (
                   <GoHeart className="text-2xl text-gray-300" /> // Outline heart for non-wishlist items
@@ -425,7 +422,9 @@ export const ImagesComponent = () => {
                     src="handshake_img.png"
                     alt="Open Offer Popup"
                     className="cursor-pointer"
-                    onClick={() => handleOpenOfferPopup(card._id,card.seller._id)}
+                    onClick={() =>
+                      handleOpenOfferPopup(card._id, card.seller._id)
+                    }
                   />
                 </div>
               </div>
