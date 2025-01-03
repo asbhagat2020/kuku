@@ -11,6 +11,8 @@ const Emergency = () => {
     brand: "",
     size: "",
     price: "",
+    location: "", // New field
+    requiredWithinDate: "", // New field
     images: [],
   });
 
@@ -20,7 +22,6 @@ const Emergency = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
-    // Clear the error for this field when it's changed
     setErrors({ ...errors, [name]: "" });
   };
 
@@ -30,14 +31,12 @@ const Emergency = () => {
     if (file) {
       const validImageTypes = ["image/jpeg", "image/png", "image/jpg"];
 
-      // Check if the file type is a valid image type
       if (validImageTypes.includes(file.type)) {
         const newImages = [...formData.images];
         newImages[index] = file;
         setFormData({ ...formData, images: newImages });
         setErrors({ ...errors, images: "" });
       } else {
-        // If the file is not an image, set an error message
         setErrors({
           ...errors,
           images: "Only image files (JPEG, PNG) are allowed.",
@@ -62,9 +61,19 @@ const Emergency = () => {
     if (!formData.brand) newErrors.brand = "Brand is required";
     if (!formData.size) newErrors.size = "Size is required";
     if (!formData.price.trim()) newErrors.price = "Price is required";
+    if (!formData.location.trim()) newErrors.location = "Location is required";
+    if (!formData.requiredWithinDate)
+      newErrors.requiredWithinDate = "Required within date is required";
     if (!formData.rentOption) newErrors.rentOption = "Rent option is required";
     if (formData.images.length === 0)
       newErrors.images = "At least one image is required";
+
+    // Validate that required date is not in the past
+    const currentDate = new Date();
+    const selectedDate = new Date(formData.requiredWithinDate);
+    if (selectedDate < currentDate) {
+      newErrors.requiredWithinDate = "Required date cannot be in the past";
+    }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -81,11 +90,18 @@ const Emergency = () => {
         brand: "",
         size: "",
         price: "",
+        location: "",
+        requiredWithinDate: "",
         images: [],
       });
       setTimeout(() => setSuccessPopup(false), 5000);
     }
   };
+
+  // Get tomorrow's date for min date attribute
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  const minDate = tomorrow.toISOString().split('T')[0];
 
   return (
     <div className="max-w-[800px] bg-white rounded-3xl shadow-md border-4 border-black mx-auto overflow-hidden mt-10">
@@ -126,11 +142,11 @@ const Emergency = () => {
         <img
           src="/yellow-bird.png"
           alt="Yellow Bird"
-          className="absolute top-6 right-24 w-12 h-12 hidden md:block" // Hidden on mobile, shown on desktop
+          className="absolute top-6 right-24 w-12 h-12 hidden md:block"
           style={{ marginTop: "53px", marginRight: "30px" }}
         />
         <div
-          className="absolute top-5 right-6 w-12 h-12 rounded-full border-2 border-black border-dotted flex items-center justify-center p-[2px] hidden md:flex" // Hidden on mobile, shown on desktop
+          className="absolute top-5 right-6 w-12 h-12 rounded-full border-2 border-black border-dotted flex items-center justify-center p-[2px] hidden md:flex"
           style={{ marginTop: "63px" }}
         >
           <div className="w-5 h-5 bg-yellow-400 rounded-full border-2 border-black"></div>
@@ -139,6 +155,7 @@ const Emergency = () => {
 
       <div className="px-4 sm:px-8 md:px-16 lg:px-20 py-8 sm:py-10">
         <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Image upload section remains the same */}
           <div>
             <label className="block text-[#151515] text-base font-bold font-karla mb-2">
               Product Images
@@ -149,11 +166,11 @@ const Emergency = () => {
                 .map((_, idx) => (
                   <div
                     key={idx}
-                    className="relative w-24 h-24 border border-[#E4086F] flex items-center justify-center  overflow-hidden"
+                    className="relative w-24 h-24 border border-[#E4086F] flex items-center justify-center overflow-hidden"
                   >
                     <input
                       type="file"
-                      accept="image/png, image/jpeg, image/jpg" // Only accept image files
+                      accept="image/png, image/jpeg, image/jpg"
                       onChange={(e) => handleFileChange(e, idx)}
                       className="opacity-0 absolute inset-0 cursor-pointer"
                     />
@@ -204,6 +221,7 @@ const Emergency = () => {
             </a>
           </div>
 
+          {/* Product Title */}
           <div>
             <label className="block text-[#151515] text-base font-bold font-karla mb-2">
               Product Title
@@ -224,6 +242,7 @@ const Emergency = () => {
             )}
           </div>
 
+          {/* Product Description */}
           <div>
             <label className="block text-[#151515] text-base font-bold font-karla mb-2">
               Product Description
@@ -243,6 +262,49 @@ const Emergency = () => {
             )}
           </div>
 
+          {/* Location - New Field */}
+          <div>
+            <label className="block text-[#151515] text-base font-bold font-karla mb-2">
+              Location
+            </label>
+            <input
+              type="text"
+              name="location"
+              value={formData.location}
+              onChange={handleChange}
+              placeholder="Enter your location"
+              className={`w-full p-2 border ${
+                errors.location ? "border-red-500" : "border-[#868686]"
+              } rounded-lg max-w-[500px]`}
+              required
+            />
+            {errors.location && (
+              <p className="text-red-500 mt-1">{errors.location}</p>
+            )}
+          </div>
+
+          {/* Required Within Date - New Field */}
+          <div>
+            <label className="block text-[#151515] text-base font-bold font-karla mb-2">
+              Required Within Date
+            </label>
+            <input
+              type="date"
+              name="requiredWithinDate"
+              value={formData.requiredWithinDate}
+              onChange={handleChange}
+              min={minDate}
+              className={`w-full p-2 border ${
+                errors.requiredWithinDate ? "border-red-500" : "border-[#868686]"
+              } rounded-lg max-w-[500px]`}
+              required
+            />
+            {errors.requiredWithinDate && (
+              <p className="text-red-500 mt-1">{errors.requiredWithinDate}</p>
+            )}
+          </div>
+
+          {/* Category */}
           <div>
             <label className="block text-[#151515] text-base font-bold font-karla mb-2">
               Product Category
@@ -262,6 +324,7 @@ const Emergency = () => {
             )}
           </div>
 
+          {/* Brand */}
           <div>
             <label className="block text-[#151515] text-base font-bold font-karla mb-2">
               Product Brand
@@ -284,6 +347,7 @@ const Emergency = () => {
             )}
           </div>
 
+          {/* Size */}
           <div>
             <label className="block text-[#151515] text-base font-bold font-karla mb-2">
               Product Size
@@ -308,12 +372,13 @@ const Emergency = () => {
             {errors.size && <p className="text-red-500 mt-1">{errors.size}</p>}
           </div>
 
+          {/* Price */}
           <div>
             <label className="block text-[#151515] text-base font-bold font-karla mb-2">
               Price
             </label>
             <input
-              type="number" // Change the type to 'number'
+              type="number"
               name="price"
               value={formData.price}
               onChange={handleChange}
@@ -321,18 +386,20 @@ const Emergency = () => {
               className={`w-full p-2 border ${
                 errors.price ? "border-red-500" : "border-[#868686]"
               } rounded-lg max-w-[500px]`}
-              min="0" // Prevent negative numbers
-              step="0.01" // Allow decimal values if necessary
+              min="0"
+              step="0.01"
               onKeyDown={(e) => {
                 if (e.key === "e" || e.key === "+" || e.key === "-") {
-                  e.preventDefault(); // Disable 'e', '+' and '-' to avoid invalid input
+                  e.preventDefault();
                 }
               }}
             />
             {errors.price && (
-              <p className="text-red-500 mt-1">{errors.price}</p>
+             <p className="text-red-500 mt-1">{errors.price}</p>
             )}
           </div>
+
+          {/* Submit and Cancel Buttons */}
           <div className="flex space-x-8 mt-6 justify-center">
             <button
               type="submit"
