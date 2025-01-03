@@ -2,6 +2,9 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import Cookies from 'js-cookie';
+import axios from 'axios';
+import { useRouter } from "next/navigation";
 
 const Emergency = () => {
   const [formData, setFormData] = useState({
@@ -11,13 +14,15 @@ const Emergency = () => {
     brand: "",
     size: "",
     price: "",
-    location: "", // New field
-    requiredWithinDate: "", // New field
+    location: "",
+    requiredWithinDate: "",
+    color: "", // Added color field
     images: [],
   });
 
   const [errors, setErrors] = useState({});
   const [successPopup, setSuccessPopup] = useState(false);
+  const router = useRouter();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -57,18 +62,23 @@ const Emergency = () => {
       newErrors.itemName = "Product title is required";
     if (!formData.description.trim())
       newErrors.description = "Description is required";
-    if (!formData.category.trim()) newErrors.category = "Category is required";
-    if (!formData.brand) newErrors.brand = "Brand is required";
-    if (!formData.size) newErrors.size = "Size is required";
-    if (!formData.price.trim()) newErrors.price = "Price is required";
-    if (!formData.location.trim()) newErrors.location = "Location is required";
+    if (!formData.category.trim()) 
+      newErrors.category = "Category is required";
+    if (!formData.brand) 
+      newErrors.brand = "Brand is required";
+    if (!formData.size) 
+      newErrors.size = "Size is required";
+    if (!formData.price.trim()) 
+      newErrors.price = "Price is required";
+    if (!formData.location.trim()) 
+      newErrors.location = "Location is required";
     if (!formData.requiredWithinDate)
       newErrors.requiredWithinDate = "Required within date is required";
-    if (!formData.rentOption) newErrors.rentOption = "Rent option is required";
+    if (!formData.color.trim())
+      newErrors.color = "Color is required";
     if (formData.images.length === 0)
       newErrors.images = "At least one image is required";
 
-    // Validate that required date is not in the past
     const currentDate = new Date();
     const selectedDate = new Date(formData.requiredWithinDate);
     if (selectedDate < currentDate) {
@@ -79,26 +89,82 @@ const Emergency = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (validateForm()) {
-      setSuccessPopup(true);
-      setFormData({
-        itemName: "",
-        description: "",
-        category: "",
-        brand: "",
-        size: "",
-        price: "",
-        location: "",
-        requiredWithinDate: "",
-        images: [],
-      });
-      setTimeout(() => setSuccessPopup(false), 5000);
+  const uploadImage = async (imageFile) => {
+    const imageData = new FormData();
+    for (let i = 0; i < imageFile?.length; i++) {
+      imageData.append("files", imageFile[i]);
+      imageData.append("folder", "avatar");
+    }
+
+    try {
+      const token = JSON.parse(Cookies.get("auth"));
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/upload/multiple`,
+        imageData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      return response.data.fileUrls;
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      throw new Error("Failed to upload image");
     }
   };
 
-  // Get tomorrow's date for min date attribute
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (validateForm()) {
+      try {
+        let imageUrl = null;
+
+        if (formData.images.length > 0) {
+          imageUrl = await uploadImage(formData.images);
+        }
+
+        const token = JSON.parse(Cookies.get("auth"));
+
+        const payload = {
+          title: formData.itemName, // Using itemName as title
+          name: formData.itemName,
+          description: formData.description,
+          category: formData.category,
+          brand: formData.brand,
+          size: formData.size,
+          price: formData.price,
+          location: formData.location,
+          requiredWithinDate: formData.requiredWithinDate,
+          requiredBy: formData.requiredWithinDate, // Using requiredWithinDate as requiredBy
+          color: formData.color,
+          images: imageUrl,
+        };
+
+        const response = await axios.post(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/requirement/add`,
+          payload,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (response.status === 201) {
+          setSuccessPopup(true);
+          setTimeout(() => {
+            setSuccessPopup(false);
+            router.push("/");
+          }, 2000);
+        }
+      } catch (error) {
+        console.error("Error submitting form:", error);
+      }
+    }
+  };
+
   const tomorrow = new Date();
   tomorrow.setDate(tomorrow.getDate() + 1);
   const minDate = tomorrow.toISOString().split('T')[0];
@@ -155,7 +221,7 @@ const Emergency = () => {
 
       <div className="px-4 sm:px-8 md:px-16 lg:px-20 py-8 sm:py-10">
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Image upload section remains the same */}
+          {/* Image upload section */}
           <div>
             <label className="block text-[#151515] text-base font-bold font-karla mb-2">
               Product Images
@@ -242,6 +308,27 @@ const Emergency = () => {
             )}
           </div>
 
+          {/* Color Field */}
+          <div>
+            <label className="block text-[#151515] text-base font-bold font-karla mb-2">
+              Color
+            </label>
+            <input
+              type="text"
+              name="color"
+              value={formData.color}
+              onChange={handleChange}
+              placeholder="Enter product color"
+              className={`w-full p-2 border ${
+                errors.color ? "border-red-500" : "border-[#868686]"
+              } rounded-lg max-w-[500px]`}
+              required
+            />
+            {errors.color && (
+              <p className="text-red-500 mt-1">{errors.color}</p>
+            )}
+          </div>
+
           {/* Product Description */}
           <div>
             <label className="block text-[#151515] text-base font-bold font-karla mb-2">
@@ -262,7 +349,7 @@ const Emergency = () => {
             )}
           </div>
 
-          {/* Location - New Field */}
+          {/* Location */}
           <div>
             <label className="block text-[#151515] text-base font-bold font-karla mb-2">
               Location
@@ -283,7 +370,7 @@ const Emergency = () => {
             )}
           </div>
 
-          {/* Required Within Date - New Field */}
+          {/* Required Within Date */}
           <div>
             <label className="block text-[#151515] text-base font-bold font-karla mb-2">
               Required Within Date
@@ -395,7 +482,7 @@ const Emergency = () => {
               }}
             />
             {errors.price && (
-             <p className="text-red-500 mt-1">{errors.price}</p>
+              <p className="text-red-500 mt-1">{errors.price}</p>
             )}
           </div>
 
