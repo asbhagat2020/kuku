@@ -21,6 +21,7 @@ import { useDispatch ,useSelector} from "react-redux";
 import { addToCart } from "@/store/cart/cartSlice";
 import axios from 'axios';
 import Cookies from 'js-cookie';
+import { showSuccessNotification } from "@/utils/Notification/notif";
 
 
 const ProductCard = ({ product }) => {
@@ -61,7 +62,14 @@ console.log(errorMessage,"hhhhhhh");
   const handleBuy = async() => {
     try {
 
-       const token = JSON.parse(Cookies.get('auth'));
+      const rawToken = Cookies.get('auth');
+    const token = rawToken ? JSON.parse(rawToken) : null;
+
+    // Check for token and show notification if missing
+    if (!token) {
+      showSuccessNotification("Please Login!");
+      return; // Stop further execution
+    }
       
       // Make the POST request to your API
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/product/add/cart/${product._id}`, 
@@ -92,7 +100,14 @@ console.log(errorMessage,"hhhhhhh");
   const handleWish = async() => {
     try {
 
-       const token = JSON.parse(Cookies.get('auth'));
+      const rawToken = Cookies.get('auth');
+      const token = rawToken ? JSON.parse(rawToken) : null;
+  
+      // Check for token and show notification if missing
+      if (!token) {
+        showSuccessNotification("Please Login!");
+        return; // Stop further execution
+      }
       
       // Make the POST request to your API
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/product/wishlist/${product._id}`, 

@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { removeFromCart } from "@/store/cart/cartSlice";
 import { useRouter } from "next/navigation";
 import axios from "axios";
-import Cookies from 'js-cookie';
+import Cookies from "js-cookie";
 
 export default function Cart() {
   const [isCouponPopupVisible, setIsCouponPopupVisible] = useState(false);
@@ -23,14 +23,12 @@ export default function Cart() {
   const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.cart.items);
 
-
- 
   const handleRemoveCoupon = () => {
     setAppliedCoupon("");
     setisCouponApplied(false);
     setDiscount(0); // Reset discount
   };
-  const handleRemove = async(id) => {
+  const handleRemove = async (id) => {
     try {
       const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/product/cart/${id}`;
 
@@ -39,9 +37,8 @@ export default function Cart() {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log(response.data, "Cart Data");
-    
-     
+      console.log(response.data.cart, "Cart Data");
+      setCart(response.data.cart);
     } catch (err) {
       setError("Failed to fetch product details");
     } finally {
@@ -106,9 +103,9 @@ export default function Cart() {
   }, [cartItems, discount]);
 
   const token = useSelector((store) => store.auth.token);
- 
+
   const username = useSelector((store) => store.auth.user);
- 
+
   const router = useRouter();
   // useEffect(() => {
   //   if (!token) {
@@ -117,7 +114,6 @@ export default function Cart() {
   // }, [token]);
 
   const fetchCartDetails = async () => {
- 
     try {
       const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/product/get/cart`;
 
@@ -128,52 +124,54 @@ export default function Cart() {
       });
       console.log(response.data, "Cart Data");
       setCart(response.data.cart);
-     
     } catch (err) {
       setError("Failed to fetch product details");
     } finally {
       setLoading(false);
     }
   };
-  
-  const handleAddToWishlist = async(id) =>{
-    try {
 
-      const token = JSON.parse(Cookies.get('auth'));
-     
-     // Make the POST request to your API
-     const response = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/product/wishlist/${id}`, 
-       {},
-       {
-         headers: {
-           Authorization: `Bearer ${token}`,
-         },
-       } // or any other data you need to send
-     );
-  
-     if (response.status === 201) {
-       // If the request is successful, dispatch the action to add to cart
-     
- 
-       // Navigate to the cart page
-       router.push('/wishlist');
-     } else {
-       // Handle the case where the request is not successful
-       console.error('Failed to add product to wishlist:', response.statusText);
-     }
-   } catch (error) {
-     // Handle any errors that occur during the request
-     console.error('An error occurred while adding product to wishlist:', error);
-   }
-  }
-  
+  const handleAddToWishlist = async (id) => {
+    try {
+      const token = JSON.parse(Cookies.get("auth"));
+
+      // Make the POST request to your API
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/product/wishlist/${id}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        } // or any other data you need to send
+      );
+
+      if (response.status === 201) {
+        // If the request is successful, dispatch the action to add to cart
+
+        // Navigate to the cart page
+        router.push("/wishlist");
+      } else {
+        // Handle the case where the request is not successful
+        console.error(
+          "Failed to add product to wishlist:",
+          response.statusText
+        );
+      }
+    } catch (error) {
+      // Handle any errors that occur during the request
+      console.error(
+        "An error occurred while adding product to wishlist:",
+        error
+      );
+    }
+  };
 
   useEffect(() => {
     if (token) {
-   
       fetchCartDetails();
     }
-  }, [token]); 
+  }, [token]);
 
   return (
     <>
@@ -212,7 +210,7 @@ export default function Cart() {
                         {/* Product Image */}
                         <img
                           className="w-24 h-auto md:w-[159.2px] rounded-md"
-                          src={item.images[0]}
+                          src={item?.images?.[0]}
                           alt="Product"
                         />
 
@@ -233,10 +231,10 @@ export default function Cart() {
                                 SIZE
                               </div>
                               <div className="inline-flex border border-[#e4086f] justify-center items-center px-2 py-1">
-  <div className="text-[#e4086f] text-sm md:text-[16px] font-normal font-karla">
-    {item?.size}
-  </div>
-</div>
+                                <div className="text-[#e4086f] text-sm md:text-[16px] font-normal font-karla">
+                                  {item?.size}
+                                </div>
+                              </div>
                             </div>
 
                             <div className="flex items-center gap-3">
@@ -263,13 +261,13 @@ export default function Cart() {
                             {/* </Link> */}
                             {/* <Link href="/wishlist"> */}
                             <button
-  className="w-full md:w-[200px] h-[40px] md:h-[50px] rounded-lg text-black hover:border-white hover:text-white border-2 border-[#0f0f0f] flex justify-center items-center hover:bg-[#e4086f]"
-  onClick={() =>handleAddToWishlist(item._id)}
->
-  <span className="text-sm md:text-[14px] font-bold font-karla uppercase">
-    Add to Wishlist
-  </span>
-</button>
+                              className="w-full md:w-[200px] h-[40px] md:h-[50px] rounded-lg text-black hover:border-white hover:text-white border-2 border-[#0f0f0f] flex justify-center items-center hover:bg-[#e4086f]"
+                              onClick={() => handleAddToWishlist(item._id)}
+                            >
+                              <span className="text-sm md:text-[14px] font-bold font-karla uppercase">
+                                Add to Wishlist
+                              </span>
+                            </button>
                             {/* </Link> */}
                           </div>
                         </div>
