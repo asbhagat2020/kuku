@@ -211,6 +211,8 @@ export const updateDetails = createAsyncThunk(
           anonymous: !isChecked,
         }
       );
+      Cookies.set("auth", JSON.stringify(response.data.token));
+      Cookies.set("user", JSON.stringify(response.data.user));
       console.log(response.data.message);
       showSuccessNotification("Update", response.data.message);
       return response.data.user;
