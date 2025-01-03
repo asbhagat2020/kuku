@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import Cookies from 'js-cookie';
 import axios from 'axios';
+import { useRouter } from "next/navigation";
 
 const ItemList = () => {
   const [formData, setFormData] = useState({
@@ -33,6 +34,8 @@ const ItemList = () => {
   const [caseState, setCaseState] = useState(1);
   const [errors, setErrors] = useState({});
   const [successPopup, setSuccessPopup] = useState(false);
+  const [successPopups, setSuccessPopups] = useState(false);
+  const router = useRouter(); 
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -122,20 +125,18 @@ const ItemList = () => {
     e.preventDefault();
     if (validateForm()) {
       try {
-
         let imageUrl = null;
 
         if (formData.images) {
           imageUrl = await uploadImage(formData.images);
         }
 
-     
         // Retrieve the token from cookies
-        const token = JSON.parse(Cookies.get('auth')); // Assuming 'auth' is the key used to store the token
-  
+        const token = JSON.parse(Cookies.get("auth")); // Assuming 'auth' is the key used to store the token
+
         const address = {
           country: formData.country,
-          city:formData.city,
+          city: formData.city,
           addressLine1: formData.addressLine1,
           addressLine2: formData.addressLine2,
           firstName: formData.firstName,
@@ -146,11 +147,11 @@ const ItemList = () => {
 
         const product = {
           name: formData.itemName,
-          description:formData.description,
+          description: formData.description,
           category: formData.category,
           subCategory: formData.subCategory,
           gender: formData.gender,
-          condition:formData.condition,
+          condition: formData.condition,
           brand: formData.brand,
           size: formData.size,
           usage: formData.usage,
@@ -174,15 +175,17 @@ const ItemList = () => {
             },
           }
         );
-  
+
         // Handle the success response
-        if (response.status === 200) {
-          setSuccessPopup(false);
+        if (response.status === 201) {
+          setSuccessPopups(true); // Show the success popup
+          setTimeout(() => {
+            setSuccessPopups(false); // Hide the popup after 2 seconds
+            router.push("/"); // Redirect to the homepage
+          }, 2000);
         }
       } catch (error) {
-        // Handle any errors that occur during the API call
         console.error("Error submitting form:", error);
-        alert("An error occurred while submitting the form. Please try again.");
       }
     }
   };
@@ -803,6 +806,11 @@ const ItemList = () => {
        
 
        )}
+        {successPopups && (
+       <div className="popup fixed top-1/3 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-green-500 text-white px-6 py-4 rounded shadow-lg z-50">
+       Product added successfully!
+     </div>
+      )}
     </div>
   );
 };

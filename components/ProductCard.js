@@ -51,6 +51,9 @@ console.log(selectedPrice,"ooooooooo");
   const [loading, setLoading] = useState(false);
   const modalRef = useRef(null);
   const dispatch = useDispatch();
+  const [errorPopupOpen, setErrorPopupOpen] = useState(false);
+const [errorMessage, setErrorMessage] = useState("");
+console.log(errorMessage,"hhhhhhh");
 
   const details = useSelector((state) => state.auth.user);
   const id = details?._id;
@@ -200,12 +203,9 @@ console.log(selectedPrice,"ooooooooo");
   }, []);
 
   const handleOpenModal = async () => {
-    
     try {
-   
-  
       const token = JSON.parse(Cookies.get('auth'));
-      const data = { offerPrice: selectedPrice, seller:product.seller };
+      const data = { offerPrice: selectedPrice, seller: product.seller };
   
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/offer/add/${product._id}`,
@@ -222,9 +222,13 @@ console.log(selectedPrice,"ooooooooo");
         setOfferPopupOpen(false);
       } else {
         console.error("Failed to submit offer:", response.statusText);
+        setErrorMessage(`Failed to submit offer: ${response.data.message}`);
+        setErrorPopupOpen(true);
       }
     } catch (error) {
       console.error("An error occurred:", error.message);
+      setErrorMessage(` ${error.response?.data?.message || error.message}`);
+      setErrorPopupOpen(true);
     }
   };
   
@@ -873,6 +877,19 @@ console.log(selectedPrice,"ooooooooo");
           </div>
         </div>
       )}
+      {errorPopupOpen && (
+  <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+    <div className="bg-white rounded-lg shadow-lg p-6 w-11/12 max-w-md">
+      <p className="text-red-600 font-semibold text-center">{errorMessage}</p>
+      <button
+        onClick={() => setErrorPopupOpen(false)}
+        className="mt-4 w-full bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded transition"
+      >
+        Close
+      </button>
+    </div>
+  </div>
+)}
     </div>
   );
 };

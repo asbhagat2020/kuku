@@ -1,10 +1,15 @@
 import React, { useState, useRef, useEffect } from "react";
+import Cookies from "js-cookie";
+import axios from "axios";
 
 const NotificationPanel = ({ notifications, offers, onClose }) => {
   const [activeTab, setActiveTab] = useState("notifications");
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [currentOffer, setCurrentOffer] = useState(null);
   const panelRef = useRef(null);
+  const [data, setData] = useState(null);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   const toggleTab = (tab) => setActiveTab(tab);
 
@@ -24,9 +29,60 @@ const NotificationPanel = ({ notifications, offers, onClose }) => {
     setIsPopupOpen(true);
   };
 
-  const closePopup = () => {
-    setIsPopupOpen(false);
-    setCurrentOffer(null);
+  const closePopup = async (id) => {
+    try {
+      const token = JSON.parse(Cookies.get("auth"));
+      // const data = { offerPrice: price, seller:selectedSellerId};
+      const response = await axios.patch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/offer/reject/${id}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        setIsPopupOpen(false);
+        setCurrentOffer(null);
+      } else {
+        console.error("Failed to submit offer:", response.statusText);
+      }
+    } catch (error) {
+      console.error(
+        "An error occurred while submitting the offer:",
+        error.message
+      );
+    }
+  };
+
+  const closeAcceptPopup = async (id) => {
+    try {
+      const token = JSON.parse(Cookies.get("auth"));
+      // const data = { offerPrice: price, seller:selectedSellerId};
+      const response = await axios.patch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/offer/accept/${id}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        setIsPopupOpen(false);
+        setCurrentOffer(null);
+      } else {
+        console.error("Failed to submit offer:", response.statusText);
+      }
+    } catch (error) {
+      console.error(
+        "An error occurred while submitting the offer:",
+        error.message
+      );
+    }
   };
 
   const hideScrollbarStyle = {
@@ -39,6 +95,28 @@ const NotificationPanel = ({ notifications, offers, onClose }) => {
       display: "none",
     },
   };
+
+  const fetchNotificationDetails = async () => {
+    try {
+      const token = JSON.parse(Cookies.get("auth"));
+      const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/offer/get`;
+
+      const response = await axios.get(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setData(response.data.offers);
+    } catch (err) {
+      setError("Failed to fetch product details");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchNotificationDetails();
+  }, []);
 
   return (
     <div
@@ -71,7 +149,7 @@ const NotificationPanel = ({ notifications, offers, onClose }) => {
         >
           Offers
           <span className="bg-[#FDE504] text-black font-karla font-semibold rounded-full h-[24px] w-[24px] flex items-center justify-center">
-            {offers.length}
+            {data?.length}
           </span>
         </div>
       </div>
@@ -106,7 +184,7 @@ const NotificationPanel = ({ notifications, offers, onClose }) => {
           ))}
 
         {activeTab === "offers" &&
-          offers.map((offer, index) => (
+          data.map((offer, index) => (
             <li key={index} className="mb-4 flex gap-4 items-start">
               <img
                 src="/image 139.png"
@@ -115,16 +193,21 @@ const NotificationPanel = ({ notifications, offers, onClose }) => {
               />
               <div className="flex flex-col gap-2 w-full">
                 {index === 0 && (
-                  <span className="text-xs text-gray-500">Today</span>
+                  <span className="text-xs text-gray-500">
+                  {Math.floor((new Date() - new Date(offer.createdAt)) / (1000 * 60 * 60 * 24))} days ago
+                </span>
                 )}
                 <div className="flex justify-between">
-                  <p className="text-sm text-[#1e1f23] font-bold font-karla">
-                    {offer.text}
-                  </p>
-                  <span className="text-xs text-gray-500">{offer.time}</span>
-                </div>
+  <p className="text-sm text-[#1e1f23] font-bold font-karla">
+    Offer received
+  </p>
+  <span className="text-xs text-gray-500">
+    {new Date(offer?.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+  </span>
+</div>
                 <p className="text-sm text-[#5d5d5d] font-bold font-karla">
-                  {offer.description}
+                  "Great news! Someone has made you an offer. Tap here to check
+                  it out"
                 </p>
                 <button
                   onClick={() => openPopup(offer)}
@@ -139,92 +222,108 @@ const NotificationPanel = ({ notifications, offers, onClose }) => {
 
       {/* Popup */}
       {isPopupOpen && (
-  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-    <div className="bg-white p-8 rounded-xl shadow-xl w-[400px] relative">
-      {/* Header */}
-      <h2 className="text-xl font-bold text-gray-900 text-center mb-6">
-        Review Offer
-      </h2>
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-8 rounded-xl shadow-xl w-[400px] relative">
+            {/* Header */}
+            <h2 className="text-xl font-bold text-gray-900 text-center mb-6">
+              Review Offer
+            </h2>
 
-      {/* Product Information */}
-      <div className="flex items-center gap-5 mb-8">
-        <img
-          src="/card_image5.png"
-          alt="Product"
-          className="w-24 h-24 rounded-lg object-cover"
-        />
-        <div>
-          <p className="font-medium text-base text-gray-800">
-            Lulu & Sky - Orange crochet cottage Kurta
-          </p>
-          <p className="text-sm text-gray-500">Size: XS</p>
+            {/* Product Information */}
+            <div className="flex items-center gap-5 mb-8">
+              <img
+                src={currentOffer?.product?.images[0]}
+                alt="Product"
+                className="w-24 h-24 rounded-lg object-cover"
+              />
+              <div>
+                <p className="font-medium text-base text-gray-800">
+                  {currentOffer?.product?.name}
+                </p>
+                <p className="text-sm text-gray-500">
+                  Size: {currentOffer?.product?.size}
+                </p>
+              </div>
+            </div>
+
+            {/* Buyer Information */}
+            <div className="mb-6">
+              <p
+                className="text-sm font-bold text-gray-900 mb-2"
+                style={{ color: "#FDE504" }}
+              >
+                Buyer
+              </p>
+              <div className="flex items-center gap-5">
+                <img
+                  src={currentOffer?.seller?.avatar}
+                  alt="Buyer"
+                  className="w-12 h-12 rounded-full"
+                />
+                <p className="text-sm text-gray-700">
+                  {currentOffer?.seller?.username}
+                </p>
+              </div>
+            </div>
+
+            {/* Price Information */}
+            <div className="mb-8">
+              <p
+                className="text-sm font-bold text-gray-900 mb-3"
+                style={{ color: "#FDE504" }}
+              >
+                Price Information
+              </p>
+              <div className="flex justify-between text-sm text-gray-700 mb-2">
+                <p>Buyer&apos;s Offer</p>
+                <p className="font-bold text-[#FDE504]">
+                  {currentOffer?.product?.price}
+                </p>
+              </div>
+              <div className="flex justify-between text-sm text-gray-700">
+                <p>Seller&apos;s Offer</p>
+                <p className="font-bold text-[#FDE504]">
+                  {currentOffer?.offerPrice}
+                </p>
+              </div>
+            </div>
+
+            {/* Agreement Checkbox */}
+            <div className="flex items-start gap-3 mb-8">
+              <input
+                type="checkbox"
+                id="terms"
+                className="w-5 h-5 text-[#FDE504] border-gray-300 rounded focus:ring-[#FDE504]"
+              />
+              <label
+                htmlFor="terms"
+                className="text-sm text-gray-600 leading-tight"
+              >
+                I agree to the terms and conditions by KUKU.{" "}
+                <a href="#" className="text-[#FDE504] underline">
+                  Click here to know more
+                </a>
+              </label>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex justify-between">
+              <button
+                onClick={() => closePopup(currentOffer?._id)}
+                className="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg shadow hover:bg-gray-300 transition"
+              >
+                Reject
+              </button>
+              <button
+                onClick={() => closeAcceptPopup(currentOffer?._id)}
+                className="px-6 py-3 bg-[#FDE504] text-gray-900 font-bold rounded-lg shadow hover:bg-yellow-400 transition"
+              >
+                Accept
+              </button>
+            </div>
+          </div>
         </div>
-      </div>
-
-      {/* Buyer Information */}
-      <div className="mb-6">
-        <p className="text-sm font-bold text-gray-900 mb-2" style={{ color: "#FDE504" }}>
-          Buyer
-        </p>
-        <div className="flex items-center gap-5">
-          <img
-            src="/emojiKuku.png"
-            alt="Buyer"
-            className="w-12 h-12 rounded-full"
-          />
-          <p className="text-sm text-gray-700">Abu Salim</p>
-        </div>
-      </div>
-
-      {/* Price Information */}
-      <div className="mb-8">
-        <p className="text-sm font-bold text-gray-900 mb-3" style={{ color: "#FDE504" }}>
-          Price Information
-        </p>
-        <div className="flex justify-between text-sm text-gray-700 mb-2">
-          <p>Buyer&apos;s Offer</p>
-          <p className="font-bold text-[#FDE504]">₹120.00</p>
-        </div>
-        <div className="flex justify-between text-sm text-gray-700">
-          <p>Seller&apos;s Offer</p>
-          <p className="font-bold text-[#FDE504]">₹140.00</p>
-        </div>
-      </div>
-
-      {/* Agreement Checkbox */}
-      <div className="flex items-start gap-3 mb-8">
-        <input
-          type="checkbox"
-          id="terms"
-          className="w-5 h-5 text-[#FDE504] border-gray-300 rounded focus:ring-[#FDE504]"
-        />
-        <label htmlFor="terms" className="text-sm text-gray-600 leading-tight">
-          I agree to the terms and conditions by KUKU.{" "}
-          <a href="#" className="text-[#FDE504] underline">
-            Click here to know more
-          </a>
-        </label>
-      </div>
-
-      {/* Action Buttons */}
-      <div className="flex justify-between">
-        <button
-          onClick={closePopup}
-          className="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg shadow hover:bg-gray-300 transition"
-        >
-          Reject
-        </button>
-        <button
-          onClick={closePopup}
-          className="px-6 py-3 bg-[#FDE504] text-gray-900 font-bold rounded-lg shadow hover:bg-yellow-400 transition"
-        >
-          Accept
-        </button>
-      </div>
-    </div>
-  </div>
-)}
-
+      )}
     </div>
   );
 };

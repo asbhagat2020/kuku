@@ -16,6 +16,7 @@ import { FaStar } from "react-icons/fa";
 import { AiFillDelete } from "react-icons/ai";
 import Cookies from "js-cookie";
 import axios from "axios";
+import { HiOutlinePencil } from "react-icons/hi";
 
 const innerSliderSettings = {
   dots: true,
@@ -189,7 +190,7 @@ console.log(data,"nnnnnnnnnn");
               <Link href={`/editproduct/${item._id}`}>
               <div className="absolute  right-5 top-[180px] z-10">
                 <div className="h-[54px] p-[15px] bg-white rounded-[100px]">
-                  <AiFillDelete
+                  <HiOutlinePencil
                     size={24} // Set the size of the icon
                     color="red" // Optionally set the color
                     onClick={() => openPopup(item._id)} // Call handleDelete on click

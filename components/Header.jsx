@@ -320,6 +320,15 @@ const Header = () => {
                 {/* Kids */}
                 <KidsDropdown />
               </Link>
+              <Link
+                href="/EmergencyProducts"
+                className={`${
+                  isHome ? "text-[#fefae5]" : "text-black"
+                } text-base font-bold font-karla leading-tight hover:text-pink-500`}
+              >
+                {/* Emergency */}
+                Urgent Need
+              </Link>
             </div>
           </div>
 
