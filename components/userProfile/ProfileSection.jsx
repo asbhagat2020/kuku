@@ -15,6 +15,7 @@ const ProfileSection = (user) => {
   const [image, setImage] = useState("/profile_icon.svg");
   const [loading, setLoading] = useState();
   const [error, setError] = useState();
+  const [successMessage, setSuccessMessage] = useState("");
   // const [user, setUser] = useState();
 
   const details = useSelector((state) => state.auth.user);
@@ -137,6 +138,12 @@ const ProfileSection = (user) => {
         });
 
         console.log("Form submission successful:", response.data);
+
+        // Set success message and hide it after a few seconds
+        setSuccessMessage("Profile updated successfully!");
+        setTimeout(() => {
+          setSuccessMessage(""); // Clear the success message after 3 seconds
+        }, 3000);
 
         // Close modal and reset form state
         setIsModalOpen(false);
@@ -402,7 +409,12 @@ const ProfileSection = (user) => {
           </form>
         </div>
       </Modal>
-    
+     {/* Success notification */}
+     {successMessage && (
+       <div className="fixed top-4 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-6 py-4 rounded shadow-lg z-50 transition-opacity duration-500">
+          {successMessage}
+        </div>
+      )}
     </div>
   );
 };

@@ -33,6 +33,7 @@ const router = useRouter()
           Authorization: `Bearer ${token}`,
         },
       });
+      setWishlist(response.data.wishlist);
       console.log(response.data, "Wish Data");
     
      
@@ -47,6 +48,7 @@ const router = useRouter()
     try {
 
       const token = JSON.parse(Cookies.get('auth'));
+
      
      // Make the POST request to your API
      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/product/add/cart/${id}`, 
