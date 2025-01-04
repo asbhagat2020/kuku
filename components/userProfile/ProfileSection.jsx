@@ -9,14 +9,15 @@ import Cookies from "js-cookie";
 import { format } from "timeago.js";
 
 
-const ProfileSection = (user) => {
+const ProfileSection = (userDetails) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [imageSrc, setImageSrc] = useState("/kuku-suit 2.png");
   const [image, setImage] = useState("/profile_icon.svg");
   const [loading, setLoading] = useState();
   const [error, setError] = useState();
   const [successMessage, setSuccessMessage] = useState("");
-  // const [user, setUser] = useState();
+  const [user, setUser] = useState(userDetails);
+
 
   const details = useSelector((state) => state.auth.user);
   const id = details._id;
@@ -168,6 +169,40 @@ const ProfileSection = (user) => {
     }
   };
 
+  const handleFollow = async (id, type) => {
+    setLoading(true);
+  
+    try {
+      const token = JSON.parse(Cookies.get("auth"));
+      const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/profile/${type}/${id}`;
+      const res = await axios.post(
+        url,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+  
+      const updatedFollowers = res.data.followers;
+  
+      // Update the followers directly
+      setUser({
+        ...user,
+        user: {
+          ...user.user,
+          followers: updatedFollowers,
+        },
+      });
+    } catch (error) {
+      console.error("Error while following/unfollowing", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  
+
   return (
     <div className="max-w-[1550px] mx-auto">
       <div className="lg:px-[70px] px-[20px] pt-[28px]">
@@ -259,13 +294,23 @@ const ProfileSection = (user) => {
           </div>
         </div>
       ) : (
-        <div
-          className="w-[250px] h-[39.40px] p-[13.70px] bg-[#2fbc74] rounded-[20px] justify-center items-center gap-[13.70px] inline-flex cursor-pointer"
-        >
-          <div className="text-white text-[19.18px] font-bold font-karla leading-[23.02px]">
-            Follow
-          </div>
-        </div>
+        <button
+        className={`mt-2 px-4 sm:px-6 py-1 ${
+          user?.user.followers.includes(id)
+            ? "bg-gray-500"
+            : "bg-custom-green"
+        } text-white rounded-full`}
+        onClick={() =>
+          user?.user.followers.includes(id)
+            ? handleFollow(user.user._id, "unfollow", user?.user?._id)
+            : handleFollow(user.user._id, "follow", user?.user?._id)
+        }
+        disabled={loading}
+      >
+        {user?.user.followers.includes(id)
+          ? "Unfollow"
+          : "Follow"}
+      </button>
       )}
             </div>
           </div>

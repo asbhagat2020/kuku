@@ -190,6 +190,8 @@ export const ImagesComponent = () => {
   const [selectedSellerId, setSelectedSellerId] = useState([]);
   const [isFollowing, setIsFollowing] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [errorPopupOpen, setErrorPopupOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const cardsPerPage = 9;
 
@@ -206,7 +208,7 @@ export const ImagesComponent = () => {
   const totalPages = Math.ceil(data.length / cardsPerPage);
 
   const details = useSelector((state) => state.auth.user);
-  const id = details?._id;
+  const userID = details?._id;
 
   useEffect(() => {
     fetchProducts();
@@ -255,9 +257,13 @@ export const ImagesComponent = () => {
         handleCloseOfferPopup();
       } else {
         console.error("Failed to submit offer:", response.statusText);
+        setErrorMessage(`Failed to submit offer: ${response.data.message}`);
+        setErrorPopupOpen(true);
       }
     } catch (error) {
       console.error("An error occurred:", error.message);
+      setErrorMessage(` ${error.response?.data?.message || error.message}`);
+      setErrorPopupOpen(true);
     }
   };
 
@@ -320,16 +326,13 @@ export const ImagesComponent = () => {
     }
   };
 
-  const handleFollow = async (id) => {
+  const handleFollow = async (id, type, sellerID) => {
     setLoading(true);
 
     try {
       const token = JSON.parse(Cookies.get("auth"));
-
-      const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/profile/${
-        isFollowing ? "unfollow" : "follow"
-      }/${id}`;
-      await axios.post(
+      const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/profile/${type}/${id}`;
+      let res = await axios.post(
         url,
         {},
         {
@@ -339,13 +342,28 @@ export const ImagesComponent = () => {
         }
       );
 
-      setIsFollowing(!isFollowing);
+      let updatedFollowers = res.data.followers;
+      setData(
+        data.map((item) => {
+          if (item.seller._id === sellerID) {
+            return {
+              ...item,
+              seller: {
+                ...item.seller,
+                followers: updatedFollowers,
+              },
+            };
+          }
+          return item;
+        })
+      );
     } catch (error) {
       console.error("Error while following/unfollowing", error);
     } finally {
       setLoading(false);
     }
   };
+
 
   return (
     <div className="p-6 ml-8 h-auto w-auto font-karla z-10">
@@ -354,25 +372,29 @@ export const ImagesComponent = () => {
           <div key={card._id} className="flex flex-col">
             <div className="flex justify-between items-center space-x-4">
               <div className="flex space-x-4 items-center">
-              <Link href={`/user_profile/${card?.seller?._id}`}>
-                <img
-                  src={card?.seller?.avatar || "/profile_icon.svg"}
-                  alt="User avatar"
-                  className="object-contain h-12 w-12"
-                />
-                  </Link>
+                <Link href={`/user_profile/${card?.seller?._id}`}>
+                  <img
+                    src={card?.seller?.avatar || "/profile_icon.svg"}
+                    alt="User avatar"
+                    className="object-contain h-12 w-12"
+                  />
+                </Link>
                 <p className="font-bold text-sm">{card?.seller?.username}</p>
               </div>
               <button
                 className={`mt-2 px-4 sm:px-6 py-1 ${
-                  isFollowing ? "bg-gray-500" : "bg-custom-green"
+                  card?.seller.followers.includes(userID)
+                    ? "bg-gray-500"
+                    : "bg-custom-green"
                 } text-white rounded-full`}
-                onClick={() => handleFollow(card.seller._id)}
+                onClick={() =>
+                  card?.seller.followers.includes(userID)
+                    ? handleFollow(card.seller._id, "unfollow", card?.seller?._id)
+                    : handleFollow(card.seller._id, "follow", card?.seller?._id)
+                }
                 disabled={loading}
               >
-                {loading
-                  ? "Processing..."
-                  : isFollowing
+                {card?.seller.followers.includes(userID)
                   ? "Unfollow"
                   : "Follow"}
               </button>
@@ -454,6 +476,21 @@ export const ImagesComponent = () => {
         handlePrevPage={handlePrevPage}
         handlePageChange={handlePageChange}
       />
+      {errorPopupOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white rounded-lg shadow-lg p-6 w-11/12 max-w-md">
+            <p className="text-red-600 font-semibold text-center">
+              {errorMessage}
+            </p>
+            <button
+              onClick={() => setErrorPopupOpen(false)}
+              className="mt-4 w-full bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded transition"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -23,7 +23,10 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { showSuccessNotification } from "@/utils/Notification/notif";
 
-const ProductCard = ({ product }) => {
+const ProductCard = (productDetails) => {
+  // console.log(productDetails, "hhhhhhhh");
+  const [product, setProduct] = useState(productDetails?.product);
+  // console.log(product, "rrr");
   const router = useRouter();
   const [isRentPopupOpen, setRentPopupOpen] = useState(false);
   const [rentalDate, setRentalDate] = useState("");
@@ -34,7 +37,6 @@ const ProductCard = ({ product }) => {
   const [isModalOpen, setIsModalOpen] = useState(false); // State to control the modal
   const [currentImageIndex, setCurrentImageIndex] = useState(0); // State to keep track of the current image
   const [isDateSelected, setIsDateSelected] = useState(false);
- 
 
   // const images = [amiriImg, amiriImg];
   const images = product?.images;
@@ -50,10 +52,9 @@ const ProductCard = ({ product }) => {
   const dispatch = useDispatch();
   const [errorPopupOpen, setErrorPopupOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
- 
 
   const details = useSelector((state) => state.auth.user);
-  const id = details?._id;
+  const userID = details?._id;
 
   const handleBuy = async () => {
     try {
@@ -86,10 +87,14 @@ const ProductCard = ({ product }) => {
       } else {
         // Handle the case where the request is not successful
         console.error("Failed to add product to cart:", response.statusText);
+        setErrorMessage(`Failed to submit offer: ${response.data.message}`);
+        setErrorPopupOpen(true);
       }
     } catch (error) {
       // Handle any errors that occur during the request
       console.error("An error occurred while adding product to cart:", error);
+      setErrorMessage(` ${error.response?.data?.message || error.message}`);
+      setErrorPopupOpen(true);
     }
   };
 
@@ -126,6 +131,8 @@ const ProductCard = ({ product }) => {
           "Failed to add product to wishlist:",
           response.statusText
         );
+        setErrorMessage(`Failed to submit offer: ${response.data.message}`);
+        setErrorPopupOpen(true);
       }
     } catch (error) {
       // Handle any errors that occur during the request
@@ -133,36 +140,42 @@ const ProductCard = ({ product }) => {
         "An error occurred while adding product to wishlist:",
         error
       );
+       setErrorMessage(` ${error.response?.data?.message || error.message}`);
+      setErrorPopupOpen(true);
     }
   };
 
-  const handleFollow = async () => {
+  const handleFollow = async (id, type, sellerID) => {
     setLoading(true);
 
     try {
       const token = JSON.parse(Cookies.get("auth"));
-      if (product?.seller?.followers.includes(id)) {
-        await axios.post(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/profile/unfollow/${product.seller._id}`,
-          {},
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
+      const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/profile/${type}/${id}`;
+      let res = await axios.post(
+        url,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const updatedFollowers = res.data.followers;
+
+      // Update product directly if the sellerID matches
+      setProduct((prevProduct) => {
+        if (prevProduct.seller._id === sellerID) {
+          return {
+            ...prevProduct,
+            seller: {
+              ...prevProduct.seller,
+              followers: updatedFollowers,
             },
-          } // or any other data you need to send
-        );
-      } else {
-        await axios.post(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/profile/follow/${product.seller._id}`,
-          {},
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          } // or any other data you need to send
-        );
-      }
-      setIsFollowing(!isFollowing);
+          };
+        }
+        return prevProduct;
+      });
     } catch (error) {
       console.error("Error while following/unfollowing", error);
     } finally {
@@ -552,18 +565,27 @@ const ProductCard = ({ product }) => {
               </div>
 
               <button
-                className={`ml-auto rounded-md px-4 py-2 text-white w-full max-w-[136px] font-bold ${
-                  product?.seller?.followers.includes(id)
-                    ? "bg-red-500"
-                    : "bg-green-500"
-                }`}
-                style={{ borderRadius: "20px" }}
-                onClick={handleFollow}
+                className={`mt-2 px-4 sm:px-6 py-1 ${
+                  product?.seller.followers.includes(userID)
+                    ? "bg-gray-500"
+                    : "bg-custom-green"
+                } text-white rounded-full`}
+                onClick={() =>
+                  product?.seller.followers.includes(userID)
+                    ? handleFollow(
+                        product.seller._id,
+                        "unfollow",
+                        product?.seller?._id
+                      )
+                    : handleFollow(
+                        product.seller._id,
+                        "follow",
+                        product?.seller?._id
+                      )
+                }
                 disabled={loading}
               >
-                {loading
-                  ? "Processing..."
-                  : product?.seller?.followers.includes(id)
+                {product?.seller.followers.includes(userID)
                   ? "Unfollow"
                   : "Follow"}
               </button>

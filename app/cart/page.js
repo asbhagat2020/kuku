@@ -21,6 +21,9 @@ export default function Cart() {
   const [loading, setLoading] = useState({});
   const [cart, setCart] = useState({});
   const dispatch = useDispatch();
+  const [errorPopupOpen, setErrorPopupOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+
   const cartItems = useSelector((state) => state.cart.items);
 
   const handleRemoveCoupon = () => {
@@ -37,7 +40,7 @@ export default function Cart() {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log(response.data.cart, "Cart Data");
+   
       setCart(response.data.cart);
     } catch (err) {
       setError("Failed to fetch product details");
@@ -122,7 +125,7 @@ export default function Cart() {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log(response.data, "Cart Data");
+  
       setCart(response.data.cart);
     } catch (err) {
       setError("Failed to fetch product details");
@@ -157,6 +160,8 @@ export default function Cart() {
           "Failed to add product to wishlist:",
           response.statusText
         );
+        setErrorMessage(`Failed to submit offer: ${response.data.message}`);
+        setErrorPopupOpen(true);
       }
     } catch (error) {
       // Handle any errors that occur during the request
@@ -164,6 +169,8 @@ export default function Cart() {
         "An error occurred while adding product to wishlist:",
         error
       );
+      setErrorMessage(` ${error.response?.data?.message || error.message}`);
+      setErrorPopupOpen(true);
     }
   };
 
@@ -452,6 +459,21 @@ export default function Cart() {
             <button
               onClick={() => setIsCouponPopupVisible(false)}
               className="mt-4 w-full px-4 py-2 bg-gray-300 rounded-lg text-black"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
+            {errorPopupOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white rounded-lg shadow-lg p-6 w-11/12 max-w-md">
+            <p className="text-red-600 font-semibold text-center">
+              {errorMessage}
+            </p>
+            <button
+              onClick={() => setErrorPopupOpen(false)}
+              className="mt-4 w-full bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded transition"
             >
               Close
             </button>
