@@ -20,7 +20,6 @@ const Home = () => {
       
       const response = await axios.get(url);
       setProduct(response.data.product);
-      // console.log(response.data, "Product Data");
     } catch (err) {
       setError("Failed to fetch product details");
     } finally {

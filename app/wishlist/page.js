@@ -13,7 +13,9 @@ import Cookies from 'js-cookie';
 export default function Wishlist() {
    const[wishlist, setWishlist] =useState(null);
      const [loading, setLoading] = useState(null);
-     const [error, setError] = useState(null)
+     const [error, setError] = useState(null);
+     const [errorPopupOpen, setErrorPopupOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const token = useSelector((store)=>store.auth.token)
 
@@ -69,10 +71,14 @@ const router = useRouter()
      } else {
        // Handle the case where the request is not successful
        console.error('Failed to add product to wishlist:', response.statusText);
+       setErrorMessage(`Failed to submit offer: ${response.data.message}`);
+       setErrorPopupOpen(true);
      }
    } catch (error) {
      // Handle any errors that occur during the request
      console.error('An error occurred while adding product to wishlist:', error);
+     setErrorMessage(` ${error.response?.data?.message || error.message}`);
+     setErrorPopupOpen(true);
    }
   }
 
@@ -197,6 +203,21 @@ const router = useRouter()
           ) : (
             <div>No items in your wishlist</div>
           )}
+           {errorPopupOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white rounded-lg shadow-lg p-6 w-11/12 max-w-md">
+            <p className="text-red-600 font-semibold text-center">
+              {errorMessage}
+            </p>
+            <button
+              onClick={() => setErrorPopupOpen(false)}
+              className="mt-4 w-full bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded transition"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
         </div>
       </div>
       <DownloadKuku />
