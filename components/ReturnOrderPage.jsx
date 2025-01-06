@@ -124,7 +124,7 @@ const ReturnOrderPage = () => {
                 <div>
                   <span className="text-[#E4086F] font-medium">Delivered</span>
                   <span className="text-gray-400 text-sm block">
-                    On Dec 31'Dec
+                    On Dec 31&apos;Dec
                   </span>
                 </div>
               </div>
@@ -272,7 +272,7 @@ const ReturnOrderPage = () => {
                           Delivered
                         </span>
                         <span className="text-gray-400 text-sm">
-                          On Dec 31'Dec
+                          On Dec 31&apos;Dec
                         </span>
                       </div>
                     </div>
@@ -358,7 +358,7 @@ const ReturnOrderPage = () => {
                 <div className="space-y-8">
                   <div>
                     <h4 className="text-sm font-medium mb-4">
-                      What is the product's current condition?
+                      What is the product&apos;s current condition?
                     </h4>
                     <div className="space-y-3">
                       {[
