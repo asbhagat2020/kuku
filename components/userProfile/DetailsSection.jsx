@@ -17,6 +17,7 @@ import { AiFillDelete } from "react-icons/ai";
 import Cookies from "js-cookie";
 import axios from "axios";
 import { HiOutlinePencil } from "react-icons/hi";
+import { useDispatch, useSelector } from "react-redux";
 
 const innerSliderSettings = {
   dots: true,
@@ -65,11 +66,13 @@ const SellingCards = ({ data }) => {
   const [selectedSellerId, setSelectedSellerId] = useState(null);
 
 
+  const details = useSelector((state) => state.auth.user);
+  const userId = details._id;
+
   const handleOpenOfferPopup = (id, seller) => {
-   
     setSelectedProductId(id);
     setSelectedSellerId(seller);
-     // Store the selected product ID
+    // Store the selected product ID
     setIsOfferPopupOpen(true);
   };
 
@@ -87,9 +90,8 @@ const SellingCards = ({ data }) => {
 
     try {
       const token = JSON.parse(Cookies.get("auth"));
-      const data = { offerPrice: price, seller:selectedSellerId};
+      const data = { offerPrice: price, seller: selectedSellerId };
 
-     
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/offer/add/${selectedProductId}`,
         data,
@@ -177,27 +179,43 @@ const SellingCards = ({ data }) => {
                   )}
                 </div>
               </div>
-              <div className="absolute  right-5 top-[250px] z-10">
-                <div className="h-[54px] p-[15px] bg-white rounded-[100px]">
+              <div className="absolute right-5 top-[250px] z-10">
+                <div className="h-[54px] p-[15px] bg-white rounded-full shadow-md">
                   <AiFillDelete
-                    size={24} // Set the size of the icon
-                    color="red" // Optionally set the color
-                    onClick={() => openPopup(item._id)} // Call handleDelete on click
-                    style={{ cursor: "pointer" }} // Add pointer cursor
+                    size={24}
+                    color={userId === item.seller ? "red" : "gray"} // Different color if inactive
+                    onClick={
+                      userId === item.seller ? () => openPopup(item._id) : null
+                    } // Prevent click if inactive
+                    style={{
+                      cursor:
+                        userId === item.seller ? "pointer" : "not-allowed",
+                    }} // Modify cursor style
                   />
                 </div>
               </div>
-              <Link href={`/editproduct/${item._id}`}>
-              <div className="absolute  right-5 top-[180px] z-10">
-                <div className="h-[54px] p-[15px] bg-white rounded-[100px]">
-                  <HiOutlinePencil
-                    size={24} // Set the size of the icon
-                    color="red" // Optionally set the color
-                    onClick={() => openPopup(item._id)} // Call handleDelete on click
-                    style={{ cursor: "pointer" }} // Add pointer cursor
-                  />
+
+              <Link
+                href={userId === item.seller ? `/editproduct/${item._id}` : "#"}
+              >
+                <div
+                  className={`absolute right-5 top-[180px] z-10 ${
+                    userId === item.seller
+                      ? "cursor-pointer"
+                      : "cursor-not-allowed opacity-50"
+                  }`}
+                >
+                  <div className="h-[54px] p-[15px] bg-white rounded-full shadow-md">
+                    <HiOutlinePencil
+                      size={24}
+                      color={userId === item.seller ? "red" : "gray"} // Different color if inactive
+                      style={{
+                        cursor:
+                          userId === item.seller ? "pointer" : "not-allowed",
+                      }} // Modify cursor style
+                    />
+                  </div>
                 </div>
-              </div>
               </Link>
 
               <Link href={`/selling-page/${item._id}`}>
@@ -214,7 +232,7 @@ const SellingCards = ({ data }) => {
                     width={24}
                     height={24}
                     src="/hand_shake.svg"
-                    onClick={() => handleOpenOfferPopup(item._id,item.seller)}
+                    onClick={() => handleOpenOfferPopup(item._id, item.seller)}
                   />
                 </div>
               </div>
@@ -226,13 +244,16 @@ const SellingCards = ({ data }) => {
               />
               <Slider {...innerSliderSettings}>
                 {item.images.map((imgSrc, imgIndex) => (
-                  <div key={imgIndex}>
+                  <div key={imgIndex}
+                   className="w-[307px] h-[390px] flex items-center justify-center overflow-hidden rounded-md "
+                  >
                     <Image
                       src={imgSrc}
                       width={307}
-                      height={404}
-                      layout="responsive"
+                      height={390}
+                      layout="fixed"
                       alt={item.name}
+                      className="w-full h-full object-cover rounded-xl"
                     />
                   </div>
                 ))}

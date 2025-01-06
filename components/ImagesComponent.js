@@ -364,7 +364,6 @@ export const ImagesComponent = () => {
     }
   };
 
-
   return (
     <div className="p-6 ml-8 h-auto w-auto font-karla z-10">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -389,7 +388,11 @@ export const ImagesComponent = () => {
                 } text-white rounded-full`}
                 onClick={() =>
                   card?.seller.followers.includes(userID)
-                    ? handleFollow(card.seller._id, "unfollow", card?.seller?._id)
+                    ? handleFollow(
+                        card.seller._id,
+                        "unfollow",
+                        card?.seller?._id
+                      )
                     : handleFollow(card.seller._id, "follow", card?.seller?._id)
                 }
                 disabled={loading}
@@ -416,13 +419,17 @@ export const ImagesComponent = () => {
               {/* Slider for product images */}
               <Slider {...innerSliderSettings}>
                 {card.images.map((imgSrc, imgIndex) => (
-                  <div key={imgIndex}>
+                  <div
+                    key={imgIndex}
+                    className="w-[307px] h-[390px] flex items-center justify-center overflow-hidden rounded-md " // Adds border and rounded corners
+                  >
                     <Image
                       src={imgSrc}
                       width={307}
-                      height={404}
-                      layout="responsive"
-                      alt={""}
+                      height={390}
+                      layout="fixed" // Ensures consistent image dimensions
+                      alt=""
+                      className="w-full h-full object-cover rounded-xl" // Ensures the image matches the rounded corners
                     />
                   </div>
                 ))}
