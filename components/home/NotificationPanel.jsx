@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import Cookies from "js-cookie";
 import axios from "axios";
+import Image from "next/image";
 
 const NotificationPanel = ({ notifications, offers, onClose }) => {
   const [activeTab, setActiveTab] = useState("notifications");
@@ -22,7 +23,7 @@ const NotificationPanel = ({ notifications, offers, onClose }) => {
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+  });
 
   const openPopup = (offer) => {
     setCurrentOffer(offer);
@@ -166,9 +167,11 @@ const NotificationPanel = ({ notifications, offers, onClose }) => {
                 <span className="text-xs text-gray-500">Today</span>
               )}
               <div className="flex items-center gap-4 mt-2">
-                <img
+                <Image
                   src="/Ellipse 4427.svg"
                   alt="notify"
+                  width={10}
+                  height={10}
                   className="w-[10px] h-[10px]"
                 />
                 <div>
@@ -186,7 +189,7 @@ const NotificationPanel = ({ notifications, offers, onClose }) => {
         {activeTab === "offers" &&
           data.map((offer, index) => (
             <li key={index} className="mb-4 flex gap-4 items-start">
-              <img
+              <Image
                 src="/image 139.png"
                 alt="offer"
                 className="w-[30px] h-[30px] rounded-full p-1 bg-[#ffdbac]"
@@ -194,20 +197,27 @@ const NotificationPanel = ({ notifications, offers, onClose }) => {
               <div className="flex flex-col gap-2 w-full">
                 {index === 0 && (
                   <span className="text-xs text-gray-500">
-                  {Math.floor((new Date() - new Date(offer.createdAt)) / (1000 * 60 * 60 * 24))} days ago
-                </span>
+                    {Math.floor(
+                      (new Date() - new Date(offer.createdAt)) /
+                        (1000 * 60 * 60 * 24)
+                    )}{" "}
+                    days ago
+                  </span>
                 )}
                 <div className="flex justify-between">
-  <p className="text-sm text-[#1e1f23] font-bold font-karla">
-    Offer received
-  </p>
-  <span className="text-xs text-gray-500">
-    {new Date(offer?.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-  </span>
-</div>
+                  <p className="text-sm text-[#1e1f23] font-bold font-karla">
+                    Offer received
+                  </p>
+                  <span className="text-xs text-gray-500">
+                    {new Date(offer?.createdAt).toLocaleTimeString([], {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
+                  </span>
+                </div>
                 <p className="text-sm text-[#5d5d5d] font-bold font-karla">
-                  "Great news! Someone has made you an offer. Tap here to check
-                  it out"
+                  &quot;Great news! Someone has made you an offer. Tap here to
+                  check it out&quot;
                 </p>
                 <button
                   onClick={() => openPopup(offer)}
@@ -231,7 +241,7 @@ const NotificationPanel = ({ notifications, offers, onClose }) => {
 
             {/* Product Information */}
             <div className="flex items-center gap-5 mb-8">
-              <img
+              <Image
                 src={currentOffer?.product?.images[0]}
                 alt="Product"
                 className="w-24 h-24 rounded-lg object-cover"
@@ -255,7 +265,7 @@ const NotificationPanel = ({ notifications, offers, onClose }) => {
                 Buyer
               </p>
               <div className="flex items-center gap-5">
-                <img
+                <Image
                   src={currentOffer?.seller?.avatar}
                   alt="Buyer"
                   className="w-12 h-12 rounded-full"
