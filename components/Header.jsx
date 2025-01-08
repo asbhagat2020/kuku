@@ -16,6 +16,7 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import Cookies from "js-cookie";
 import { useDispatch, useSelector } from "react-redux";
 import { logout, token } from "@/store/auth/authSlice";
+import { message } from 'antd';
 
 const Header = () => {
   const [isSearchVisible, setIsSearchVisible] = useState(false);
@@ -236,6 +237,15 @@ const Header = () => {
   };
   const handleLocalSignIn = () => {
     router.push("/login");
+  };
+
+  const handleClick = (userID) => {
+    const token = Cookies.get('auth');
+    if (!token) {
+      message.error("Please Login First");
+    } else {
+      window.location.href = `/user_profile/${userID}`;
+    }
   };
 
   return (
@@ -466,20 +476,19 @@ const Header = () => {
                 />
               </div>
             </Link>
-            <Link href={`/user_profile/${userID}`}>
-              <div
-                className={`${
-                  iconsPath ? "bg-[#393939]" : "bg-white/40"
-                } h-[54px] p-[15px]  rounded-[100px] hidden lg:block`}
-              >
-                <Image
-                  alt="profile icon"
-                  width={24}
-                  height={24}
-                  src={iconsPath ? "/profile_white.svg" : "/profile_black.svg"}
-                />
-              </div>
-            </Link>
+            <Link href={`/user_profile/${userID}`} onClick={(e) => { e.preventDefault(); handleClick(userID); }}>
+  <div
+    className={`${iconsPath ? "bg-[#393939]" : "bg-white/40"} h-[54px] p-[15px] rounded-[100px] hidden lg:block`}
+    style={{ cursor: 'pointer' }}
+  >
+    <Image
+      alt="profile icon"
+      width={24}
+      height={24}
+      src={iconsPath ? "/profile_white.svg" : "/profile_black.svg"}
+    />
+  </div>
+</Link>
 
             <div ref={dropdownRef} className="relative">
               <div

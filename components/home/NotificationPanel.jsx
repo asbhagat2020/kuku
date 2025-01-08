@@ -8,7 +8,7 @@ const NotificationPanel = ({ notifications, offers, onClose }) => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [currentOffer, setCurrentOffer] = useState(null);
   const panelRef = useRef(null);
-  const [data, setData] = useState(null);
+  const [data, setData] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -23,7 +23,7 @@ const NotificationPanel = ({ notifications, offers, onClose }) => {
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  });
+  }, []);
 
   const openPopup = (offer) => {
     setCurrentOffer(offer);
@@ -33,7 +33,6 @@ const NotificationPanel = ({ notifications, offers, onClose }) => {
   const closePopup = async (id) => {
     try {
       const token = JSON.parse(Cookies.get("auth"));
-      // const data = { offerPrice: price, seller:selectedSellerId};
       const response = await axios.patch(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/offer/reject/${id}`,
         {},
@@ -47,6 +46,7 @@ const NotificationPanel = ({ notifications, offers, onClose }) => {
       if (response.status === 200) {
         setIsPopupOpen(false);
         setCurrentOffer(null);
+        fetchNotificationDetails(); // Refresh data after rejecting an offer
       } else {
         console.error("Failed to submit offer:", response.statusText);
       }
@@ -61,7 +61,6 @@ const NotificationPanel = ({ notifications, offers, onClose }) => {
   const closeAcceptPopup = async (id) => {
     try {
       const token = JSON.parse(Cookies.get("auth"));
-      // const data = { offerPrice: price, seller:selectedSellerId};
       const response = await axios.patch(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/offer/accept/${id}`,
         {},
@@ -75,6 +74,7 @@ const NotificationPanel = ({ notifications, offers, onClose }) => {
       if (response.status === 200) {
         setIsPopupOpen(false);
         setCurrentOffer(null);
+        fetchNotificationDetails(); // Refresh data after accepting an offer
       } else {
         console.error("Failed to submit offer:", response.statusText);
       }
@@ -150,7 +150,7 @@ const NotificationPanel = ({ notifications, offers, onClose }) => {
         >
           Offers
           <span className="bg-[#FDE504] text-black font-karla font-semibold rounded-full h-[24px] w-[24px] flex items-center justify-center">
-            {data?.length}
+            {data.length}
           </span>
         </div>
       </div>

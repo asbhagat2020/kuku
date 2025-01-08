@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { Search } from "lucide-react";
 import axios from "axios";
 import Cookies from "js-cookie";
+import { notification } from "antd";
 
 const InfoRow = ({ label, value }) => (
   <div className="flex justify-between items-center py-2 border-b border-gray-200">
@@ -25,12 +26,23 @@ export default function EmergencyProduct() {
 
   const fetchProducts = async () => {
     try {
-      const token = JSON.parse(Cookies.get("auth"));
+      const token = Cookies.get("auth");
+      if (!token) {
+        notification.error({
+          message: "Authentication Required",
+          description: "Please login first to view emergency products.",
+          placement: "top",
+          duration: 3,
+        });
+        setLoading(false);
+        return;
+      }
+      
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/requirement/get`,
         {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${JSON.parse(token)}`,
           },
         }
       );
@@ -45,12 +57,22 @@ export default function EmergencyProduct() {
 
   const fetchProductDetails = async (id) => {
     try {
-      const token = JSON.parse(Cookies.get("auth"));
+      const token = Cookies.get("auth");
+      if (!token) {
+        notification.error({
+          message: "Authentication Required",
+          description: "Please login first to view product details.",
+          placement: "top",
+          duration: 3,
+        });
+        return;
+      }
+
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/requirement/get/${id}`,
         {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${JSON.parse(token)}`,
           },
         }
       );
