@@ -306,7 +306,7 @@ const SoldCards = ({ data }) => (
           <div className="w-[307px] h-[404px] rounded-[20px] relative mx-2 outline-none">
             <div className="absolute top-2 right-2 z-10">
               <div className="h-[54px] p-[15px] bg-white/40 rounded-[100px]">
-                <Image alt="" width={24} height={24} src="wishlist.svg" />
+                <Image alt="" width={24} height={24} src="/wishlist.svg" />
               </div>
             </div>
             <div className="absolute min-w-[204px] bottom-4 left-4 text-center z-10 bg-[#fde504] px-[50px] py-[20px] rounded-[20px]">
@@ -316,18 +316,21 @@ const SoldCards = ({ data }) => (
             </div>
             <div className="absolute bottom-6 right-5 z-10">
               <div className="h-[54px] p-[15px] bg-white rounded-[100px]">
-                <Image alt="" width={24} height={24} src="hand_shake.svg" />
+                <Image alt="" width={24} height={24} src="/hand_shake.svg" />
               </div>
             </div>
             <Slider {...innerSliderSettings}>
               {i.images.map((imgSrc, imgIndex) => (
-                <div key={imgIndex}>
+                <div key={imgIndex}
+                className="w-[307px] h-[390px] flex items-center justify-center overflow-hidden rounded-md "
+                >
                   <Image
                     src={imgSrc}
                     width={307}
-                    height={404}
-                    layout="responsive"
+                    height={390}
+                    layout="fixed"
                     alt={i.name}
+                    className="w-full h-full object-cover rounded-xl"
                   />
                 </div>
               ))}

@@ -206,30 +206,7 @@ const ProfileSection = (userDetails) => {
   return (
     <div className="max-w-[1550px] mx-auto">
       <div className="lg:px-[70px] px-[20px] pt-[28px]">
-        <div className="flex  items-center ">
-          <Link href="/">
-            <p className="text-[#6a6a6a] text-base font-normal font-karla underline leading-[17.60px]">
-              Home
-            </p>
-          </Link>
-          <div class="w-[2px] h-3 bg-black mx-2"></div>
-
-          <Link href="/">
-            <p className="text-[#6a6a6a] text-base font-normal font-karla underline leading-[17.60px]">
-              Categories
-            </p>
-          </Link>
-          <div class="w-[2px] h-3 bg-black mx-2"></div>
-          <Link href="/">
-            <p className="text-[#6a6a6a] text-base font-normal font-karla underline leading-[17.60px]">
-              Tshirt
-            </p>
-          </Link>
-          <div class="w-[1px] h-3 bg-black mx-2"></div>
-          <p className="text-black text-base font-semibold font-karla  leading-[17.60px]">
-            Nike Black rounded tshirt
-          </p>
-        </div>
+       
         <div className="w-[95%] h-[1px]  bg-[#e6e6e6] mt-4"></div>
         <div className="flex flex-col lg:flex-row gap-[21px] mt-[103px]">
           <div className="lg:w-1/2 w-full min-h-[302px] rounded-lg shadow relative flex flex-col gap-[80px] ">
