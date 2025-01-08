@@ -16,7 +16,7 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import Cookies from "js-cookie";
 import { useDispatch, useSelector } from "react-redux";
 import { logout, token } from "@/store/auth/authSlice";
-import { message } from 'antd';
+import { showSuccessNotification } from "@/utils/Notification/notif";
 
 const Header = () => {
   const [isSearchVisible, setIsSearchVisible] = useState(false);
@@ -240,9 +240,9 @@ const Header = () => {
   };
 
   const handleClick = (userID) => {
-    const token = Cookies.get('auth');
+    const token = Cookies.get("auth");
     if (!token) {
-      message.error("Please Login First");
+      showSuccessNotification("Please Login!");
     } else {
       window.location.href = `/user_profile/${userID}`;
     }
@@ -476,19 +476,27 @@ const Header = () => {
                 />
               </div>
             </Link>
-            <Link href={`/user_profile/${userID}`} onClick={(e) => { e.preventDefault(); handleClick(userID); }}>
-  <div
-    className={`${iconsPath ? "bg-[#393939]" : "bg-white/40"} h-[54px] p-[15px] rounded-[100px] hidden lg:block`}
-    style={{ cursor: 'pointer' }}
-  >
-    <Image
-      alt="profile icon"
-      width={24}
-      height={24}
-      src={iconsPath ? "/profile_white.svg" : "/profile_black.svg"}
-    />
-  </div>
-</Link>
+            <Link
+              href={`/user_profile/${userID}`}
+              onClick={(e) => {
+                e.preventDefault();
+                handleClick(userID);
+              }}
+            >
+              <div
+                className={`${
+                  iconsPath ? "bg-[#393939]" : "bg-white/40"
+                } h-[54px] p-[15px] rounded-[100px] hidden lg:block`}
+                style={{ cursor: "pointer" }}
+              >
+                <Image
+                  alt="profile icon"
+                  width={24}
+                  height={24}
+                  src={iconsPath ? "/profile_white.svg" : "/profile_black.svg"}
+                />
+              </div>
+            </Link>
 
             <div ref={dropdownRef} className="relative">
               <div
@@ -509,11 +517,23 @@ const Header = () => {
                   <div className="px-4 py-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold">
                     Account
                   </div>
-                  <Link href={`/user_profile/${id}`}>
-                    <div className="px-4  pb-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold">
+                  <Link
+                    href={`/user_profile/${id}`}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleClick(id); // Ensure `handleClick` is defined and works for your logic
+                    }}
+                  >
+                    <div
+                      className={`${
+                        iconsPath ? "bg-[#393939]" : "bg-white/40"
+                      } px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold`}
+                      style={{ borderRadius: "100px" }}
+                    >
                       Your Profile
                     </div>
                   </Link>
+
                   <Link href="/orderdetails">
                     <div className="px-4 pb-2  hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold">
                       Purchases
