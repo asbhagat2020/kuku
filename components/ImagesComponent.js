@@ -405,6 +405,7 @@ export const ImagesComponent = () => {
 
             <div className="relative mt-4">
               {/* Heart icon for like functionality */}
+              <Link href="/wishlist">
               <div
                 className="absolute top-4 right-4 w-12 h-12 flex items-center justify-center rounded-full bg-custom-gray cursor-pointer z-10"
                 onClick={() => handleLikeClick(card?._id)}
@@ -415,7 +416,7 @@ export const ImagesComponent = () => {
                   <GoHeart className="text-2xl text-gray-300" /> // Outline heart for non-wishlist items
                 )}
               </div>
-
+              </Link>
               {/* Slider for product images */}
               <Slider {...innerSliderSettings}>
                 {card.images.map((imgSrc, imgIndex) => (
