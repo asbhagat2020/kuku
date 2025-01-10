@@ -330,15 +330,15 @@ const Header = () => {
                 {/* Kids */}
                 <KidsDropdown />
               </Link>
-              <Link
+              {/* <Link
                 href="/EmergencyProducts"
                 className={`${
                   isHome ? "text-[#fefae5]" : "text-black"
                 } text-base font-bold font-karla leading-tight hover:text-pink-500`}
               >
-                {/* Emergency */}
+                //  Emergency 
                 Urgent Need
-              </Link>
+              </Link> */}
             </div>
           </div>
 
@@ -559,9 +559,14 @@ const Header = () => {
                       Pickup Address
                     </div>
                   </Link>
-                  <Link href="/emergencyrequirement">
+                  {/* <Link href="/emergencyrequirement">
                     <div className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold">
                       Emergency Requirement
+                    </div>
+                  </Link> */}
+                  <Link href="/AllOrders">
+                    <div className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold">
+                      Orders
                     </div>
                   </Link>
                   <Link href="#">
