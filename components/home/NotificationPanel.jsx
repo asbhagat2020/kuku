@@ -192,6 +192,8 @@ const NotificationPanel = ({ notifications, offers, onClose }) => {
               <Image
                 src="/image 139.png"
                 alt="offer"
+                width={30}
+                height={30}
                 className="w-[30px] h-[30px] rounded-full p-1 bg-[#ffdbac]"
               />
               <div className="flex flex-col gap-2 w-full">
@@ -244,6 +246,8 @@ const NotificationPanel = ({ notifications, offers, onClose }) => {
               <Image
                 src={currentOffer?.product?.images[0]}
                 alt="Product"
+                width={96}
+                height={96}
                 className="w-24 h-24 rounded-lg object-cover"
               />
               <div>
@@ -268,6 +272,8 @@ const NotificationPanel = ({ notifications, offers, onClose }) => {
                 <Image
                   src={currentOffer?.seller?.avatar}
                   alt="Buyer"
+                  width={48}
+                  height={48}
                   className="w-12 h-12 rounded-full"
                 />
                 <p className="text-sm text-gray-700">
