@@ -6,48 +6,151 @@ import Header from "@/components/Header";
 import DownloadKuku from "@/components/home/DownloadKuku";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { removeFromCart } from "@/store/cart/cartSlice";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import Cookies from "js-cookie";
+import { showSuccessNotification } from "@/utils/Notification/notif";
 
 export default function Cart() {
   const [isCouponPopupVisible, setIsCouponPopupVisible] = useState(false);
   const [appliedCoupon, setAppliedCoupon] = useState("");
   const [isCouponApplied, setisCouponApplied] = useState(false);
-  const [subtotal, setSubtotal] = useState(250); // Initial subtotal
+  const [subtotal, setSubtotal] = useState(0);
   const [discount, setDiscount] = useState(0);
   const [error, setError] = useState({});
-  const [loading, setLoading] = useState({});
-  const [cart, setCart] = useState({});
+  const [loading, setLoading] = useState(false);
+  const [cart, setCart] = useState([]);
+  const [selectedItems, setSelectedItems] = useState({});
+  const [selectAll, setSelectAll] = useState(false);
   const dispatch = useDispatch();
   const [errorPopupOpen, setErrorPopupOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
   const cartItems = useSelector((state) => state.cart.items);
+  const { token } = useSelector((store) => store.auth);
+  const router = useRouter();
+
+  // Handle select all functionality
+  const handleSelectAll = (checked) => {
+    setSelectAll(checked);
+    const newSelectedItems = {};
+    cart.forEach((item) => {
+      newSelectedItems[item._id] = checked;
+    });
+    setSelectedItems(newSelectedItems);
+    calculateTotals(newSelectedItems);
+  };
+
+  // Handle individual item selection
+  const handleSelectItem = (itemId, checked) => {
+    const newSelectedItems = { ...selectedItems, [itemId]: checked };
+    setSelectedItems(newSelectedItems);
+    setSelectAll(Object.values(newSelectedItems).every((value) => value));
+    calculateTotals(newSelectedItems);
+  };
+
+  // Calculate totals based on selected items
+  const calculateTotals = (selected) => {
+    const total = cart.reduce((sum, item) => {
+      if (selected[item._id]) {
+        return sum + (item.price || 0);
+      }
+      return sum;
+    }, 0);
+    setSubtotal(total);
+  };
+
+  const handleCheckout = async () => {
+    try {
+      setLoading(true);
+
+      // Create the products array based on selected items
+      const selectedProducts = cart
+        .filter((item) => selectedItems[item._id])
+        .map((item) => ({
+          product: item._id,
+          quantity: 1,
+          price: item.price,
+          size: item.size || "",
+        }));
+
+      // Log the selected products array
+      console.log("Selected Products for Order:", selectedProducts);
+
+      // Only proceed if there are selected items
+      if (selectedProducts.length === 0) {
+        setErrorMessage("Please select at least one item to checkout");
+        setErrorPopupOpen(true);
+        return;
+      }
+      const user = JSON.parse(Cookies.get("user"));
+      // Prepare the order data
+      const orderData = {
+        products: selectedProducts,
+        totalAmount: total,
+        discount: discount,
+        // couponCode: appliedCoupon || null,
+        buyer: user?._id,
+        finalAmount: total - discount,
+      };
+
+      console.log(orderData);
+      // Make the API call to create order
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/order/create`,
+        orderData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log(response.data);
+      if (response.status === 201) {
+        // Order created successfully
+        setCart(response.data.updatedCart);
+        showSuccessNotification("Order placed successfully");
+      } else {
+        throw new Error(response.data.message || "Failed to create order");
+      }
+    } catch (error) {
+      setErrorMessage(
+        error.response?.data?.message || "Failed to process checkout"
+      );
+      setErrorPopupOpen(true);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleRemoveCoupon = () => {
     setAppliedCoupon("");
     setisCouponApplied(false);
-    setDiscount(0); // Reset discount
+    setDiscount(0);
   };
+
   const handleRemove = async (id) => {
     try {
       const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/product/cart/${id}`;
-
       const response = await axios.delete(url, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-   
       setCart(response.data.cart);
+      // Update selected items after removal
+      const newSelectedItems = { ...selectedItems };
+      delete newSelectedItems[id];
+      setSelectedItems(newSelectedItems);
+      calculateTotals(newSelectedItems);
     } catch (err) {
-      setError("Failed to fetch product details");
-    } finally {
-      setLoading(false);
+      setError("Failed to remove item from cart");
+      setErrorMessage("Failed to remove item from cart");
+      setErrorPopupOpen(true);
     }
   };
+
   const coupons = [
     {
       id: 1,
@@ -73,72 +176,48 @@ export default function Cart() {
 
   const handleApplyCoupon = (couponCode) => {
     const coupon = coupons.find((c) => c.code === couponCode);
-    console.log(coupon);
-
     if (coupon) {
       setAppliedCoupon(couponCode);
       setIsCouponPopupVisible(false);
       setisCouponApplied(true);
 
-      // Calculate discount based on coupon type
       if (coupon.type === "percentage") {
         setDiscount((subtotal * coupon.value) / 100);
       } else if (coupon.type === "flat") {
         setDiscount(coupon.value);
       } else if (coupon.type === "freeShipping") {
-        // No discount, but you can show a free shipping message
         setDiscount(0);
       }
     }
   };
 
-  // const total = subtotal - discount;
-
-  const subTotal = cartItems.reduce(
-    (total, item) => total + item?.pricing?.currentPrice,
-    0
-  );
   const total = subtotal - discount;
-
-  // Update state dynamically
-  useEffect(() => {
-    setSubtotal(subTotal);
-  }, [cartItems, discount]);
-
-  const token = useSelector((store) => store.auth.token);
-
-  const username = useSelector((store) => store.auth.user);
-
-  const router = useRouter();
-  // useEffect(() => {
-  //   if (!token) {
-  //     router.push("/");
-  //   }
-  // }, [token]);
 
   const fetchCartDetails = async () => {
     try {
       const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/product/get/cart`;
-
       const response = await axios.get(url, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-  
       setCart(response.data.cart);
+      // Initialize selected items
+      const initialSelected = {};
+      response.data.cart.forEach((item) => {
+        initialSelected[item._id] = false;
+      });
+      setSelectedItems(initialSelected);
     } catch (err) {
-      setError("Failed to fetch product details");
-    } finally {
-      setLoading(false);
+      setError("Failed to fetch cart details");
+      setErrorMessage("Failed to fetch cart details");
+      setErrorPopupOpen(true);
     }
   };
 
   const handleAddToWishlist = async (id) => {
     try {
       const token = JSON.parse(Cookies.get("auth"));
-
-      // Make the POST request to your API
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/product/wishlist/${id}`,
         {},
@@ -146,30 +225,17 @@ export default function Cart() {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        } // or any other data you need to send
+        }
       );
 
       if (response.status === 201) {
-        // If the request is successful, dispatch the action to add to cart
-
-        // Navigate to the cart page
         router.push("/wishlist");
       } else {
-        // Handle the case where the request is not successful
-        console.error(
-          "Failed to add product to wishlist:",
-          response.statusText
-        );
-        setErrorMessage(`Failed to submit offer: ${response.data.message}`);
+        setErrorMessage(`Failed to add to wishlist: ${response.data.message}`);
         setErrorPopupOpen(true);
       }
     } catch (error) {
-      // Handle any errors that occur during the request
-      console.error(
-        "An error occurred while adding product to wishlist:",
-        error
-      );
-      setErrorMessage(` ${error.response?.data?.message || error.message}`);
+      setErrorMessage(error.response?.data?.message || error.message);
       setErrorPopupOpen(true);
     }
   };
@@ -180,127 +246,120 @@ export default function Cart() {
     }
   }, [token]);
 
+  // Get selected items count
+  const selectedCount = Object.values(selectedItems).filter(Boolean).length;
+  const totalItems = cart.length;
+
   return (
     <>
       <Header />
       <div className="px-4 py-8 md:px-8 lg:px-[70px] lg:py-[70px]">
-        {/* Title Section */}
         <div className="text-[#070707] text-2xl md:text-3xl lg:text-[36.8px] font-normal font-luckiest leading-tight mb-6">
           YOUR CART
         </div>
 
-        {/* Checkbox and Selected Items */}
         {cart.length > 0 ? (
           <>
             <div className="flex items-center gap-2 mb-4">
               <label className="custom-checkbox">
-                <input type="checkbox" />
+                <input
+                  type="checkbox"
+                  checked={selectAll}
+                  onChange={(e) => handleSelectAll(e.target.checked)}
+                />
                 <span className="checkmark"></span>
               </label>
               <div className="text-[#4f4f4f] text-sm md:text-xl font-normal font-karla">
-                1/1 Items selected
+                {selectedCount}/{totalItems} Items selected
               </div>
             </div>
 
             <div className="flex flex-col lg:flex-row justify-between items-start gap-4">
-              {/* Left Section: Cart */}
               <div className="w-full lg:w-2/3">
-                {cart.map((item) => {
-                  return (
-                    <>
-                      <div className="flex flex-col md:flex-row items-start gap-4 mb-4">
-                        <label className="custom-checkbox">
-                          <input type="checkbox" />
-                          <span className="checkmark"></span>
-                        </label>
+                {cart.map((item) => (
+                  <div
+                    key={item._id}
+                    className="flex flex-col md:flex-row items-start gap-4 mb-4"
+                  >
+                    <label className="custom-checkbox">
+                      <input
+                        type="checkbox"
+                        checked={selectedItems[item._id] || false}
+                        onChange={(e) =>
+                          handleSelectItem(item._id, e.target.checked)
+                        }
+                      />
+                      <span className="checkmark"></span>
+                    </label>
 
-                        {/* Product Image */}
-                        <img
-                          className="w-24 h-auto md:w-[159.2px] rounded-md"
-                          src={item?.images?.[0]}
-                          alt="Product"
-                        />
+                    <img
+                      className="w-24 h-auto md:w-[159.2px] rounded-md"
+                      src={item?.images?.[0]}
+                      alt="Product"
+                    />
 
-                        {/* Product Info */}
-                        <div className="flex flex-col justify-start items-start gap-3 w-full">
-                          <div>
-                            <div className="text-black text-lg md:text-[18px] font-bold font-karla">
-                              {item?.name}
-                            </div>
-                            <div className="text-[#b4b4b4] text-sm md:text-base font-normal font-karla">
-                              {item?.description}
-                            </div>
-                          </div>
-
-                          <div className="flex justify-between md:justify-start items-center gap-4">
-                            <div className="flex items-center gap-3">
-                              <div className="text-[#383838] text-sm md:text-[16px] font-bold font-karla">
-                                SIZE
-                              </div>
-                              <div className="inline-flex border border-[#e4086f] justify-center items-center px-2 py-1">
-                                <div className="text-[#e4086f] text-sm md:text-[16px] font-normal font-karla">
-                                  {item?.size}
-                                </div>
-                              </div>
-                            </div>
-
-                            <div className="flex items-center gap-3">
-                              <span className="text-[#383838] text-sm md:text-[16px] font-bold font-karla">
-                                CONDITION:
-                              </span>
-                              <span className="text-[#383838] text-sm md:text-[16px] font-bold font-karla">
-                                {item?.condition}
-                              </span>
-                            </div>
-                          </div>
-
-                          {/* Buttons */}
-                          <div className="flex flex-col md:flex-row mt-2 gap-4 w-full">
-                            {/* <Link href="/selling-page"> */}
-                            <button
-                              onClick={() => handleRemove(item._id)}
-                              className="w-full md:w-[200px] h-[40px] md:h-[50px] rounded-lg hover:border-white hover:text-white text-black border-2 border-[#0f0f0f] flex justify-center items-center hover:bg-[#e4086f]"
-                            >
-                              <span className="text-sm md:text-[14px] font-bold font-karla uppercase">
-                                Remove
-                              </span>
-                            </button>
-                            {/* </Link> */}
-                            {/* <Link href="/wishlist"> */}
-                            <button
-                              className="w-full md:w-[200px] h-[40px] md:h-[50px] rounded-lg text-black hover:border-white hover:text-white border-2 border-[#0f0f0f] flex justify-center items-center hover:bg-[#e4086f]"
-                              onClick={() => handleAddToWishlist(item._id)}
-                            >
-                              <span className="text-sm md:text-[14px] font-bold font-karla uppercase">
-                                Add to Wishlist
-                              </span>
-                            </button>
-                            {/* </Link> */}
-                          </div>
+                    <div className="flex flex-col justify-start items-start gap-3 w-full">
+                      <div>
+                        <div className="text-black text-lg md:text-[18px] font-bold font-karla">
+                          {item?.name}
                         </div>
-
-                        {/* Price and Discount */}
-                        <div className="flex flex-col items-start gap-2 ml-[-15px]">
-                          <div className="flex items-center gap-1 mr-2">
-                            {" "}
-                            {/* Adjusted with a negative margin */}
-                            <div className="text-black text-sm md:text-[16px] font-bold font-karla">
-                              AED{item?.pricing?.currentPrice}
-                            </div>
-                            <div className="text-[#30bd75] text-sm md:text-[16px] font-bold font-karla whitespace-nowrap">
-                              ({item?.pricing?.discountPercentage}% OFF)
-                            </div>
-                          </div>
-                          <div className="text-[#b4b4b4] text-sm md:text-xl font-normal font-karla line-through">
-                            MRP AED{item?.pricing?.originalPrice}
-                          </div>
+                        <div className="text-[#b4b4b4] text-sm md:text-base font-normal font-karla">
+                          {item?.description}
                         </div>
                       </div>
-                    </>
-                  );
-                })}
 
-                {/* Add More Items Button */}
+                      <div className="flex justify-between md:justify-start items-center gap-4">
+                        <div className="flex items-center gap-3">
+                          <div className="text-[#383838] text-sm md:text-[16px] font-bold font-karla">
+                            SIZE
+                          </div>
+                          <div className="inline-flex border border-[#e4086f] justify-center items-center px-2 py-1">
+                            <div className="text-[#e4086f] text-sm md:text-[16px] font-normal font-karla">
+                              {item?.size}
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center gap-3">
+                          <span className="text-[#383838] text-sm md:text-[16px] font-bold font-karla">
+                            CONDITION:
+                          </span>
+                          <span className="text-[#383838] text-sm md:text-[16px] font-bold font-karla">
+                            {item?.condition}
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="flex flex-col md:flex-row mt-2 gap-4 w-full">
+                        <button
+                          onClick={() => handleRemove(item._id)}
+                          className="w-full md:w-[200px] h-[40px] md:h-[50px] rounded-lg hover:border-white hover:text-white text-black border-2 border-[#0f0f0f] flex justify-center items-center hover:bg-[#e4086f]"
+                        >
+                          <span className="text-sm md:text-[14px] font-bold font-karla uppercase">
+                            Remove
+                          </span>
+                        </button>
+                        <button
+                          className="w-full md:w-[200px] h-[40px] md:h-[50px] rounded-lg text-black hover:border-white hover:text-white border-2 border-[#0f0f0f] flex justify-center items-center hover:bg-[#e4086f]"
+                          onClick={() => handleAddToWishlist(item._id)}
+                        >
+                          <span className="text-sm md:text-[14px] font-bold font-karla uppercase">
+                            Add to Wishlist
+                          </span>
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col items-start gap-2 ml-[-15px]">
+                      <div className="flex items-center gap-1 mr-2">
+                        <div className="text-black text-sm md:text-[16px] font-bold font-karla">
+                          AED&nbsp;{item?.price}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+
                 <Link href="/selling-page">
                   <button className="w-full h-[40px] md:h-[50px] rounded-lg hover:text-white text-[#e4086f] hover:bg-[#e4086f] hover:border-white border-2 border-[#e4086f] flex justify-center items-center">
                     <span className="text-sm md:text-[14px] font-bold font-karla uppercase">
@@ -310,39 +369,33 @@ export default function Cart() {
                 </Link>
               </div>
 
-              {/* Right Section: Coupon and Pricing Summary */}
               <div className="w-full lg:w-1/4 mt-8 lg:mt-[-50px]">
                 {isCouponApplied ? (
-                  <>
-                    <div className="bg-white flex justify-between items-center border border-gray-100 rounded-lg shadow-xl p-4 mb-4">
-                      <p className="text-[#4f4f4f] text-sm md:text-[18px] font-bold font-karla">
-                        {appliedCoupon}
-                      </p>
-                      <button
-                        onClick={handleRemoveCoupon}
-                        className="px-4 py-2 bg-[#e4086f] rounded-2xl text-white"
-                      >
-                        Remove
-                      </button>
-                    </div>
-                  </>
+                  <div className="bg-white flex justify-between items-center border border-gray-100 rounded-lg shadow-xl p-4 mb-4">
+                    <p className="text-[#4f4f4f] text-sm md:text-[18px] font-bold font-karla">
+                      {appliedCoupon}
+                    </p>
+                    <button
+                      onClick={handleRemoveCoupon}
+                      className="px-4 py-2 bg-[#e4086f] rounded-2xl text-white"
+                    >
+                      Remove
+                    </button>
+                  </div>
                 ) : (
-                  <>
-                    <div className="bg-white flex justify-between items-center border border-gray-100 rounded-lg shadow-xl p-4 mb-4">
-                      <p className="text-[#4f4f4f] text-sm md:text-[16px] font-karla">
-                        Available coupons
-                      </p>
-                      <button
-                        onClick={() => setIsCouponPopupVisible(true)}
-                        className="px-4 py-2 bg-[#e4086f] rounded-2xl text-white"
-                      >
-                        Show
-                      </button>
-                    </div>
-                  </>
+                  <div className="bg-white flex justify-between items-center border border-gray-100 rounded-lg shadow-xl p-4 mb-4">
+                    <p className="text-[#4f4f4f] text-sm md:text-[16px] font-karla">
+                      Available coupons
+                    </p>
+                    <button
+                      onClick={() => setIsCouponPopupVisible(true)}
+                      className="px-4 py-2 bg-[#e4086f] rounded-2xl text-white"
+                    >
+                      Show
+                    </button>
+                  </div>
                 )}
 
-                {/* Coupon Section */}
                 {!isCouponApplied && (
                   <div className="bg-white border border-gray-100 rounded-lg shadow-xl p-4 mb-4">
                     <div className="text-[#4f4f4f] text-sm md:text-[16px] font-karla">
@@ -361,7 +414,6 @@ export default function Cart() {
                   </div>
                 )}
 
-                {/* Pricing Summary */}
                 <div className="bg-white p-4 border border-gray-100 rounded-lg shadow-xl">
                   <div className="flex justify-between items-center mb-2">
                     <div className="text-[#4f4f4f] text-sm md:text-[16px] font-karla">
@@ -389,14 +441,16 @@ export default function Cart() {
                     </div>
                   </div>
 
-                  {/* Checkout Button */}
-                  <button className="w-full h-[40px] p-2 bg-[#fde504] rounded-lg md:rounded-[16px] mt-2">
+                  <button
+                    onClick={handleCheckout}
+                    disabled={loading || selectedCount === 0}
+                    className="w-full h-[40px] p-2 bg-[#fde504] rounded-lg md:rounded-[16px] mt-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
                     <div className="text-center text-[#070707] text-sm md:text-[14px] font-medium">
-                      Checkout
+                      {loading ? "Processing..." : "Checkout"}
                     </div>
                   </button>
 
-                  {/* Payment Methods */}
                   <div className="flex justify-around mt-3">
                     <img className="h-5" src="/payment1.png" alt="Payment1" />
                     <img
@@ -412,23 +466,20 @@ export default function Cart() {
             </div>
           </>
         ) : (
-          <>
-            <div className="w-full h-[50vh] flex justify-center items-center">
-              <div className="text-center ">
-                <h2 className="font-luckiest text-4xl mb-4">
-                  No items here :(
-                </h2>
-                <Link
-                  className="text-pink-400 font-karla text-xl"
-                  href={"/selling-page"}
-                >
-                  Continue purchase
-                </Link>
-              </div>
+          <div className="w-full h-[50vh] flex justify-center items-center">
+            <div className="text-center">
+              <h2 className="font-luckiest text-4xl mb-4">No items here :(</h2>
+              <Link
+                className="text-pink-400 font-karla text-xl"
+                href={"/selling-page"}
+              >
+                Continue purchase
+              </Link>
             </div>
-          </>
+          </div>
         )}
       </div>
+
       {isCouponPopupVisible && (
         <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-50">
           <div className="bg-white rounded-lg w-[90%] max-w-[400px] p-4 shadow-lg">
@@ -465,7 +516,8 @@ export default function Cart() {
           </div>
         </div>
       )}
-            {errorPopupOpen && (
+
+      {errorPopupOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="bg-white rounded-lg shadow-lg p-6 w-11/12 max-w-md">
             <p className="text-red-600 font-semibold text-center">
@@ -480,6 +532,7 @@ export default function Cart() {
           </div>
         </div>
       )}
+
       <DownloadKuku />
       <Footer />
     </>
