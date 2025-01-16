@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import Slider from 'react-slick';
+import { useInView } from 'react-intersection-observer'; // For viewport detection
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
-// Custom arrow components - now positioned inside the card
+// Custom arrow components
 const NextArrow = ({ onClick }) => (
   <button
     onClick={onClick}
@@ -24,7 +25,6 @@ const PrevArrow = ({ onClick }) => (
   </button>
 );
 
-// AnimationCard component with relative positioning to contain arrows
 const AnimationCard = ({ step, heading, imageSrc }) => (
   <div className="relative rounded-[20px] mx-5 lg:mx-[70px] lg:h-[640px] bg-[#FDE504] py-[40px] sm:py-[60px] flex flex-col items-center shadow-lg transition-transform duration-500">
     <div className="flex flex-col sm:flex-row mx-5 sm:mx-[50px] lg:mx-[180px] gap-[30px] sm:gap-[130px] items-center">
@@ -62,15 +62,28 @@ const AnimationCard = ({ step, heading, imageSrc }) => (
 
 const AnimationSection = () => {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [autoplay, setAutoplay] = useState(false);
+
+  const { ref, inView } = useInView({
+    threshold: 0.5, // Trigger when 50% of the component is visible
+    triggerOnce: true, // Trigger only once when it comes into view
+  });
+
+  // Start autoplay when component is in viewport
+  React.useEffect(() => {
+    if (inView) {
+      setAutoplay(true);
+    }
+  }, [inView]);
 
   const settings = {
     dots: true,
     infinite: true,
-    speed: 500,
+    speed: 1000, // Slow down the transition speed
     slidesToShow: 1,
     slidesToScroll: 1,
-    autoplay: true,
-    autoplaySpeed: 2000,
+    autoplay:autoplay,
+    autoplaySpeed: 3000, // Slower autoplay
     pauseOnHover: true,
     pauseOnFocus: true,
     nextArrow: <NextArrow />,
@@ -98,13 +111,16 @@ const AnimationSection = () => {
   };
 
   return (
-    <div className="max-w-[1550px] mx-auto mb-[53px] relative lg:h-[700px]">
+    <div
+      ref={ref}
+      className="max-w-[1550px] mx-auto mb-[53px] relative lg:h-[700px]"
+    >
       <div className="absolute top-[-50px] right-[20px] sm:top-[-80px] sm:right-[80px] z-30">
         <Image src="list_top_image.svg" width={111} height={121} alt="" />
       </div>
 
       <div className="relative">
-        <Slider {...settings}>
+        <Slider  key={autoplay ? 'autoplay-enabled' : 'autoplay-disabled'}  {...settings}>
           <AnimationCard
             step="Step-1"
             heading="List clothes you no longer need"

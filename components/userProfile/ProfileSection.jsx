@@ -12,30 +12,38 @@ import { format } from "timeago.js";
 const ProfileSection = (userDetails) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [imageSrc, setImageSrc] = useState("/kuku-suit 2.png");
-  const [image, setImage] = useState("/profile_icon.svg");
+  const [image, setImage] = useState("/kuku-suit 2.png");
   const [loading, setLoading] = useState();
   const [error, setError] = useState();
   const [successMessage, setSuccessMessage] = useState("");
   const [user, setUser] = useState(userDetails);
+  const [hasSelectedNewImage, setHasSelectedNewImage] = useState(false);
+  console.log(user);
 
 
   const details = useSelector((state) => state.auth.user);
-  const id = details._id;
+  const id = details?._id;
 
   const handleImageChange = (e) => {
-    setFormData((prevState) => ({
-      ...prevState,
-      avatar: e.target.files[0],
-    }));
+    const file = e.target.files[0];
+    if (file) {
+      setHasSelectedNewImage(true);
+      setFormData((prevState) => ({
+        ...prevState,
+        avatar: file,
+      }));
+    }
   };
 
   const handleEditClick = () => {
     setIsModalOpen(true);
     setFormData(user.user);
-  };
+    setHasSelectedNewImage(false);
+  }
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
+    setHasSelectedNewImage(false);
   };
   const [formData, setFormData] = useState({
     avatar: null,
@@ -72,9 +80,10 @@ const ProfileSection = (userDetails) => {
     }
     if (!String(formData.phone).trim()) {
       errors.phone = "Phone Number is required";
-    } else if (!/^\d{10}$/.test(String(formData.phone).trim())) {
-      errors.phone = "Phone Number must be 10 digits";
     }
+    // else if (!/^\d{10}$/.test(String(formData.phone).trim())) {
+    //   errors.phone = "Phone Number must be 10 digits";
+    // }
     if (!formData.location.trim()) {
       errors.location = "Address is required";
     }
@@ -171,7 +180,7 @@ const ProfileSection = (userDetails) => {
 
   const handleFollow = async (id, type) => {
     setLoading(true);
-  
+
     try {
       const token = JSON.parse(Cookies.get("auth"));
       const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/profile/${type}/${id}`;
@@ -184,9 +193,9 @@ const ProfileSection = (userDetails) => {
           },
         }
       );
-  
+
       const updatedFollowers = res.data.followers;
-  
+
       // Update the followers directly
       setUser({
         ...user,
@@ -201,21 +210,32 @@ const ProfileSection = (userDetails) => {
       setLoading(false);
     }
   };
-  
-
+  const handleRemoveImage = () => {
+    setFormData((prevState) => ({
+      ...prevState,
+      avatar: null,
+    }));
+    setHasSelectedNewImage(false);
+    setSuccessMessage("Profile picture removed!");
+    setTimeout(() => {
+      setSuccessMessage("");
+    }, 3000);
+  };
+  const showRemoveButton = hasSelectedNewImage || (formData.avatar && !hasSelectedNewImage);
   return (
     <div className="max-w-[1550px] mx-auto">
       <div className="lg:px-[70px] px-[20px] pt-[28px]">
-       
+
         <div className="w-[95%] h-[1px]  bg-[#e6e6e6] mt-4"></div>
         <div className="flex flex-col lg:flex-row gap-[21px] mt-[103px]">
           <div className="lg:w-1/2 w-full min-h-[302px] rounded-lg shadow relative flex flex-col gap-[80px] ">
             <Image
+              unoptimized
               src={user?.user?.avatar || image}
               width={155}
               height={155}
               layout=""
-              className="absolute left-[49px] top-[-80px]"
+              className="absolute object-fill border bg-[#AF65E6]  border-yellow-400 rounded-full w-[140px] h-[140px] left-[49px] top-[-80px] p-2"
               alt=""
             />
             <div className="flex px-[37px] lg:px-[64px] pt-[93px] gap-2 lg:gap-4 xl:gap-[52px]">
@@ -261,34 +281,33 @@ const ProfileSection = (userDetails) => {
                   Share
                 </div>
               </div>
-              {user?.user?.self ? (
-        <div
-          className="w-[250px] h-[39.40px] p-[13.70px] bg-[#2fbc74] rounded-[20px] justify-center items-center gap-[13.70px] inline-flex cursor-pointer"
-          onClick={handleEditClick}
-        >
-          <div className="text-white text-[19.18px] font-bold font-karla leading-[23.02px]">
-            Edit
-          </div>
-        </div>
-      ) : (
-        <button
-        className={`mt-2 px-4 sm:px-6 py-1 ${
-          user?.user.followers.includes(id)
-            ? "bg-gray-500"
-            : "bg-custom-green"
-        } text-white rounded-full`}
-        onClick={() =>
-          user?.user.followers.includes(id)
-            ? handleFollow(user.user._id, "unfollow", user?.user?._id)
-            : handleFollow(user.user._id, "follow", user?.user?._id)
-        }
-        disabled={loading}
-      >
-        {user?.user.followers.includes(id)
-          ? "Unfollow"
-          : "Follow"}
-      </button>
-      )}
+              {user?.user?.self ===true? (
+                <div
+                  className="w-[250px] h-[39.40px] p-[13.70px] bg-[#2fbc74] rounded-[20px] justify-center items-center gap-[13.70px] inline-flex cursor-pointer"
+                  onClick={handleEditClick}
+                >
+                  <div className="text-white text-[19.18px] font-bold font-karla leading-[23.02px]">
+                    Edit
+                  </div>
+                </div>
+              ) : (
+                <button
+                  className={`mt-2 px-4 sm:px-6 py-1 ${user?.user?.followers?.includes(id)
+                      ? "bg-gray-500"
+                      : "bg-custom-green"
+                    } text-white rounded-full`}
+                  onClick={() =>
+                    user?.user?.followers?.includes(id)
+                      ? handleFollow(user.user._id, "unfollow", user?.user?._id)
+                      : handleFollow(user.user._id, "follow", user?.user?._id)
+                  }
+                  disabled={loading}
+                >
+                  {user?.user?.followers?.includes(id)
+                    ? "Unfollow"
+                    : "Follow"}
+                </button>
+              )}
             </div>
           </div>
           <div className="lg:w-1/2 w-full min-h-[302px] rounded-lg shadow ">
@@ -321,19 +340,19 @@ const ProfileSection = (userDetails) => {
           <h2 className="text-[#070707] text-[22.91px] font-bold font-karla leading-7 pb-[20px] md:pb-[57px]">
             Edit Profile
           </h2>
-          <div className="w-[80px] h-[80px] md:w-[114px] md:h-[114px] rounded-full bg-[#fde504] flex justify-center items-center relative">
+          <div className="w-[100px] h-[100px] md:w-[114px] md:h-[114px] rounded-full bg-[#fde504] flex justify-center items-center relative">
             {/* Profile Image */}
             <Image
               unoptimized
               width={100}
               height={100}
-              className="rounded-full object-cover"
+              className="w-[100px] h-[100px] rounded-full object-fill"
               src={
                 typeof window !== "undefined" && formData.avatar instanceof File
                   ? URL.createObjectURL(formData.avatar)
                   : user?.user?.avatar
-                  ? user?.user?.avatar
-                  : imageSrc
+                    ? user?.user?.avatar
+                    : imageSrc
               }
               alt="Profile Picture"
             />
@@ -349,12 +368,14 @@ const ProfileSection = (userDetails) => {
             {/* Edit Icon in the bottom-right corner */}
             <div className="absolute bottom-0 right-0 w-[20px] h-[20px] md:w-[30px] md:h-[30px] bg-white rounded-full flex justify-center items-center cursor-pointer">
               <Image
+                className="cursor-pointer"
                 unoptimized
                 width={24}
                 height={24}
                 src={"/edit.png"}
                 alt="Edit"
               />
+
               <input
                 type="file"
                 accept="image/*"
@@ -362,6 +383,15 @@ const ProfileSection = (userDetails) => {
                 onChange={handleImageChange}
               />
             </div>
+            {hasSelectedNewImage && (
+              <button
+                onClick={handleRemoveImage}
+                className="absolute bottom-[-14px] right-5 bg-red-500 text-white rounded-full w-8 h-8 flex items-center justify-center transform translate-x-1/2 -translate-y-1/2 hover:bg-red-600 transition-colors"
+                type="button"
+              >
+                ×
+              </button>
+            )}
           </div>
 
           <form
@@ -431,9 +461,9 @@ const ProfileSection = (userDetails) => {
           </form>
         </div>
       </Modal>
-     {/* Success notification */}
-     {successMessage && (
-       <div className="fixed top-4 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-6 py-4 rounded shadow-lg z-50 transition-opacity duration-500">
+      {/* Success notification */}
+      {successMessage && (
+        <div className="fixed top-4 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-6 py-4 rounded shadow-lg z-50 transition-opacity duration-500">
           {successMessage}
         </div>
       )}

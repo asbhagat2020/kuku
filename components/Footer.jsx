@@ -78,13 +78,13 @@ const Footer = () => {
 
                 <div className='flex flex-col gap-4 items-center'>
                     <p className="text-[#6a6a6a] text-sm font-extrabold font-karla uppercase">
-                        Get special offers in our Newsletter
+                    Write your message to us
                     </p>
                     <div className="w-fit max-w-md flex flex-col sm:flex-row items-center gap-2 p-2 rounded-[20px] border border-[#393939]">
                         <input
                             required
                             type="email"
-                            placeholder="Enter your email"
+                            placeholder="Enter your message"
                             className="flex-grow p-2 bg-transparent text-[#383838] text-sm font-normal font-karla outline-none"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
@@ -93,7 +93,7 @@ const Footer = () => {
                             onClick={handleSubscribe}
                             className="w-full sm:w-auto px-6 py-3 bg-[#e4086f] rounded-[15px] text-[#fde504] text-base font-bold font-karla"
                         >
-                            Subscribe
+                            Send
                         </button>
                     </div>
                     {error && <p className="text-red-500 text-sm mt-2">{error}</p>}

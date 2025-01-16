@@ -50,7 +50,7 @@ const MarketPlace = () => {
     useGSAP(() => {
         // Create horizontal scroll animation
         const horizontalSections = gsap.utils.toArray(".horizontal-panel");
-        
+
         const horizontalScroll = gsap.to(horizontalSections, {
             xPercent: -100,
             ease: "none",
@@ -85,12 +85,13 @@ const MarketPlace = () => {
     const horizontalData = [
         {
             number: "1",
-            title: "$500 Billion is lost each year because of under-wearing and failure to recycle clothes",
+            title: "Nearly 10% of microplastics dispersed in the ocean each year come from textiles",
+
             url: "marketPlace_BG.png"
         },
         {
             number: "2",
-            title: "Nearly 10% of microplastics dispersed in the ocean each year come from textiles",
+            title: "$500 Billion is lost each year because of under-wearing and failure to recycle clothes",
             url: "marketPlaceBg2.png"
         }
     ];
@@ -108,8 +109,8 @@ const MarketPlace = () => {
                 <div className="absolute top-[-10px] right-0 z-10">
                     <Image width={100} height={100} src="/market_flower.png" alt="" />
                 </div>
-                <div 
-                    ref={horizontalRef} 
+                <div
+                    ref={horizontalRef}
                     className={`flex ${isMobile ? 'w-[200%]' : 'w-[200%]'} h-[906px] transform`}
                 >
                     {horizontalData.map((card, index) => (
@@ -123,8 +124,8 @@ const MarketPlace = () => {
                                 backgroundRepeat: 'no-repeat',
                             }}
                         >
-                            <div className="px-[27px] lg:px-0 lg:w-[650px]">
-                                <div className="text-white text-center text-2xl lg:text-5xl tracking-wide font-bold font-luckiest">
+                            <div className={`px-[27px] lg:px-0  ${index==1?"lg:w-[600px]":"lg:w-[650px]"}`}>
+                                <div className="text-white text-center text-2xl lg:text-5xl tracking-wider font-bold font-luckiest">
                                     {card.title}
                                 </div>
                             </div>
