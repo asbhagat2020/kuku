@@ -12,16 +12,16 @@ const CategoryCarousel = () => {
   const sliderRef = useRef(null);
 
   const products = [
-    { title: "Dress", price: "12 AED", image: "/top.png" },
-    { title: "Dress", price: "12 AED", image: "/bottom.png" },
-    { title: "Dress", price: "12 AED", image: "/t-shirt.png" },
-    { title: "Dress", price: "12 AED", image: "/top.png" },
-    { title: "Dress", price: "12 AED", image: "/bottom.png" },
-    { title: "Dress", price: "12 AED", image: "/t-shirt.png" },
-    { title: "Dress", price: "12 AED", image: "/top.png" },
-    { title: "Dress", price: "12 AED", image: "/bottom.png" },
-    { title: "Dress", price: "12 AED", image: "/t-shirt.png" },
-    { title: "Dress", price: "12 AED", image: "/t-shirt.png" },
+    { title: "Top", price: "12 AED", image: "/top.png" },
+    { title: "Bottom", price: "12 AED", image: "/bottom.png" },
+    { title: "T-shirt", price: "12 AED", image: "/t-shirt.png" },
+    { title: "Top", price: "12 AED", image: "/top.png" },
+    { title: "Bottom", price: "12 AED", image: "/bottom.png" },
+    { title: "Tshirt", price: "12 AED", image: "/t-shirt.png" },
+    { title: "Top", price: "12 AED", image: "/top.png" },
+    { title: "Bottom", price: "12 AED", image: "/bottom.png" },
+    { title: "T-shirt", price: "12 AED", image: "/t-shirt.png" },
+    { title: "T-shirt", price: "12 AED", image: "/t-shirt.png" },
   ];
 
   const settings = {
@@ -70,7 +70,6 @@ const CategoryCarousel = () => {
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      // Update centerIndex when window is resized
       const handleResize = () => {
         const slidesToShow =
           window.innerWidth < 480
@@ -83,7 +82,7 @@ const CategoryCarousel = () => {
         setCenterIndex(Math.floor(slidesToShow / 4));
       };
 
-      handleResize(); // Initial call
+      handleResize();
       window.addEventListener("resize", handleResize);
 
       return () => window.removeEventListener("resize", handleResize);
@@ -102,6 +101,9 @@ const CategoryCarousel = () => {
     }
   };
 
+  // Get the current product's title
+  const currentTitle = products[currentSlide]?.title.toUpperCase() || "T-SHIRT";
+
   return (
     <div className="flex flex-col overflow-hidden px-[20px] md:px-0 ">
       <Slider ref={sliderRef} {...settings}>
@@ -110,7 +112,7 @@ const CategoryCarousel = () => {
             {index !== currentSlide && (
               <div className="absolute top-2 left-10 md:left-[40px] h-[25px] px-2.5 py-[5px] bg-[#e4086f]/10 rounded-[10px] justify-center items-center gap-2.5 inline-flex">
                 <div className="text-black text-xs font-normal font-karla">
-                  Top
+                  {item.title}
                 </div>
               </div>
             )}
@@ -148,10 +150,10 @@ const CategoryCarousel = () => {
             />
           </div>
 
-          {/* Central T-Shirt Section */}
+          {/* Central Title Section */}
           <div className="h-[84px] px-4 py-4 bg-[#f0fafe] rounded-[20px] flex justify-center items-center gap-2.5">
             <div className="text-[#070707] text-base sm:text-xl font-bold font-karla leading-normal">
-              T-SHIRT
+              {currentTitle}
             </div>
           </div>
 
@@ -189,10 +191,10 @@ const CategoryCarousel = () => {
           </motion.div>
         </div>
 
-        {/* Central T-Shirt Section for larger screens */}
-        <div className="hidden sm:flex h-[84px] px-4 sm:px-[70px] py-4 sm:py-[30px] bg-[#f0fafe] rounded-[20px] flex justify-center items-center gap-2.5">
+        {/* Central Title Section for larger screens */}
+        <div className="hidden sm:flex h-[84px] w-[220px] px-4 sm:px-[60px] py-4 sm:py-[30px] bg-[#f0fafe] rounded-[20px]  justify-center items-center gap-2.5">
           <div className="text-[#070707] text-base sm:text-xl font-bold font-karla leading-normal">
-            T-SHIRT
+            {currentTitle}
           </div>
         </div>
 
