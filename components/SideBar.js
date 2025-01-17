@@ -133,7 +133,7 @@ export const SideBar = () => {
                   id="price-options"
                   className="flex flex-col space-y-1 mt-2 ml-3"
                 >
-                  {["low", "medium", "high"].map((price) => (
+                  {["0 - 300", "300 - 500", "500 Above"].map((price) => (
                     <div className="flex items-center" key={price}>
                       <input
                         type="checkbox"
@@ -181,7 +181,7 @@ export const SideBar = () => {
                   id="size-options"
                   className="flex flex-col space-y-1 mt-2 ml-3"
                 >
-                  {["small", "medium", "large"].map((size) => (
+                  {["Extra Small","Small", "Medium", "Large","Extra Large","2X Large","3X Large"].map((size) => (
                     <div className="flex items-center" key={size}>
                       <input
                         type="checkbox"
@@ -230,11 +230,10 @@ export const SideBar = () => {
                   className="flex flex-col space-y-1 mt-2 ml-3"
                 >
                   {[
-                    "Brand New",
-                    "Like New",
-                    "Gently Used",
-                    "Moderately Used",
-                    "Well Worn",
+                    "Never used",
+                    "Rarely used",
+                    "Medium used",
+                    "Well used",
                   ].map((condition) => (
                     <div className="flex items-center" key={condition}>
                       <input

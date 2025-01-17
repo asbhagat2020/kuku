@@ -199,11 +199,10 @@ const SellingCards = ({ data }) => {
                 href={userId === item.seller ? `/editproduct/${item._id}` : "#"}
               >
                 <div
-                  className={`absolute right-5 top-[180px] z-10 ${
-                    userId === item.seller
+                  className={`absolute right-5 top-[180px] z-10 ${userId === item.seller
                       ? "cursor-pointer"
                       : "cursor-not-allowed opacity-50"
-                  }`}
+                    }`}
                 >
                   <div className="h-[54px] p-[15px] bg-white rounded-full shadow-md">
                     <HiOutlinePencil
@@ -245,7 +244,7 @@ const SellingCards = ({ data }) => {
               <Slider {...innerSliderSettings}>
                 {item.images.map((imgSrc, imgIndex) => (
                   <div key={imgIndex}
-                   className="w-[307px] h-[390px] flex items-center justify-center overflow-hidden rounded-md "
+                    className="w-[307px] h-[390px] flex items-center justify-center overflow-hidden rounded-md "
                   >
                     <Image
                       src={imgSrc}
@@ -322,7 +321,7 @@ const SoldCards = ({ data }) => (
             <Slider {...innerSliderSettings}>
               {i.images.map((imgSrc, imgIndex) => (
                 <div key={imgIndex}
-                className="w-[307px] h-[390px] flex items-center justify-center overflow-hidden rounded-md "
+                  className="w-[307px] h-[390px] flex items-center justify-center overflow-hidden rounded-md "
                 >
                   <Image
                     src={imgSrc}
@@ -354,6 +353,8 @@ const ReviewCards = ({ data }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [sortOrder, setSortOrder] = useState(null); // 'lowToHigh' or 'highToLow'
+  console.log(data);
+  const dataIn=data.reviews
 
   const handleSort = (order) => {
     setSortOrder(order);
@@ -378,19 +379,19 @@ const ReviewCards = ({ data }) => {
                 alt="Rating Icon"
               />
               <p className="text-center text-[#9c9c9c] text-[26.92px] font-normal font-karla leading-loose">
-                {data.length > 0
+                {dataIn?.reviews?.length > 0
                   ? (
-                      data.reduce(
-                        (total, item) => total + (item.rating || 0),
-                        0
-                      ) / data.length
-                    ).toFixed(1)
+                    dataIn.reduce(
+                      (total, item) => total + (item.rating || 0),
+                      0
+                    ) / dataIn.length
+                  ).toFixed(1)
                   : 0}
-                Rating
+                {" "}Rating
               </p>
               <div className="w-2 h-2 rounded-full bg-[#9c9c9c]"></div>
               <div className="text-center text-[#9c9c9c] lg:text-[26.92px] font-normal font-karla leading-loose">
-                {data.length > 0 ? `${data.length} Reviews` : "No Reviews"}
+                {dataIn.length > 0 ? `${dataIn.length} Reviews` : "No Reviews"}
               </div>
             </div>
           </div>
@@ -409,8 +410,11 @@ const ReviewCards = ({ data }) => {
               />
               <p>Sort by</p>
             </div>
-            <div className="w-5 rotate-90 h-[1px] bg-gray-400"></div>
-            <div
+
+            {!data.self &&(
+              <>
+              <div className="w-5 rotate-90 h-[1px] bg-gray-400"></div>
+              <div
               className="flex items-center gap-2 cursor-pointer"
               onClick={() => setIsOpen(true)}
             >
@@ -419,6 +423,8 @@ const ReviewCards = ({ data }) => {
                 Add Review
               </span>
             </div>
+            </>
+            )}
 
             <AddModal
               isOpen={isOpen}
@@ -447,7 +453,7 @@ const ReviewCards = ({ data }) => {
       </div>
       <div className="py-[56px] flex flex-col gap-[56px] pl-5">
         {[1].map((_, index) => (
-          <ReviewItem key={index} data={data} />
+          <ReviewItem key={index} data={dataIn} />
         ))}
       </div>
     </div>
@@ -606,9 +612,8 @@ const StatsCards = ({ data }) => {
             <div className="flex pt-[30px]  gap-[20px]">
               <div className="relative">
                 <select
-                  className={`py-[18px] px-4 rounded-lg font-karla w-[111px] appearance-none ${
-                    fromDisabled ? "bg-gray-200" : ""
-                  }`}
+                  className={`py-[18px] px-4 rounded-lg font-karla w-[111px] appearance-none ${fromDisabled ? "bg-gray-200" : ""
+                    }`}
                   id="fromOptions"
                   name="fromOptions"
                   onChange={handleFromChange}
@@ -630,9 +635,8 @@ const StatsCards = ({ data }) => {
 
               <div className="relative">
                 <select
-                  className={`py-[18px] px-4 rounded-lg font-karla w-[111px] appearance-none ${
-                    toDisabled ? "bg-gray-200" : ""
-                  }`}
+                  className={`py-[18px] px-4 rounded-lg font-karla w-[111px] appearance-none ${toDisabled ? "bg-gray-200" : ""
+                    }`}
                   id="toOptions"
                   name="toOptions"
                   onChange={handleToChange}
@@ -859,9 +863,8 @@ const Orders = () => {
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`px-6 py-2 rounded-lg font-semibold transition-transform duration-300 ${
-                  activeTab === tab ? "bg-white text-black" : "text-gray-600"
-                }`}
+                className={`px-6 py-2 rounded-lg font-semibold transition-transform duration-300 ${activeTab === tab ? "bg-white text-black" : "text-gray-600"
+                  }`}
               >
                 {tab}
               </button>
@@ -901,6 +904,8 @@ const Orders = () => {
 };
 
 export default function DetailsSection({ data }) {
+  console.log(data);
+
   const sellingData = data.products;
 
   // {
@@ -985,7 +990,7 @@ export default function DetailsSection({ data }) {
   //   price: "AED 120.00",
   // },
 
-  const reviewData = data.reviews;
+  const reviewData = data;
 
   const statsData = [
     { id: 13, title: "Total Sales", stat: "1,000" },
@@ -1137,7 +1142,7 @@ export default function DetailsSection({ data }) {
       count: "",
     },
     { label: "Sold", component: SoldCards, data: soldData, count: "" },
-    { label: "Reviews", component: ReviewCards, data: reviewData, count: "" },
+    { label: "Reviews", component: ReviewCards, data: reviewData,count: "" },
     { label: "Stats", component: StatsCards, data: statsData, count: "" },
     { label: "Orders", component: Orders, data: orderData, count: "" },
   ];
@@ -1151,11 +1156,10 @@ export default function DetailsSection({ data }) {
           {tabs.map((item) => (
             <li
               key={item.label}
-              className={`w-full p-3 text-center cursor-pointer relative text-[#383838] lg:text-2xl font-normal font-karla leading-[28.80px] ${
-                selectedTab.label === item.label
+              className={`w-full p-3 text-center cursor-pointer relative text-[#383838] lg:text-2xl font-normal font-karla leading-[28.80px] ${selectedTab.label === item.label
                   ? "border-b-[5px] border-[#fde504]"
                   : ""
-              }`}
+                }`}
               onClick={() => setSelectedTab(item)}
             >
               {item.label} {item.count ? `(${item.count})` : ""}

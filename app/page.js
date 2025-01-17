@@ -12,7 +12,7 @@ import MarketPlace from "@/components/home/MarketPlace";
 import Popup from "@/components/home/Popup";
 import Selling from "@/components/home/Selling";
 import StriteSection from "@/components/home/StriteSection";
-import homeAnimation from "../public/lottieFiles/kukuhome.json";
+import homeAnimation from "../public/lottieFiles/kukuhomenew.json";
 import { useDispatch, useSelector } from "react-redux";
 import { getProducts,resetNotificationFlag } from "@/store/product/productSlice";
 
@@ -45,7 +45,7 @@ const Page = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 2000);
+    }, 4500);
 
     return () => clearTimeout(timer);
   }, []);
