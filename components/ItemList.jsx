@@ -9,6 +9,8 @@ import { useRouter } from "next/navigation";
 const ItemList = () => {
   const [adress,setAdress]=useState([])
   const [loading,setLoading]=useState(false)
+  const [showAddressForm, setShowAddressForm] = useState(false);
+  const [selectedAddress, setSelectedAddress] = useState(null);
   console.log(adress);
   const handleSelect=()=>{}
   const fetchAddress = async () => {
@@ -71,9 +73,9 @@ const ItemList = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
-    // Clear the error for this field when it's changed
     setErrors({ ...errors, [name]: "" });
   };
+
 
   const handleFileChange = (e, index) => {
     const file = e.target.files[0];
@@ -105,10 +107,8 @@ const ItemList = () => {
 
   const validateForm = () => {
     let newErrors = {};
-    if (!formData.itemName.trim())
-      newErrors.itemName = "Product title is required";
-    if (!formData.description.trim())
-      newErrors.description = "Description is required";
+    if (!formData.itemName.trim()) newErrors.itemName = "Product title is required";
+    if (!formData.description.trim()) newErrors.description = "Description is required";
     if (!formData.category.trim()) newErrors.category = "Category is required";
     if (!formData.gender) newErrors.gender = "gender is required";
     if (!formData.condition) newErrors.condition = "condition is required";
@@ -116,9 +116,7 @@ const ItemList = () => {
     if (!formData.size) newErrors.size = "Size is required";
     if (!formData.usage) newErrors.usage = "Usage is required";
     if (!formData.price.trim()) newErrors.price = "Price is required";
-    // if (!formData.rentOption) newErrors.rentOption = "Rent option is required";
-    if (formData.images.length === 0)
-      newErrors.images = "At least one image is required";
+    if (formData.images.length === 0) newErrors.images = "At least one image is required";
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -162,7 +160,6 @@ const ItemList = () => {
     }
   };
 
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (validateForm()) {
@@ -173,19 +170,25 @@ const ItemList = () => {
           imageUrl = await uploadImage(formData.images);
         }
 
-        // Retrieve the token from cookies
-        const token = JSON.parse(Cookies.get("auth")); // Assuming 'auth' is the key used to store the token
+        const token = JSON.parse(Cookies.get("auth"));
 
-        const address = {
-          country: formData.country,
-          city: formData.city,
-          addressLine1: formData.addressLine1,
-          addressLine2: formData.addressLine2,
-          firstName: formData.firstName,
-          lastName: formData.lastName,
-          email: formData.email,
-          phone: formData.phone,
-        };
+        let address = selectedAddress
+          ? { ...selectedAddress } // Create a copy of selectedAddress
+          : {
+              country: formData.country,
+              city: formData.city,
+              addressLine1: formData.addressLine1,
+              addressLine2: formData.addressLine2,
+              firstName: formData.firstName,
+              lastName: formData.lastName,
+              email: formData.email,
+              phone: formData.phone,
+            };
+
+        // Remove the _id property if it exists
+        if (address._id) {
+          delete address._id;
+        }
 
         const product = {
           name: formData.itemName,
@@ -218,12 +221,11 @@ const ItemList = () => {
           }
         );
 
-        // Handle the success response
         if (response.status === 201) {
-          setSuccessPopups(true); // Show the success popup
+          setSuccessPopups(true);
           setTimeout(() => {
-            setSuccessPopups(false); // Hide the popup after 2 seconds
-            router.push("/"); // Redirect to the homepage
+            setSuccessPopups(false);
+            router.push("/");
           }, 2000);
         }
       } catch (error) {
@@ -232,6 +234,87 @@ const ItemList = () => {
     }
   };
 
+  const AddressSelection = ({ addresses, onSelect, onAddNew }) => {
+    const [selectedType, setSelectedType] = useState("existing");
+
+    const handleTypeChange = (type) => {
+      setSelectedType(type);
+      if (type === "new") {
+        onAddNew();
+      }
+    };
+
+    return (
+      <div className="space-y-6 font-karla">
+        <div className="flex gap-6 mb-6">
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input
+              type="radio"
+              name="addressType"
+              checked={selectedType === "existing"}
+              onChange={() => handleTypeChange("existing")}
+              className="w-4 h-4 text-pink-500 border-gray-300 focus:ring-pink-500"
+            />
+            <span className="text-gray-700">Use Existing Address</span>
+          </label>
+
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input
+              type="radio"
+              name="addressType"
+              checked={selectedType === "new"}
+              onChange={() => handleTypeChange("new")}
+              className="w-4 h-4 text-pink-500 border-gray-300 focus:ring-pink-500"
+            />
+            <span className="text-gray-700">Add New Address</span>
+          </label>
+        </div>
+
+        {selectedType === "existing" && addresses?.length > 0 ? (
+          <div className="space-y-4">
+            {addresses.map((address) => (
+              <div
+                key={address._id}
+                className={`border rounded-lg p-4 cursor-pointer transition-all ${
+                  selectedAddress?._id === address._id
+                    ? "border-2 border-pink-500"
+                    : "border-gray-200 hover:border-pink-300"
+                }`}
+                onClick={() => onSelect(address)}
+              >
+                <div className="flex justify-between items-start">
+                  <div className="space-y-2">
+                    <p className="font-semibold">
+                      {address.firstName} {address.lastName}
+                    </p>
+                    <p className="text-sm text-gray-600">{address.phone}</p>
+                    <p className="text-sm text-gray-600">{address.email}</p>
+                    <p className="text-sm text-gray-600">
+                      {address.addressLine1}
+                      {address.addressLine2 && `, ${address.addressLine2}`}
+                    </p>
+                    <p className="text-sm text-gray-600">
+                      {address.city}, {address.country}
+                    </p>
+                  </div>
+                  <div className="mt-2">
+                    <input
+                      type="radio"
+                      checked={selectedAddress?._id === address._id}
+                      onChange={() => onSelect(address)}
+                      className="w-4 h-4 text-pink-500 border-gray-300 focus:ring-pink-500"
+                    />
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : selectedType === "existing" ? (
+          <p className="text-gray-500 italic">No saved addresses found. Please add a new address.</p>
+        ) : null}
+      </div>
+    );
+  };
 
   return (
     <div className="max-w-[800px] bg-white rounded-3xl shadow-md border-4 border-black mx-auto overflow-hidden mt-10">
@@ -678,46 +761,41 @@ const ItemList = () => {
               Please enter your pickup details
             </p>
             <div className="space-y-4">
-        {adress?.map((address) => (
-          <div
-            key={address._id}
-            className={`border rounded-lg p-4 ${
-              address.isDefault ? "border-green-500" : "border-gray-200"
-            }`}
-          >
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-              <div className="space-y-1">
-                <h2 className="text-lg font-medium">
-                  Name: {address.firstName} {address.lastName}
-                </h2>
-                <p className="text-gray-600 text-sm">Phone: {address.phone}</p>
-                <p className="text-gray-600 text-sm">
-                  Street: {address.addressLine1}
-                </p>
-                <p className="text-gray-600 text-sm">
-                  Street: {address.addressLine2}
-                </p>
-                <p className="text-gray-600 text-sm">City: {address.city}</p>
-                <p className="text-gray-600 text-sm">
-                  Country: {address.country}
-                </p>
-                <p className="text-gray-600 text-sm">Email: {address.email}</p>
-              </div>
-
-              <label className="relative">
-                <input
-                  type="radio"
-                  name="address"
-                  checked={address.isDefault}
-                  onChange={() => handleSelect(address._id)}
-                  className="w-5 h-5 border-2 border-gray-300 rounded-full checked:border-green-500 checked:bg-green-500 appearance-none cursor-pointer"
-                />
-                <span className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 block w-2 h-2 rounded-full bg-white opacity-0 checked:opacity-100" />
-              </label>
-            </div>
-          </div>
-        ))}
+            <AddressSelection
+              addresses={adress}
+              onSelect={(address) => {
+                setSelectedAddress(address);
+                setShowAddressForm(false);
+                setFormData({
+                  ...formData,
+                  firstName: address.firstName,
+                  lastName: address.lastName,
+                  email: address.email,
+                  phone: address.phone,
+                  addressLine1: address.addressLine1,
+                  addressLine2: address.addressLine2,
+                  city: address.city,
+                  country: address.country
+                });
+              }}
+              onAddNew={() => {
+                setShowAddressForm(true);
+                setSelectedAddress(null);
+                setFormData({
+                  ...formData,
+                  firstName: "",
+                  lastName: "",
+                  email: "",
+                  phone: "",
+                  addressLine1: "",
+                  addressLine2: "",
+                  city: "",
+                  country: ""
+                });
+              }}
+            />
       </div>
+      {showAddressForm  &&
             <div className="flex flex-col lg:flex-row mt-6 sm:mt-[36px] gap-6 lg:gap-[54px]">
               <div className="w-full flex flex-col gap-6">
                 <div className="flex flex-wrap sm:flex-nowrap gap-6">
@@ -877,7 +955,7 @@ const ItemList = () => {
                   </div>
                 </div>
               </div>
-            </div>
+            </div>}
 
             <div className="flex flex-col sm:flex-row sm:justify-end gap-4 my-8 sm:my-[36px]">
               <button

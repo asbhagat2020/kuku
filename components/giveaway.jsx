@@ -6,19 +6,89 @@ import Lottie from "react-lottie-player";
 import clothHangerAnimation from "../public/lottieFiles/cloth_hanger.json";
 import playgroundAnimation from "../public/lottieFiles/playground.json";
 import giftboxAnimation from "../public/lottieFiles/giftbox.json";
-import homeAnimation from "../public/lottieFiles/kukuhome.json";
+import homeAnimation from "../public/lottieFiles/kukuhomenew.json";
+import axios from "axios";
+import Cookies from "js-cookie";
+
+const AddressSelection = ({ addresses, onSelect, onAddNew }) => {
+  return (
+    <div className="space-y-4">
+      {addresses.map((address, index) => (
+        <div
+          key={index}
+          onClick={() => onSelect(address)}
+          className="p-4 border-2 rounded-lg cursor-pointer hover:border-green-500"
+        >
+          <p className="font-bold">{`${address.firstName} ${address.lastName}`}</p>
+          <p>{address.addressLine1}</p>
+          {address.addressLine2 && <p>{address.addressLine2}</p>}
+          <p>{`${address.city}, ${address.country}`}</p>
+        </div>
+      ))}
+      <button
+        onClick={onAddNew}
+        className="w-full p-4 border-2 border-dashed rounded-lg text-center hover:border-green-500"
+      >
+        + Add New Address
+      </button>
+    </div>
+  );
+};
 
 const Giveaway = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [showFinalScreen, setShowFinalScreen] = useState(false);
   const [isMobileView, setIsMobileView] = useState(false);
+  const [showAddressForm, setShowAddressForm] = useState(false);
+  const [selectedAddress, setSelectedAddress] = useState(null);
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
     address: "",
     pickTime: "",
+    firstName: "",
+    lastName: "",
+    email: "",
+    addressLine1: "",
+    addressLine2: "",
+    city: "",
+    country: "",
+    weight:""
   });
   const [formErrors, setFormErrors] = useState({});
+  const [sampleAddresses,setSampleAddresses]=useState([])
+  const[loading,setLoading]=useState(false)
+  const fetchAddress = async () => {
+    try {
+      const token = JSON.parse(Cookies.get('auth'));
+
+      const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/pickup/get`;
+      const response = await axios.get(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log(response);
+
+      setSampleAddresses(response?.data?.addresses);
+    } catch (err) {
+      console.log(err);
+
+      if (err.response && err.response.status === 401) {
+        // If unauthorized, clear token and redirect to homepage
+        Cookies.remove('auth');
+        router.push('/');
+      } else {
+        console.log('error');
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(()=>{
+    fetchAddress()
+  },[])
+
 
   useEffect(() => {
     const handleResize = () => {
@@ -35,10 +105,20 @@ const Giveaway = () => {
 
   const validateForm = () => {
     const errors = {};
-    if (!formData.name.trim()) errors.name = "Name is required";
-    if (!formData.phone.trim()) errors.phone = "Phone number is required";
-    if (!formData.address.trim()) errors.address = "Address is required";
-    if (!formData.pickTime) errors.pickTime = "Pick time is required";
+    if (currentStep === 2) {
+      if (!formData.name.trim()) errors.name = "Name is required";
+      if (!formData.phone.trim()) errors.phone = "Phone number is required";
+      if (!formData.address.trim()) errors.address = "Address is required";
+      if (!formData.pickTime) errors.pickTime = "Pick time is required";
+    } else if (currentStep === 3 && showAddressForm) {
+      if (!formData.firstName) errors.firstName = "First name is required";
+      if (!formData.lastName) errors.lastName = "Last name is required";
+      if (!formData.email) errors.email = "Email is required";
+      if (!formData.phone) errors.phone = "Phone number is required";
+      if (!formData.addressLine1) errors.addressLine1 = "Address Line 1 is required";
+      if (!formData.city) errors.city = "City is required";
+      if (!formData.country) errors.country = "Country is required";
+    }
 
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
@@ -66,6 +146,19 @@ const Giveaway = () => {
   const handleFinalScreenClick = () => {
     setShowFinalScreen(false);
     setCurrentStep(1);
+    setFormData({
+      name: "",
+      phone: "",
+      address: "",
+      pickTime: "",
+      firstName: "",
+      lastName: "",
+      email: "",
+      addressLine1: "",
+      addressLine2: "",
+      city: "",
+      country: ""
+    });
   };
 
   const handleInputChange = (e) => {
@@ -88,14 +181,14 @@ const Giveaway = () => {
       case 1:
         return (
           <div className="text-center max-w-2xl mx-auto">
-            <h2 className="text-2xl font-bold mb-8">
+            <h2 className="text-2xl font-bold mb-8 font-karla">
               Reuse Repurpose Recycle, let KuKu handle your textile by giving
               the reusable to charity or recycling them partnered with textile
               recyclers.
             </h2>
             <button
               onClick={handleNext}
-              className="bg-green-500 text-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-green-600 transition border border-black"
+              className="bg-green-500 text-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-green-600 transition border border-black font-karla"
             >
               NEXT STEP
             </button>
@@ -104,7 +197,7 @@ const Giveaway = () => {
       case 2:
         return (
           <div className="max-w-md mx-auto px-4">
-            <h2 className="text-2xl font-bold mb-12 text-center">
+            <h2 className="text-2xl font-bold mb-12 text-center font-karla">
               Fill Up the details
             </h2>
             <div className="grid grid-cols-2 gap-6">
@@ -169,9 +262,9 @@ const Giveaway = () => {
                   } focus:outline-none focus:ring-2 focus:ring-green-500`}
                 >
                   <option value="">Select the Pick time</option>
-                  <option value="morning">Morning</option>
-                  <option value="afternoon">Afternoon</option>
-                  <option value="evening">Evening</option>
+                  <option value="morning">9:30-12:00</option>
+                  <option value="afternoon">12:00-4:00</option>
+                  <option value="evening">4:00-8:00</option>
                 </select>
                 {formErrors.pickTime && (
                   <p className="text-red-500 text-sm mt-1 ml-4">
@@ -192,19 +285,260 @@ const Giveaway = () => {
         );
       case 3:
         return (
-          <div className="text-center max-w-2xl mx-auto">
-            <h2 className="text-2xl font-bold mb-8">
-              Lorem ipsum dolor sit amet consectetur. Eget neque ultrices ?
-            </h2>
-            <div className="flex justify-center gap-4">
-              <button className="bg-white text-black px-8 py-3 rounded-full text-lg font-semibold border border-black hover:bg-gray-100 transition">
-                LOREM IPSUM
-              </button>
+          <div className="px-4 sm:px-8 md:px-16 lg:px-20 py-8 sm:py-10 bg-white rounded-2xl font-karla">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4">
+              <p className="text-[#151515] text-xl sm:text-2xl font-bold font-karla">
+                Pickup Details
+              </p>
+            </div>
+            <p className="text-[#a8a8a8] text-sm sm:text-base font-normal font-karla mb-2">
+              Please enter your pickup details
+            </p>
+            <div className="space-y-4">
+              <AddressSelection
+                addresses={sampleAddresses}
+                onSelect={(address) => {
+                  setSelectedAddress(address);
+                  setShowAddressForm(false);
+                  setFormData({
+                    ...formData,
+                    firstName: address.firstName,
+                    lastName: address.lastName,
+                    email: address.email,
+                    phone: address.phone,
+                    addressLine1: address.addressLine1,
+                    addressLine2: address.addressLine2,
+                    city: address.city,
+                    country: address.country
+                  });
+                }}
+                onAddNew={() => {
+                  setShowAddressForm(true);
+                  setSelectedAddress(null);
+                  setFormData({
+                    ...formData,
+                    firstName: "",
+                    lastName: "",
+                    email: "",
+                    phone: "",
+                    addressLine1: "",
+                    addressLine2: "",
+                    city: "",
+                    country: ""
+                  });
+                }}
+              />
+            </div>
+            {showAddressForm && (
+              <div className="flex flex-col lg:flex-row mt-6 sm:mt-[36px] gap-6 lg:gap-[54px]">
+                <div className="w-full flex flex-col gap-6">
+                  <div className="flex flex-wrap sm:flex-nowrap gap-6">
+                    <div className="flex-1 flex flex-col">
+                      <p className="text-[#151515] text-sm sm:text-base font-bold font-karla">
+                        Country
+                      </p>
+                      <select
+                        name="country"
+                        value={formData.country}
+                        onChange={handleInputChange}
+                        className="w-full h-[50px] border-2 rounded-lg px-5 mt-2 sm:mt-5 font-karla"
+                      >
+                        <option value="">Select a country</option>
+                        <option value="uae">UAE</option>
+                        <option value="saab">Saab</option>
+                        <option value="fiat">Fiat</option>
+                        <option value="audi">Audi</option>
+                      </select>
+                      {formErrors.country && (
+                        <p className="text-red-500 text-sm mt-1">{formErrors.country}</p>
+                      )}
+                    </div>
+
+                    <div className="flex-1 flex flex-col">
+                      <p className="text-[#151515] text-sm sm:text-base font-bold font-karla">
+                        City
+                      </p>
+                      <select
+                        name="city"
+                        value={formData.city}
+                        onChange={handleInputChange}
+                        className="w-full h-[50px] border-2 rounded-lg px-5 mt-2 sm:mt-5 font-karla"
+                      >
+                        <option value="">Select a city</option>
+                        <option value="dubai">Dubai</option>
+                        <option value="abudhabi">Abu Dhabi</option>
+                        <option value="sharjah">Sharjah</option>
+                        <option value="ajman">Ajman</option>
+                      </select>
+                      {formErrors.city && (
+                        <p className="text-red-500 text-sm mt-1">{formErrors.city}</p>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="flex flex-wrap sm:flex-nowrap gap-6">
+                    <div className="flex-1 flex flex-col">
+                      <p className="text-[#151515] text-sm sm:text-base font-bold font-karla">
+                        Address Line 1
+                      </p>
+                      <input
+                        maxLength={25}
+                        placeholder="Enter your address line 1"
+                        type="text"
+                        name="addressLine1"
+                        value={formData.addressLine1}
+                        onChange={handleInputChange}
+                        className="w-full h-[50px] border-2 rounded-lg px-5 mt-2 sm:mt-5 font-karla"
+                      />
+                      {formErrors.addressLine1 && (
+                        <p className="text-red-500 text-sm mt-1">
+                          {formErrors.addressLine1}
+                        </p>
+                      )}
+                    </div>
+
+                    <div className="flex-1 flex flex-col">
+                      <p className="text-[#151515] text-sm sm:text-base font-bold font-karla">
+                        Address Line 2
+                      </p>
+                      <input maxLength={25}
+                        placeholder="Enter your address line 2"
+                        type="text"
+                        name="addressLine2"
+                        value={formData.addressLine2}
+                        onChange={handleInputChange}
+                        className="w-full h-[50px] border-2 rounded-lg px-5 mt-2 sm:mt-5 font-karla"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex flex-wrap sm:flex-nowrap gap-6">
+                    <div className="flex-1 flex flex-col">
+                      <p className="text-[#151515] text-sm sm:text-base font-bold font-karla">
+                        First name
+                      </p>
+                      <input
+                        maxLength={25}
+                        placeholder="Enter your first name"
+                        type="text"
+                        name="firstName"
+                        value={formData.firstName}
+                        onChange={handleInputChange}
+                        className="w-full h-[50px] border-2 rounded-lg px-5 mt-2 sm:mt-5 font-karla"
+                      />
+                      {formErrors.firstName && (
+                        <p className="text-red-500 text-sm mt-1">{formErrors.firstName}</p>
+                      )}
+                    </div>
+
+                    <div className="flex-1 flex flex-col">
+                      <p className="text-[#151515] text-sm sm:text-base font-bold font-karla">
+                        Last name
+                      </p>
+                      <input
+                        maxLength={25}
+                        placeholder="Enter your last name"
+                        type="text"
+                        name="lastName"
+                        value={formData.lastName}
+                        onChange={handleInputChange}
+                        className="w-full h-[50px] border-2 rounded-lg px-5 mt-2 sm:mt-5 font-karla"
+                      />
+                      {formErrors.lastName && (
+                        <p className="text-red-500 text-sm mt-1">{formErrors.lastName}</p>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="flex flex-wrap sm:flex-nowrap gap-6">
+                    <div className="flex-1 flex flex-col">
+                      <p className="text-[#151515] text-sm sm:text-base font-bold font-karla">
+                        Email address
+                      </p>
+                      <input
+                        maxLength={50}
+                        placeholder="Enter your email address"
+                        type="email"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleInputChange}
+                        className="w-full h-[50px] border-2 rounded-lg px-5 mt-2 sm:mt-5 font-karla"
+                      />
+                      {formErrors.email && (
+                        <p className="text-red-500 text-sm mt-1">{formErrors.email}</p>
+                      )}
+                    </div>
+
+                    <div className="flex-1 flex flex-col">
+                      <p className="text-[#151515] text-sm sm:text-base font-bold font-karla">
+                        Phone number
+                      </p>
+                      <input
+                        maxLength={12}
+                        placeholder="Enter your phone number"
+                        type="tel"
+                        name="phone"
+                        value={formData.phone}
+                        onChange={handleInputChange}
+                        className="w-full h-[50px] border-2 rounded-lg px-5 mt-2 sm:mt-5 font-karla"
+                      />
+                      {formErrors.phone && (
+                        <p className="text-red-500 text-sm mt-1">{formErrors.phone}</p>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+                              <div className="flex flex-wrap sm:flex-nowrap gap-6 mt-2">
+                    <div className="flex-1 flex flex-col">
+                      <p className="text-[#151515] text-sm sm:text-base font-bold font-karla">
+                        Time
+                      </p>
+                      <input
+                        maxLength={25}
+                        placeholder="Enter your first name"
+                        type="text"
+                        name="firstName"
+                        value={formData.firstName}
+                        onChange={handleInputChange}
+                        className="w-full h-[50px] border-2 rounded-lg px-5 mt-2 sm:mt-5 font-karla"
+                      />
+                      {formErrors.firstName && (
+                        <p className="text-red-500 text-sm mt-1">{formErrors.firstName}</p>
+                      )}
+                    </div>
+
+                    <div className="flex-1 flex flex-col">
+                      <p className="text-[#151515] text-sm sm:text-base font-bold font-karla">
+                        Approximate weight
+                      </p>
+                      <input
+                        maxLength={25}
+                        placeholder="Enter your last name"
+                        type="text"
+                        name="weight"
+                        value={formData.weight}
+                        onChange={handleInputChange}
+                        className="w-full h-[50px] border-2 rounded-lg px-5 mt-2 sm:mt-5 font-karla"
+                      />
+                      {formErrors.lastName && (
+                        <p className="text-red-500 text-sm mt-1">{formErrors.lastName}</p>
+                      )}
+                    </div>
+                  </div>
+            <div className="flex flex-col sm:flex-row sm:justify-end gap-4 my-8 sm:my-[36px]">
               <button
                 onClick={handleFinalScreen}
-                className="bg-white text-black px-8 py-3 rounded-full text-lg font-semibold border border-black hover:bg-gray-100 transition"
+                className="w-full sm:w-auto px-6 py-3 sm:py-4 bg-[#e4086f] rounded-[22px] text-[#fde504] text-lg sm:text-xl font-bold font-karla"
               >
-                LOREM IPSUM
+                List Now
+              </button>
+              <button
+                onClick={() => setCurrentStep(2)}
+                className="w-full sm:w-auto px-6 py-3 sm:py-4 rounded-[22px] border border-[#e4086f] text-[#e4086f] text-lg sm:text-xl font-bold font-karla"
+              >
+                Back
               </button>
             </div>
           </div>
