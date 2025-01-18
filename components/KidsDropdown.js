@@ -4,153 +4,60 @@ import { useEffect, useState } from "react";
 
 const categories = [
   {
-    title: "Baby Clothing",
+    title: "New Born",
     items: [
-      "Onesies",
-      "Rompers",
-      "Baby Sleepers",
-      "Baby Bodysuits",
-      "Baby T-Shirts",
-      "Diaper Covers",
+      "0-9 Months"
     ],
   },
   {
-    title: "Tops",
+    title: "Baby Boys",
     items: [
-      "T-Shirts",
-      "Blouses",
-      "Polos",
-      "Sweaters",
-      "Hoodies",
-      "Tank Tops",
+      "0-3 Years"
     ],
   },
   {
-    title: "Bottoms",
+    title: "Baby Girls",
     items: [
-      "Pants",
-      "Leggings",
-      "Jeans",
-      "Shorts",
-      "Skirts",
-      "Overalls",
+      "0-3 Years"
     ],
   },
   {
-    title: "Dresses",
+    title: "Young Boys",
     items: [
-      "Casual Dresses",
-      "Formal Dresses",
-      "Sundresses",
-      "Party Dresses",
-      "Maxi Dresses",
+      "3-7 Years"
     ],
   },
   {
-    title: "Outerwear",
+    title: "Young Girls",
     items: [
-      "Jackets",
-      "Coats",
-      "Snowsuits",
-      "Raincoats",
-      "Vests",
-      "Fleece Jackets",
+      "3-7 Years"
     ],
   },
   {
-    title: "Activewear",
+    title: "Tween Boys",
     items: [
-      "Athletic Shorts",
-      "Sports Jerseys",
-      "Tracksuits",
-      "Sports Bras",
-      "Gym Leggings",
-      "Athletic T-Shirts",
+      "8-12 Years"
     ],
   },
   {
-    title: "Sleepwear",
+    title: "Tween Girls",
     items: [
-      "Pajama Sets",
-      "Sleep Gowns",
-      "Sleep Shirts",
-      "Sleep Pants",
-      "Robes",
-      "Onesies",
+      "8-12 Years"
     ],
   },
   {
-    title: "Swimwear",
+    title: "Teen Boys",
     items: [
-      "Swim Trunks",
-      "Swimsuits",
-      "Rash Guards",
-      "Swim Diapers",
-      "Cover-Ups",
+      "13-16 Years"
     ],
   },
   {
-    title: "Underwear",
+    title: "Teen Girls",
     items: [
-      "Underwear Sets",
-      "Briefs",
-      "Boxer Briefs",
-      "Training Pants",
-      "Camisoles",
-      "Undershirts",
+      "13-16 Years"
     ],
   },
-  {
-    title: "Footwear",
-    items: [
-      "Baby Booties",
-      "Infant Shoes",
-      "Sneakers",
-      "Sandals",
-      "Slippers",
-    ],
-  },
-  {
-    title: "School Uniforms",
-    items: [
-      "Polo Shirts",
-      "Dress Shirts",
-      "Dress Pants",
-      "Skirts",
-      "Blazers",
-      "Ties",
-    ],
-  },
-  {
-    title: "Special Occasion Wear",
-    items: [
-      "Flower Girl Dresses",
-      "Boys' Suits",
-      "Christening Gowns",
-      "Communion Dresses",
-      "Holiday Outfits",
-    ],
-  },
-  {
-    title: "Toddler and Infant",
-    items: [
-      "Toddler Suits",
-      "Toddler Dresses",
-      "Toddler T-Shirts",
-      "Baby Sets",
-      "Baby Pajamas",
-    ],
-  },
-  {
-    title: "Ethnic and Cultural Attire",
-    items: [
-      "Traditional Cultural Outfits",
-      "Ethnic Dresses",
-      "Cultural Accessories",
-      "Baby Sets",
-      "Baby Pajamas",
-    ],
-  },
+
 ];
 
 export default function KidsDropdown({ isOpen, onToggle }) {
@@ -230,13 +137,13 @@ export default function KidsDropdown({ isOpen, onToggle }) {
                   className="flex items-center justify-between w-full p-4 text-gray-700 hover:bg-gray-50"
                 >
                   <span className="text-sm font-medium">{category.title}</span>
-                  <ChevronRight 
+                  <ChevronRight
                     className={`w-5 h-5 transform transition-transform duration-200 ${
                       openCategory === category.title ? 'rotate-90' : ''
                     }`}
                   />
                 </button>
-                
+
                 {openCategory === category.title && (
                   <div className="bg-gray-50 px-4 py-2">
                     <ul className="space-y-2">

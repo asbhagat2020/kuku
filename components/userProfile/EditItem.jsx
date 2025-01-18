@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 const EditItem = ({ data }) => {
 
   const [formData, setFormData] = useState({
-    id:"",
+    id: "",
     itemName: "",
     description: "",
     category: "",
@@ -37,15 +37,15 @@ const EditItem = ({ data }) => {
   const [caseState, setCaseState] = useState(1);
   const [errors, setErrors] = useState({});
   const [successPopup, setSuccessPopup] = useState(false);
-const[productId,setProductId] = useState({});
-const [successPopups, setSuccessPopups] = useState(false);
-const router = useRouter(); 
- 
+  const [productId, setProductId] = useState({});
+  const [successPopups, setSuccessPopups] = useState(false);
+  const router = useRouter();
+
 
   useEffect(() => {
     if (data) {
       setFormData({
-        id:data?._id,
+        id: data?._id,
         itemName: data?.name || "",
         description: data?.description || "",
         category: data?.category || "",
@@ -70,7 +70,7 @@ const router = useRouter();
       });
     }
   }, [data]);
-console.log(formData,"ooooooooo");
+  console.log(formData, "ooooooooo");
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -119,11 +119,11 @@ console.log(formData,"ooooooooo");
     if (!formData.size) newErrors.size = "Size is required";
     if (!formData.usage) newErrors.usage = "Usage is required";
     if (!String(formData?.price ?? '').trim()) {
-        newErrors.price = "Price is required";
-      }
+      newErrors.price = "Price is required";
+    }
     if (!formData.rentOption) newErrors.rentOption = "Rent option is required";
-    if (formData.images.length === 0)
-      newErrors.images = "At least one image is required";
+    if (formData.images.length < 2)
+      newErrors.images = "At least two images are required";
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -131,12 +131,12 @@ console.log(formData,"ooooooooo");
 
   const uploadImage = async (imageFiles) => {
     const imageData = new FormData();
-  
+
     for (let i = 0; i < imageFiles.length; i++) {
       imageData.append("files", imageFiles[i]);
       imageData.append("folder", "avatar");
     }
-  
+
     try {
       const token = JSON.parse(Cookies.get("auth"));
       const response = await axios.post(
@@ -148,23 +148,23 @@ console.log(formData,"ooooooooo");
           },
         }
       );
-  
+
       return response.data.fileUrls;
     } catch (error) {
       console.error("Error uploading image:", error);
       throw new Error("Failed to upload image");
     }
   };
-  
+
   const handleSubmit = async (e, data) => {
     e.preventDefault();
-    
+
     if (validateForm()) {
       try {
         // Separate strings and files
         const existingUrls = [];
         const filesToUpload = [];
-  
+
         formData.images.forEach((image) => {
           if (typeof image === "string") {
             existingUrls.push(image);
@@ -172,19 +172,19 @@ console.log(formData,"ooooooooo");
             filesToUpload.push(image);
           }
         });
-  
+
         // Upload files if any
         let uploadedUrls = [];
         if (filesToUpload.length > 0) {
           uploadedUrls = await uploadImage(filesToUpload);
         }
-  
+
         // Combine all URLs
         const allImageUrls = [...existingUrls, ...uploadedUrls];
-  
+
         // Retrieve the token from cookies
         const token = JSON.parse(Cookies.get("auth"));
-  
+
         const product = {
           name: formData.itemName,
           description: formData.description,
@@ -200,9 +200,9 @@ console.log(formData,"ooooooooo");
           openToRent: formData.rentOption,
           images: allImageUrls, // Use combined image URLs
         };
-  
+
         const payload = { product };
- ;
+        ;
         const response = await axios.patch(
           `${process.env.NEXT_PUBLIC_API_BASE_URL}/product/${formData.id}`,
           payload,
@@ -212,7 +212,7 @@ console.log(formData,"ooooooooo");
             },
           }
         );
-   console.log("Response:", response);
+        console.log("Response:", response);
         // Handle the success response
         if (response.status === 200) {
           setSuccessPopups(true);
@@ -224,11 +224,11 @@ console.log(formData,"ooooooooo");
       } catch (error) {
         // Handle any errors that occur during the API call
         console.error("Error submitting form:", error);
-       
+
       }
     }
   };
-  
+
 
   return (
     <div className="max-w-[800px] bg-white rounded-3xl shadow-md border-4 border-black mx-auto overflow-hidden mt-10">
@@ -279,75 +279,75 @@ console.log(formData,"ooooooooo");
 
           <div className="px-4 sm:px-8 md:px-16 lg:px-20 py-8 sm:py-10">
             <form onSubmit={handleSubmit} className="space-y-6">
-            <div>
-  <label className="block text-[#151515] text-base font-bold font-karla mb-2">
-    Product Images
-  </label>
-  <div className="flex flex-wrap gap-4 sm:gap-9">
-    {Array(4)
-      .fill()
-      .map((_, idx) => (
-        <div
-          key={idx}
-          className="relative w-24 h-24 border border-[#E4086F] flex items-center justify-center overflow-hidden"
-        >
-          <input
-            type="file"
-            accept="image/png, image/jpeg, image/jpg" // Only accept image files
-            onChange={(e) => handleFileChange(e, idx)}
-            className="opacity-0 absolute inset-0 cursor-pointer"
-          />
-          {formData && formData.images && formData.images[idx] ? (
-            <>
-              <img
-                src={
-                  typeof formData.images[idx] === 'string'
-                    ? formData.images[idx] // If it's a URL
-                    : URL.createObjectURL(formData.images[idx]) // If it's a File
-                }
-                alt={`Uploaded ${idx + 1}`}
-                onError={(e) => { e.target.src = "default-placeholder-image.jpg"; }}
-                className="w-full h-full object-cover rounded-lg"
-              />
-              <button
-                type="button"
-                onClick={() => removeImage(idx)}
-                className="absolute top-1 right-1 bg-white bg-opacity-75 rounded-full p-1 hover:bg-opacity-100 transition-opacity"
-                aria-label="Remove Image"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-4 w-4 text-red-500"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                </svg>
-              </button>
-            </>
-          ) : (
-            <img
-              src="/upload.png"
-              alt="Upload Icon"
-              className="w-8 h-8"
-            />
-          )}
-        </div>
-      ))}
-  </div>
-  {errors.images && (
-    <p className="text-red-500 mt-1">{errors.images}</p>
-  )}
-  <a href="/tips" className="text-[#E4086F] mt-2 underline">
-    Read our video and photo tips
-  </a>
-</div>
+              <div>
+                <label className="block text-[#151515] text-base font-bold font-karla mb-2">
+                  Product Images
+                </label>
+                <div className="flex flex-wrap gap-4 sm:gap-9">
+                  {Array(4)
+                    .fill()
+                    .map((_, idx) => (
+                      <div
+                        key={idx}
+                        className="relative w-24 h-24 border border-[#E4086F] flex items-center justify-center overflow-hidden"
+                      >
+                        <input
+                          type="file"
+                          accept="image/png, image/jpeg, image/jpg" // Only accept image files
+                          onChange={(e) => handleFileChange(e, idx)}
+                          className="opacity-0 absolute inset-0 cursor-pointer"
+                        />
+                        {formData && formData.images && formData.images[idx] ? (
+                          <>
+                            <img
+                              src={
+                                typeof formData.images[idx] === 'string'
+                                  ? formData.images[idx] // If it's a URL
+                                  : URL.createObjectURL(formData.images[idx]) // If it's a File
+                              }
+                              alt={`Uploaded ${idx + 1}`}
+                              onError={(e) => { e.target.src = "default-placeholder-image.jpg"; }}
+                              className="w-full h-full object-cover rounded-lg"
+                            />
+                            <button
+                              type="button"
+                              onClick={() => removeImage(idx)}
+                              className="absolute top-1 right-1 bg-white bg-opacity-75 rounded-full p-1 hover:bg-opacity-100 transition-opacity"
+                              aria-label="Remove Image"
+                            >
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="h-4 w-4 text-red-500"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M6 18L18 6M6 6l12 12"
+                                />
+                              </svg>
+                            </button>
+                          </>
+                        ) : (
+                          <img
+                            src="/upload.png"
+                            alt="Upload Icon"
+                            className="w-8 h-8"
+                          />
+                        )}
+                      </div>
+                    ))}
+                </div>
+                {errors.images && (
+                  <p className="text-red-500 mt-1">{errors.images}</p>
+                )}
+                <a href="/tips" className="text-[#E4086F] mt-2 underline">
+                  Read our video and photo tips
+                </a>
+              </div>
 
 
               <div>
@@ -360,9 +360,8 @@ console.log(formData,"ooooooooo");
                   value={formData.itemName}
                   onChange={handleChange}
                   placeholder="Enter your product title"
-                  className={`w-full p-2 border ${
-                    errors.itemName ? "border-red-500" : "border-[#868686]"
-                  } rounded-lg max-w-[500px]`}
+                  className={`w-full p-2 border ${errors.itemName ? "border-red-500" : "border-[#868686]"
+                    } rounded-lg max-w-[500px]`}
                   required
                 />
                 {errors.itemName && (
@@ -379,9 +378,8 @@ console.log(formData,"ooooooooo");
                   value={formData.description}
                   onChange={handleChange}
                   placeholder="Enter your product description"
-                  className={`w-full p-2 border ${
-                    errors.description ? "border-red-500" : "border-[#868686]"
-                  } rounded-lg max-w-[500px]`}
+                  className={`w-full p-2 border ${errors.description ? "border-red-500" : "border-[#868686]"
+                    } rounded-lg max-w-[500px]`}
                   rows={4}
                 />
                 {errors.description && (
@@ -399,9 +397,8 @@ console.log(formData,"ooooooooo");
                   value={formData.category}
                   onChange={handleChange}
                   placeholder="Enter Product Category"
-                  className={`w-full p-2 border ${
-                    errors.category ? "border-red-500" : "border-[#868686]"
-                  } rounded-lg max-w-[500px]`}
+                  className={`w-full p-2 border ${errors.category ? "border-red-500" : "border-[#868686]"
+                    } rounded-lg max-w-[500px]`}
                 />
                 {errors.category && (
                   <p className="text-red-500 mt-1">{errors.category}</p>
@@ -418,9 +415,8 @@ console.log(formData,"ooooooooo");
                   value={formData.subCategory}
                   onChange={handleChange}
                   placeholder="Enter Product Sub Category"
-                  className={`w-full p-2 border ${
-                    errors.subCategory ? "border-red-500" : "border-[#868686]"
-                  } rounded-lg max-w-[500px]`}
+                  className={`w-full p-2 border ${errors.subCategory ? "border-red-500" : "border-[#868686]"
+                    } rounded-lg max-w-[500px]`}
                 />
                 {errors.subCategory && (
                   <p className="text-red-500 mt-1">{errors.subCategory}</p>
@@ -434,9 +430,8 @@ console.log(formData,"ooooooooo");
                   name="gender"
                   value={formData.gender}
                   onChange={handleChange}
-                  className={`w-full p-2 border ${
-                    errors.gender ? "border-red-500" : "border-[#868686]"
-                  } rounded-lg max-w-[500px]`}
+                  className={`w-full p-2 border ${errors.gender ? "border-red-500" : "border-[#868686]"
+                    } rounded-lg max-w-[500px]`}
                 >
                   <option value="">Select Gender</option>
                   <option value="Men">Men</option>
@@ -456,9 +451,8 @@ console.log(formData,"ooooooooo");
                   name="condition"
                   value={formData.condition}
                   onChange={handleChange}
-                  className={`w-full p-2 border ${
-                    errors.condition ? "border-red-500" : "border-[#868686]"
-                  } rounded-lg max-w-[500px]`}
+                  className={`w-full p-2 border ${errors.condition ? "border-red-500" : "border-[#868686]"
+                    } rounded-lg max-w-[500px]`}
                 >
                   <option value="">Select Condition</option>
                   <option value="Excellent">Excellent</option>
@@ -480,9 +474,8 @@ console.log(formData,"ooooooooo");
                   name="brand"
                   value={formData.brand}
                   onChange={handleChange}
-                  className={`w-full p-2 border ${
-                    errors.brand ? "border-red-500" : "border-[#868686]"
-                  } rounded-lg max-w-[500px]`}
+                  className={`w-full p-2 border ${errors.brand ? "border-red-500" : "border-[#868686]"
+                    } rounded-lg max-w-[500px]`}
                 >
                   <option value="">Select Brand</option>
                   <option value="Brand A">Brand A</option>
@@ -502,9 +495,8 @@ console.log(formData,"ooooooooo");
                   name="size"
                   value={formData.size}
                   onChange={handleChange}
-                  className={`w-full p-2 border ${
-                    errors.size ? "border-red-500" : "border-[#868686]"
-                  } rounded-lg max-w-[500px]`}
+                  className={`w-full p-2 border ${errors.size ? "border-red-500" : "border-[#868686]"
+                    } rounded-lg max-w-[500px]`}
                 >
                   <option value="">Choose Product Size</option>
                   <option value="XS">XS (Extra Small)</option>
@@ -528,9 +520,8 @@ console.log(formData,"ooooooooo");
                   name="usage"
                   value={formData.usage}
                   onChange={handleChange}
-                  className={`w-full p-2 border ${
-                    errors.usage ? "border-red-500" : "border-[#868686]"
-                  } rounded-lg max-w-[500px]`}
+                  className={`w-full p-2 border ${errors.usage ? "border-red-500" : "border-[#868686]"
+                    } rounded-lg max-w-[500px]`}
                 >
                   <option value="">Choose Usage Level</option>
                   <option value="Casual">Casual</option>
@@ -554,9 +545,8 @@ console.log(formData,"ooooooooo");
                   value={formData.price}
                   onChange={handleChange}
                   placeholder="Enter Product Price"
-                  className={`w-full p-2 border ${
-                    errors.price ? "border-red-500" : "border-[#868686]"
-                  } rounded-lg max-w-[500px]`}
+                  className={`w-full p-2 border ${errors.price ? "border-red-500" : "border-[#868686]"
+                    } rounded-lg max-w-[500px]`}
                   min="0" // Prevent negative numbers
                   step="0.01" // Allow decimal values if necessary
                   onKeyDown={(e) => {
@@ -592,9 +582,8 @@ console.log(formData,"ooooooooo");
                   name="rentOption"
                   value={formData.rentOption}
                   onChange={handleChange}
-                  className={`w-full p-2 border ${
-                    errors.rentOption ? "border-red-500" : "border-[#868686]"
-                  } rounded-lg max-w-[500px]`}
+                  className={`w-full p-2 border ${errors.rentOption ? "border-red-500" : "border-[#868686]"
+                    } rounded-lg max-w-[500px]`}
                 >
                   <option value="">Choose One</option>
                   <option value="Yes">Yes</option>
@@ -633,13 +622,13 @@ console.log(formData,"ooooooooo");
             </form>
           </div>
         </>
-      
-       
-    ):null}
+
+
+      ) : null}
       {successPopups && (
-       <div className="popup fixed top-1/3 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-green-500 text-white px-6 py-4 rounded shadow-lg z-50">
-       Product updated successfully!
-     </div>
+        <div className="popup fixed top-1/3 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-green-500 text-white px-6 py-4 rounded shadow-lg z-50">
+          Product updated successfully!
+        </div>
       )}
     </div>
   );

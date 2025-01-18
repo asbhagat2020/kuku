@@ -116,7 +116,7 @@ const ItemList = () => {
     if (!formData.size) newErrors.size = "Size is required";
     if (!formData.usage) newErrors.usage = "Usage is required";
     if (!formData.price.trim()) newErrors.price = "Price is required";
-    if (formData.images.length === 0) newErrors.images = "At least one image is required";
+    if (formData.images.length <2) newErrors.images = "At least two image is required";
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -233,6 +233,10 @@ const ItemList = () => {
       }
     }
   };
+
+  const handleBack=()=>{
+    router.back()
+  }
 
   const AddressSelection = ({ addresses, onSelect, onAddNew }) => {
     const [selectedType, setSelectedType] = useState("existing");
@@ -708,15 +712,16 @@ const ItemList = () => {
                   Next
                 </button>
 
-                <Link href="/">
+                {/* <Link href="/"> */}
                   <button
+                    onClick={handleBack}
                     type="button"
                     className="px-8 py-3 border border-[#E4086F] text-[#E4086F] text-lg font-semibold hover:bg-[#fce4f4] transition-colors"
                     style={{ borderRadius: "22px" }}
                   >
                     Cancel
                   </button>
-                </Link>
+                {/* </Link> */}
               </div>
             </form>
           </div>

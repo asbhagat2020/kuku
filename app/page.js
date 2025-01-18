@@ -13,44 +13,37 @@ import Popup from "@/components/home/Popup";
 import Selling from "@/components/home/Selling";
 import StriteSection from "@/components/home/StriteSection";
 import homeAnimation from "../public/lottieFiles/kukuhomenew.json";
-import { useDispatch, useSelector } from "react-redux";
-import { getProducts,resetNotificationFlag } from "@/store/product/productSlice";
+import { useDispatch } from "react-redux";
 
 const Page = () => {
-  // State to handle loading and screen size
-  const [isLoading, setIsLoading] = useState(true);
+  // Initialize isLoading based on sessionStorage
+  const [isLoading, setIsLoading] = useState(() => {
+    return !sessionStorage.getItem("hasVisitedBefore");
+  });
   const [isMobileView, setIsMobileView] = useState(false);
-  const dispatch=useDispatch();
-//   useEffect(() => {
-//     dispatch(getProducts());
-// }, [dispatch]);
+  const dispatch = useDispatch();
 
-  // Handle screen resize and initial mobile check
+  useEffect(() => {
+    if (isLoading) {
+      const timer = setTimeout(() => {
+        setIsLoading(false);
+        sessionStorage.setItem("hasVisitedBefore", "true");
+      }, 4500);
+
+      return () => clearTimeout(timer);
+    }
+  }, [isLoading]);
+
   useEffect(() => {
     const handleResize = () => {
-      setIsMobileView(window.innerWidth <= 768); // Adjust breakpoint as needed
+      setIsMobileView(window.innerWidth <= 768);
     };
 
-    // Set initial value
     handleResize();
-
-    // Add event listener
-    window.addEventListener('resize', handleResize);
-
-    // Cleanup
-    return () => window.removeEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Simulate a loading delay
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 4500);
-
-    return () => clearTimeout(timer);
-  }, []);
-
-  // Loading animation component
   const LoadingAnimation = () => {
     if (isMobileView) {
       return (
@@ -74,16 +67,17 @@ const Page = () => {
     } else {
       return (
         <div className="flex justify-center items-center w-full lg:h-[50vh]">
-              <Lottie
-                loop
-                play
-                animationData={homeAnimation}
-                className="w-full"
-              />
-            </div>
+          <Lottie
+            loop
+            play
+            animationData={homeAnimation}
+            className="w-full"
+          />
+        </div>
       );
     }
   };
+
   return (
     <>
       {isLoading ? (
@@ -99,7 +93,7 @@ const Page = () => {
           <StriteSection />
           <AnimationSection />
           <Brands />
-          <DownloadKuku/>
+          <DownloadKuku />
           <Footer />
         </>
       )}

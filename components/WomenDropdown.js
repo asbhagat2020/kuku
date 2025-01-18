@@ -7,130 +7,169 @@ const categories = [
   {
     title: "Tops",
     items: [
-      "T-Shirts",
+      "T-shirts",
+      "Tank tops and Camis",
       "Blouses",
-      "Tank Tops",
-      "Sweaters",
-      "Hoodies",
-      "Tunics",
-      "Crop Tops",
+      "Other Tops",
     ],
   },
   {
     title: "Bottoms",
     items: [
+      "Pants",
       "Jeans",
-      "Leggings",
-      "Trousers",
       "Skirts",
-      "Shorts",
-      "Palazzo Pants",
-      "Culottes",
+      "Sweatpants",
+      "Legging",
+      "Shorts"
+
     ],
   },
   {
     title: "Dresses",
     items: [
-      "Casual Dresses",
-      "Formal Dresses",
-      "Maxi Dresses",
-      "Midi Dresses",
-      "Mini Dresses",
-      "Wrap Dresses",
-      "Bodycon Dresses",
-    ],
-  },
-  {
-    title: "Outerwear",
-    items: [
-      "Jackets",
-      "Coats",
-      "Blazers",
-      "Parkas",
-      "Cardigans",
-      "Ponchos",
-      "Vests",
+      "Short Dresses",
+      "Long Dresses",
+      "Midi dresses",
+      "Maxi dresses",
     ],
   },
   {
     title: "Activewear",
     items: [
-      "Yoga Pants",
-      "Sports Bras",
-      "Athletic Shorts",
-      "Workout Leggings",
-      "Running Tops",
-      "Athletic Jackets",
+      "Active Sets",
+      "Active Bottoms",
+      "Active Tops",
+      "Active Jackets",
+      "Active Caps",
     ],
   },
   {
-    title: "Footwear",
+    title: "Denim",
     items: [
-      "Sneakers",
-      "Sandals",
-      "Boots",
-      "Flats",
-      "Heels",
-      "Wedges",
-      "Espadrilles",
+      "Denim Jeans",
+      "Denim shorts",
+      "Denim skirts",
+      "Denim Jackets",
+      "Denim Tops",
+      "Denim dresses",
+      "Denim Co-Ords"
     ],
   },
   {
-    title: "Maternity Wear",
+    title: "Jacets and Coats",
     items: [
-      "Maternity Dresses",
-      "Maternity Jeans",
-      "Maternity Tops",
-      "Maternity Activewear",
-      "Maternity Outerwear",
-      "Nursing Bras",
+      "Coats, Jackets",
+      "Winter Coats",
+      "Overcoats",
+      "Lightweight Jackets",
+      "Faux Fur Coats",
+      "Trench Coats",
+      "Down Coats"
     ],
   },
   {
-    title: "Plus-Size Clothing",
+    title: "Suits",
     items: [
-      "Plus-Size Tops",
-      "Plus-Size Bottoms",
-      "Plus-Size Dresses",
-      "Plus-Size Lingerie",
-      "Plus-Size Activewear",
-      "Plus-Size Outerwear",
+      "Suit Sets",
+      "Suit Pants",
+      "Blazers",
+      "Lightweight Blazers",
     ],
   },
   {
-    title: "Special Occasion Wear",
+    title: "Jumpsuits & Bodysuits",
     items: [
-      "Evening Gowns",
+      "Jumpsuits",
+      "Bodysuits",
+      " Unitards",
+    ],
+  },
+
+  {
+    title: "Beachwear",
+    items: [
+      "One-pieces",
+      "Bikini sets",
+      "Cover Ups",
+      "Burkinis",
+      "Kimonos",
+      "Tankinis",
+      "Bikini Bottoms",
+      "Bikini Tops",
+      "Rashguards",
+      "Beach Dresses"
+    ],
+  },
+  {
+    title: "Party Wear",
+    items: [
+      "Prom Dresses",
+      "Evening Dresses",
       "Cocktail Dresses",
-      "Ballgowns",
+      "Party Jumpsuits",
+      "Homecoming Dresses",
+      "Semi-Formal Dresses",
+      "Maxi-Party Dresses",
+    ],
+  },
+  {
+    title: "Wedding",
+    items: [
       "Wedding Dresses",
       "Bridesmaid Dresses",
-      "Prom Dresses",
     ],
   },
   {
-    title: "Workwear",
+    title: "Maternity",
     items: [
-      "Business Suits",
-      "Blouses",
-      "Pencil Skirts",
-      "Dress Pants",
-      "Blazer Jackets",
-      "Work Dresses",
+      "Maternity Dresses",
+      "Maternity Bottoms",
+      "Maternity Tops",
+      "Maternity Two-Piece",
+      "Maternity Denim",
+      "Nursing",
+      "Maternity Jumpsuits",
+      "Maternity Party Wear",
+      "Maternity Active Wear",
+      "Maternity Beachwear",
+      "Maternity Coats & Jackets"
     ],
   },
   {
-    title: "Ethnic and Cultural Attire",
+    title: "Sleep & Lounge",
     items: [
-      "Sari",
-      "Kimono",
-      "Abaya",
-      "Cheongsam",
-      "Dashiki",
-      "Hanbok",
-      "Dirndl",
+      "Sleepwear",
+      "Pyajama Sets",
+      "Night Dresses",
+      "Robes",
     ],
   },
+  {
+    title: "Arabian Wear",
+    items: [
+      "Arabian Dresses",
+      "Kaftan and Jalabiya",
+      "Abayas",
+      "Modest Evening Gown"
+    ],
+  },
+  {
+    title: "Sweater and Cardigan",
+    items: [
+    ],
+  },
+  {
+    title: "Hoodie and Sweatshirts",
+    items: [
+    ],
+  },
+  {
+    title: "Co-ords",
+    items: [
+    ],
+  },
+
 ];
 
 
@@ -149,7 +188,7 @@ export default function WomenDropdown({ isOpen, onToggle }) {
   }, []);
 
 
-  
+
   if (!isMounted) return null; // Avoid rendering on the server
 
   return (
@@ -196,13 +235,13 @@ export default function WomenDropdown({ isOpen, onToggle }) {
                   className="flex items-center justify-between w-full p-4 text-gray-700 hover:bg-gray-50"
                 >
                   <span className="text-sm font-medium">{category.title}</span>
-                  <ChevronRight 
+                  <ChevronRight
                     className={`w-5 h-5 transform transition-transform duration-200 ${
                       openCategory === category.title ? 'rotate-90' : ''
                     }`}
                   />
                 </button>
-                
+
                 {openCategory === category.title && (
                   <div className="bg-gray-50 px-4 py-2">
                     <ul className="space-y-2">

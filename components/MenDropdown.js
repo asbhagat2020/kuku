@@ -7,35 +7,34 @@ const categories = [
     title: "Tops",
     items: [
       "T-Shirts",
-      "Dress Shirts",
+      "Shirt",
       "Polo Shirts",
-      "Henley Shirts",
-      "Casual Button-Up Shirts",
-      "Sweaters",
-      "Hoodies",
+      "Tank Tops",
     ],
   },
   {
     title: "Bottoms",
     items: [
-      "Jeans",
-      "Trousers",
-      "Chinos",
+      "Pants",
+      "Sweatpants",
       "Shorts",
       "Cargo Pants",
-      "Sweatpants",
       "Joggers",
     ],
   },
   {
-    title: "Suits and Formal Wear",
+    title: "Suits",
     items: [
-      "Business Suits",
-      "Tuxedos",
+      "Suits",
+      "Suit Pants",
       "Blazers",
-      "Dress Pants",
-      "Waistcoats",
-      "Dress Shirts",
+      "Waist Coats",
+      "Tuxedos",
+    ],
+  },
+  {
+    title: "Co-Ords",
+    items: ["Hoodie and Sweatshirts","Tees","Shirts",
     ],
   },
   {
@@ -43,106 +42,40 @@ const categories = [
     items: [
       "Jackets",
       "Coats",
+      "Winter coats",
       "Overcoats",
-      "Parkas",
-      "Pea Coats",
-      "Bomber Jackets",
-      "Leather Jackets",
+      "Down Coats",
+      "Trench Coats",
+      "Vests",
+      "Shackets",
+      "Faux Fur Coats"
     ],
   },
   {
-    title: "Activewear",
-    items: [
-      "Athletic Shorts",
-      "Athletic T-Shirts",
-      "Track Pants",
-      "Running Shorts",
-      "Performance Hoodies",
-      "Sports Jerseys",
-      "Compression Gear",
+    title: "Swimwear",
+    items: ["Beach Shorts", "Swim Shorts", "Swim One Pieces", "Rash Guards","Beach Sets"],
+  },
+
+  {
+    title: "Denim",
+    items: ["Jeans","Denim Jackets"," Denim Shirts","Denim Co-Ords",
+      "Denim Jumpsuits and Overalls"
+    ],
+  },
+
+  {
+    title: "Sweaters",
+    items: ["Pullovers","Knit Tops","Sweater Vests","Cardigans","Sweater Co-Ords"
     ],
   },
   {
-    title: "Underwear",
+    title: "Hoodies & Sweatshirts",
     items: [
-      "Boxer Briefs",
-      "Boxers",
-      "Briefs",
-      "Trunks",
-      "Thermal Underwear",
-      "Undershirts",
-      "Long Johns",
     ],
   },
   {
     title: "Sleepwear",
     items: [
-      "Pajama Sets",
-      "Sleep Shorts",
-      "Sleep Pants",
-      "Robes",
-      "Lounge Pants",
-      "Onesies",
-    ],
-  },
-  {
-    title: "Swimwear",
-    items: ["Swim Trunks", "Board Shorts", "Swim Briefs", "Rash Guards"],
-  },
-  {
-    title: "Footwear",
-    items: [
-      "Sneakers",
-      "Dress Shoes",
-      "Casual Shoes",
-      "Boots",
-      "Loafers",
-      "Sandals",
-      "Slippers",
-    ],
-  },
-  {
-    title: "Workwear",
-    items: [
-      "Dress Shirts",
-      "Dress Pants",
-      "Business Suits",
-      "Ties",
-      "Work Boots",
-      "Safety Gear",
-    ],
-  },
-  {
-    title: "Casual Wear",
-    items: [
-      "Graphic T-Shirts",
-      "Cargo Shorts",
-      "Denim Jackets",
-      "Flannel Shirts",
-      "Casual Sneakers",
-      "Baseball Caps",
-    ],
-  },
-  {
-    title: "Outdoor and Adventure",
-    items: [
-      "Hiking Pants",
-      "Outdoor Jackets",
-      "Performance Fleece",
-      "Waterproof Boots",
-      "Camping Gear",
-    ],
-  },
-  {
-    title: "Ethnic and Cultural Attire",
-    items: [
-      "Kimono",
-      "Dashiki",
-      "Kilt",
-      "Sherwani",
-      "Thobe",
-      "Djellaba",
-      "Lederhosen",
     ],
   },
 ];
