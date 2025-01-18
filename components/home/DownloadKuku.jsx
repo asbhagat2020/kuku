@@ -10,7 +10,7 @@ const DownloadKuku = () => {
     <div
       className="max-w-[1550px] mx-auto h-[890px] px-[70px] mb-[0px]"
       style={{
-        backgroundImage: "url('/download_bg1.png')",
+        backgroundImage: "url('/download_bg3.png')",
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
@@ -45,7 +45,7 @@ const DownloadKuku = () => {
             : "justify-center ml-3.5 gap-[150px]"
         } pt-[41px]`}
       >
-        <Link href={"#"}>
+        {/* <Link href={"#"}>
           <Image
             width={284}
             height={111}
@@ -55,8 +55,8 @@ const DownloadKuku = () => {
             }`}
             alt=""
           />
-        </Link>
-        <Link href={"#"}>
+        </Link> */}
+        {/* <Link href={"#"}>
           <Image
             width={284}
             height={111}
@@ -64,10 +64,10 @@ const DownloadKuku = () => {
             className={`w-full max-w-[284px] ${isMobileOrTablet ? "" : ""}`}
             alt=""
           />
-        </Link>
+        </Link> */}
       </div>
       {/* Smaller Kuku Logo for Mobile */}
-      <div className="flex justify-center mt-[-7px] md:mt-[-60px]">
+      <div className="flex justify-center mt-[-7px] ">
         <Image
           width={260}
           height={280}

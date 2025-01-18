@@ -5,7 +5,7 @@ import productSlice from "./product/productSlice";
 import cartSlice from "./cart/cartSlice";
 import wishlistReducer from "./wishlist/wishlistSlice";
 import authReducer from "./auth/authSlice";
-
+import popupReducer from './popup/popupSlice'
 // Combine all reducers
 
 export const store = configureStore({
@@ -15,5 +15,6 @@ export const store = configureStore({
     cart: cartSlice,
     wishlist: wishlistReducer,
     auth: authReducer,
+    popup: popupReducer
   },
 });

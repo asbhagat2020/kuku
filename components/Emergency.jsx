@@ -62,22 +62,22 @@ const Emergency = () => {
       newErrors.itemName = "Product title is required";
     if (!formData.description.trim())
       newErrors.description = "Description is required";
-    if (!formData.category.trim()) 
+    if (!formData.category.trim())
       newErrors.category = "Category is required";
-    if (!formData.brand) 
+    if (!formData.brand)
       newErrors.brand = "Brand is required";
-    if (!formData.size) 
+    if (!formData.size)
       newErrors.size = "Size is required";
-    if (!formData.price.trim()) 
+    if (!formData.price.trim())
       newErrors.price = "Price is required";
-    if (!formData.location.trim()) 
+    if (!formData.location.trim())
       newErrors.location = "Location is required";
     if (!formData.requiredWithinDate)
       newErrors.requiredWithinDate = "Required within date is required";
     if (!formData.color.trim())
       newErrors.color = "Color is required";
-    if (formData.images.length === 0)
-      newErrors.images = "At least one image is required";
+    if (formData.images.length <2)
+      newErrors.images = "At least two image is required";
 
     const currentDate = new Date();
     const selectedDate = new Date(formData.requiredWithinDate);

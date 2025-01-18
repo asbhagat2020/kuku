@@ -114,7 +114,24 @@ const ProfileSection = (userDetails) => {
       throw error; // Re-throw the error for handling in the calling function
     }
   };
-
+const fetchProfileData = async () => {
+    try {
+      const token = JSON.parse(Cookies.get("auth"));
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/profile/${user.user._id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setUser(response.data);
+      setFormData(response.data.user);
+    } catch (error) {
+      console.error("Error fetching profile data:", error);
+      setError("Failed to fetch updated profile data");
+    }
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
     const errors = validateForm();
@@ -157,7 +174,10 @@ const ProfileSection = (userDetails) => {
 
         // Close modal and reset form state
         setIsModalOpen(false);
-        setUser(response.data.profile);
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
+        // setUser(response.data.profile);
         setFormData(response.data.profile);
 
         setFormErrors({
