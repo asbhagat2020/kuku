@@ -91,7 +91,7 @@ const MarketPlace = () => {
         },
         {
             number: "2",
-            title: "$500 Billion is lost each year because of under-wearing and failure to recycle clothes",
+            title: "$50 Billion is lost each year because of under-wearing and failure to recycle clothes",
             url: "marketPlaceBg2.png"
         }
     ];

@@ -29,10 +29,10 @@ const Footer = () => {
         <footer className='max-w-[1550px] mx-auto bg-[#FDE504] pt-12 pb-0'>
             <div className="px-4 sm:px-8 lg:px-[71px] grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-8 mb-16">
                 <FooterColumn title="About">
-                    <FooterLink href="#">Contact Us</FooterLink>
-                    <FooterLink href="#">About Us</FooterLink>
-                    <FooterLink href="#">Locations</FooterLink>
-                    <FooterLink href="#">Blogs</FooterLink>
+                    <FooterLink href="#">Who we are ?</FooterLink>
+                    <FooterLink href="#">How it works ?</FooterLink>
+                    <FooterLink href="#">Our Services</FooterLink>
+                    <FooterLink href="#">Sustainability</FooterLink>
                 </FooterColumn>
                 <FooterColumn title="Categories">
                     <FooterLink href="#">Men</FooterLink>
@@ -40,20 +40,20 @@ const Footer = () => {
                     <FooterLink href="#">Kids</FooterLink>
                 </FooterColumn>
                 <FooterColumn title="Help">
+                    <FooterLink href="#">How to Sell - Tips and Tricks</FooterLink>
                     <FooterLink href="#">Payments</FooterLink>
-                    <FooterLink href="#">Shipping</FooterLink>
-                    <FooterLink href="#">Cancellation & Returns</FooterLink>
+                    <FooterLink href="#">Return / Cancellations / Refund</FooterLink>
+                    <FooterLink href="#">FAQ</FooterLink>
                 </FooterColumn>
-                <FooterColumn title="Legal & Privacy">
+                <FooterColumn title="Guide">
                     <FooterLink href="#">Terms & Conditions</FooterLink>
+                    <FooterLink href="#">Payments</FooterLink>
+                    <FooterLink href="#">Commission Structure</FooterLink>
                     <FooterLink href="#">Privacy Policy</FooterLink>
-                    <FooterLink href="#">Accessibility</FooterLink>
                 </FooterColumn>
-                <FooterColumn title="Customer Service">
-                    <FooterLink href="#">Size Guide</FooterLink>
-                    <FooterLink href="#">Shipping Information</FooterLink>
-                    <FooterLink href="/wishlist">Wishlist</FooterLink>
-                    <FooterLink href="#">FAQs</FooterLink>
+                <FooterColumn title="Connect">
+                    <FooterLink href="#">Contact Us</FooterLink>
+                    <FooterLink href="#">Social Media</FooterLink>
                 </FooterColumn>
             </div>
 
