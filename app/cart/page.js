@@ -10,6 +10,8 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { showSuccessNotification } from "@/utils/Notification/notif";
+import AddressList from "@/components/userProfile/AddressList";
+import CartAddress from "@/components/userProfile/CartAddress";
 
 export default function Cart() {
   const [isCouponPopupVisible, setIsCouponPopupVisible] = useState(false);
@@ -25,6 +27,7 @@ export default function Cart() {
   const dispatch = useDispatch();
   const [errorPopupOpen, setErrorPopupOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [showAddress, setShowAddress] = useState(true);
 
   const cartItems = useSelector((state) => state.cart.items);
   const { token } = useSelector((store) => store.auth);
@@ -61,6 +64,7 @@ export default function Cart() {
   };
 
   const handleCheckout = async () => {
+    setShowAddress(false);
     try {
       setLoading(true);
 
@@ -532,7 +536,12 @@ export default function Cart() {
           </div>
         </div>
       )}
-
+      {/* <AddressList/> */}
+      {cart.length > 0 && (
+        <>
+          <CartAddress />
+        </>
+      )}
       <DownloadKuku />
       <Footer />
     </>

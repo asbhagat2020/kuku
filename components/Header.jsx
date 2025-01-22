@@ -551,14 +551,14 @@ const Header = () => {
                   </Link>
                   <Link href="/addresslist">
                     <div className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold">
-                      Shiping Address
+                      Address
                     </div>
                   </Link>
-                  <Link href="/pickupaddress">
+                  {/* <Link href="/pickupaddress">
                     <div className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold">
                       Pickup Address
                     </div>
-                  </Link>
+                  </Link> */}
                   {/* <Link href="/emergencyrequirement">
                     <div className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold">
                       Emergency Requirement
