@@ -6,6 +6,7 @@ import AddressModal from "./AddressModal";
 import Cookies from "js-cookie";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import PickupAddress from "./PickupAddress";
 
 const AddressList = () => {
   const [addresses, setAddresses] = useState([]);
@@ -153,7 +154,7 @@ const AddressList = () => {
   return (
     <div className="container mx-auto px-4 py-8 font-karla">
       {/* Heading */}
-      <h1 className="text-3xl font-luckiest mb-6">ADDRESS LIST</h1>
+      <h1 className="text-3xl font-luckiest mb-6">SHIPING ADDRESS LIST</h1>
 
       {/* Search and Add Button */}
       <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
@@ -248,7 +249,7 @@ const AddressList = () => {
           </div>
         ))}
       </div>
-
+      <PickupAddress/>
       {/* Modal */}
       <AddressModal
         isOpen={isModalOpen}

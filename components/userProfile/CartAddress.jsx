@@ -2,12 +2,13 @@
 
 // import React, { useState } from "react";
 import { Search } from "lucide-react";
+import AddressModal from "./AddressModal";
 import Cookies from "js-cookie";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import PickupModal from "./PickupModel";
 
-const PickupAddress = () => {
+
+const CartAddress = () => {
   const [addresses, setAddresses] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMode, setModalMode] = useState("add");
@@ -15,6 +16,7 @@ const PickupAddress = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
 
+ 
   useEffect(() => {
     fetchAddress();
   }, []);
@@ -23,7 +25,7 @@ const PickupAddress = () => {
     try {
       const token = JSON.parse(Cookies.get("auth"));
 
-      const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/pickup/get`;
+      const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/address/get`;
 
       const response = await axios.get(url, {
         headers: {
@@ -42,8 +44,9 @@ const PickupAddress = () => {
   const handleSelect = async (id) => {
     try {
       const token = JSON.parse(Cookies.get("auth"));
+    
 
-      const apiUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/pickup/default/${id}`; // Use the ID of the address to update
+      const apiUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/address/default/${id}`; // Use the ID of the address to update
 
       const response = await axios.patch(
         apiUrl,
@@ -56,7 +59,7 @@ const PickupAddress = () => {
       );
 
       if (response.status === 200) {
-        setAddresses(response.data.addresses);
+        setAddresses(response.data.address)
         console.log("Default Address updated successfully");
       } else {
         console.error("Failed to update default address");
@@ -67,33 +70,32 @@ const PickupAddress = () => {
   };
 
   const handleEdit = (address) => {
+  
     setModalMode("edit");
-    setAddresses([
-      ...addresses.filter((elem) => {
-        if (elem?._id == address._id) {
-          return address;
-        }
-        return elem;
-      }),
-    ]);
+    setAddresses([...addresses.filter((elem)=> {
+      if(elem?._id == address._id){
+        return address
+      }
+      return elem
+    })]);
     setEditingAddress(address);
-
+   
     setIsModalOpen(true);
   };
 
   const handleDelete = async (id) => {
     try {
       const token = JSON.parse(Cookies.get("auth"));
-      const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/pickup/delete/${id}`;
+      const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/address/delete/${id}`;
 
       const response = await axios.delete(url, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-      setAddresses(response.data.addresses);
+      setAddresses(response.data.address)
       console.log(response.data, "Address Deleted");
-
+     
       closePopup();
     } catch (err) {
       setError("Failed to delete Address");
@@ -108,53 +110,17 @@ const PickupAddress = () => {
     setIsModalOpen(true);
   };
 
-  // const handleSaveAddress = (formData) => {
-  //   console.log(formData,"ddddddddddd")
-  //   if (modalMode === "add") {
-  //     const newAddress = {
-  //       id: addresses.length + 1,
-  //       addressName: formData.addressName,
-  //       phoneNumber: formData.phoneNumber,
-  //       street: formData.street,
-  //       city: formData.city,
-  //       state: formData.state,
-  //       country: formData.country,
-  //       postalCode: formData.postalCode,
-  //       selected: false,
-  //     };
-  //     setAddresses([...addresses, newAddress]);
-  //   } else {
-  //     setAddresses(
-  //       addresses.map((addr) =>
-  //         addr.id === editingAddress.id
-  //           ? {
-  //               ...addr,
-  //               addressName: formData.addressName,
-  //               phoneNumber: formData.phoneNumber,
-  //               street: formData.street,
-  //               city: formData.city,
-  //               state: formData.state,
-  //               country: formData.country,
-  //               postalCode: formData.postalCode,
-  //             }
-  //           : addr
-  //       )
-  //     );
-  //   }
-  // };
   const handleSave = (address) => {
     if (modalMode === "add") {
       setAddresses([...addresses, address]);
     } else if (modalMode === "edit") {
-      setAddresses(
-        addresses.map((addr) => (addr._id === address._id ? address : addr))
-      );
+      setAddresses(addresses.map((addr) => (addr._id === address._id ? address : addr)));
     }
   };
   return (
     <div className="container mx-auto px-4 py-8 font-karla">
       {/* Heading */}
-      <h1 className="text-3xl font-luckiest mb-6">PICK UP ADDRESS LIST</h1>
+      <h1 className="text-3xl font-luckiest mb-6">SHIPING ADDRESS LIST</h1>
 
       {/* Search and Add Button */}
       <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
@@ -169,7 +135,7 @@ const PickupAddress = () => {
           </button>
         </div> */}
 
-        {/* <button
+        <button
           onClick={handleAddNew}
           className="bg-[#FDE504] hover:bg-yellow-500 text-black px-6 py-3 rounded-lg flex items-center gap-2 shadow-md"
         >
@@ -188,12 +154,12 @@ const PickupAddress = () => {
             />
           </svg>
           <span className="font-medium text-sm">Add new address</span>
-        </button> */}
+        </button>
       </div>
 
       {/* Address Cards */}
       <div className="space-y-4">
-        {addresses?.map((address) => (
+        {addresses.map((address) => (
           <div
             key={address._id}
             className={`border rounded-lg p-4 ${
@@ -203,20 +169,22 @@ const PickupAddress = () => {
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
               <div className="space-y-1">
                 <h2 className="text-lg font-medium">
-                  Name: {address.firstName} {address.lastName}
+                  Name: {address.addressName}
                 </h2>
-                <p className="text-gray-600 text-sm">Phone: {address.phone}</p>
                 <p className="text-gray-600 text-sm">
-                  Street: {address.addressLine1}
+                  Phone: {address.phoneNumber}
                 </p>
                 <p className="text-gray-600 text-sm">
-                  Street: {address.addressLine2}
+                  Street: {address.street}
                 </p>
                 <p className="text-gray-600 text-sm">City: {address.city}</p>
+                <p className="text-gray-600 text-sm">State: {address.state}</p>
                 <p className="text-gray-600 text-sm">
                   Country: {address.country}
                 </p>
-                <p className="text-gray-600 text-sm">Email: {address.email}</p>
+                <p className="text-gray-600 text-sm">
+                  Postal Code: {address.postalCode}
+                </p>
                 <div className="flex gap-6 mt-3">
                   <button
                     onClick={() => handleEdit(address)}
@@ -247,9 +215,9 @@ const PickupAddress = () => {
           </div>
         ))}
       </div>
-
+      {/* <PickupAddress/> */}
       {/* Modal */}
-      <PickupModal
+      <AddressModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onSave={handleSave}
@@ -260,4 +228,4 @@ const PickupAddress = () => {
   );
 };
 
-export default PickupAddress;
+export default CartAddress;
