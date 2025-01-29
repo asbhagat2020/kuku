@@ -24,6 +24,7 @@ export default function Cart() {
   const [cart, setCart] = useState([]);
   const [selectedItems, setSelectedItems] = useState({});
   const [selectAll, setSelectAll] = useState(false);
+  const [coupons, setCoupons] = useState([]); // Initialize as an empty array
   const dispatch = useDispatch();
   const [errorPopupOpen, setErrorPopupOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -32,6 +33,24 @@ export default function Cart() {
   const cartItems = useSelector((state) => state.cart.items);
   const { token } = useSelector((store) => store.auth);
   const router = useRouter();
+
+  // Fetch coupons from the backend
+  const fetchCoupons = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/coupon/getCoupons`
+      );
+      if (Array.isArray(response.data)) {
+        setCoupons(response.data);
+      } else {
+        setErrorMessage("Invalid data received for coupons");
+        setErrorPopupOpen(true);
+      }
+    } catch (error) {
+      setErrorMessage("Failed to fetch coupons");
+      setErrorPopupOpen(true);
+    }
+  };
 
   // Handle select all functionality
   const handleSelectAll = (checked) => {
@@ -91,11 +110,11 @@ export default function Cart() {
       // Prepare the order data
       const orderData = {
         products: selectedProducts,
-        totalAmount: total,
+        totalAmount: subtotal,
         discount: discount,
-        // couponCode: appliedCoupon || null,
+        couponCode: appliedCoupon || null,
         buyer: user?._id,
-        finalAmount: total - discount,
+        finalAmount: subtotal - discount,
       };
 
       console.log(orderData);
@@ -155,29 +174,6 @@ export default function Cart() {
     }
   };
 
-  const coupons = [
-    {
-      id: 1,
-      code: "SAVE10",
-      description: "Get 10% off on your order",
-      type: "percentage",
-      value: 10,
-    },
-    {
-      id: 2,
-      code: "FREESHIP",
-      description: "Free shipping on orders over AED 100",
-      type: "freeShipping",
-    },
-    {
-      id: 3,
-      code: "DISCOUNT20",
-      description: "Flat 20 AED off on all items",
-      type: "flat",
-      value: 20,
-    },
-  ];
-
   const handleApplyCoupon = (couponCode) => {
     const coupon = coupons.find((c) => c.code === couponCode);
     if (coupon) {
@@ -192,6 +188,9 @@ export default function Cart() {
       } else if (coupon.type === "freeShipping") {
         setDiscount(0);
       }
+    } else {
+      setErrorMessage("Invalid coupon code");
+      setErrorPopupOpen(true);
     }
   };
 
@@ -247,6 +246,7 @@ export default function Cart() {
   useEffect(() => {
     if (token) {
       fetchCartDetails();
+      fetchCoupons();
     }
   }, [token]);
 
