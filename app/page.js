@@ -17,11 +17,15 @@ import { useDispatch } from "react-redux";
 
 const Page = () => {
   // Initialize isLoading based on sessionStorage
-  const [isLoading, setIsLoading] = useState(() => {
-    return !sessionStorage.getItem("hasVisitedBefore");
-  });
+  const [isLoading, setIsLoading] = useState(true);
   const [isMobileView, setIsMobileView] = useState(false);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    // Ensure sessionStorage is only accessed on the client side
+    const hasVisitedBefore = sessionStorage.getItem("hasVisitedBefore");
+    setIsLoading(!hasVisitedBefore);
+  }, []);
 
   useEffect(() => {
     if (isLoading) {
