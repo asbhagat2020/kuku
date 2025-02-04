@@ -425,19 +425,19 @@ const Giveaway = () => {
                 </div>
 
                 <div className="flex-1 flex flex-col">
-                  <p className="text-[#151515] text-sm sm:text-base font-bold font-karla">
-                    Approximate weight
-                  </p>
-                  <input
-                    maxLength={25}
-                    placeholder="Enter approximate weight"
-                    type="text"
-                    name="weight"
-                    value={formData.weight}
-                    onChange={handleInputChange}
-                    className="w-full h-[50px] border-2 rounded-lg px-5 mt-2 sm:mt-5 font-karla"
-                  />
-                </div>
+                <p className="text-[#151515] text-sm sm:text-base font-bold font-karla">
+                  Number of items
+                </p>
+                <input
+                  maxLength={25}
+                  placeholder="Enter number of items"
+                  type="number"
+                  name="weight"
+                  value={formData.weight}
+                  onChange={handleInputChange}
+                  className="w-full h-[50px] border-2 rounded-lg px-5 mt-2 sm:mt-5 font-karla"
+                />
+              </div>
               </div>
               <div className="flex flex-col sm:flex-row sm:justify-end gap-4 my-8 sm:my-[36px]">
                 <button
