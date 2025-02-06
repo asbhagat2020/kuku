@@ -223,17 +223,12 @@ const Header = () => {
     // Remove cookies
     Cookies.remove("auth");
     Cookies.remove("user");
-
-    // Dispatch logout and redirect on success
-    dispatch(logout())
-      .then(() => {
-        // Optional: Redirect the user to the login page or homepage after logout
-        router.push("/login");
-      })
-      .catch((error) => {
-        // Handle any errors during the logout process (if any)
-        console.error("Logout failed:", error);
-      });
+  
+    // Dispatch logout action
+    dispatch(logout());
+  
+    // Redirect the user to the login page after logout
+    router.push("/login");
   };
   const handleLocalSignIn = () => {
     router.push("/login");
