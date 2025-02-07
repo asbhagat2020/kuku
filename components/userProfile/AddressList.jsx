@@ -1,6 +1,5 @@
 "use client";
 
-// import React, { useState } from "react";
 import { Search } from "lucide-react";
 import AddressModal from "./AddressModal";
 import Cookies from "js-cookie";
@@ -16,7 +15,6 @@ const AddressList = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
 
- 
   useEffect(() => {
     fetchAddress();
   }, []);
@@ -24,15 +22,12 @@ const AddressList = () => {
   const fetchAddress = async () => {
     try {
       const token = JSON.parse(Cookies.get("auth"));
-
       const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/address/get`;
-
       const response = await axios.get(url, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-
       setAddresses(response.data.addresses);
     } catch (err) {
       setError("Failed to fetch user details");
@@ -44,10 +39,7 @@ const AddressList = () => {
   const handleSelect = async (id) => {
     try {
       const token = JSON.parse(Cookies.get("auth"));
-    
-
-      const apiUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/address/default/${id}`; // Use the ID of the address to update
-
+      const apiUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/address/default/${id}`;
       const response = await axios.patch(
         apiUrl,
         {},
@@ -57,7 +49,6 @@ const AddressList = () => {
           },
         }
       );
-
       if (response.status === 200) {
         setAddresses(response.data.address)
         console.log("Default Address updated successfully");
@@ -70,7 +61,6 @@ const AddressList = () => {
   };
 
   const handleEdit = (address) => {
-  
     setModalMode("edit");
     setAddresses([...addresses.filter((elem)=> {
       if(elem?._id == address._id){
@@ -79,7 +69,6 @@ const AddressList = () => {
       return elem
     })]);
     setEditingAddress(address);
-   
     setIsModalOpen(true);
   };
 
@@ -87,7 +76,6 @@ const AddressList = () => {
     try {
       const token = JSON.parse(Cookies.get("auth"));
       const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/address/delete/${id}`;
-
       const response = await axios.delete(url, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -95,7 +83,6 @@ const AddressList = () => {
       });
       setAddresses(response.data.address)
       console.log(response.data, "Address Deleted");
-     
       closePopup();
     } catch (err) {
       setError("Failed to delete Address");
@@ -110,40 +97,6 @@ const AddressList = () => {
     setIsModalOpen(true);
   };
 
-  // const handleSaveAddress = (formData) => {
-  //   console.log(formData,"ddddddddddd")
-  //   if (modalMode === "add") {
-  //     const newAddress = {
-  //       id: addresses.length + 1,
-  //       addressName: formData.addressName,
-  //       phoneNumber: formData.phoneNumber,
-  //       street: formData.street,
-  //       city: formData.city,
-  //       state: formData.state,
-  //       country: formData.country,
-  //       postalCode: formData.postalCode,
-  //       selected: false,
-  //     };
-  //     setAddresses([...addresses, newAddress]);
-  //   } else {
-  //     setAddresses(
-  //       addresses.map((addr) =>
-  //         addr.id === editingAddress.id
-  //           ? {
-  //               ...addr,
-  //               addressName: formData.addressName,
-  //               phoneNumber: formData.phoneNumber,
-  //               street: formData.street,
-  //               city: formData.city,
-  //               state: formData.state,
-  //               country: formData.country,
-  //               postalCode: formData.postalCode,
-  //             }
-  //           : addr
-  //       )
-  //     );
-  //   }
-  // };
   const handleSave = (address) => {
     if (modalMode === "add") {
       setAddresses([...addresses, address]);
@@ -151,12 +104,11 @@ const AddressList = () => {
       setAddresses(addresses.map((addr) => (addr._id === address._id ? address : addr)));
     }
   };
+
   return (
     <div className="container mx-auto px-4 py-8 font-karla">
-      {/* Heading */}
-      <h1 className="text-3xl font-luckiest mb-6">SHIPING ADDRESS LIST</h1>
+      <h1 className="text-3xl font-luckiest mb-6">SHIPPING ADDRESS LIST</h1>
 
-      {/* Search and Add Button */}
       <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
         <div className="relative w-full md:w-72">
           <input
@@ -191,7 +143,6 @@ const AddressList = () => {
         </button>
       </div>
 
-      {/* Address Cards */}
       <div className="space-y-4">
         {addresses.map((address) => (
           <div
@@ -209,10 +160,20 @@ const AddressList = () => {
                   Phone: {address.phoneNumber}
                 </p>
                 <p className="text-gray-600 text-sm">
+                  Apartment: {address.apartmentName}
+                </p>
+                <p className="text-gray-600 text-sm">
+                  Apartment Details: {address.apartmentDetails}
+                </p>
+                <p className="text-gray-600 text-sm">
                   Street: {address.street}
                 </p>
-                <p className="text-gray-600 text-sm">City: {address.city}</p>
-                <p className="text-gray-600 text-sm">State: {address.state}</p>
+                <p className="text-gray-600 text-sm">
+                  City: {address.city}
+                </p>
+                <p className="text-gray-600 text-sm">
+                  State: {address.state}
+                </p>
                 <p className="text-gray-600 text-sm">
                   Country: {address.country}
                 </p>
@@ -250,7 +211,6 @@ const AddressList = () => {
         ))}
       </div>
       <PickupAddress/>
-      {/* Modal */}
       <AddressModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}

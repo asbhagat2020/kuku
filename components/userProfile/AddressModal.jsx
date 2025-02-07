@@ -15,6 +15,8 @@ const AddressModal = ({
   const [formData, setFormData] = useState({
     addressName: "",
     phoneNumber: "",
+    apartmentName: "",
+    apartmentDetails: "",
     street: "",
     city: "",
     state: "",
@@ -27,6 +29,8 @@ const AddressModal = ({
       setFormData({
         addressName: initialData.addressName || "",
         phoneNumber: initialData.phoneNumber || "",
+        apartmentName: initialData.apartmentName || "",
+        apartmentDetails: initialData.apartmentDetails || "",
         street: initialData.street || "",
         city: initialData.city || "",
         state: initialData.state || "",
@@ -66,7 +70,7 @@ const AddressModal = ({
 
       if (response.status === 201) {
         console.log("Address added successfully");
-        onSave(response.data.address); // Notify parent component with the new address
+        onSave(response.data.address);
         onClose();
         resetForm();
       } else {
@@ -90,7 +94,7 @@ const AddressModal = ({
 
       if (response.status === 200) {
         console.log("Address updated successfully");
-        onSave(response.data.address); // Notify parent component with the updated address
+        onSave(response.data.address);
         onClose();
         resetForm();
       } else {
@@ -105,6 +109,8 @@ const AddressModal = ({
     setFormData({
       addressName: "",
       phoneNumber: "",
+      apartmentName: "",
+      apartmentDetails: "",
       street: "",
       city: "",
       state: "",
@@ -116,9 +122,8 @@ const AddressModal = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 ">
-      <div className="bg-white rounded-lg w-full max-w-2xl mx-4  overflow-y-auto max-h-[90vh] relative ">
-        {/* Header */}
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className="bg-white rounded-lg w-full max-w-2xl mx-4 overflow-y-auto max-h-[90vh] relative">
         <div className="px-8 py-6 border-b border-gray-100">
           <div className="flex justify-between items-center">
             <h2 className="text-3xl font-luckiest">
@@ -133,10 +138,8 @@ const AddressModal = ({
           </div>
         </div>
 
-        {/* Form */}
         <form onSubmit={handleSubmit} className="p-8 space-y-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {/* Full Name */}
             <div className="space-y-2">
               <label className="block text-sm font-medium text-gray-700">
                 Enter Full Name
@@ -152,7 +155,6 @@ const AddressModal = ({
               />
             </div>
 
-            {/* Phone Number */}
             <div className="space-y-2">
               <label className="block text-sm font-medium text-gray-700">
                 Phone Number
@@ -168,7 +170,36 @@ const AddressModal = ({
               />
             </div>
 
-            {/* Address 1 */}
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">
+                Apartment Name
+              </label>
+              <input
+                type="text"
+                name="apartmentName"
+                value={formData.apartmentName}
+                onChange={handleChange}
+                placeholder="Enter Apartment Name"
+                className="w-full h-12 px-4 bg-gray-50 rounded-2xl focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                required
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">
+                Apartment Details
+              </label>
+              <input
+                type="text"
+                name="apartmentDetails"
+                value={formData.apartmentDetails}
+                onChange={handleChange}
+                placeholder="Enter Apartment Details (Floor, Unit, etc.)"
+                className="w-full h-12 px-4 bg-gray-50 rounded-2xl focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                required
+              />
+            </div>
+
             <div className="space-y-2">
               <label className="block text-sm font-medium text-gray-700">
                 Street
@@ -179,12 +210,11 @@ const AddressModal = ({
                 value={formData.street}
                 onChange={handleChange}
                 placeholder="Enter Street"
-                className="w-full h-20 px-4 bg-gray-50 rounded-2xl focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                className="w-full h-12 px-4 bg-gray-50 rounded-2xl focus:outline-none focus:ring-2 focus:ring-yellow-500"
                 required
               />
             </div>
 
-            {/* Address 2 */}
             <div className="space-y-2">
               <label className="block text-sm font-medium text-gray-700">
                 City
@@ -195,9 +225,11 @@ const AddressModal = ({
                 value={formData.city}
                 onChange={handleChange}
                 placeholder="Enter City"
-                className="w-full h-20 px-4 bg-gray-50 rounded-2xl focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                className="w-full h-12 px-4 bg-gray-50 rounded-2xl focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                required
               />
             </div>
+
             <div className="space-y-2">
               <label className="block text-sm font-medium text-gray-700">
                 State
@@ -208,9 +240,11 @@ const AddressModal = ({
                 value={formData.state}
                 onChange={handleChange}
                 placeholder="Enter State"
-                className="w-full h-20 px-4 bg-gray-50 rounded-2xl focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                className="w-full h-12 px-4 bg-gray-50 rounded-2xl focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                required
               />
             </div>
+
             <div className="space-y-2">
               <label className="block text-sm font-medium text-gray-700">
                 Country
@@ -221,9 +255,11 @@ const AddressModal = ({
                 value={formData.country}
                 onChange={handleChange}
                 placeholder="Enter Country"
-                className="w-full h-20 px-4 bg-gray-50 rounded-2xl focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                className="w-full h-12 px-4 bg-gray-50 rounded-2xl focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                required
               />
             </div>
+
             <div className="space-y-2">
               <label className="block text-sm font-medium text-gray-700">
                 Postal Code
@@ -234,12 +270,12 @@ const AddressModal = ({
                 value={formData.postalCode}
                 onChange={handleChange}
                 placeholder="Enter Postal Code"
-                className="w-full h-20 px-4 bg-gray-50 rounded-2xl focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                className="w-full h-12 px-4 bg-gray-50 rounded-2xl focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                required
               />
             </div>
           </div>
 
-          {/* Action Buttons */}
           <div className="flex justify-end space-x-4 pt-6">
             <button
               type="submit"
