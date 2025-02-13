@@ -1,23 +1,25 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import React, { useState, useEffect } from "react";
-import Lottie from "react-lottie-player";
-import clothHangerAnimation from "../public/lottieFiles/cloth_hanger.json";
-import playgroundAnimation from "../public/lottieFiles/playground.json";
-import giftboxAnimation from "../public/lottieFiles/giftbox.json";
-import homeAnimation from "../public/lottieFiles/kukuhomenew.json";
-import axios from "axios";
-import Cookies from "js-cookie";
+import Link from 'next/link';
+import React, { useState, useEffect } from 'react';
+import Lottie from 'react-lottie-player';
+import clothHangerAnimation from '../public/lottieFiles/cloth_hanger.json';
+import playgroundAnimation from '../public/lottieFiles/playground.json';
+import giftboxAnimation from '../public/lottieFiles/giftbox.json';
+import homeAnimation from '../public/lottieFiles/kukuhomenew.json';
+import axios from 'axios';
+import Cookies from 'js-cookie';
 
-const AddressSelection = ({ addresses, onSelect, onAddNew }) => {
+const AddressSelection = ({ addresses, selectedAddress, onSelect, onAddNew }) => {
   return (
     <div className="space-y-4">
       {addresses.map((address, index) => (
         <div
           key={index}
           onClick={() => onSelect(address)}
-          className="p-4 border-2 rounded-lg cursor-pointer hover:border-green-500"
+          className={`p-4 border-2 rounded-lg cursor-pointer ${
+            selectedAddress === address ? 'border-green-500' : 'hover:border-green-500'
+          }`}
         >
           <p className="font-bold">{`${address.firstName} ${address.lastName}`}</p>
           <p>{address.addressLine1}</p>
@@ -42,22 +44,22 @@ const Giveaway = () => {
   const [showAddressForm, setShowAddressForm] = useState(false);
   const [selectedAddress, setSelectedAddress] = useState(null);
   const [formData, setFormData] = useState({
-    name: "",
-    phone: "",
-    address: "",
-    pickTime: "",
-    firstName: "",
-    lastName: "",
-    email: "",
-    addressLine1: "",
-    addressLine2: "",
-    city: "",
-    country: "",
-    weight:""
+    name: '',
+    phone: '',
+    address: '',
+    pickTime: '',
+    firstName: '',
+    lastName: '',
+    email: '',
+    addressLine1: '',
+    addressLine2: '',
+    city: '',
+    country: '',
+    weight: '',
   });
   const [formErrors, setFormErrors] = useState({});
-  const [sampleAddresses,setSampleAddresses]=useState([])
-  const[loading,setLoading]=useState(false)
+  const [sampleAddresses, setSampleAddresses] = useState([]);
+  const [loading, setLoading] = useState(false);
   const fetchAddress = async () => {
     try {
       const token = JSON.parse(Cookies.get('auth'));
@@ -85,10 +87,9 @@ const Giveaway = () => {
       setLoading(false);
     }
   };
-  useEffect(()=>{
-    fetchAddress()
-  },[])
-
+  useEffect(() => {
+    fetchAddress();
+  }, []);
 
   useEffect(() => {
     const handleResize = () => {
@@ -96,30 +97,30 @@ const Giveaway = () => {
     };
 
     handleResize();
-    window.addEventListener("resize", handleResize);
+    window.addEventListener('resize', handleResize);
 
     return () => {
-      window.removeEventListener("resize", handleResize);
+      window.removeEventListener('resize', handleResize);
     };
   }, []);
 
   const validateForm = () => {
     const errors = {};
     if (currentStep === 2) {
-      if (!formData.firstName.trim()) errors.firstName = "First name is required";
-      if (!formData.lastName.trim()) errors.lastName = "Last name is required";
-      if (!formData.email.trim()) errors.email = "Email is required";
-      if (!formData.phone.trim()) errors.phone = "Phone number is required";
+      if (!formData.firstName.trim()) errors.firstName = 'First name is required';
+      if (!formData.lastName.trim()) errors.lastName = 'Last name is required';
+      if (!formData.email.trim()) errors.email = 'Email is required';
+      if (!formData.phone.trim()) errors.phone = 'Phone number is required';
     } else if (currentStep === 3 && showAddressForm) {
-      if (!formData.addressLine1) errors.addressLine1 = "Address Line 1 is required";
-      if (!formData.city) errors.city = "City is required";
-      if (!formData.country) errors.country = "Country is required";
-      if (!formData.pickTime) errors.pickTime = "Pick time is required";
+      if (!formData.addressLine1) errors.addressLine1 = 'Address Line 1 is required';
+      if (!formData.city) errors.city = 'City is required';
+      if (!formData.country) errors.country = 'Country is required';
+      if (!formData.pickTime) errors.pickTime = 'Pick time is required';
     }
 
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
-  }
+  };
 
   const handleNext = () => {
     if (currentStep === 2) {
@@ -138,23 +139,51 @@ const Giveaway = () => {
 
   const handleFinalScreen = () => {
     setShowFinalScreen(true);
+    const finalData = {
+      step1: {},
+      step2: {
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        email: formData.email,
+        phone: formData.phone,
+      },
+      step3: {
+        address: selectedAddress
+          ? {
+              addressLine1: selectedAddress.addressLine1,
+              addressLine2: selectedAddress.addressLine2,
+              city: selectedAddress.city,
+              country: selectedAddress.country,
+            }
+          : {
+              addressLine1: formData.addressLine1,
+              addressLine2: formData.addressLine2,
+              city: formData.city,
+              country: formData.country,
+            },
+        pickTime: formData.pickTime,
+        weight: formData.weight,
+      },
+    };
+
+    console.log('Final Form Data:', finalData);
   };
 
   const handleFinalScreenClick = () => {
     setShowFinalScreen(false);
     setCurrentStep(1);
     setFormData({
-      name: "",
-      phone: "",
-      address: "",
-      pickTime: "",
-      firstName: "",
-      lastName: "",
-      email: "",
-      addressLine1: "",
-      addressLine2: "",
-      city: "",
-      country: ""
+      name: '',
+      phone: '',
+      address: '',
+      pickTime: '',
+      firstName: '',
+      lastName: '',
+      email: '',
+      addressLine1: '',
+      addressLine2: '',
+      city: '',
+      country: '',
     });
   };
 
@@ -168,7 +197,7 @@ const Giveaway = () => {
     if (formErrors[name]) {
       setFormErrors((prev) => ({
         ...prev,
-        [name]: "",
+        [name]: '',
       }));
     }
   };
@@ -179,9 +208,8 @@ const Giveaway = () => {
         return (
           <div className="text-center max-w-2xl mx-auto">
             <h2 className="text-2xl font-bold mb-8 font-karla">
-              Reuse Repurpose Recycle, let KuKu handle your textile by giving
-              the reusable to charity or recycling them partnered with textile
-              recyclers.
+              Reuse Repurpose Recycle, let KuKu handle your textile by giving the reusable to charity or recycling them
+              partnered with textile recyclers.
             </h2>
             <button
               onClick={handleNext}
@@ -191,243 +219,204 @@ const Giveaway = () => {
             </button>
           </div>
         );
-        case 2:
-          return (
-            <div className="max-w-md mx-auto px-4">
-              <h2 className="text-2xl font-bold mb-12 text-center font-karla">
-                Fill Up the details
-              </h2>
-              <div className="grid grid-cols-2 gap-6">
-                <div className="col-span-1">
-                  <input
-                    type="text"
-                    name="firstName"
-                    placeholder="First Name"
-                    value={formData.firstName}
-                    onChange={handleInputChange}
-                    className={`w-full px-4 py-3 rounded-lg border ${
-                      formErrors.firstName ? "border-red-500" : "border-gray-300"
-                    } focus:outline-none focus:ring-2 focus:ring-green-500`}
-                  />
-                  {formErrors.firstName && (
-                    <p className="text-red-500 text-sm mt-1 ml-4">
-                      {formErrors.firstName}
-                    </p>
-                  )}
-                </div>
-                <div className="col-span-1">
-                  <input
-                    type="text"
-                    name="lastName"
-                    placeholder="Last Name"
-                    value={formData.lastName}
-                    onChange={handleInputChange}
-                    className={`w-full px-4 py-3 rounded-lg border ${
-                      formErrors.lastName ? "border-red-500" : "border-gray-300"
-                    } focus:outline-none focus:ring-2 focus:ring-green-500`}
-                  />
-                  {formErrors.lastName && (
-                    <p className="text-red-500 text-sm mt-1 ml-4">
-                      {formErrors.lastName}
-                    </p>
-                  )}
-                </div>
-                <div className="col-span-1">
-                  <input
-                    type="email"
-                    name="email"
-                    placeholder="Email Address"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    className={`w-full px-4 py-3 rounded-lg border ${
-                      formErrors.email ? "border-red-500" : "border-gray-300"
-                    } focus:outline-none focus:ring-2 focus:ring-green-500`}
-                  />
-                  {formErrors.email && (
-                    <p className="text-red-500 text-sm mt-1 ml-4">
-                      {formErrors.email}
-                    </p>
-                  )}
-                </div>
-                <div className="col-span-1">
-                  <input
-                    type="tel"
-                    name="phone"
-                    placeholder="Phone Number"
-                    value={formData.phone}
-                    onChange={handleInputChange}
-                    className={`w-full px-4 py-3 rounded-lg border ${
-                      formErrors.phone ? "border-red-500" : "border-gray-300"
-                    } focus:outline-none focus:ring-2 focus:ring-green-500`}
-                  />
-                  {formErrors.phone && (
-                    <p className="text-red-500 text-sm mt-1 ml-4">
-                      {formErrors.phone}
-                    </p>
-                  )}
-                </div>
+      case 2:
+        return (
+          <div className="max-w-md mx-auto px-4">
+            <h2 className="text-2xl font-bold mb-12 text-center font-karla">Fill Up the details</h2>
+            <div className="grid grid-cols-2 gap-6">
+              <div className="col-span-1">
+                <input
+                  type="text"
+                  name="firstName"
+                  placeholder="First Name"
+                  value={formData.firstName}
+                  onChange={handleInputChange}
+                  className={`w-full px-4 py-3 rounded-lg border ${
+                    formErrors.firstName ? 'border-red-500' : 'border-gray-300'
+                  } focus:outline-none focus:ring-2 focus:ring-green-500`}
+                />
+                {formErrors.firstName && <p className="text-red-500 text-sm mt-1 ml-4">{formErrors.firstName}</p>}
               </div>
-              <div className="text-center mt-12">
-                <button
-                  onClick={handleNext}
-                  className="bg-green-500 text-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-green-600 transition border border-black"
-                >
-                  NEXT STEP
-                </button>
+              <div className="col-span-1">
+                <input
+                  type="text"
+                  name="lastName"
+                  placeholder="Last Name"
+                  value={formData.lastName}
+                  onChange={handleInputChange}
+                  className={`w-full px-4 py-3 rounded-lg border ${
+                    formErrors.lastName ? 'border-red-500' : 'border-gray-300'
+                  } focus:outline-none focus:ring-2 focus:ring-green-500`}
+                />
+                {formErrors.lastName && <p className="text-red-500 text-sm mt-1 ml-4">{formErrors.lastName}</p>}
+              </div>
+              <div className="col-span-1">
+                <input
+                  type="email"
+                  name="email"
+                  placeholder="Email Address"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  className={`w-full px-4 py-3 rounded-lg border ${
+                    formErrors.email ? 'border-red-500' : 'border-gray-300'
+                  } focus:outline-none focus:ring-2 focus:ring-green-500`}
+                />
+                {formErrors.email && <p className="text-red-500 text-sm mt-1 ml-4">{formErrors.email}</p>}
+              </div>
+              <div className="col-span-1">
+                <input
+                  type="tel"
+                  name="phone"
+                  placeholder="Phone Number"
+                  value={formData.phone}
+                  onChange={handleInputChange}
+                  className={`w-full px-4 py-3 rounded-lg border ${
+                    formErrors.phone ? 'border-red-500' : 'border-gray-300'
+                  } focus:outline-none focus:ring-2 focus:ring-green-500`}
+                />
+                {formErrors.phone && <p className="text-red-500 text-sm mt-1 ml-4">{formErrors.phone}</p>}
               </div>
             </div>
-          );
-        case 3:
-          return (
-            <div className="px-4 sm:px-8 md:px-16 lg:px-20 py-8 sm:py-10 bg-white rounded-2xl font-karla overflow-x-clip">
-              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4">
-                <p className="text-[#151515] text-xl sm:text-2xl font-bold font-karla">
-                  Pickup Details
-                </p>
-              </div>
-              <p className="text-[#a8a8a8] text-sm sm:text-base font-normal font-karla mb-2">
-                Please enter your pickup details
-              </p>
-              <div className="space-y-4">
-                <AddressSelection
-                  addresses={sampleAddresses}
-                  onSelect={(address) => {
-                    setSelectedAddress(address);
-                    setShowAddressForm(false);
-                    setFormData({
-                      ...formData,
-                      addressLine1: address.addressLine1,
-                      addressLine2: address.addressLine2,
-                      city: address.city,
-                      country: address.country
-                    });
-                  }}
-                  onAddNew={() => {
-                    setShowAddressForm(true);
-                    setSelectedAddress(null);
-                    setFormData({
-                      ...formData,
-                      addressLine1: "",
-                      addressLine2: "",
-                      city: "",
-                      country: ""
-                    });
-                  }}
-                />
-              </div>
-              {showAddressForm && (
-                <div className="flex flex-col lg:flex-row mt-6 sm:mt-[36px] gap-6 lg:gap-[54px]">
-                  <div className="w-full flex flex-col gap-6">
-                    <div className="flex flex-wrap sm:flex-nowrap gap-6">
-                      <div className="flex-1 flex flex-col">
-                        <p className="text-[#151515] text-sm sm:text-base font-bold font-karla">
-                          Country
-                        </p>
-                        <select
-                          name="country"
-                          value={formData.country}
-                          onChange={handleInputChange}
-                          className="w-full h-[50px] border-2 rounded-lg px-5 mt-2 sm:mt-5 font-karla"
-                        >
-                          <option value="">Select a country</option>
-                          <option value="uae">UAE</option>
-                          <option value="saab">Saab</option>
-                          <option value="fiat">Fiat</option>
-                          <option value="audi">Audi</option>
-                        </select>
-                        {formErrors.country && (
-                          <p className="text-red-500 text-sm mt-1">{formErrors.country}</p>
-                        )}
-                      </div>
-
-                      <div className="flex-1 flex flex-col">
-                        <p className="text-[#151515] text-sm sm:text-base font-bold font-karla">
-                          City
-                        </p>
-                        <select
-                          name="city"
-                          value={formData.city}
-                          onChange={handleInputChange}
-                          className="w-full h-[50px] border-2 rounded-lg px-5 mt-2 sm:mt-5 font-karla"
-                        >
-                          <option value="">Select a city</option>
-                          <option value="dubai">Dubai</option>
-                          <option value="abudhabi">Abu Dhabi</option>
-                          <option value="sharjah">Sharjah</option>
-                          <option value="ajman">Ajman</option>
-                        </select>
-                        {formErrors.city && (
-                          <p className="text-red-500 text-sm mt-1">{formErrors.city}</p>
-                        )}
-                      </div>
+            <div className="text-center mt-12">
+              <button
+                onClick={handleNext}
+                className="bg-green-500 text-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-green-600 transition border border-black"
+              >
+                NEXT STEP
+              </button>
+            </div>
+          </div>
+        );
+      case 3:
+        return (
+          <div className="px-4 sm:px-8 md:px-16 lg:px-20 py-8 sm:py-10 bg-white rounded-2xl font-karla overflow-x-clip">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4">
+              <p className="text-[#151515] text-xl sm:text-2xl font-bold font-karla">Pickup Details</p>
+            </div>
+            <p className="text-[#a8a8a8] text-sm sm:text-base font-normal font-karla mb-2">
+              Please enter your pickup details
+            </p>
+            <div className="space-y-4">
+              <AddressSelection
+                addresses={sampleAddresses}
+                selectedAddress={selectedAddress}
+                onSelect={(address) => {
+                  setSelectedAddress(address);
+                  setShowAddressForm(false);
+                  setFormData({
+                    ...formData,
+                    addressLine1: address.addressLine1,
+                    addressLine2: address.addressLine2,
+                    city: address.city,
+                    country: address.country,
+                  });
+                }}
+                onAddNew={() => {
+                  setShowAddressForm(true);
+                  setSelectedAddress(null);
+                  setFormData({
+                    ...formData,
+                    addressLine1: '',
+                    addressLine2: '',
+                    city: '',
+                    country: '',
+                  });
+                }}
+              />
+            </div>
+            {showAddressForm && (
+              <div className="flex flex-col lg:flex-row mt-6 sm:mt-[36px] gap-6 lg:gap-[54px]">
+                <div className="w-full flex flex-col gap-6">
+                  <div className="flex flex-wrap sm:flex-nowrap gap-6">
+                    <div className="flex-1 flex flex-col">
+                      <p className="text-[#151515] text-sm sm:text-base font-bold font-karla">Country</p>
+                      <select
+                        name="country"
+                        value={formData.country}
+                        onChange={handleInputChange}
+                        className="w-full h-[50px] border-2 rounded-lg px-5 mt-2 sm:mt-5 font-karla"
+                      >
+                        <option value="">Select a country</option>
+                        <option value="uae">UAE</option>
+                        <option value="saab">Saab</option>
+                        <option value="fiat">Fiat</option>
+                        <option value="audi">Audi</option>
+                      </select>
+                      {formErrors.country && <p className="text-red-500 text-sm mt-1">{formErrors.country}</p>}
                     </div>
 
-                    <div className="flex flex-wrap sm:flex-nowrap gap-6">
-                      <div className="flex-1 flex flex-col">
-                        <p className="text-[#151515] text-sm sm:text-base font-bold font-karla">
-                          Address Line 1
-                        </p>
-                        <input
-                          maxLength={25}
-                          placeholder="Enter your address line 1"
-                          type="text"
-                          name="addressLine1"
-                          value={formData.addressLine1}
-                          onChange={handleInputChange}
-                          className="w-full h-[50px] border-2 rounded-lg px-5 mt-2 sm:mt-5 font-karla"
-                        />
-                        {formErrors.addressLine1 && (
-                          <p className="text-red-500 text-sm mt-1">
-                            {formErrors.addressLine1}
-                          </p>
-                        )}
-                      </div>
+                    <div className="flex-1 flex flex-col">
+                      <p className="text-[#151515] text-sm sm:text-base font-bold font-karla">City</p>
+                      <select
+                        name="city"
+                        value={formData.city}
+                        onChange={handleInputChange}
+                        className="w-full h-[50px] border-2 rounded-lg px-5 mt-2 sm:mt-5 font-karla"
+                      >
+                        <option value="">Select a city</option>
+                        <option value="dubai">Dubai</option>
+                        <option value="abudhabi">Abu Dhabi</option>
+                        <option value="sharjah">Sharjah</option>
+                        <option value="ajman">Ajman</option>
+                      </select>
+                      {formErrors.city && <p className="text-red-500 text-sm mt-1">{formErrors.city}</p>}
+                    </div>
+                  </div>
 
-                      <div className="flex-1 flex flex-col">
-                        <p className="text-[#151515] text-sm sm:text-base font-bold font-karla">
-                          Address Line 2
-                        </p>
-                        <input
-                          maxLength={25}
-                          placeholder="Enter your address line 2"
-                          type="text"
-                          name="addressLine2"
-                          value={formData.addressLine2}
-                          onChange={handleInputChange}
-                          className="w-full h-[50px] border-2 rounded-lg px-5 mt-2 sm:mt-5 font-karla"
-                        />
-                      </div>
+                  <div className="flex flex-wrap sm:flex-nowrap gap-6">
+                    <div className="flex-1 flex flex-col">
+                      <p className="text-[#151515] text-sm sm:text-base font-bold font-karla">Address Line 1</p>
+                      <input
+                        maxLength={25}
+                        placeholder="Enter your address line 1"
+                        type="text"
+                        name="addressLine1"
+                        value={formData.addressLine1}
+                        onChange={handleInputChange}
+                        className="w-full h-[50px] border-2 rounded-lg px-5 mt-2 sm:mt-5 font-karla"
+                      />
+                      {formErrors.addressLine1 && (
+                        <p className="text-red-500 text-sm mt-1">{formErrors.addressLine1}</p>
+                      )}
+                    </div>
+
+                    <div className="flex-1 flex flex-col">
+                      <p className="text-[#151515] text-sm sm:text-base font-bold font-karla">Address Line 2</p>
+                      <input
+                        maxLength={25}
+                        placeholder="Enter your address line 2"
+                        type="text"
+                        name="addressLine2"
+                        value={formData.addressLine2}
+                        onChange={handleInputChange}
+                        className="w-full h-[50px] border-2 rounded-lg px-5 mt-2 sm:mt-5 font-karla"
+                      />
                     </div>
                   </div>
                 </div>
-              )}
-              <div className="flex flex-wrap sm:flex-nowrap gap-6 mt-6">
-                <div className="flex-1 flex flex-col">
-                  <p className="text-[#151515] text-sm sm:text-base font-bold font-karla">
-                    Time
-                  </p>
-                  <select
-                    name="pickTime"
-                    value={formData.pickTime}
-                    onChange={handleInputChange}
-                    className={`w-full h-[50px] border-2 rounded-lg px-5 mt-2 sm:mt-5 font-karla ${
-                      formErrors.pickTime ? "border-red-500" : ""
-                    }`}
-                  >
-                    <option value="">Select pickup time</option>
-                    <option value="morning">9:30-12:00</option>
-                    <option value="afternoon">12:00-4:00</option>
-                    <option value="evening">4:00-8:00</option>
-                  </select>
-                  {formErrors.pickTime && (
-                    <p className="text-red-500 text-sm mt-1">{formErrors.pickTime}</p>
-                  )}
-                </div>
+              </div>
+            )}
+            <div className="flex flex-wrap sm:flex-nowrap gap-6 mt-6">
+              <div className="flex-1 flex flex-col">
+                <p className="text-[#151515] text-sm sm:text-base font-bold font-karla">Time</p>
+                <select
+                  name="pickTime"
+                  value={formData.pickTime}
+                  onChange={handleInputChange}
+                  className={`w-full h-[50px] border-2 rounded-lg px-5 mt-2 sm:mt-5 font-karla ${
+                    formErrors.pickTime ? 'border-red-500' : ''
+                  }`}
+                >
+                  <option value="">Select pickup time</option>
+                  <option value="morning">9:30-12:00</option>
+                  <option value="afternoon">12:00-4:00</option>
+                  <option value="evening">4:00-8:00</option>
+                </select>
+                {formErrors.pickTime && <p className="text-red-500 text-sm mt-1">{formErrors.pickTime}</p>}
+              </div>
 
-                <div className="flex-1 flex flex-col">
-                <p className="text-[#151515] text-sm sm:text-base font-bold font-karla">
-                  Number of items
-                </p>
+              <div className="flex-1 flex flex-col">
+                <p className="text-[#151515] text-sm sm:text-base font-bold font-karla">Number of items</p>
                 <input
                   maxLength={25}
                   placeholder="Enter number of items"
@@ -438,23 +427,23 @@ const Giveaway = () => {
                   className="w-full h-[50px] border-2 rounded-lg px-5 mt-2 sm:mt-5 font-karla"
                 />
               </div>
-              </div>
-              <div className="flex flex-col sm:flex-row sm:justify-end gap-4 my-8 sm:my-[36px]">
-                <button
-                  onClick={handleFinalScreen}
-                  className="w-full sm:w-auto px-6 py-3 sm:py-4 bg-[#e4086f] rounded-[22px] text-[#fde504] text-lg sm:text-xl font-bold font-karla"
-                >
-                  List Now
-                </button>
-                <button
-                  onClick={() => setCurrentStep(2)}
-                  className="w-full sm:w-auto px-6 py-3 sm:py-4 rounded-[22px] border border-[#e4086f] text-[#e4086f] text-lg sm:text-xl font-bold font-karla"
-                >
-                  Back
-                </button>
-              </div>
             </div>
-          );
+            <div className="flex flex-col sm:flex-row sm:justify-end gap-4 my-8 sm:my-[36px]">
+              <button
+                onClick={handleFinalScreen}
+                className="w-full sm:w-auto px-6 py-3 sm:py-4 bg-[#e4086f] rounded-[22px] text-[#fde504] text-lg sm:text-xl font-bold font-karla"
+              >
+                List Now
+              </button>
+              <button
+                onClick={() => setCurrentStep(2)}
+                className="w-full sm:w-auto px-6 py-3 sm:py-4 rounded-[22px] border border-[#e4086f] text-[#e4086f] text-lg sm:text-xl font-bold font-karla"
+              >
+                Back
+              </button>
+            </div>
+          </div>
+        );
       default:
         return null;
     }
@@ -462,11 +451,7 @@ const Giveaway = () => {
 
   const renderLottieAnimation = () => {
     const animationData =
-      currentStep === 1
-        ? homeAnimation
-        : currentStep === 2
-        ? clothHangerAnimation
-        : playgroundAnimation;
+      currentStep === 1 ? homeAnimation : currentStep === 2 ? clothHangerAnimation : playgroundAnimation;
 
     if (isMobileView) {
       return (
@@ -474,13 +459,13 @@ const Giveaway = () => {
           <Lottie
             loop
             play
-            rendererSettings={{ preserveAspectRatio: "xMidYMid slice" }}
+            rendererSettings={{ preserveAspectRatio: 'xMidYMid slice' }}
             animationData={animationData}
             style={{
-              width: "100vw",
-              height: "100vh",
-              objectFit: "cover",
-              position: "absolute",
+              width: '100vw',
+              height: '100vh',
+              objectFit: 'cover',
+              position: 'absolute',
               left: 0,
               top: 0,
             }}
@@ -500,9 +485,7 @@ const Giveaway = () => {
     <>
       {!showFinalScreen ? (
         <div className="relative flex flex-col items-center min-h-screen w-screen overflow-hidden">
-          <div className="fixed inset-0 w-screen h-screen">
-            {renderLottieAnimation()}
-          </div>
+          <div className="fixed inset-0 w-screen h-screen">{renderLottieAnimation()}</div>
 
           <div className="relative z-10 w-full max-w-7xl px-6 pt-4">
             <div className="flex justify-between items-center mb-8">
@@ -518,7 +501,7 @@ const Giveaway = () => {
                   key={step}
                   onClick={() => goToStep(step)}
                   className={`w-1/3 h-1 mx-3 cursor-pointer ${
-                    currentStep >= step ? "bg-green-500" : "bg-gray-300"
+                    currentStep >= step ? 'bg-green-500' : 'bg-gray-300'
                   } rounded-full`}
                 />
               ))}
@@ -546,16 +529,16 @@ const Giveaway = () => {
           <Lottie
             loop
             play
-            rendererSettings={{ preserveAspectRatio: "xMidYMid slice" }}
+            rendererSettings={{ preserveAspectRatio: 'xMidYMid slice' }}
             animationData={giftboxAnimation}
             style={{
-              width: "100vw",
-              height: "100vh",
-              objectFit: "cover",
-              position: "absolute",
+              width: '100vw',
+              height: '100vh',
+              objectFit: 'cover',
+              position: 'absolute',
               left: 0,
               top: 0,
-              marginBottom: "10px",
+              marginBottom: '10px',
             }}
           />
           <button className="absolute top-4 right-4 z-10">

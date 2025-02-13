@@ -14,6 +14,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { toggleWishlist } from "@/store/wishlist/wishlistSlice";
 import axios from "axios";
 import Cookies from "js-cookie";
+import { useRouter } from 'next/navigation';
 
 // const cardData = [
 //   {
@@ -192,7 +193,7 @@ export const ImagesComponent = () => {
   const [loading, setLoading] = useState(false);
   const [errorPopupOpen, setErrorPopupOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-
+  const router = useRouter()
   const cardsPerPage = 9;
 
   const indexOfLastCard = currentPage * cardsPerPage;
@@ -211,15 +212,16 @@ export const ImagesComponent = () => {
   const userID = details?._id;
 
   useEffect(() => {
+    console.log('kjjwkehfkjwekfj')
     fetchProducts();
   }, []);
 
   const handleNextPage = () => {
-    if (currentPage < totalPages) setCurrentPage(currentPage + 1);
+    if(currentPage < totalPages) setCurrentPage(currentPage + 1);
   };
 
   const handlePrevPage = () => {
-    if (currentPage > 1) setCurrentPage(currentPage - 1);
+    if(currentPage > 1) setCurrentPage(currentPage - 1);
   };
 
   const handlePageChange = (selectedPage) => {
@@ -252,7 +254,7 @@ export const ImagesComponent = () => {
         }
       );
 
-      if (response.status === 201) {
+      if(response.status === 201) {
         setOfferSubmitted(true);
         handleCloseOfferPopup();
       } else {
@@ -260,7 +262,7 @@ export const ImagesComponent = () => {
         setErrorMessage(`Failed to submit offer: ${response.data.message}`);
         setErrorPopupOpen(true);
       }
-    } catch (error) {
+    } catch(error) {
       console.error("An error occurred:", error.message);
       setErrorMessage(` ${error.response?.data?.message || error.message}`);
       setErrorPopupOpen(true);
@@ -271,11 +273,35 @@ export const ImagesComponent = () => {
   //   setLikedCards((prevLikedCards) => ({
   //     ...prevLikedCards,
   //     [cardId]: !prevLikedCards[cardId],
-  //   }));
+  //   })); 
   // };
 
-  const handleLikeClick = (cardId) => {
-    dispatch(toggleWishlist(cardId));
+  // const handleLikeClick = (id) => {
+  //   dispatch(addToWishlist(id));
+  // };
+  const handleLikeClick = async (id) => {
+    try {
+      const token = JSON.parse(Cookies.get("auth"));
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/product/wishlist/${id}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if(response.status === 201) {
+        router.push("/wishlist");
+      } else {
+        setErrorMessage(`Failed to add to wishlist: ${response.data.message}`);
+        setErrorPopupOpen(true);
+      }
+    } catch(error) {
+      setErrorMessage(error.response?.data?.message || error.message);
+      setErrorPopupOpen(true);
+    }
   };
 
   const innerSliderSettings = {
@@ -319,16 +345,15 @@ export const ImagesComponent = () => {
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/products`
       );
       const datavalue = response.data.products;
-
+      console.log(datavalue, 'dataValue')
       setData(datavalue || []);
-    } catch (error) {
+    } catch(error) {
       alert(error.message);
     }
   };
 
   const handleFollow = async (id, type, sellerID) => {
     setLoading(true);
-
     try {
       const token = JSON.parse(Cookies.get("auth"));
       const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/profile/${type}/${id}`;
@@ -345,7 +370,7 @@ export const ImagesComponent = () => {
       let updatedFollowers = res.data.followers;
       setData(
         data.map((item) => {
-          if (item.seller._id === sellerID) {
+          if(item.seller._id === sellerID) {
             return {
               ...item,
               seller: {
@@ -357,7 +382,7 @@ export const ImagesComponent = () => {
           return item;
         })
       );
-    } catch (error) {
+    } catch(error) {
       console.error("Error while following/unfollowing", error);
     } finally {
       setLoading(false);
@@ -381,18 +406,17 @@ export const ImagesComponent = () => {
                 <p className="font-bold text-sm">{card?.seller?.username}</p>
               </div>
               <button
-                className={`mt-2 px-4 sm:px-6 py-1 ${
-                  card?.seller.followers.includes(userID)
-                    ? "bg-gray-500"
-                    : "bg-custom-green"
-                } text-white rounded-full`}
+                className={`mt-2 px-4 sm:px-6 py-1 ${card?.seller.followers.includes(userID)
+                  ? "bg-gray-500"
+                  : "bg-custom-green"
+                  } text-white rounded-full`}
                 onClick={() =>
                   card?.seller.followers.includes(userID)
                     ? handleFollow(
-                        card.seller._id,
-                        "unfollow",
-                        card?.seller?._id
-                      )
+                      card.seller._id,
+                      "unfollow",
+                      card?.seller?._id
+                    )
                     : handleFollow(card.seller._id, "follow", card?.seller?._id)
                 }
                 disabled={loading}
@@ -406,16 +430,16 @@ export const ImagesComponent = () => {
             <div className="relative mt-4">
               {/* Heart icon for like functionality */}
               <Link href="/wishlist">
-              <div
-                className="absolute top-4 right-4 w-12 h-12 flex items-center justify-center rounded-full bg-custom-gray cursor-pointer z-10"
-                onClick={() => handleLikeClick(card?._id)}
-              >
-                {wishlist.includes(card._id) ? (
-                  <FcLike className="text-2xl text-red-500" /> // Filled heart for wishlist items
-                ) : (
-                  <GoHeart className="text-2xl text-gray-300" /> // Outline heart for non-wishlist items
-                )}
-              </div>
+                <div
+                  className="absolute top-4 right-4 w-12 h-12 flex items-center justify-center rounded-full bg-custom-gray cursor-pointer z-10"
+                  onClick={() => handleLikeClick(card?._id)}
+                >
+                  {wishlist.includes(card._id) ? (
+                    <FcLike className="text-2xl text-red-500" /> // Filled heart for wishlist items
+                  ) : (
+                    <GoHeart className="text-2xl text-gray-300" /> // Outline heart for non-wishlist items
+                  )}
+                </div>
               </Link>
               {/* Slider for product images */}
               <Slider {...innerSliderSettings}>

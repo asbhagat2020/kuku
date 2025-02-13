@@ -1,29 +1,29 @@
-"use client";
-import Image from "next/image";
+'use client';
+import Image from 'next/image';
 
-import React, { useState, useEffect, useRef } from "react";
-import NotificationPanel from "./home/NotificationPanel"; // Import the NotificationPanel component
+import React, { useState, useEffect, useRef } from 'react';
+import NotificationPanel from './home/NotificationPanel'; // Import the NotificationPanel component
 
-import { usePathname, useRouter } from "next/navigation";
-import Link from "next/link";
-import WomenDropdown from "./WomenDropdown";
-import MenDropdown from "./MenDropdown";
-import KidsDropdown from "./KidsDropdown";
-import LanguageSelector from "./LanguageSelector";
-import { BottomNavigation } from "./BottomNavigation";
-import SettingsDropdown from "./SettingsDropdown";
-import { signIn, signOut, useSession } from "next-auth/react";
-import Cookies from "js-cookie";
-import { useDispatch, useSelector } from "react-redux";
-import { logout, token } from "@/store/auth/authSlice";
-import { showSuccessNotification } from "@/utils/Notification/notif";
+import { usePathname, useRouter } from 'next/navigation';
+import Link from 'next/link';
+import WomenDropdown from './WomenDropdown';
+import MenDropdown from './MenDropdown';
+import KidsDropdown from './KidsDropdown';
+import LanguageSelector from './LanguageSelector';
+import { BottomNavigation } from './BottomNavigation';
+import SettingsDropdown from './SettingsDropdown';
+import { signIn, signOut, useSession } from 'next-auth/react';
+import Cookies from 'js-cookie';
+import { useDispatch, useSelector } from 'react-redux';
+import { logout, token } from '@/store/auth/authSlice';
+import { showSuccessNotification } from '@/utils/Notification/notif';
 
 const Header = () => {
   const [isSearchVisible, setIsSearchVisible] = useState(false);
   const [isMobileSearchVisible, setIsMobileSearchVisible] = useState(false);
   const [isNotificationVisible, setIsNotificationVisible] = useState(false);
   const [suggestions, setSuggestions] = useState([]);
-  const [searchValue, setSearchValue] = useState("");
+  const [searchValue, setSearchValue] = useState('');
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
   const [hamburger, setHamburger] = useState(false);
   const path = usePathname();
@@ -58,7 +58,7 @@ const Header = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      const headerOffset = document.getElementById("header")?.offsetTop || 0;
+      const headerOffset = document.getElementById('header')?.offsetTop || 0;
 
       if (window.scrollY > headerOffset) {
         setIsFixed(true);
@@ -67,46 +67,44 @@ const Header = () => {
       }
     };
 
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   const notifications = [
     {
-      text: "A Seller has posted item for your emergency requirement",
-      date: "July 28, 2024 at 07:40 AM",
+      text: 'A Seller has posted item for your emergency requirement',
+      date: 'July 28, 2024 at 07:40 AM',
     },
     {
       text: '"Lulu & Sky - Orange crochet cottage Kurta" Bid placed',
-      date: "July 28, 2024 at 07:40 AM",
+      date: 'July 28, 2024 at 07:40 AM',
     },
     {
       text: '"Lulu & Sky - Orange crochet cottage Kurta" Bid placed',
-      date: "July 28, 2024 at 07:40 AM",
+      date: 'July 28, 2024 at 07:40 AM',
     },
     {
       text: '"Lulu & Sky - Orange crochet cottage Kurta" Bid placed',
-      date: "July 28, 2024 at 07:40 AM",
+      date: 'July 28, 2024 at 07:40 AM',
     },
     {
       text: '"Lulu & Sky - Orange crochet cottage Kurta" Bid placed',
-      date: "July 28, 2024 at 07:40 AM",
+      date: 'July 28, 2024 at 07:40 AM',
     },
   ];
 
   // Offers data
   const offers = [
     {
-      text: "Offer received",
-      time: "12:02 AM",
-      description:
-        "Great news! Someone has made you an offer. Tap here to check it out",
+      text: 'Offer received',
+      time: '12:02 AM',
+      description: 'Great news! Someone has made you an offer. Tap here to check it out',
     },
     {
-      text: "Offer received",
-      time: "12:02 AM",
-      description:
-        "Great news! Someone has made you an offer. Tap here to check it out",
+      text: 'Offer received',
+      time: '12:02 AM',
+      description: 'Great news! Someone has made you an offer. Tap here to check it out',
     },
   ];
 
@@ -131,13 +129,9 @@ const Header = () => {
     setSearchValue(value);
 
     if (value) {
-      const mockSuggestions = [
-        "T-shirt",
-        "Jacket",
-        "Jeans",
-        "Shoes",
-        "Socks",
-      ].filter((item) => item.toLowerCase().includes(value.toLowerCase()));
+      const mockSuggestions = ['T-shirt', 'Jacket', 'Jeans', 'Shoes', 'Socks'].filter((item) =>
+        item.toLowerCase().includes(value.toLowerCase()),
+      );
 
       setSuggestions(mockSuggestions);
     } else {
@@ -146,8 +140,8 @@ const Header = () => {
   };
   const handleGoogleSignOut = () => {
     // Remove cookies
-    Cookies.remove("auth");
-    Cookies.remove("user");
+    Cookies.remove('auth');
+    Cookies.remove('user');
 
     // Perform signOut and dispatch logout, then chain actions
     signOut()
@@ -156,27 +150,24 @@ const Header = () => {
         dispatch(logout());
 
         // Optional: Log a success message
-        console.log("Google sign out successful");
+        console.log('Google sign out successful');
       })
       .catch((error) => {
         // Handle any errors during signOut
-        console.error("Google sign out failed:", error);
+        console.error('Google sign out failed:', error);
       });
   };
   // Paths where the notification icon should be disabled
-  const disabledNotificationPaths = [""];
+  const disabledNotificationPaths = [''];
   const isNotificationDisabled = disabledNotificationPaths.includes(path);
 
   // Determine background color based on the path
   const isSpecialPath =
-    path === "/listingproduct" ||
-    path === "/kukuit" ||
-    path === "/renting" ||
-    path === "/emergencyrequirement";
-  const iconsPath = path === "/user_profile";
-  const wishPath = path === "/wishlist";
-  const cartPath = path === "/cart";
-  const isHome = path === "/";
+    path === '/listingproduct' || path === '/kukuit' || path === '/renting' || path === '/emergencyrequirement';
+  const iconsPath = path === '/user_profile';
+  const wishPath = path === '/wishlist';
+  const cartPath = path === '/cart';
+  const isHome = path === '/';
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -185,10 +176,7 @@ const Header = () => {
         setIsSearchVisible(false);
       }
       // Handle mobile search click outside
-      if (
-        mobileSearchRef.current &&
-        !mobileSearchRef.current.contains(event.target)
-      ) {
+      if (mobileSearchRef.current && !mobileSearchRef.current.contains(event.target)) {
         setIsMobileSearchVisible(false);
       }
 
@@ -202,13 +190,13 @@ const Header = () => {
     };
 
     // Add event listener
-    if (typeof document !== "undefined") {
-      document.addEventListener("mousedown", handleClickOutside);
+    if (typeof document !== 'undefined') {
+      document.addEventListener('mousedown', handleClickOutside);
     }
 
     // Cleanup function
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [searchRef, dropdownRef, panelRef]);
 
@@ -221,23 +209,23 @@ const Header = () => {
   };
   const handleLocalSignOut = () => {
     // Remove cookies
-    Cookies.remove("auth");
-    Cookies.remove("user");
-  
+    Cookies.remove('auth');
+    Cookies.remove('user');
+
     // Dispatch logout action
     dispatch(logout());
-  
+
     // Redirect the user to the login page after logout
-    router.push("/login");
+    router.push('/login');
   };
   const handleLocalSignIn = () => {
-    router.push("/login");
+    router.push('/login');
   };
 
   const handleClick = (userID) => {
-    const token = Cookies.get("auth");
+    const token = Cookies.get('auth');
     if (!token) {
-      showSuccessNotification("Please Login!");
+      showSuccessNotification('Please Login!');
     } else {
       window.location.href = `/user_profile/${userID}`;
     }
@@ -249,22 +237,16 @@ const Header = () => {
       <div
         id="header"
         className={`w-full transition-all duration-300 ${
-          isFixed ? " top-0 left-0 right-0 shadow-md" : "relative"
+          isFixed ? ' top-0 left-0 right-0 shadow-md' : 'relative'
         } max-w-full lg:px-[70px] py-[23px] h-[80px] lg:h-[108px] z-40`}
         style={{
-          backgroundColor: isSpecialPath ? "#FFF" : "#EDA702",
+          backgroundColor: isSpecialPath ? '#FFF' : '#EDA702',
         }}
       >
         <div className="flex justify-between items-center">
           <div className="flex items-center sm:gap-[20px] lg:gap-[60px] lg:ml-[-40px]">
             <Link href="/" className="flex gap-[1rem] items-center pl-0">
-              <Image
-                src="/kuku_logo.svg"
-                width={56}
-                height={61}
-                alt=""
-                className="hidden lg:block"
-              />
+              <Image src="/kuku_logo.svg" width={56} height={61} alt="" className="hidden lg:block" />
               <h1 className="text-black text-[37px] font-bold font-palanquin_dark leading-[44.40px] hidden lg:block">
                 KUKU
               </h1>
@@ -277,31 +259,17 @@ const Header = () => {
               alt=""
               className="pl-2 lg:hidden"
             />
-            <div
-              className={`lg:hidden pl-4 ${
-                isSearchVisible ? "lg:block hidden" : ""
-              }`}
-            >
+            <div className={`lg:hidden pl-4 ${isSearchVisible ? 'lg:block hidden' : ''}`}>
               <Link href="/">
-                <Image
-                  src="/kuku_logo.svg"
-                  width={36}
-                  height={41}
-                  alt=""
-                  className=""
-                />
+                <Image src="/kuku_logo.svg" width={36} height={41} alt="" className="" />
               </Link>
             </div>
 
-            <div
-              className={`lg:flex gap-[30px] items-center hidden ${
-                isSearchVisible ? "lg:hidden xl:flex" : ""
-              }`}
-            >
+            <div className={`lg:flex gap-[30px] items-center hidden ${isSearchVisible ? 'lg:hidden xl:flex' : ''}`}>
               <Link
                 href="#"
                 className={`${
-                  isHome ? "text-[#fefae5]" : "text-black"
+                  isHome ? 'text-[#fefae5]' : 'text-black'
                 } text-base font-bold font-karla leading-tight hover:text-pink-500`}
               >
                 {/* Men */}
@@ -310,7 +278,7 @@ const Header = () => {
               <Link
                 href="#"
                 className={`${
-                  isHome ? "text-[#fefae5]" : "text-black"
+                  isHome ? 'text-[#fefae5]' : 'text-black'
                 } text-base font-bold font-karla leading-tight hover:text-pink-500`}
               >
                 {/* Women */}
@@ -319,7 +287,7 @@ const Header = () => {
               <Link
                 href="#"
                 className={`${
-                  isHome ? "text-[#fefae5]" : "text-black"
+                  isHome ? 'text-[#fefae5]' : 'text-black'
                 } text-base font-bold font-karla leading-tight hover:text-pink-500`}
               >
                 {/* Kids */}
@@ -356,16 +324,8 @@ const Header = () => {
                   }
                 `}</style>
 
-                <div
-                  onClick={toggleSearch}
-                  className="absolute left-6 top-1/2 transform -translate-y-1/2"
-                >
-                  <Image
-                    alt="search icon"
-                    width={24}
-                    height={24}
-                    src="/search_button.svg"
-                  />
+                <div onClick={toggleSearch} className="absolute left-6 top-1/2 transform -translate-y-1/2">
+                  <Image alt="search icon" width={24} height={24} src="/search_button.svg" />
                 </div>
 
                 {suggestions.length > 0 && (
@@ -374,22 +334,12 @@ const Header = () => {
                       <React.Fragment key={index}>
                         <div className="px-4 py-7 cursor-pointer hover:bg-gray-100 font-karla flex justify-between gap-4">
                           <div className="flex gap-4 ">
-                            <Image
-                              width={24}
-                              height={24}
-                              src="/search_button.svg"
-                              alt=""
-                            />
+                            <Image width={24} height={24} src="/search_button.svg" alt="" />
                             <p className="text-[#070707] text-base font-normal font-karla leading-snug tracking-tight">
                               {suggestion}
                             </p>
                           </div>
-                          <Image
-                            width={24}
-                            height={24}
-                            src="/arrow-up-right.svg"
-                            alt=""
-                          />
+                          <Image width={24} height={24} src="/arrow-up-right.svg" alt="" />
                         </div>
 
                         {/* Conditionally render the line */}
@@ -406,20 +356,14 @@ const Header = () => {
                 className="h-10 w-10 lg:h-[54px] lg:w-[54px] flex items-center justify-center bg-[#393939] rounded-full cursor-pointer"
                 onClick={toggleSearch}
               >
-                <Image
-                  alt="search icon"
-                  width={24}
-                  height={24}
-                  src="/search.svg"
-                  className="w-4 h-4 lg:w-6 lg:h-6"
-                />
+                <Image alt="search icon" width={24} height={24} src="/search.svg" className="w-4 h-4 lg:w-6 lg:h-6" />
               </div>
             )}
 
             {!isNotificationDisabled && (
               <div
                 className={`h-10 w-10 lg:h-[54px] lg:w-[54px] flex items-center justify-center bg-white/40 rounded-full cursor-pointer ${
-                  isSearchVisible ? "block" : ""
+                  isSearchVisible ? 'block' : ''
                 }`}
                 onClick={toggleNotifications}
               >
@@ -445,28 +389,23 @@ const Header = () => {
             <Link href="/cart">
               <div
                 className={`${
-                  cartPath ? "bg-[#393939]" : "bg-white/40"
+                  cartPath ? 'bg-[#393939]' : 'bg-white/40'
                 } h-[54px] p-[15px] rounded-[100px] hidden lg:block`}
               >
-                <Image
-                  alt="cart icon"
-                  width={24}
-                  height={24}
-                  src={cartPath ? "/cart_white.svg" : "/cart.svg"}
-                />
+                <Image alt="cart icon" width={24} height={24} src={cartPath ? '/cart_white.svg' : '/cart.svg'} />
               </div>
             </Link>
             <Link href="/wishlist">
               <div
                 className={` h-10 w-10 lg:h-[54px] lg:w-[54px] flex items-center justify-center rounded-full cursor-pointer  ${
-                  wishPath ? "bg-[#393939]" : "bg-white/40"
+                  wishPath ? 'bg-[#393939]' : 'bg-white/40'
                 } ml-[-10px] lg:ml-0`}
               >
                 <Image
                   alt="wishlist icon"
                   width={24}
                   height={24}
-                  src={wishPath ? "/wishlist_white.svg" : "/wishlist.svg"}
+                  src={wishPath ? '/wishlist_white.svg' : '/wishlist.svg'}
                   className="w-5 h-5 lg:w-6 lg:h-6"
                 />
               </div>
@@ -480,30 +419,22 @@ const Header = () => {
             >
               <div
                 className={`${
-                  iconsPath ? "bg-[#393939]" : "bg-white/40"
+                  iconsPath ? 'bg-[#393939]' : 'bg-white/40'
                 } h-[54px] p-[15px] rounded-[100px] hidden lg:block`}
-                style={{ cursor: "pointer" }}
+                style={{ cursor: 'pointer' }}
               >
                 <Image
                   alt="profile icon"
                   width={24}
                   height={24}
-                  src={iconsPath ? "/profile_white.svg" : "/profile_black.svg"}
+                  src={iconsPath ? '/profile_white.svg' : '/profile_black.svg'}
                 />
               </div>
             </Link>
 
             <div ref={dropdownRef} className="relative">
-              <div
-                onClick={toggleDropdown}
-                className="cursor-pointer hidden lg:block"
-              >
-                <Image
-                  alt="dropdown"
-                  width={14}
-                  height={14}
-                  src="/heade_drop_down.svg"
-                />
+              <div onClick={toggleDropdown} className="cursor-pointer hidden lg:block">
+                <Image alt="dropdown" width={14} height={14} src="/heade_drop_down.svg" />
               </div>
 
               {isDropdownVisible && (
@@ -521,9 +452,9 @@ const Header = () => {
                   >
                     <div
                       className={`${
-                        iconsPath ? "bg-[#393939]" : "bg-white/40"
+                        iconsPath ? 'bg-[#393939]' : 'bg-white/40'
                       } px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold`}
-                      style={{ borderRadius: "100px" }}
+                      style={{ borderRadius: '100px' }}
                     >
                       Your Profile
                     </div>
@@ -600,16 +531,11 @@ const Header = () => {
         <BottomNavigation />
         <div
           className={`w-full h-screen bg-yellow-500 lg:hidden fixed  px-[20px] py-[20px] top-[-2px] left-0 right-0 bottom-0 z-[1000] transition-transform ease-in-out duration-300 ${
-            hamburger
-              ? "transform translate-x-0 z-50"
-              : "transform translate-x-full z-0"
+            hamburger ? 'transform translate-x-0 z-50' : 'transform translate-x-full z-0'
           }`}
         >
           <div className="flex px-[24px] mt-[20px] justify-between">
-            <div
-              className="w-[50%] flex items-center gap-1"
-              onClick={handleBack}
-            >
+            <div className="w-[50%] flex items-center gap-1" onClick={handleBack}>
               <Image
                 unoptimized
                 src="/arrow_left.png"
@@ -634,16 +560,8 @@ const Header = () => {
                     value={searchValue}
                     onChange={handleInputChange}
                   />
-                  <div
-                    onClick={toggleSearch}
-                    className="absolute left-4 top-1/2 transform -translate-y-1/2"
-                  >
-                    <Image
-                      alt="search icon"
-                      width={20}
-                      height={20}
-                      src="/search_button.svg"
-                    />
+                  <div onClick={toggleSearch} className="absolute left-4 top-1/2 transform -translate-y-1/2">
+                    <Image alt="search icon" width={20} height={20} src="/search_button.svg" />
                   </div>
 
                   {/* Mobile Search Suggestions */}
@@ -653,22 +571,12 @@ const Header = () => {
                         <React.Fragment key={index}>
                           <div className="px-4 py-3 cursor-pointer hover:bg-gray-100 font-karla flex justify-between gap-4">
                             <div className="flex gap-4">
-                              <Image
-                                width={20}
-                                height={20}
-                                src="/search_button.svg"
-                                alt=""
-                              />
+                              <Image width={20} height={20} src="/search_button.svg" alt="" />
                               <p className="text-[#070707] text-sm font-normal font-karla leading-snug tracking-tight">
                                 {suggestion}
                               </p>
                             </div>
-                            <Image
-                              width={20}
-                              height={20}
-                              src="/arrow-up-right.svg"
-                              alt=""
-                            />
+                            <Image width={20} height={20} src="/arrow-up-right.svg" alt="" />
                           </div>
                           {index !== suggestions.length - 1 && (
                             <div className="w-[95%] mx-auto h-[1px] bg-[#383838]"></div>
@@ -683,24 +591,13 @@ const Header = () => {
                   className="h-10 w-10 flex items-center justify-center bg-[#393939] rounded-full cursor-pointer"
                   onClick={toggleSearch}
                 >
-                  <Image
-                    alt="search icon"
-                    width={24}
-                    height={24}
-                    src="/search.svg"
-                    className="w-4 h-4"
-                  />
+                  <Image alt="search icon" width={24} height={24} src="/search.svg" className="w-4 h-4" />
                 </div>
               )}
 
               <Link href="/">
                 <div onClick={handleBack}>
-                  <Image
-                    src="/kuku_logo.svg"
-                    width={36}
-                    height={41}
-                    alt="img"
-                  />
+                  <Image src="/kuku_logo.svg" width={36} height={41} alt="img" />
                 </div>
               </Link>
             </div>
@@ -730,89 +627,60 @@ const Header = () => {
               <Link
                 href="#"
                 className={`${
-                  isHome ? "text-white" : "text-black"
+                  isHome ? 'text-white' : 'text-black'
                 } text-base font-bold font-karla leading-tight hover:text-pink-500 z-50`}
               >
                 {/* MEN */}
                 {/* <MenDropdown /> */}
-                <MenDropdown
-                  isOpen={currentOpenDropdown === "men"}
-                  onToggle={() => handleToggle("men")}
-                />
+                <MenDropdown isOpen={currentOpenDropdown === 'men'} onToggle={() => handleToggle('men')} />
               </Link>
               <Link
                 href="#"
                 className={`${
-                  isHome ? "text-white" : "text-black"
+                  isHome ? 'text-white' : 'text-black'
                 } text-base font-bold font-karla leading-tight hover:text-pink-500 z-40`}
               >
                 {/* WOMEN */}
                 {/* <WomenDropdown /> */}
-                <WomenDropdown
-                  isOpen={currentOpenDropdown === "women"}
-                  onToggle={() => handleToggle("women")}
-                />
+                <WomenDropdown isOpen={currentOpenDropdown === 'women'} onToggle={() => handleToggle('women')} />
               </Link>
               <Link
                 href="#"
                 className={`${
-                  isHome ? "text-white" : "text-black"
+                  isHome ? 'text-white' : 'text-black'
                 } text-base font-bold font-karla leading-tight hover:text-pink-500 z-30`}
               >
                 {/* KIDS */}
                 {/* <KidsDropdown /> */}
-                <KidsDropdown
-                  isOpen={currentOpenDropdown === "kids"}
-                  onToggle={() => handleToggle("kids")}
-                />
+                <KidsDropdown isOpen={currentOpenDropdown === 'kids'} onToggle={() => handleToggle('kids')} />
               </Link>
               <hr />
-              <SettingsDropdown
-                isOpen={currentOpenDropdown === "setting"}
-                onToggle={() => handleToggle("setting")}
-              />
+              <SettingsDropdown isOpen={currentOpenDropdown === 'setting'} onToggle={() => handleToggle('setting')} />
             </div>
           </div>
           <div className="flex mx-6 mt-5 justify-between">
             <Link href="/cart">
-              <div
-                className={`${
-                  cartPath ? "bg-[#393939]" : "bg-white/40"
-                } h-[54px] p-[15px] rounded-[100px]`}
-              >
-                <Image
-                  alt="cart icon"
-                  width={24}
-                  height={24}
-                  src={cartPath ? "/cart_white.svg" : "/cart.svg"}
-                />
+              <div className={`${cartPath ? 'bg-[#393939]' : 'bg-white/40'} h-[54px] p-[15px] rounded-[100px]`}>
+                <Image alt="cart icon" width={24} height={24} src={cartPath ? '/cart_white.svg' : '/cart.svg'} />
               </div>
             </Link>
             <Link href="/wishlist">
-              <div
-                className={`${
-                  wishPath ? "bg-[#393939]" : "bg-white/40"
-                } h-[54px] p-[15px] rounded-[100px]`}
-              >
+              <div className={`${wishPath ? 'bg-[#393939]' : 'bg-white/40'} h-[54px] p-[15px] rounded-[100px]`}>
                 <Image
                   alt="wishlist icon"
                   width={24}
                   height={24}
-                  src={wishPath ? "/wishlist_white.svg" : "/wishlist.svg"}
+                  src={wishPath ? '/wishlist_white.svg' : '/wishlist.svg'}
                 />
               </div>
             </Link>
             <Link href="/user_profile">
-              <div
-                className={`${
-                  iconsPath ? "bg-[#393939]" : "bg-white/40"
-                } h-[54px] p-[15px]  rounded-[100px]`}
-              >
+              <div className={`${iconsPath ? 'bg-[#393939]' : 'bg-white/40'} h-[54px] p-[15px]  rounded-[100px]`}>
                 <Image
                   alt="profile icon"
                   width={24}
                   height={24}
-                  src={iconsPath ? "/profile_white.svg" : "/profile_black.svg"}
+                  src={iconsPath ? '/profile_white.svg' : '/profile_black.svg'}
                 />
               </div>
             </Link>

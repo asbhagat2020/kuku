@@ -1,42 +1,68 @@
-"use client";
+'use client';
 
-import React, { useState, useEffect } from "react";
-import { X } from "lucide-react";
-import axios from "axios";
-import Cookies from "js-cookie";
+import React, { useState, useEffect } from 'react';
+import { X } from 'lucide-react';
+import axios from 'axios';
+import Cookies from 'js-cookie';
 
-const PickupModal = ({
-  isOpen,
-  onClose,
-  onSave,
-  mode = "add",
-  initialData = null,
-}) => {
+const PickupModal = ({ isOpen, onClose, onSave, mode = 'add', initialData = null }) => {
+  const [productsData, setProductsData] = useState([]);
   const [formData, setFormData] = useState({
-    firstName:"",
-    lastName:"",
-    addressLine1: "",
-    addressLine2:"",
-    phone: "",
-    city: "",
-    country: "",
-    email: "",
+    firstName: '',
+    lastName: '',
+    addressLine1: '',
+    addressLine2: '',
+    phone: '',
+    city: '',
+    country: '',
+    email: '',
   });
 
   useEffect(() => {
-    if (mode === "edit" && initialData) {
+    if (mode === 'edit' && initialData) {
       setFormData({
-        firstName: initialData.firstName || "",
-        lastName: initialData.lastName || "",
-        phone: initialData.phone || "",
-        addressLine1: initialData.addressLine1 || "",
-        addressLine2: initialData.addressLine2 || "",
-        city: initialData.city || "",
-        country: initialData.country || "",
-        email: initialData.email || "",
+        firstName: initialData.firstName || '',
+        lastName: initialData.lastName || '',
+        phone: initialData.phone || '',
+        addressLine1: initialData.addressLine1 || '',
+        addressLine2: initialData.addressLine2 || '',
+        city: initialData.city || '',
+        country: initialData.country || '',
+        email: initialData.email || '',
       });
     }
   }, [initialData, mode]);
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/products`);
+        const datavalue = response.data.products;
+
+        const uniqueSellersMap = new Map();
+
+        datavalue.forEach((data) => {
+          const sellerId = data?.seller?._id;
+          const sellerName = data?.seller?.username;
+
+          if (sellerId && sellerName) {
+            uniqueSellersMap.set(sellerId, {
+              id: sellerId,
+              name: sellerName,
+            });
+          }
+        });
+
+        const uniqueSellers = Array.from(uniqueSellersMap.values());
+        console.log(uniqueSellers, 'unique sellers');
+        setProductsData(uniqueSellers);
+      } catch (error) {
+        console.error('Error fetching products:', error);
+      }
+    }
+
+    fetchData();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -48,18 +74,19 @@ const PickupModal = ({
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (mode === "add") {
+    if (mode === 'add') {
       addAddress();
-    } else if (mode === "edit") {
+    } else if (mode === 'edit') {
       editAddress();
     }
   };
 
   const addAddress = async () => {
     try {
-      const token = JSON.parse(Cookies.get("auth"));
-      const apiUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/address/add`;
+      const token = JSON.parse(Cookies.get('auth'));
+      const apiUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/pickup/address`;
 
+      console.log(formData, 'formdata');
       const response = await axios.post(apiUrl, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -67,21 +94,22 @@ const PickupModal = ({
       });
 
       if (response.status === 201) {
-        console.log("Address added successfully");
+        console.log('Address added successfully');
         onSave(response.data.address); // Notify parent component with the new address
         onClose();
         resetForm();
       } else {
-        console.error("Failed to add address");
+        console.error('Failed to add address');
       }
     } catch (error) {
-      console.error("An error occurred while adding the address:", error);
+      console.error('An error occurred while adding the address:', error);
     }
   };
 
   const editAddress = async () => {
+    console.log(initialData._id, 'kkkk');
     try {
-      const token = JSON.parse(Cookies.get("auth"));
+      const token = JSON.parse(Cookies.get('auth'));
       const apiUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/pickup/edit/${initialData._id}`;
 
       const response = await axios.put(apiUrl, formData, {
@@ -91,28 +119,28 @@ const PickupModal = ({
       });
 
       if (response.status === 200) {
-        console.log("Address updated successfully");
+        console.log('Address updated successfully');
         onSave(response.data.address); // Notify parent component with the updated address
         onClose();
         resetForm();
       } else {
-        console.error("Failed to update address");
+        console.error('Failed to update address');
       }
     } catch (error) {
-      console.error("An error occurred while updating the address:", error);
+      console.error('An error occurred while updating the address:', error);
     }
   };
 
   const resetForm = () => {
     setFormData({
-        firstName:"",
-        lastName:"",
-        addressLine1: "",
-        addressLine2:"",
-        phone: "",
-        city: "",
-        country: "",
-        email: "",
+      firstName: '',
+      lastName: '',
+      addressLine1: '',
+      addressLine2: '',
+      phone: '',
+      city: '',
+      country: '',
+      email: '',
     });
   };
 
@@ -124,9 +152,7 @@ const PickupModal = ({
         {/* Header */}
         <div className="px-8 py-6 border-b border-gray-100">
           <div className="flex justify-between items-center">
-            <h2 className="text-3xl font-luckiest">
-              {mode === "add" ? "ADD NEW ADDRESS" : "EDIT ADDRESS"}
-            </h2>
+            <h2 className="text-3xl font-luckiest">{mode === 'add' ? 'ADD NEW ADDRESS' : 'EDIT ADDRESS'}</h2>
             <button
               onClick={onClose}
               className="w-8 h-8 rounded-full flex items-center justify-center border border-black hover:bg-gray-100"
@@ -141,9 +167,7 @@ const PickupModal = ({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {/* Full Name */}
             <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">
-                Enter First Name
-              </label>
+              <label className="block text-sm font-medium text-gray-700">Enter First Name</label>
               <input
                 type="text"
                 name="firstName"
@@ -156,9 +180,7 @@ const PickupModal = ({
             </div>
 
             <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">
-                Enter Last Name
-              </label>
+              <label className="block text-sm font-medium text-gray-700">Enter Last Name</label>
               <input
                 type="text"
                 name="lastName"
@@ -172,9 +194,7 @@ const PickupModal = ({
 
             {/* Phone Number */}
             <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">
-                Phone Number
-              </label>
+              <label className="block text-sm font-medium text-gray-700">Phone Number</label>
               <input
                 type="tel"
                 name="phone"
@@ -188,9 +208,7 @@ const PickupModal = ({
 
             {/* Address 1 */}
             <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">
-              Address1
-              </label>
+              <label className="block text-sm font-medium text-gray-700">Address1</label>
               <input
                 type="text"
                 name="addressLine1"
@@ -202,9 +220,7 @@ const PickupModal = ({
               />
             </div>
             <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">
-              Address2
-              </label>
+              <label className="block text-sm font-medium text-gray-700">Address2</label>
               <input
                 type="text"
                 name="addressLine2"
@@ -218,9 +234,7 @@ const PickupModal = ({
 
             {/* Address 2 */}
             <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">
-                City
-              </label>
+              <label className="block text-sm font-medium text-gray-700">City</label>
               <input
                 type="text"
                 name="city"
@@ -230,11 +244,9 @@ const PickupModal = ({
                 className="w-full h-20 px-4 bg-gray-50 rounded-2xl focus:outline-none focus:ring-2 focus:ring-yellow-500"
               />
             </div>
-           
+
             <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">
-                Country
-              </label>
+              <label className="block text-sm font-medium text-gray-700">Country</label>
               <input
                 type="text"
                 name="country"
@@ -245,9 +257,7 @@ const PickupModal = ({
               />
             </div>
             <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">
-                Email
-              </label>
+              <label className="block text-sm font-medium text-gray-700">Email</label>
               <input
                 type="text"
                 name="email"
@@ -256,6 +266,23 @@ const PickupModal = ({
                 placeholder="Enter email"
                 className="w-full h-20 px-4 bg-gray-50 rounded-2xl focus:outline-none focus:ring-2 focus:ring-yellow-500"
               />
+            </div>
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">Select Seller</label>
+              <select
+                name="seller"
+                value={formData.seller}
+                onChange={handleChange}
+                className="w-full h-12 px-4 bg-gray-50 rounded-2xl focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                required
+              >
+                <option value="">Select Seller</option>
+                {productsData?.map((product) => (
+                  <option key={product.id} value={product.id}>
+                    {product.name}
+                  </option>
+                ))}
+              </select>
             </div>
           </div>
 

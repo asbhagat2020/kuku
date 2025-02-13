@@ -13,7 +13,7 @@ import { showSuccessNotification } from "@/utils/Notification/notif";
 import AddressList from "@/components/userProfile/AddressList";
 import CartAddress from "@/components/userProfile/CartAddress";
 
-export default function Cart() {
+export default function Cart () {
   const [isCouponPopupVisible, setIsCouponPopupVisible] = useState(false);
   const [appliedCoupon, setAppliedCoupon] = useState("");
   const [isCouponApplied, setisCouponApplied] = useState(false);
@@ -32,7 +32,6 @@ export default function Cart() {
   const cartItems = useSelector((state) => state.cart.items);
   const { token } = useSelector((store) => store.auth);
   const router = useRouter();
-
   // Handle select all functionality
   const handleSelectAll = (checked) => {
     setSelectAll(checked);
@@ -55,7 +54,7 @@ export default function Cart() {
   // Calculate totals based on selected items
   const calculateTotals = (selected) => {
     const total = cart.reduce((sum, item) => {
-      if (selected[item._id]) {
+      if(selected[item._id]) {
         return sum + (item.price || 0);
       }
       return sum;
@@ -82,7 +81,7 @@ export default function Cart() {
       console.log("Selected Products for Order:", selectedProducts);
 
       // Only proceed if there are selected items
-      if (selectedProducts.length === 0) {
+      if(selectedProducts.length === 0) {
         setErrorMessage("Please select at least one item to checkout");
         setErrorPopupOpen(true);
         return;
@@ -111,14 +110,14 @@ export default function Cart() {
         }
       );
       console.log(response.data);
-      if (response.status === 201) {
+      if(response.status === 201) {
         // Order created successfully
         setCart(response.data.updatedCart);
         showSuccessNotification("Order placed successfully");
       } else {
         throw new Error(response.data.message || "Failed to create order");
       }
-    } catch (error) {
+    } catch(error) {
       setErrorMessage(
         error.response?.data?.message || "Failed to process checkout"
       );
@@ -148,7 +147,7 @@ export default function Cart() {
       delete newSelectedItems[id];
       setSelectedItems(newSelectedItems);
       calculateTotals(newSelectedItems);
-    } catch (err) {
+    } catch(err) {
       setError("Failed to remove item from cart");
       setErrorMessage("Failed to remove item from cart");
       setErrorPopupOpen(true);
@@ -180,16 +179,16 @@ export default function Cart() {
 
   const handleApplyCoupon = (couponCode) => {
     const coupon = coupons.find((c) => c.code === couponCode);
-    if (coupon) {
+    if(coupon) {
       setAppliedCoupon(couponCode);
       setIsCouponPopupVisible(false);
       setisCouponApplied(true);
 
-      if (coupon.type === "percentage") {
+      if(coupon.type === "percentage") {
         setDiscount((subtotal * coupon.value) / 100);
-      } else if (coupon.type === "flat") {
+      } else if(coupon.type === "flat") {
         setDiscount(coupon.value);
-      } else if (coupon.type === "freeShipping") {
+      } else if(coupon.type === "freeShipping") {
         setDiscount(0);
       }
     }
@@ -212,7 +211,7 @@ export default function Cart() {
         initialSelected[item._id] = false;
       });
       setSelectedItems(initialSelected);
-    } catch (err) {
+    } catch(err) {
       setError("Failed to fetch cart details");
       setErrorMessage("Failed to fetch cart details");
       setErrorPopupOpen(true);
@@ -232,23 +231,27 @@ export default function Cart() {
         }
       );
 
-      if (response.status === 201) {
+      if(response.status === 201) {
         router.push("/wishlist");
       } else {
         setErrorMessage(`Failed to add to wishlist: ${response.data.message}`);
         setErrorPopupOpen(true);
       }
-    } catch (error) {
+    } catch(error) {
       setErrorMessage(error.response?.data?.message || error.message);
       setErrorPopupOpen(true);
     }
   };
 
+  // useEffect(() => {
+  //   if(token) {
+  //     fetchCartDetails();
+  //   }
+  // }, [token]);
   useEffect(() => {
-    if (token) {
-      fetchCartDetails();
-    }
-  }, [token]);
+    fetchCartDetails();
+
+  }, [])
 
   // Get selected items count
   const selectedCount = Object.values(selectedItems).filter(Boolean).length;
