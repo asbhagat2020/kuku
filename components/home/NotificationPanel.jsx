@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import Cookies from "js-cookie";
 import axios from "axios";
 import Image from "next/image";
+import { useDispatch, useSelector } from "react-redux";
 
 const NotificationPanel = ({ notifications, offers, onClose }) => {
   const [activeTab, setActiveTab] = useState("notifications");
@@ -11,6 +12,10 @@ const NotificationPanel = ({ notifications, offers, onClose }) => {
   const [data, setData] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
+  
+  const details = useSelector((state) => state.auth.user);
+  const id = details?._id;
+  console.log(id,"hhhh")
 
   const toggleTab = (tab) => setActiveTab(tab);
 
@@ -35,7 +40,7 @@ const NotificationPanel = ({ notifications, offers, onClose }) => {
       const token = JSON.parse(Cookies.get("auth"));
       const response = await axios.patch(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/offer/reject/${id}`,
-        {},
+        {_id:id},
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -57,6 +62,7 @@ const NotificationPanel = ({ notifications, offers, onClose }) => {
       );
     }
   };
+  console.log(data,"ooo")
 
   const closeAcceptPopup = async (id) => {
     try {

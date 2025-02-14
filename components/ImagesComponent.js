@@ -211,6 +211,8 @@ export const ImagesComponent = () => {
   const details = useSelector((state) => state.auth.user);
   const userID = details?._id;
 
+  const token = Cookies.get("auth") ? JSON.parse(Cookies.get("auth")) : null; 
+
   useEffect(() => {
     console.log('kjjwkehfkjwekfj')
     fetchProducts();
@@ -388,7 +390,7 @@ export const ImagesComponent = () => {
       setLoading(false);
     }
   };
-
+console.log(data,"ssssssss");
   return (
     <div className="p-6 ml-8 h-auto w-auto font-karla z-10">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -462,12 +464,20 @@ export const ImagesComponent = () => {
 
               {/* Buy Now button and handshake icon - fixed position */}
               <div className="absolute w-full bottom-4 flex justify-evenly items-center px-4">
-                <Link href={`/selling-page/${card._id}`} className="w-[70%]">
-                  <button className="w-full p-2 py-[15px] sm:px-10 bg-custom-yellow text-black rounded-2xl font-bold mr-1">
-                    Buy Now
-                  </button>
-                </Link>
-
+              {token ? (
+  <Link href={`/selling-page/${card._id}`} className="w-[70%]">
+    <button className="w-full p-2 py-[15px] sm:px-10 bg-custom-yellow text-black rounded-2xl font-bold mr-1">
+      Buy Now
+    </button>
+  </Link>
+) : (
+  <button
+    className="w-full p-2 py-[15px] sm:px-10 bg-custom-yellow text-black  rounded-2xl font-bold mr-1 cursor-not-allowed"
+    onClick={() => alert("You need to log in to proceed!")}
+  >
+    Buy Now
+  </button>
+)}
                 <div className="h-12 w-12 flex items-center justify-center bg-white rounded-full">
                   <Image
                     unoptimized

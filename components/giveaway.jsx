@@ -167,7 +167,7 @@ const Giveaway = () => {
           'Content-Type': 'application/json',
         },
       });
-      console.log(response, 'llllllllll');
+    
       if (response.status === 201) {
         showSuccessNotification('Giveaway Created successfully');
       } else {
