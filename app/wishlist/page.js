@@ -5,28 +5,28 @@ import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import DownloadKuku from "@/components/home/DownloadKuku";
 import { useRouter } from "next/navigation";
-import {useState, useEffect} from "react";
+import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import Cookies from 'js-cookie';
 
-export default function Wishlist() {
-   const[wishlist, setWishlist] =useState(null);
-     const [loading, setLoading] = useState(null);
-     const [error, setError] = useState(null);
-     const [errorPopupOpen, setErrorPopupOpen] = useState(false);
+export default function Wishlist () {
+  const [wishlist, setWishlist] = useState(null);
+  const [loading, setLoading] = useState(null);
+  const [error, setError] = useState(null);
+  const [errorPopupOpen, setErrorPopupOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
-  const token = useSelector((store)=>store.auth.token)
+  const token = useSelector((store) => store.auth.token)
 
-const router = useRouter()
+  const router = useRouter()
   // useEffect(() => {
   //   if (!token) {
   //     router.push("/");
   //   }
   // }, [token]);
 
-  const handleRemove = async(id) => {
+  const handleRemove = async (id) => {
     try {
       const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/product/wishlist/${id}`;
 
@@ -37,49 +37,49 @@ const router = useRouter()
       });
       setWishlist(response.data.wishlist);
       console.log(response.data, "Wish Data");
-    
-     
-    } catch (err) {
+
+
+    } catch(err) {
       setError("Failed to fetch Wishlist details");
     } finally {
       setLoading(false);
     }
   };
 
-  const handleAddToCart = async(id) =>{
+  const handleAddToCart = async (id) => {
     try {
 
       const token = JSON.parse(Cookies.get('auth'));
 
-     
-     // Make the POST request to your API
-     const response = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/product/add/cart/${id}`, 
-       {},
-       {
-         headers: {
-           Authorization: `Bearer ${token}`,
-         },
-       } // or any other data you need to send
-     );
-  
-     if (response.status === 201) {
-       // If the request is successful, dispatch the action to add to cart
-     
- 
-       // Navigate to the cart page
-       router.push('/cart');
-     } else {
-       // Handle the case where the request is not successful
-       console.error('Failed to add product to wishlist:', response.statusText);
-       setErrorMessage(`Failed to submit offer: ${response.data.message}`);
-       setErrorPopupOpen(true);
-     }
-   } catch (error) {
-     // Handle any errors that occur during the request
-     console.error('An error occurred while adding product to wishlist:', error);
-     setErrorMessage(` ${error.response?.data?.message || error.message}`);
-     setErrorPopupOpen(true);
-   }
+
+      // Make the POST request to your API
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/product/add/cart/${id}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        } // or any other data you need to send
+      );
+
+      if(response.status === 201) {
+        // If the request is successful, dispatch the action to add to cart
+
+
+        // Navigate to the cart page
+        router.push('/cart');
+      } else {
+        // Handle the case where the request is not successful
+        console.error('Failed to add product to wishlist:', response.statusText);
+        setErrorMessage(`Failed to submit offer: ${response.data.message}`);
+        setErrorPopupOpen(true);
+      }
+    } catch(error) {
+      // Handle any errors that occur during the request
+      console.error('An error occurred while adding product to wishlist:', error);
+      setErrorMessage(` ${error.response?.data?.message || error.message}`);
+      setErrorPopupOpen(true);
+    }
   }
 
   const fetchWishlist = async () => {
@@ -91,8 +91,8 @@ const router = useRouter()
         },
       });
       setWishlist(response.data.wishlist);
-      
-    } catch (err) {
+
+    } catch(err) {
       setError("Failed to fetch product details");
     } finally {
       setLoading(false);
@@ -100,9 +100,9 @@ const router = useRouter()
   };
 
   useEffect(() => {
-    
+
     fetchWishlist();
-    
+
   }, []);
 
   return (
@@ -123,7 +123,7 @@ const router = useRouter()
                   src={item?.images[0]}
                   alt="Product"
                 />
-  
+
                 {/* Product Info */}
                 <div className="flex flex-col justify-start items-start gap-3 flex-grow">
                   {/* Product Title and Description */}
@@ -135,7 +135,7 @@ const router = useRouter()
                       {item?.description}
                     </div>
                   </div>
-  
+
                   {/* Size and Condition */}
                   <div className="flex justify-start items-center gap-4">
                     {/* Size */}
@@ -144,12 +144,12 @@ const router = useRouter()
                         SIZE
                       </div>
                       <div className="py-2 border border-[#e4086f] flex justify-center items-center min-w-[28.8px] min-h-[28.8px] px-3">
-  <div className="text-[#e4086f] text-[14px] md:text-[16px] font-normal font-karla">
-    {item?.size}
-  </div>
-</div>
+                        <div className="text-[#e4086f] text-[14px] md:text-[16px] font-normal font-karla">
+                          {item?.size}
+                        </div>
+                      </div>
                     </div>
-  
+
                     {/* Condition */}
                     <div className="flex justify-start items-center gap-3">
                       <span className="text-[#383838] text-[14px] md:text-[16px] font-bold font-karla leading-normal">
@@ -160,30 +160,30 @@ const router = useRouter()
                       </span>
                     </div>
                   </div>
-  
+
                   {/* Action Buttons */}
                   <div className="flex flex-col md:flex-row justify-start mt-1 items-start gap-4">
                     {/* <Link href="/selling-page"> */}
-                      <button 
+                    <button
                       onClick={() => handleRemove(item._id)}
                       className="w-[160px] md:w-[200px] h-[45px] md:h-[50px] rounded-[14px] hover:border-white hover:text-white hover:bg-[#e4086f] text-black border-2 border-[#0f0f0f] justify-center items-center gap-[8.8px] inline-flex">
-                        <span className="text-[12px] md:text-[14px] font-bold font-karla uppercase leading-snug">
-                          Remove
-                        </span>
-                      </button>
+                      <span className="text-[12px] md:text-[14px] font-bold font-karla uppercase leading-snug">
+                        Remove
+                      </span>
+                    </button>
                     {/* </Link> */}
                     {/* <Link href="/cart"> */}
-                      <button 
-                       onClick={() =>handleAddToCart(item._id)}
+                    <button
+                      onClick={() => handleAddToCart(item._id)}
                       className="w-[160px] md:w-[200px] h-[45px] md:h-[50px] rounded-[14px] hover:border-white hover:text-white text-black border-2 border-[#0f0f0f] justify-center items-center gap-[8.8px] inline-flex hover:bg-[#fde504]">
-                        <span className="text-[12px] md:text-[14px] font-bold font-karla uppercase leading-snug">
-                          Add To Bag
-                        </span>
-                      </button>
+                      <span className="text-[12px] md:text-[14px] font-bold font-karla uppercase leading-snug">
+                        Add To Bag
+                      </span>
+                    </button>
                     {/* </Link> */}
                   </div>
                 </div>
-  
+
                 {/* Price and Discount */}
                 <div className="flex flex-col justify-start items-start gap-2">
                   <div className="flex justify-start items-center gap-2">
@@ -203,27 +203,27 @@ const router = useRouter()
           ) : (
             <div>No items in your wishlist</div>
           )}
-           {errorPopupOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="bg-white rounded-lg shadow-lg p-6 w-11/12 max-w-md">
-            <p className="text-red-600 font-semibold text-center">
-              {errorMessage}
-            </p>
-            <button
-              onClick={() => setErrorPopupOpen(false)}
-              className="mt-4 w-full bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded transition"
-            >
-              Close
-            </button>
-          </div>
-        </div>
-      )}
+          {errorPopupOpen && (
+            <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+              <div className="bg-white rounded-lg shadow-lg p-6 w-11/12 max-w-md">
+                <p className="text-red-600 font-semibold text-center">
+                  {errorMessage}
+                </p>
+                <button
+                  onClick={() => setErrorPopupOpen(false)}
+                  className="mt-4 w-full bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded transition"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </div>
       <DownloadKuku />
       <Footer />
     </>
   );
-  
-  
+
+
 }

@@ -8,7 +8,7 @@ const wishlistSlice = createSlice({
   reducers: {
     toggleWishlist: (state, action) => {
       const productId = action.payload;
-      if (state.items.includes(productId)) {
+      if(state.items.includes(productId)) {
         state.items = state.items.filter((id) => id !== productId);
       } else {
         state.items.push(productId);
@@ -18,5 +18,4 @@ const wishlistSlice = createSlice({
 });
 
 export const { toggleWishlist } = wishlistSlice.actions;
-
 export default wishlistSlice.reducer;

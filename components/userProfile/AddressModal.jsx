@@ -1,41 +1,35 @@
-"use client";
+'use client';
 
-import React, { useState, useEffect } from "react";
-import { X } from "lucide-react";
-import axios from "axios";
-import Cookies from "js-cookie";
+import React, { useState, useEffect } from 'react';
+import { X } from 'lucide-react';
+import axios from 'axios';
+import Cookies from 'js-cookie';
 
-const AddressModal = ({
-  isOpen,
-  onClose,
-  onSave,
-  mode = "add",
-  initialData = null,
-}) => {
+const AddressModal = ({ isOpen, onClose, onSave, mode = 'add', initialData = null }) => {
   const [formData, setFormData] = useState({
-    addressName: "",
-    phoneNumber: "",
-    apartmentName: "",
-    apartmentDetails: "",
-    street: "",
-    city: "",
-    state: "",
-    country: "",
-    postalCode: "",
+    addressName: '',
+    phoneNumber: '',
+    apartmentName: '',
+    apartmentDetails: '',
+    street: '',
+    city: '',
+    state: '',
+    country: '',
+    postalCode: '',
   });
 
   useEffect(() => {
-    if (mode === "edit" && initialData) {
+    if (mode === 'edit' && initialData) {
       setFormData({
-        addressName: initialData.addressName || "",
-        phoneNumber: initialData.phoneNumber || "",
-        apartmentName: initialData.apartmentName || "",
-        apartmentDetails: initialData.apartmentDetails || "",
-        street: initialData.street || "",
-        city: initialData.city || "",
-        state: initialData.state || "",
-        country: initialData.country || "",
-        postalCode: initialData.postalCode || "",
+        addressName: initialData.addressName || '',
+        phoneNumber: initialData.phoneNumber || '',
+        apartmentName: initialData.apartmentName || '',
+        apartmentDetails: initialData.apartmentDetails || '',
+        street: initialData.street || '',
+        city: initialData.city || '',
+        state: initialData.state || '',
+        country: initialData.country || '',
+        postalCode: initialData.postalCode || '',
       });
     }
   }, [initialData, mode]);
@@ -50,16 +44,16 @@ const AddressModal = ({
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (mode === "add") {
+    if (mode === 'add') {
       addAddress();
-    } else if (mode === "edit") {
+    } else if (mode === 'edit') {
       editAddress();
     }
   };
 
   const addAddress = async () => {
     try {
-      const token = JSON.parse(Cookies.get("auth"));
+      const token = JSON.parse(Cookies.get('auth'));
       const apiUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/address/add`;
 
       const response = await axios.post(apiUrl, formData, {
@@ -69,21 +63,21 @@ const AddressModal = ({
       });
 
       if (response.status === 201) {
-        console.log("Address added successfully");
+        console.log('Address added successfully');
         onSave(response.data.address);
         onClose();
         resetForm();
       } else {
-        console.error("Failed to add address");
+        console.error('Failed to add address');
       }
     } catch (error) {
-      console.error("An error occurred while adding the address:", error);
+      console.error('An error occurred while adding the address:', error);
     }
   };
 
   const editAddress = async () => {
     try {
-      const token = JSON.parse(Cookies.get("auth"));
+      const token = JSON.parse(Cookies.get('auth'));
       const apiUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/address/edit/${initialData._id}`;
 
       const response = await axios.put(apiUrl, formData, {
@@ -93,29 +87,29 @@ const AddressModal = ({
       });
 
       if (response.status === 200) {
-        console.log("Address updated successfully");
+        console.log('Address updated successfully');
         onSave(response.data.address);
         onClose();
         resetForm();
       } else {
-        console.error("Failed to update address");
+        console.error('Failed to update address');
       }
     } catch (error) {
-      console.error("An error occurred while updating the address:", error);
+      console.error('An error occurred while updating the address:', error);
     }
   };
 
   const resetForm = () => {
     setFormData({
-      addressName: "",
-      phoneNumber: "",
-      apartmentName: "",
-      apartmentDetails: "",
-      street: "",
-      city: "",
-      state: "",
-      country: "",
-      postalCode: "",
+      addressName: '',
+      phoneNumber: '',
+      apartmentName: '',
+      apartmentDetails: '',
+      street: '',
+      city: '',
+      state: '',
+      country: '',
+      postalCode: '',
     });
   };
 
@@ -126,9 +120,7 @@ const AddressModal = ({
       <div className="bg-white rounded-lg w-full max-w-2xl mx-4 overflow-y-auto max-h-[90vh] relative">
         <div className="px-8 py-6 border-b border-gray-100">
           <div className="flex justify-between items-center">
-            <h2 className="text-3xl font-luckiest">
-              {mode === "add" ? "ADD NEW ADDRESS" : "EDIT ADDRESS"}
-            </h2>
+            <h2 className="text-3xl font-luckiest">{mode === 'add' ? 'ADD NEW ADDRESS' : 'EDIT ADDRESS'}</h2>
             <button
               onClick={onClose}
               className="w-8 h-8 rounded-full flex items-center justify-center border border-black hover:bg-gray-100"
@@ -141,9 +133,7 @@ const AddressModal = ({
         <form onSubmit={handleSubmit} className="p-8 space-y-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">
-                Enter Full Name
-              </label>
+              <label className="block text-sm font-medium text-gray-700">Enter Full Name</label>
               <input
                 type="text"
                 name="addressName"
@@ -156,9 +146,7 @@ const AddressModal = ({
             </div>
 
             <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">
-                Phone Number
-              </label>
+              <label className="block text-sm font-medium text-gray-700">Phone Number</label>
               <input
                 type="tel"
                 name="phoneNumber"
@@ -171,9 +159,7 @@ const AddressModal = ({
             </div>
 
             <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">
-                Apartment Name
-              </label>
+              <label className="block text-sm font-medium text-gray-700">Apartment Name</label>
               <input
                 type="text"
                 name="apartmentName"
@@ -186,9 +172,7 @@ const AddressModal = ({
             </div>
 
             <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">
-                Apartment Details
-              </label>
+              <label className="block text-sm font-medium text-gray-700">Apartment Details</label>
               <input
                 type="text"
                 name="apartmentDetails"
@@ -201,9 +185,7 @@ const AddressModal = ({
             </div>
 
             <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">
-                Street
-              </label>
+              <label className="block text-sm font-medium text-gray-700">Street</label>
               <input
                 type="text"
                 name="street"
@@ -216,9 +198,7 @@ const AddressModal = ({
             </div>
 
             <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">
-                City
-              </label>
+              <label className="block text-sm font-medium text-gray-700">City</label>
               <input
                 type="text"
                 name="city"
@@ -231,9 +211,7 @@ const AddressModal = ({
             </div>
 
             <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">
-                State
-              </label>
+              <label className="block text-sm font-medium text-gray-700">State</label>
               <input
                 type="text"
                 name="state"
@@ -246,9 +224,7 @@ const AddressModal = ({
             </div>
 
             <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">
-                Country
-              </label>
+              <label className="block text-sm font-medium text-gray-700">Country</label>
               <input
                 type="text"
                 name="country"
@@ -261,9 +237,7 @@ const AddressModal = ({
             </div>
 
             <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">
-                Postal Code
-              </label>
+              <label className="block text-sm font-medium text-gray-700">Postal Code</label>
               <input
                 type="text"
                 name="postalCode"
