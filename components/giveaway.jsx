@@ -9,6 +9,7 @@ import giftboxAnimation from '../public/lottieFiles/giftbox.json';
 import homeAnimation from '../public/lottieFiles/kukuhomenew.json';
 import axios from 'axios';
 import Cookies from 'js-cookie';
+import { showSuccessNotification } from '@/utils/Notification/notif';
 
 const AddressSelection = ({ addresses, selectedAddress, onSelect, onAddNew }) => {
   return (
@@ -56,6 +57,8 @@ const Giveaway = () => {
     city: '',
     country: '',
     weight: '',
+    items: [],
+    category: '',
   });
   const [formErrors, setFormErrors] = useState({});
   const [sampleAddresses, setSampleAddresses] = useState([]);
@@ -137,36 +140,43 @@ const Giveaway = () => {
     }
   };
 
-  const handleFinalScreen = () => {
+  const handleFinalScreen = async () => {
     setShowFinalScreen(true);
     const finalData = {
-      step1: {},
-      step2: {
-        firstName: formData.firstName,
-        lastName: formData.lastName,
-        email: formData.email,
-        phone: formData.phone,
-      },
-      step3: {
-        address: selectedAddress
-          ? {
-              addressLine1: selectedAddress.addressLine1,
-              addressLine2: selectedAddress.addressLine2,
-              city: selectedAddress.city,
-              country: selectedAddress.country,
-            }
-          : {
-              addressLine1: formData.addressLine1,
-              addressLine2: formData.addressLine2,
-              city: formData.city,
-              country: formData.country,
-            },
-        pickTime: formData.pickTime,
-        weight: formData.weight,
-      },
-    };
+      firstName: formData.firstName,
+      lastName: formData.lastName,
+      email: formData.email,
+      phone: formData.phone,
 
-    console.log('Final Form Data:', finalData);
+      address: selectedAddress
+        ? `${selectedAddress.addressLine1}, ${selectedAddress.addressLine2}, ${selectedAddress.city}, ${selectedAddress.country}`
+        : `${formData.addressLine1}, ${formData.addressLine2}, ${formData.city}, ${formData.country}`,
+
+      pickupTime: formData.pickTime,
+      numberOfItems: formData.weight,
+      items: formData.items,
+      category: formData.category,
+    };
+    try {
+      console.log(finalData, 'finaldata');
+      const token = JSON.parse(Cookies.get('auth'));
+
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/giveaways/giveaways`, finalData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+      console.log(response, 'llllllllll');
+      if (response.status === 201) {
+        showSuccessNotification('Giveaway Created successfully');
+      } else {
+        throw new Error(response.data.message || 'Failed to create order');
+      }
+    } catch (error) {
+      console.log(error, 'failed to create an giveaway');
+    }
+    // console.log('Final Form Data:', finalData);
   };
 
   const handleFinalScreenClick = () => {
@@ -184,6 +194,8 @@ const Giveaway = () => {
       addressLine2: '',
       city: '',
       country: '',
+      items: [],
+      category: '',
     });
   };
 
@@ -202,6 +214,16 @@ const Giveaway = () => {
     }
   };
 
+  const handleItemsChange = (e) => {
+    const { value } = e.target;
+
+    setFormData((prev) => ({
+      ...prev,
+      items: prev.items.includes(value)
+        ? prev.items.filter((item) => item !== value) // Remove if already selected
+        : [...prev.items, value], // Add new item
+    }));
+  };
   const renderStepContent = () => {
     switch (currentStep) {
       case 1:
@@ -426,6 +448,64 @@ const Giveaway = () => {
                   onChange={handleInputChange}
                   className="w-full h-[50px] border-2 rounded-lg px-5 mt-2 sm:mt-5 font-karla"
                 />
+              </div>
+            </div>
+            <div className="flex flex-wrap sm:flex-nowrap gap-6 mt-6">
+              <div className="flex-1 flex flex-col">
+                <p className="text-[#151515] text-sm sm:text-base font-bold font-karla">Items</p>
+                <select
+                  name="items"
+                  onChange={handleItemsChange}
+                  className="w-full h-[50px] border-2 rounded-lg px-5 mt-2 sm:mt-5 font-karla"
+                >
+                  <option value="">Select Item</option>
+                  <option value="cloths">Clothes</option>
+                  <option value="curtain">Curtains</option>
+                  <option value="bedsheet">Bedsheets</option>
+                </select>
+
+                {/* Display Selected Items */}
+                {formData.items.length > 0 && (
+                  <div className="mt-3">
+                    <p className="text-sm font-karla font-bold">Selected Items:</p>
+                    <div className="flex flex-wrap gap-2 mt-1">
+                      {formData.items.map((item) => (
+                        <span key={item} className="bg-gray-200 text-sm px-3 py-1 rounded-lg flex items-center gap-2">
+                          {item}
+                          <button
+                            onClick={() =>
+                              setFormData((prev) => ({
+                                ...prev,
+                                items: prev.items.filter((i) => i !== item),
+                              }))
+                            }
+                            className="text-red-500 font-bold ml-2"
+                          >
+                            ✕
+                          </button>
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              <div className="flex-1 flex flex-col">
+                <p className="text-[#151515] text-sm sm:text-base font-bold font-karla">Category</p>
+                <select
+                  name="category"
+                  value={formData.category}
+                  onChange={handleInputChange}
+                  className={`w-full h-[50px] border-2 rounded-lg px-5 mt-2 sm:mt-5 font-karla ${
+                    formErrors.category ? 'border-red-500' : ''
+                  }`}
+                >
+                  <option value="">Select Category</option>
+                  <option value="Reusable">Reusable</option>
+                  <option value="Repurposeable">Repurposeable</option>
+                  <option value="Recyclable">Recyclable</option>
+                </select>
+                {formErrors.category && <p className="text-red-500 text-sm mt-1">{formErrors.category}</p>}
               </div>
             </div>
             <div className="flex flex-col sm:flex-row sm:justify-end gap-4 my-8 sm:my-[36px]">
