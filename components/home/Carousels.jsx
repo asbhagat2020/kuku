@@ -22,14 +22,41 @@ const Carousels = () => {
   const sliderRef = useRef(null);
   const [progress, setProgress] = useState(0);
   const [likedCards, setLikedCards] = useState({});
-  const [product,setProduct]=useState([])
-  const [loading,setLoading]=useState(false)
+  const [product, setProduct] = useState([]);
+  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const wishlist = useSelector((state) => state.wishlist.items);
   const details = useSelector((state) => state.auth.user);
+  const [errorPopupOpen, setErrorPopupOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const userID = details?._id;
-  const handleLikeClick = (cardId) => {
-    dispatch(toggleWishlist(cardId));
+  // const handleLikeClick = (cardId) => {
+  //   dispatch(toggleWishlist(cardId));
+  // };
+
+  const handleLikeClick = async (id) => {
+    try {
+      const token = JSON.parse(Cookies.get("auth"));
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/product/wishlist/${id}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.status === 201) {
+        router.push("/wishlist");
+      } else {
+        setErrorMessage(`Failed to add to wishlist: ${response.data.message}`);
+        setErrorPopupOpen(true);
+      }
+    } catch (error) {
+      setErrorMessage(error.response?.data?.message || error.message);
+      setErrorPopupOpen(true);
+    }
   };
   const handleOpenOfferPopup = () => {
     setIsOfferPopupOpen(true);
@@ -44,7 +71,6 @@ const Carousels = () => {
     setOfferSubmitted(true);
     handleCloseOfferPopup();
   };
-
 
   // const handleLikeClick = (cardId) => {
   //   setLikedCards((prevLikedCards) => ({
@@ -187,13 +213,13 @@ const Carousels = () => {
 
       setProduct(datavalue || []);
     } catch (error) {
-      toast.error(error)
+      toast.error(error);
     }
   };
-  useEffect(()=>{
-    fetchProducts()
-  },[])
-console.log(product)
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+  console.log(product);
   // Main slider settings
   const settings = {
     dots: false,
@@ -284,6 +310,8 @@ console.log(product)
     ),
   };
 
+  console.log(product, "tttt");
+
   return (
     <div className="lg:pl-[50px] pl-5 outline-none">
       <Slider ref={sliderRef} {...settings}>
@@ -334,21 +362,20 @@ console.log(product)
                 {/* <div className="h-[54px] p-[15px] bg-white/40 rounded-[100px]">
                     <Image alt="" width={24} height={24} src="wishlist.svg" />
                   </div> */}
-
-                <div
-                  className="absolute top-4 right-4 w-12 h-12 flex items-center justify-center rounded-full bg-custom-gray cursor-pointer"
-                  onClick={() => handleLikeClick(item.id)}
-                >
-                  {wishlist.includes(item.id) ? (
-                    <FcLike className="text-2xl w-8 h-8" /> // Filled heart icon if in wishlist
-                  ) : (
-                    <GoHeart className="text-2xl text-gray-300" /> // Outline heart icon otherwise
-                  )}
-                </div>
-
-                {/* </Link> */}
+                <Link href="/wishlist">
+                  <div
+                    className="absolute top-4 right-4 w-12 h-12 flex items-center justify-center rounded-full bg-custom-gray cursor-pointer"
+                    onClick={() => handleLikeClick(item._id)}
+                  >
+                    {wishlist.includes(item.id) ? (
+                      <FcLike className="text-2xl w-8 h-8" /> // Filled heart icon if in wishlist
+                    ) : (
+                      <GoHeart className="text-2xl text-gray-300" /> // Outline heart icon otherwise
+                    )}
+                  </div>
+                </Link>
               </div>
-              <Link href={'#'}>
+              <Link href={`/selling-page/${item._id}`}>
                 <div className="absolute min-w-[204px] bottom-4 left-4 text-center z-10 bg-[#fde504] px-[50px] py-[20px] rounded-[20px]">
                   <button className="text-[#202020] text-base font-bold font-karla leading-tight">
                     Buy Now
@@ -417,6 +444,21 @@ console.log(product)
         onClose={handleCloseOfferPopup}
         onSubmit={handleOfferSubmit}
       />
+      {errorPopupOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white rounded-lg shadow-lg p-6 w-11/12 max-w-md">
+            <p className="text-red-600 font-semibold text-center">
+              {errorMessage}
+            </p>
+            <button
+              onClick={() => setErrorPopupOpen(false)}
+              className="mt-4 w-full bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded transition"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
