@@ -14,7 +14,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { toggleWishlist } from "@/store/wishlist/wishlistSlice";
 import axios from "axios";
 import Cookies from "js-cookie";
-import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
+import { showSuccessNotification } from "@/utils/Notification/notif";
 
 // const cardData = [
 //   {
@@ -193,7 +194,7 @@ export const ImagesComponent = () => {
   const [loading, setLoading] = useState(false);
   const [errorPopupOpen, setErrorPopupOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const router = useRouter()
+  const router = useRouter();
   const cardsPerPage = 9;
 
   const indexOfLastCard = currentPage * cardsPerPage;
@@ -211,19 +212,19 @@ export const ImagesComponent = () => {
   const details = useSelector((state) => state.auth.user);
   const userID = details?._id;
 
-  const token = Cookies.get("auth") ? JSON.parse(Cookies.get("auth")) : null; 
+  const token = Cookies.get("auth") ? JSON.parse(Cookies.get("auth")) : null;
 
   useEffect(() => {
-    console.log('kjjwkehfkjwekfj')
+    console.log("kjjwkehfkjwekfj");
     fetchProducts();
   }, []);
 
   const handleNextPage = () => {
-    if(currentPage < totalPages) setCurrentPage(currentPage + 1);
+    if (currentPage < totalPages) setCurrentPage(currentPage + 1);
   };
 
   const handlePrevPage = () => {
-    if(currentPage > 1) setCurrentPage(currentPage - 1);
+    if (currentPage > 1) setCurrentPage(currentPage - 1);
   };
 
   const handlePageChange = (selectedPage) => {
@@ -256,7 +257,7 @@ export const ImagesComponent = () => {
         }
       );
 
-      if(response.status === 201) {
+      if (response.status === 201) {
         setOfferSubmitted(true);
         handleCloseOfferPopup();
       } else {
@@ -264,7 +265,7 @@ export const ImagesComponent = () => {
         setErrorMessage(`Failed to submit offer: ${response.data.message}`);
         setErrorPopupOpen(true);
       }
-    } catch(error) {
+    } catch (error) {
       console.error("An error occurred:", error.message);
       setErrorMessage(` ${error.response?.data?.message || error.message}`);
       setErrorPopupOpen(true);
@@ -275,7 +276,7 @@ export const ImagesComponent = () => {
   //   setLikedCards((prevLikedCards) => ({
   //     ...prevLikedCards,
   //     [cardId]: !prevLikedCards[cardId],
-  //   })); 
+  //   }));
   // };
 
   // const handleLikeClick = (id) => {
@@ -294,13 +295,13 @@ export const ImagesComponent = () => {
         }
       );
 
-      if(response.status === 201) {
+      if (response.status === 201) {
         router.push("/wishlist");
       } else {
         setErrorMessage(`Failed to add to wishlist: ${response.data.message}`);
         setErrorPopupOpen(true);
       }
-    } catch(error) {
+    } catch (error) {
       setErrorMessage(error.response?.data?.message || error.message);
       setErrorPopupOpen(true);
     }
@@ -347,9 +348,9 @@ export const ImagesComponent = () => {
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/products`
       );
       const datavalue = response.data.products;
-      console.log(datavalue, 'dataValue')
+      console.log(datavalue, "dataValue");
       setData(datavalue || []);
-    } catch(error) {
+    } catch (error) {
       alert(error.message);
     }
   };
@@ -372,7 +373,7 @@ export const ImagesComponent = () => {
       let updatedFollowers = res.data.followers;
       setData(
         data.map((item) => {
-          if(item.seller._id === sellerID) {
+          if (item.seller._id === sellerID) {
             return {
               ...item,
               seller: {
@@ -384,13 +385,13 @@ export const ImagesComponent = () => {
           return item;
         })
       );
-    } catch(error) {
+    } catch (error) {
       console.error("Error while following/unfollowing", error);
     } finally {
       setLoading(false);
     }
   };
-console.log(data,"ssssssss");
+  console.log(data, "ssssssss");
   return (
     <div className="p-6 ml-8 h-auto w-auto font-karla z-10">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -408,17 +409,18 @@ console.log(data,"ssssssss");
                 <p className="font-bold text-sm">{card?.seller?.username}</p>
               </div>
               <button
-                className={`mt-2 px-4 sm:px-6 py-1 ${card?.seller.followers.includes(userID)
-                  ? "bg-gray-500"
-                  : "bg-custom-green"
-                  } text-white rounded-full`}
+                className={`mt-2 px-4 sm:px-6 py-1 ${
+                  card?.seller.followers.includes(userID)
+                    ? "bg-gray-500"
+                    : "bg-custom-green"
+                } text-white rounded-full`}
                 onClick={() =>
                   card?.seller.followers.includes(userID)
                     ? handleFollow(
-                      card.seller._id,
-                      "unfollow",
-                      card?.seller?._id
-                    )
+                        card.seller._id,
+                        "unfollow",
+                        card?.seller?._id
+                      )
                     : handleFollow(card.seller._id, "follow", card?.seller?._id)
                 }
                 disabled={loading}
@@ -464,20 +466,20 @@ console.log(data,"ssssssss");
 
               {/* Buy Now button and handshake icon - fixed position */}
               <div className="absolute w-full bottom-4 flex justify-evenly items-center px-4">
-              {token ? (
-  <Link href={`/selling-page/${card._id}`} className="w-[70%]">
-    <button className="w-full p-2 py-[15px] sm:px-10 bg-custom-yellow text-black rounded-2xl font-bold mr-1">
-      Buy Now
-    </button>
-  </Link>
-) : (
-  <button
-    className="w-full p-2 py-[15px] sm:px-10 bg-custom-yellow text-black  rounded-2xl font-bold mr-1 cursor-not-allowed"
-    onClick={() => alert("You need to log in to proceed!")}
-  >
-    Buy Now
-  </button>
-)}
+                {token ? (
+                  <Link href={`/selling-page/${card._id}`} className="w-[70%]">
+                    <button className="w-full p-2 py-[15px] sm:px-10 bg-custom-yellow text-black rounded-2xl font-bold mr-1">
+                      Buy Now
+                    </button>
+                  </Link>
+                ) : (
+                  <button
+                    className="w-full p-2 py-[15px] sm:px-10 bg-custom-yellow text-black  rounded-2xl font-bold mr-1 "
+                    onClick={() => showSuccessNotification("Please Login!")}
+                  >
+                    Buy Now
+                  </button>
+                )}
                 <div className="h-12 w-12 flex items-center justify-center bg-white rounded-full">
                   <Image
                     unoptimized
