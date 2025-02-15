@@ -13,6 +13,7 @@ import { showSuccessNotification } from "@/utils/Notification/notif";
 import AddressList from "@/components/userProfile/AddressList";
 import CartAddress from "@/components/userProfile/CartAddress";
 
+
 export default function Cart () {
   const [isCouponPopupVisible, setIsCouponPopupVisible] = useState(false);
   const [appliedCoupon, setAppliedCoupon] = useState("");
@@ -135,6 +136,7 @@ export default function Cart () {
 
   const handleRemove = async (id) => {
     try {
+      const token = JSON.parse(Cookies.get('auth'));
       const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/product/cart/${id}`;
       const response = await axios.delete(url, {
         headers: {
@@ -198,6 +200,7 @@ export default function Cart () {
 
   const fetchCartDetails = async () => {
     try {
+      const token = JSON.parse(Cookies.get("auth"));
       const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/product/get/cart`;
       const response = await axios.get(url, {
         headers: {
@@ -212,9 +215,11 @@ export default function Cart () {
       });
       setSelectedItems(initialSelected);
     } catch(err) {
-      setError("Failed to fetch cart details");
-      setErrorMessage("Failed to fetch cart details");
-      setErrorPopupOpen(true);
+      // showSuccessNotification("Please login")
+      // setError("Failed to fetch cart details");
+      // setErrorMessage("Failed to fetch cart details");
+      // setErrorPopupOpen(true);
+      
     }
   };
 

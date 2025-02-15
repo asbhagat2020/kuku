@@ -14,6 +14,7 @@ import { toggleWishlist } from "@/store/wishlist/wishlistSlice";
 import axios from "axios";
 import toast from "react-hot-toast";
 import Cookies from "js-cookie";
+import { showSuccessNotification } from "@/utils/Notification/notif";
 
 const Carousels = () => {
   const [isOfferPopupOpen, setIsOfferPopupOpen] = useState(false);
@@ -34,6 +35,7 @@ const Carousels = () => {
   //   dispatch(toggleWishlist(cardId));
   // };
 
+  const token = Cookies.get("auth") ? JSON.parse(Cookies.get("auth")) : null;
   const handleLikeClick = async (id) => {
     try {
       const token = JSON.parse(Cookies.get("auth"));
@@ -375,6 +377,7 @@ const Carousels = () => {
                   </div>
                 </Link>
               </div>
+              {token ? (
               <Link href={`/selling-page/${item._id}`}>
                 <div className="absolute min-w-[204px] bottom-4 left-4 text-center z-10 bg-[#fde504] px-[50px] py-[20px] rounded-[20px]">
                   <button className="text-[#202020] text-base font-bold font-karla leading-tight">
@@ -382,6 +385,15 @@ const Carousels = () => {
                   </button>
                 </div>
               </Link>
+               ) : (
+                <div className="absolute min-w-[204px] bottom-4 left-4 text-center z-10 bg-[#fde504] px-[50px] py-[20px] rounded-[20px]">
+                  <button className="text-[#202020] text-base font-bold font-karla leading-tight"
+                   onClick={() => showSuccessNotification("Please Login!")}
+                  >
+                    Buy Now
+                  </button>
+                </div>
+               )}
               <div className="absolute bottom-6 right-5 z-10">
                 <div
                   className="h-[54px] p-[15px] bg-white rounded-[100px] cursor-pointer"

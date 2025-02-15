@@ -28,6 +28,7 @@ export default function Wishlist () {
 
   const handleRemove = async (id) => {
     try {
+      const token = JSON.parse(Cookies.get('auth'));
       const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/product/wishlist/${id}`;
 
       const response = await axios.delete(url, {
@@ -84,6 +85,7 @@ export default function Wishlist () {
 
   const fetchWishlist = async () => {
     try {
+      const token = JSON.parse(Cookies.get('auth'));
       const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/product/get/wishlist`;
       const response = await axios.get(url, {
         headers: {
