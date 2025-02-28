@@ -74,6 +74,12 @@ const ItemList = () => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
     setErrors({ ...errors, [name]: '' });
+  
+    if (name === "price" && value > 300) {
+      setFormData((prev) => ({ ...prev, openToRent: "Yes" }));
+    } else if (name === "price" && value <= 300) {
+      setFormData((prev) => ({ ...prev, openToRent: "No" }));
+    }
   };
 
   const handleFileChange = (e, index) => {
@@ -116,10 +122,15 @@ const ItemList = () => {
     if (!formData.usage) newErrors.usage = 'Usage is required';
     if (!formData.price.trim()) newErrors.price = 'Price is required';
     if (formData.images.length < 2) newErrors.images = 'At least two image is required';
-
+  
+    if (formData.price > 300 && formData.openToRent === "Yes" && !formData.rentalRate) {
+      newErrors.rentalRate = 'Rental rate is required for products above AED 300';
+    }
+  
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
+
   const handleNext = (e) => {
     e.preventDefault();
     if (validateForm()) {
