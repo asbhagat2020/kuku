@@ -10,7 +10,6 @@ import calendarImg from "../public/Calendar.png";
 import {
   FaStar,
   FaRegHeart,
-  // FaRegHandshake,
   FaShoppingBag,
   FaArrowLeft,
   FaArrowRight,
@@ -24,24 +23,17 @@ import Cookies from "js-cookie";
 import { showSuccessNotification } from "@/utils/Notification/notif";
 
 const ProductCard = (productDetails) => {
-  // console.log(productDetails, "hhhhhhhh");
   const [product, setProduct] = useState(productDetails?.product);
-  // console.log(product, "rrr");
   const router = useRouter();
   const [isRentPopupOpen, setRentPopupOpen] = useState(false);
   const [rentalDate, setRentalDate] = useState("");
   const [isOfferPopupOpen, setOfferPopupOpen] = useState(false);
   const [offerAmount, setOfferAmount] = useState("");
-  const [selectedPrice, setSelectedPrice] = useState(null); // State to hold the selected price for the offer
-  const [isSubmitDisabled, setIsSubmitDisabled] = useState(true); // State to disable/enable the submit button
-  const [isModalOpen, setIsModalOpen] = useState(false); // State to control the modal
-  const [currentImageIndex, setCurrentImageIndex] = useState(0); // State to keep track of the current image
+  const [selectedPrice, setSelectedPrice] = useState(null);
+  const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isDateSelected, setIsDateSelected] = useState(false);
-
-  // const images = [amiriImg, amiriImg];
-  const images = product?.images;
-
-  // const [isRentPopupOpen, setIsRentPopupOpen] = useState(false);
   const [isStartFormatted, setIsStartFormatted] = useState("");
   const [isEndFormatted, setIsEndFormatted] = useState("");
   const [showCalendar, setShowCalendar] = useState(false);
@@ -52,22 +44,22 @@ const ProductCard = (productDetails) => {
   const dispatch = useDispatch();
   const [errorPopupOpen, setErrorPopupOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-
   const details = useSelector((state) => state.auth.user);
   const userID = details?._id;
+
+  // Define the images array
+  const images = product?.images || [amiriImg];
 
   const handleBuy = async () => {
     try {
       const rawToken = Cookies.get("auth");
       const token = rawToken ? JSON.parse(rawToken) : null;
 
-      // Check for token and show notification if missing
       if (!token) {
         showSuccessNotification("Please Login!");
-        return; // Stop further execution
+        return;
       }
 
-      // Make the POST request to your API
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/product/add/cart/${product._id}`,
         {},
@@ -75,23 +67,18 @@ const ProductCard = (productDetails) => {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        } // or any other data you need to send
+        }
       );
 
       if (response.status === 201) {
-        // If the request is successful, dispatch the action to add to cart
         dispatch(addToCart(product));
-
-        // Navigate to the cart page
         router.push("/cart");
       } else {
-        // Handle the case where the request is not successful
         console.error("Failed to add product to cart:", response.statusText);
         setErrorMessage(`Failed to submit offer: ${response.data.message}`);
         setErrorPopupOpen(true);
       }
     } catch (error) {
-      // Handle any errors that occur during the request
       console.error("An error occurred while adding product to cart:", error);
       setErrorMessage(` ${error.response?.data?.message || error.message}`);
       setErrorPopupOpen(true);
@@ -103,13 +90,11 @@ const ProductCard = (productDetails) => {
       const rawToken = Cookies.get("auth");
       const token = rawToken ? JSON.parse(rawToken) : null;
 
-      // Check for token and show notification if missing
       if (!token) {
         showSuccessNotification("Please Login!");
-        return; // Stop further execution
+        return;
       }
 
-      // Make the POST request to your API
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/product/wishlist/${product._id}`,
         {},
@@ -117,30 +102,19 @@ const ProductCard = (productDetails) => {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        } // or any other data you need to send
+        }
       );
 
       if (response.status === 201) {
-        // If the request is successful, dispatch the action to add to cart
-
-        // Navigate to the cart page
         router.push("/wishlist");
       } else {
-        // Handle the case where the request is not successful
-        console.error(
-          "Failed to add product to wishlist:",
-          response.statusText
-        );
+        console.error("Failed to add product to wishlist:", response.statusText);
         setErrorMessage(`Failed to submit offer: ${response.data.message}`);
         setErrorPopupOpen(true);
       }
     } catch (error) {
-      // Handle any errors that occur during the request
-      console.error(
-        "An error occurred while adding product to wishlist:",
-        error
-      );
-       setErrorMessage(` ${error.response?.data?.message || error.message}`);
+      console.error("An error occurred while adding product to wishlist:", error);
+      setErrorMessage(` ${error.response?.data?.message || error.message}`);
       setErrorPopupOpen(true);
     }
   };
@@ -163,7 +137,6 @@ const ProductCard = (productDetails) => {
 
       const updatedFollowers = res.data.followers;
 
-      // Update product directly if the sellerID matches
       setProduct((prevProduct) => {
         if (prevProduct.seller._id === sellerID) {
           return {
@@ -204,8 +177,8 @@ const ProductCard = (productDetails) => {
       year: "numeric",
     });
     setIsDateSelected(true);
-    setIsStartFormatted(formattedDate); // Assume date comes formatted from CustomCalendar
-    closeCalendar(); // Close the calendar after selecting a date
+    setIsStartFormatted(formattedDate);
+    closeCalendar();
   };
   const handleEndDateSelect = (date) => {
     const formattedDate = new Date(date).toLocaleDateString("en-GB", {
@@ -214,11 +187,10 @@ const ProductCard = (productDetails) => {
       year: "numeric",
     });
     setIsDateSelected(true);
-    setIsEndFormatted(formattedDate); // Assume date comes formatted from CustomCalendar
-    closeEndCalendar(); // Close the calendar after selecting a date
+    setIsEndFormatted(formattedDate);
+    closeEndCalendar();
   };
 
-  // Close modal when clicking outside of it
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (modalRef.current && !modalRef.current.contains(event.target)) {
@@ -226,7 +198,6 @@ const ProductCard = (productDetails) => {
       }
     };
 
-    // Attach the event listener
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
@@ -272,7 +243,7 @@ const ProductCard = (productDetails) => {
 
   const handleCloseRentPopup = () => {
     setRentPopupOpen(false);
-    setRentalDate(""); // Reset date when closing
+    setRentalDate("");
     openCalendar(false);
     openEndCalendar(false);
   };
@@ -290,16 +261,15 @@ const ProductCard = (productDetails) => {
 
   const handleCloseOfferPopup = () => {
     setOfferPopupOpen(false);
-    setOfferAmount(""); // Reset offer amount when closing
-    setSelectedPrice(null); // Reset selected price
-    setIsSubmitDisabled(true); // Disable submit button
+    setOfferAmount("");
+    setSelectedPrice(null);
+    setIsSubmitDisabled(true);
   };
 
   const handlePriceSelection = (price) => {
     setSelectedPrice(price);
-    setOfferAmount(price); // Set the offer amount to the selected price
+    setOfferAmount(price);
 
-    // Enable submit button if a valid price is selected
     if (price && !isNaN(price)) {
       setIsSubmitDisabled(false);
     } else {
@@ -313,13 +283,13 @@ const ProductCard = (productDetails) => {
   };
 
   const handleNextImage = () => {
-    setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length); // Navigate to next image
+    setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
   };
 
   const handlePrevImage = () => {
     setCurrentImageIndex(
       (prevIndex) => (prevIndex - 1 + images.length) % images.length
-    ); // Navigate to previous image
+    );
   };
 
   return (
@@ -354,26 +324,26 @@ const ProductCard = (productDetails) => {
               width: "100%",
               height: "500px",
               maxWidth: "650px",
-              zIndex: 1, // Current image has a higher z-index
+              zIndex: 1,
               position: "relative",
-              transition: "opacity 0.5s ease-in-out", // Smooth transition for fading effect
+              transition: "opacity 0.5s ease-in-out",
             }}
           />
           <Image
             unoptimized
             width={650}
             height={500}
-            src={images[(currentImageIndex + 1) % images.length]} // Show the next image below
+            src={images[(currentImageIndex + 1) % images.length]}
             alt="AMIRI Men Oversize T-shirt"
-            className="object-cover rounded-md absolute top-0 left-0" // Position on top
+            className="object-cover rounded-md absolute top-0 left-0"
             style={{
               width: "100%",
               height: "500px",
               maxWidth: "650px",
-              zIndex: 0, // Next image has a lower z-index
+              zIndex: 0,
               position: "absolute",
-              opacity: 0, // Initially hidden
-              transition: "opacity 0.5s ease-in-out", // Smooth transition for fading effect
+              opacity: 0,
+              transition: "opacity 0.5s ease-in-out",
             }}
           />
           <button
@@ -385,14 +355,13 @@ const ProductCard = (productDetails) => {
             }}
             onClick={() => {
               handlePrevImage();
-              // Adjust the opacity of the images on navigation
               document.querySelector(
                 `img[alt="AMIRI Men Oversize T-shirt"]:nth-child(1)`
               ).style.opacity = 0;
               document.querySelector(
                 `img[alt="AMIRI Men Oversize T-shirt"]:nth-child(2)`
               ).style.opacity = 1;
-            }} // Previous image handler
+            }}
           >
             <FaArrowLeft className="text-black w-4 h-4" />
           </button>
@@ -405,14 +374,13 @@ const ProductCard = (productDetails) => {
             }}
             onClick={() => {
               handleNextImage();
-              // Adjust the opacity of the images on navigation
               document.querySelector(
                 `img[alt="AMIRI Men Oversize T-shirt"]:nth-child(1)`
               ).style.opacity = 1;
               document.querySelector(
                 `img[alt="AMIRI Men Oversize T-shirt"]:nth-child(2)`
               ).style.opacity = 0;
-            }} // Next image handler
+            }}
           >
             <FaArrowRight className="text-black w-4 h-4" />
           </button>
@@ -473,21 +441,19 @@ const ProductCard = (productDetails) => {
           </div>
 
           <div className="flex gap-4 mt-4">
-            {/* <Link href="/wishlist"> */}
             <button
               onClick={handleWish}
               className="border-2 rounded-md px-6 py-3 flex items-center justify-center font-bold text-pink-500 hover:bg-[#E4086F] hover:text-white transition-all duration-300"
               style={{
                 borderColor: "#E4086F",
-                height: "60px", // Set to match the height in the image
-                width: "200px", // Set width to be consistent
+                height: "60px",
+                width: "200px",
                 borderRadius: "16px",
               }}
             >
               <FaRegHeart className="mr-2 w-5 h-5" />
               WISHLIST
             </button>
-            {/* </Link> */}
 
             <button
               onClick={handleOpenOfferPopup}
@@ -511,7 +477,6 @@ const ProductCard = (productDetails) => {
             </button>
           </div>
 
-          {/* <Link href="/cart"> */}
           <button
             onClick={handleBuy}
             className="mt-4 text-black w-full font-bold flex items-center justify-center bg-yellow-300 hover:bg-yellow-400 transition-all duration-300"
@@ -523,7 +488,6 @@ const ProductCard = (productDetails) => {
             <FaShoppingBag className="mr-2" />
             ADD TO BAG
           </button>
-          {/* </Link> */}
 
           <div className="flex flex-col mt-2">
             <div className="text-center font-bold text-black">
@@ -554,8 +518,8 @@ const ProductCard = (productDetails) => {
                     src={product?.seller?.avatar || kukuLogo}
                     alt="Kuku Logo"
                     className="object-contain w-12 h-12"
-                    width={48} // specify the width (in pixels)
-                    height={48} // specify the height (in pixels)
+                    width={48}
+                    height={48}
                   />
                 </Link>
 
@@ -635,7 +599,7 @@ const ProductCard = (productDetails) => {
           {isRentPopupOpen && (
             <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
               <div
-                ref={modalRef} // Attach ref to the modal content
+                ref={modalRef}
                 className="bg-white p-6 rounded-lg shadow-lg w-[400px] text-start"
               >
                 <div>
@@ -660,7 +624,7 @@ const ProductCard = (productDetails) => {
                     id="rentalDate"
                     placeholder="Choose your rental dates"
                     value={isStartFormatted}
-                    onClick={openCalendar} // This is the function to open the calendar
+                    onClick={openCalendar}
                     readOnly
                     required
                     className="relative p-2 text-[#4C5C6B] text-[16px] font-karla font-normal bg-no-repeat bg-right bg-[length:20px_20px] pr-10 outline-none"
@@ -673,7 +637,7 @@ const ProductCard = (productDetails) => {
                       className="w-[100%] h-[100%]"
                       onClick={() =>
                         document.getElementById("rentalDate").click()
-                      } // Trigger the input click when image is clicked
+                      }
                     />
                   </div>
                 </div>
@@ -698,7 +662,7 @@ const ProductCard = (productDetails) => {
                     id="rentalEndDate"
                     placeholder="Choose your rental dates"
                     value={isEndFormatted}
-                    onClick={openEndCalendar} // This is the function to open the calendar
+                    onClick={openEndCalendar}
                     readOnly
                     required
                     className="relative p-2 text-[#4C5C6B] text-[16px] font-karla font-normal bg-no-repeat bg-right bg-[length:20px_20px] pr-10 outline-none"
@@ -711,7 +675,7 @@ const ProductCard = (productDetails) => {
                       className="w-[100%] h-[100%]"
                       onClick={() =>
                         document.getElementById("rentalEndDate").click()
-                      } // Trigger the input click when image is clicked
+                      }
                     />
                   </div>
                 </div>
@@ -732,7 +696,6 @@ const ProductCard = (productDetails) => {
                 <div className="w-full text-[#E4086F] text-[15px] font-karla font-bold underline break-words mb-[15px]">
                   View our rental policy
                 </div>
-                {/* <Link href="/renting"> */}
                 <button
                   onClick={handleProceed}
                   className={`px-4 py-2 w-full mb-2 text-[#E4086F] text-[20px] font-karla font-bold leading-[24px] break-words flex-1 h-[60px] bg-[#FDE504] rounded-[20px] flex justify-center items-center gap-[10px] ${
@@ -740,11 +703,10 @@ const ProductCard = (productDetails) => {
                       ? "opacity-50 cursor-not-allowed"
                       : ""
                   }`}
-                  disabled={isEndFormatted === "" || isStartFormatted === ""} // Disable the button if no date is selected
+                  disabled={isEndFormatted === "" || isStartFormatted === ""}
                 >
                   PROCEED
                 </button>
-                {/* </Link> */}
 
                 <button
                   onClick={handleCloseRentPopup}
@@ -764,11 +726,11 @@ const ProductCard = (productDetails) => {
           <div
             className="bg-white p-9 rounded-lg shadow-lg w-[500px] text-start"
             style={{
-              width: "500px", // Default width for desktop
+              width: "500px",
               ...(window.innerWidth <= 768 && {
                 width: "90%",
                 padding: "1.5rem",
-              }), // Mobile responsive styling
+              }),
             }}
           >
             <div>
@@ -797,7 +759,7 @@ const ProductCard = (productDetails) => {
             <div
               className="flex gap-[8px]"
               style={{
-                flexDirection: window.innerWidth <= 768 ? "column" : "row", // Stack buttons in mobile view
+                flexDirection: window.innerWidth <= 768 ? "column" : "row",
               }}
             >
               <button
@@ -806,7 +768,7 @@ const ProductCard = (productDetails) => {
                 } inline-flex items-center justify-center gap-[8.66px]`}
                 onClick={() => handlePriceSelection(200)}
                 style={{
-                  width: window.innerWidth <= 768 ? "100%" : "89px", // Full width for mobile
+                  width: window.innerWidth <= 768 ? "100%" : "89px",
                 }}
               >
                 <div className="text-[#4C5C6B] text-[14px] font-karla font-normal break-words">
@@ -819,7 +781,7 @@ const ProductCard = (productDetails) => {
                 } inline-flex items-center justify-center gap-[8.66px]`}
                 onClick={() => handlePriceSelection(195)}
                 style={{
-                  width: window.innerWidth <= 768 ? "100%" : "89px", // Full width for mobile
+                  width: window.innerWidth <= 768 ? "100%" : "89px",
                 }}
               >
                 <div className="text-[#4C5C6B] text-[14px] font-karla font-normal break-words">
@@ -833,7 +795,7 @@ const ProductCard = (productDetails) => {
                   className="w-[245px] h-[41px] py-[8.66px] px-[19.93px] bg-white rounded-[6.93px] border border-[#878787] text-[#4C5C6B] text-[14px] font-karla font-normal placeholder:text-[#B0B0B0] break-words outline-none"
                   onChange={(e) => handlePriceSelection(e.target.value)}
                   style={{
-                    width: window.innerWidth <= 768 ? "100%" : "245px", // Full width for mobile
+                    width: window.innerWidth <= 768 ? "100%" : "245px",
                   }}
                 />
               </div>
@@ -856,7 +818,7 @@ const ProductCard = (productDetails) => {
                 }`}
                 disabled={isSubmitDisabled}
                 style={{
-                  width: window.innerWidth <= 768 ? "100%" : "440px", // Full width for mobile
+                  width: window.innerWidth <= 768 ? "100%" : "440px",
                 }}
               >
                 SUBMIT
@@ -865,7 +827,7 @@ const ProductCard = (productDetails) => {
                 onClick={handleCloseOfferPopup}
                 className="border-[#F7B5D4] text-[#E4086F] text-[20px] font-bold font-karla rounded-lg px-4 py-2 border w-[455px] h-[65px] mt-3"
                 style={{
-                  width: window.innerWidth <= 768 ? "100%" : "440px", // Full width for mobile
+                  width: window.innerWidth <= 768 ? "100%" : "440px",
                 }}
               >
                 CANCEL
@@ -878,17 +840,15 @@ const ProductCard = (productDetails) => {
       {/* Modal Section */}
       {isModalOpen && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50" // Set a high z-index value
-          onClick={handleCloseModal} // Close modal when clicking outside
+          className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
+          onClick={handleCloseModal}
         >
           <div
             className="bg-white p-6 rounded-lg shadow-lg w-[380px] h-[230px] text-center"
-            onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside the modal
+            onClick={(e) => e.stopPropagation()}
           >
-            {/* Tick Mark */}
             <div className="flex justify-center items-center mb-5">
               <div className="flex justify-center items-center w-[50px] h-[50px] bg-[#30BD75] border-4 border-[#9ae6b4] rounded-full">
-                {/* Light green border */}
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="h-6 w-6 text-white"
@@ -906,13 +866,11 @@ const ProductCard = (productDetails) => {
               </div>
             </div>
 
-            {/* Title */}
             <div className="text-[rgb(11,12,30)] text-[20px] font-bold text-center font-karla leading-tight">
               <div>Your offer has been </div>
               <div> sent to the seller</div>
             </div>
 
-            {/* Description */}
             <div className="text-[#7F808C] text-[16px] font-normal font-karla leading-tight mt-1">
               <div> Now sit back and relax while the seller</div>
               <div> takes some time to review your offer</div>
