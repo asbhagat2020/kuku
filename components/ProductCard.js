@@ -266,16 +266,10 @@ const ProductCard = (productDetails) => {
   const handleCloseModal = () => {
     setIsModalOpen(false);
   };
-  
   const handleOpenRentPopup = () => {
-    if (product.price > 300 && product.openToRent === "Yes") {
-      setRentPopupOpen(true);
-    } else {
-      setErrorMessage("This product is not available for rent.");
-      setErrorPopupOpen(true);
-    }
+    setRentPopupOpen(true);
   };
-  
+
   const handleCloseRentPopup = () => {
     setRentPopupOpen(false);
     setRentalDate(""); // Reset date when closing
