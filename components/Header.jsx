@@ -266,33 +266,24 @@ const Header = () => {
             </div>
 
             <div className={`lg:flex gap-[30px] items-center hidden ${isSearchVisible ? 'lg:hidden xl:flex' : ''}`}>
-              <Link
-                href="#"
-                className={`${
+              <div className={`${
                   isHome ? 'text-[#fefae5]' : 'text-black'
-                } text-base font-bold font-karla leading-tight hover:text-pink-500`}
-              >
+                } text-base font-bold font-karla leading-tight hover:text-pink-500`}>
                 {/* Men */}
                 <MenDropdown />
-              </Link>
-              <Link
-                href="#"
-                className={`${
+              </div>
+              <div className={`${
                   isHome ? 'text-[#fefae5]' : 'text-black'
-                } text-base font-bold font-karla leading-tight hover:text-pink-500`}
-              >
+                } text-base font-bold font-karla leading-tight hover:text-pink-500`}>
                 {/* Women */}
                 <WomenDropdown />
-              </Link>
-              <Link
-                href="#"
-                className={`${
+              </div>
+              <div className={`${
                   isHome ? 'text-[#fefae5]' : 'text-black'
-                } text-base font-bold font-karla leading-tight hover:text-pink-500`}
-              >
+                } text-base font-bold font-karla leading-tight hover:text-pink-500`}>
                 {/* Kids */}
                 <KidsDropdown />
-              </Link>
+              </div>
               {/* <Link
                 href="/EmergencyProducts"
                 className={`${
@@ -624,36 +615,24 @@ const Header = () => {
               }
             `}</style>
             <div className="flex flex-col gap-[30px]">
-              <Link
-                href="#"
-                className={`${
+              <div className={`${
                   isHome ? 'text-white' : 'text-black'
-                } text-base font-bold font-karla leading-tight hover:text-pink-500 z-50`}
-              >
+                } text-base font-bold font-karla leading-tight hover:text-pink-500 z-50`}>
                 {/* MEN */}
-                {/* <MenDropdown /> */}
                 <MenDropdown isOpen={currentOpenDropdown === 'men'} onToggle={() => handleToggle('men')} />
-              </Link>
-              <Link
-                href="#"
-                className={`${
+              </div>
+              <div className={`${
                   isHome ? 'text-white' : 'text-black'
-                } text-base font-bold font-karla leading-tight hover:text-pink-500 z-40`}
-              >
+                } text-base font-bold font-karla leading-tight hover:text-pink-500 z-40`}>
                 {/* WOMEN */}
-                {/* <WomenDropdown /> */}
                 <WomenDropdown isOpen={currentOpenDropdown === 'women'} onToggle={() => handleToggle('women')} />
-              </Link>
-              <Link
-                href="#"
-                className={`${
+              </div>
+              <div className={`${
                   isHome ? 'text-white' : 'text-black'
-                } text-base font-bold font-karla leading-tight hover:text-pink-500 z-30`}
-              >
+                } text-base font-bold font-karla leading-tight hover:text-pink-500 z-30`}>
                 {/* KIDS */}
-                {/* <KidsDropdown /> */}
                 <KidsDropdown isOpen={currentOpenDropdown === 'kids'} onToggle={() => handleToggle('kids')} />
-              </Link>
+              </div>
               <hr />
               <SettingsDropdown isOpen={currentOpenDropdown === 'setting'} onToggle={() => handleToggle('setting')} />
             </div>

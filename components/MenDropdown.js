@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { ChevronDown, ChevronUp, ChevronRight } from "lucide-react";
 import { usePathname } from "next/navigation";
+import Link from "next/link";
 
 const categories = [
   {
@@ -55,14 +56,12 @@ const categories = [
     title: "Swimwear",
     items: ["Beach Shorts", "Swim Shorts", "Swim One Pieces", "Rash Guards","Beach Sets"],
   },
-
   {
     title: "Denim",
     items: ["Jeans","Denim Jackets"," Denim Shirts","Denim Co-Ords",
       "Denim Jumpsuits and Overalls"
     ],
   },
-
   {
     title: "Sweaters",
     items: ["Pullovers","Knit Tops","Sweater Vests","Cardigans","Sweater Co-Ords"
@@ -83,7 +82,6 @@ const categories = [
 export default function MenDropdown({ isOpen, onToggle }) {
   const [isMenHovered, setIsMenHovered] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
-  // const [isMainMenuOpen, setIsMainMenuOpen] = useState(false);
   const [openCategory, setOpenCategory] = useState(null);
   const path = usePathname();
 
@@ -158,12 +156,12 @@ export default function MenDropdown({ isOpen, onToggle }) {
                     <ul className="space-y-2">
                       {category.items.map((item) => (
                         <li key={item}>
-                          <a
+                          <Link
                             href="#"
                             className="block py-2 px-4 text-sm text-gray-600 hover:text-pink-500"
                           >
                             {item}
-                          </a>
+                          </Link>
                         </li>
                       ))}
                     </ul>
@@ -181,14 +179,14 @@ export default function MenDropdown({ isOpen, onToggle }) {
         onMouseLeave={() => setIsMenHovered(false)}
       >
         <div className="relative lg">
-          <a
+          <Link
             href="#"
             className={`${
               isHome ? "text-[#fefae5]" : "text-black"
             } text-base font-bold font-karla leading-tight hover:text-pink-500`}
           >
             MEN
-          </a>
+          </Link>
           <div
             className={`absolute bottom-0 left-0 w-full h-0.5 bg-pink-500 transform origin-left transition-transform duration-300 ${
               isMenHovered ? "scale-x-100" : "scale-x-0"
@@ -227,9 +225,9 @@ export default function MenDropdown({ isOpen, onToggle }) {
                 <ul className="space-y-2 text-sm">
                   {category.items.map((item) => (
                     <li key={item}>
-                      <a href="#" className="text-gray-600 hover:text-pink-500">
+                      <Link href="#" className="text-gray-600 hover:text-pink-500">
                         {item}
-                      </a>
+                      </Link>
                     </li>
                   ))}
                 </ul>

@@ -4,6 +4,7 @@ import { Karla, Luckiest_Guy, Palanquin_Dark } from "next/font/google";
 import ReduxProvider from "./ReduxProvider/ReduxProvider";
 import ClientSessionProvider from "@/components/sessionProvider";
 import { getServerSession } from "next-auth";
+import dynamic from 'next/dynamic';
 
 const karla = Karla({
   subsets: ["latin"],
@@ -31,6 +32,7 @@ export default async function RootLayout({ children }) {
     <html lang="en">
       <body
         className={`${karla.variable} ${luckiestGuy.variable} ${palanquinDark.variable}`}
+        suppressHydrationWarning={true} // Add this to suppress warnings
       >
         <ClientSessionProvider session={session}>
           <ReduxProvider>

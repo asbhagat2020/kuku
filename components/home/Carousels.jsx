@@ -421,9 +421,9 @@ const Carousels = () => {
                         src={imgSrc}
                         width={307}
                         height={404}
-                        layout="responsive"
-                        alt={item.title}
-                        className="object-fill min-h-[404px] min-w-[307px] rounded-lg"
+                        alt={`Image ${imgIndex + 1} of ${
+                          item?.title || "carousel item"
+                        }`}
                       />
                     </div>
                   ))}

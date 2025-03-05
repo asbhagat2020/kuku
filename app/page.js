@@ -1,29 +1,33 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import Lottie from "lottie-react";
-import Footer from "@/components/Footer";
-import Header from "@/components/Header";
-import AnimationSection from "@/components/home/AnimationSection";
-import Brands from "@/components/home/Brands";
-import Categories from "@/components/home/Categories";
-import DownloadKuku from "@/components/home/DownloadKuku";
-import Hero from "@/components/home/Hero";
-import MarketPlace from "@/components/home/MarketPlace";
-import Popup from "@/components/home/Popup";
-import Selling from "@/components/home/Selling";
-import StriteSection from "@/components/home/StriteSection";
-import homeAnimation from "../public/lottieFiles/kukuhomenew.json";
+import dynamic from 'next/dynamic';
 import { useDispatch } from "react-redux";
 
+const Lottie = dynamic(() => import('lottie-react'), { ssr: false });
+const Footer = dynamic(() => import('@/components/Footer'));
+const Header = dynamic(() => import('@/components/Header'));
+const AnimationSection = dynamic(() => import('@/components/home/AnimationSection'));
+const Brands = dynamic(() => import('@/components/home/Brands'));
+const Categories = dynamic(() => import('@/components/home/Categories'));
+const DownloadKuku = dynamic(() => import('@/components/home/DownloadKuku'));
+const Hero = dynamic(() => import('@/components/home/Hero'));
+const MarketPlace = dynamic(() => import('@/components/home/MarketPlace'));
+const Popup = dynamic(() => import('@/components/home/Popup'));
+const Selling = dynamic(() => import('@/components/home/Selling'));
+const StriteSection = dynamic(() => import('@/components/home/StriteSection'));
+
+import homeAnimation from "../public/lottieFiles/kukuhomenew.json";
+
 const Page = () => {
-  // Initialize isLoading based on sessionStorage
   const [isLoading, setIsLoading] = useState(true);
   const [isMobileView, setIsMobileView] = useState(false);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    // Ensure sessionStorage is only accessed on the client side
-    const hasVisitedBefore = sessionStorage.getItem("hasVisitedBefore");
+    // Client-side check for first visit
+    const hasVisitedBefore = typeof window !== 'undefined' 
+      ? sessionStorage.getItem("hasVisitedBefore") 
+      : null;
     setIsLoading(!hasVisitedBefore);
   }, []);
 
@@ -31,7 +35,9 @@ const Page = () => {
     if (isLoading) {
       const timer = setTimeout(() => {
         setIsLoading(false);
-        sessionStorage.setItem("hasVisitedBefore", "true");
+        if (typeof window !== 'undefined') {
+          sessionStorage.setItem("hasVisitedBefore", "true");
+        }
       }, 4500);
 
       return () => clearTimeout(timer);
@@ -53,8 +59,8 @@ const Page = () => {
       return (
         <div className="absolute inset-0 w-full h-full">
           <Lottie
-            loop
-            play
+            loop={true}
+            play={true}
             rendererSettings={{ preserveAspectRatio: "xMidYMid slice" }}
             animationData={homeAnimation}
             style={{
@@ -72,8 +78,8 @@ const Page = () => {
       return (
         <div className="flex justify-center items-center w-full lg:h-[50vh]">
           <Lottie
-            loop
-            play
+            loop={true}
+            play={true}
             animationData={homeAnimation}
             className="w-full"
           />

@@ -160,115 +160,17 @@ const SellingCards = ({ data }) => {
   return (
     <div className="px-[71px] mb-10">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-4 relative place-items-center">
-        {data.map((item) => (
-          <div key={item.id} className="flex flex-col gap-3">
-            <div className="w-[307px] h-[404px] rounded-[20px] relative mx-2 outline-none">
-              <div className="absolute top-2 right-2 z-10">
-                {/* <div className="h-[54px] p-[15px] bg-white/40 rounded-[100px]">
-            <Image alt="" width={24} height={24} src="wishlist.svg" />
-           </div> */}
-
-                <div
-                  className="absolute top-4 right-4 w-12 h-12 flex items-center justify-center rounded-full bg-custom-gray cursor-pointer"
-                  onClick={() => handleLikeClick(item.id)}
-                >
-                  {likedCards[item.id] ? (
-                    <FcLike className="text-2xl w-8 h-8" /> // Filled heart icon if liked
-                  ) : (
-                    <GoHeart className="text-2xl text-gray-300" /> // Outline heart icon if not liked
-                  )}
-                </div>
-              </div>
-              <div className="absolute right-5 top-[250px] z-10">
-                <div className="h-[54px] p-[15px] bg-white rounded-full shadow-md">
-                  <AiFillDelete
-                    size={24}
-                    color={userId === item.seller ? "red" : "gray"} // Different color if inactive
-                    onClick={
-                      userId === item.seller ? () => openPopup(item._id) : null
-                    } // Prevent click if inactive
-                    style={{
-                      cursor:
-                        userId === item.seller ? "pointer" : "not-allowed",
-                    }} // Modify cursor style
-                  />
-                </div>
-              </div>
-
-              <Link
-                href={userId === item.seller ? `/editproduct/${item._id}` : "#"}
-              >
-                <div
-                  className={`absolute right-5 top-[180px] z-10 ${userId === item.seller
-                      ? "cursor-pointer"
-                      : "cursor-not-allowed opacity-50"
-                    }`}
-                >
-                  <div className="h-[54px] p-[15px] bg-white rounded-full shadow-md">
-                    <HiOutlinePencil
-                      size={24}
-                      color={userId === item.seller ? "red" : "gray"} // Different color if inactive
-                      style={{
-                        cursor:
-                          userId === item.seller ? "pointer" : "not-allowed",
-                      }} // Modify cursor style
-                    />
-                  </div>
-                </div>
-              </Link>
-
-              <Link href={`/selling-page/${item._id}`}>
-                <div className="absolute min-w-[204px] bottom-4 left-4 text-center z-10 bg-[#fde504] px-[50px] py-[20px] rounded-[20px]">
-                  <button className="text-[#202020] text-base font-bold font-karla leading-tight">
-                    Buy Now
-                  </button>
-                </div>
-              </Link>
-              <div className="absolute bottom-6 right-5 z-10">
-                <div className="h-[54px] p-[15px] bg-white rounded-[100px]">
-                  <Image
-                    alt=""
-                    width={24}
-                    height={24}
-                    src="/hand_shake.svg"
-                    onClick={() => handleOpenOfferPopup(item._id, item.seller)}
-                  />
-                </div>
-              </div>
-
-              <OfferPopup
-                isOpen={isOfferPopupOpen}
-                onClose={handleCloseOfferPopup}
-                onSubmit={handleOfferSubmit}
-              />
-              <Slider {...innerSliderSettings}>
-                {item.images.map((imgSrc, imgIndex) => (
-                  <div key={imgIndex}
-                    className="w-[307px] h-[390px] flex items-center justify-center overflow-hidden rounded-md "
-                  >
-                    <Image
-                      src={imgSrc}
-                      width={307}
-                      height={390}
-                      layout="fixed"
-                      alt={item.name}
-                      className="w-full h-full object-cover rounded-xl"
-                    />
-                  </div>
-                ))}
-              </Slider>
-            </div>
-            <div className="flex flex-col gap-3">
-              <p className=" h-2.5 text-black text-base font-bold font-karla leading-tight">
-                {item.name}
-              </p>
-              <p className="text-black text-[25px] font-bold font-karla leading-[30px]">
-                {item.price}
-              </p>
-            </div>
-          </div>
-        ))}
+  {data.map((item, index) => (
+    <div key={item.id || index} className="flex flex-col gap-3">
+      <div className="w-[307px] h-[404px] rounded-[20px] relative mx-2 outline-none">
+        <div className="absolute top-2 right-2 z-10">
+          {/* Other content */}
+        </div>
       </div>
+    </div>
+  ))}
+</div>
+
       {isPopupOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
           <div className="bg-white p-6 rounded-lg shadow-lg w-[400px] text-center">
