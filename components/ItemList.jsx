@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import React, { useEffect, useState } from 'react';
-import Link from 'next/link';
-import Cookies from 'js-cookie';
-import axios from 'axios';
-import { useRouter } from 'next/navigation';
+import React, { useEffect, useState } from "react";
+import Link from "next/link";
+import Cookies from "js-cookie";
+import axios from "axios";
+import { useRouter } from "next/navigation";
 
 const ItemList = () => {
   const [adress, setAdress] = useState([]);
@@ -15,7 +15,7 @@ const ItemList = () => {
   const handleSelect = () => {};
   const fetchAddress = async () => {
     try {
-      const token = JSON.parse(Cookies.get('auth'));
+      const token = JSON.parse(Cookies.get("auth"));
 
       const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/pickup/get`;
       const response = await axios.get(url, {
@@ -23,15 +23,16 @@ const ItemList = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-
-      setAdress(response?.data?.addresses);
+      const fetchedAddresses = response?.data?.addresses;
+      console.log("Fetched Addresses:", fetchedAddresses);
+      setAdress(fetchedAddresses);
     } catch (err) {
       if (err.response && err.response.status === 401) {
         // If unauthorized, clear token and redirect to homepage
-        Cookies.remove('auth');
-        router.push('/');
+        Cookies.remove("auth");
+        router.push("/");
       } else {
-        console.log('error');
+        console.log("error");
       }
     } finally {
       setLoading(false);
@@ -41,27 +42,27 @@ const ItemList = () => {
     fetchAddress();
   }, []);
   const [formData, setFormData] = useState({
-    itemName: '',
-    description: '',
-    category: '',
-    subCategory: '',
-    gender: '',
-    condition: '',
-    brand: '',
-    size: '',
-    usage: '',
-    price: '',
-    damages: '',
-    rentOption: 'No',
+    itemName: "",
+    description: "",
+    category: "",
+    subCategory: "",
+    gender: "",
+    condition: "",
+    brand: "",
+    size: "",
+    usage: "",
+    price: "",
+    damages: "",
+    rentOption: "No",
     images: [],
-    country: '',
-    city: '',
-    addressLine1: '',
-    addressLine2: '',
-    firstName: '',
-    lastName: '',
-    email: '',
-    phone: '',
+    country: "",
+    city: "",
+    addressLine1: "",
+    addressLine2: "",
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: "",
   });
 
   const [caseState, setCaseState] = useState(1);
@@ -73,26 +74,26 @@ const ItemList = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
-    setErrors({ ...errors, [name]: '' });
+    setErrors({ ...errors, [name]: "" });
   };
 
   const handleFileChange = (e, index) => {
     const file = e.target.files[0];
 
     if (file) {
-      const validImageTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+      const validImageTypes = ["image/jpeg", "image/png", "image/jpg"];
 
       // Check if the file type is a valid image type
       if (validImageTypes.includes(file.type)) {
         const newImages = [...formData.images];
         newImages[index] = file;
         setFormData({ ...formData, images: newImages });
-        setErrors({ ...errors, images: '' });
+        setErrors({ ...errors, images: "" });
       } else {
         // If the file is not an image, set an error message
         setErrors({
           ...errors,
-          images: 'Only image files (JPEG, PNG) are allowed.',
+          images: "Only image files (JPEG, PNG) are allowed.",
         });
       }
     }
@@ -106,16 +107,19 @@ const ItemList = () => {
 
   const validateForm = () => {
     let newErrors = {};
-    if (!formData.itemName.trim()) newErrors.itemName = 'Product title is required';
-    if (!formData.description.trim()) newErrors.description = 'Description is required';
-    if (!formData.category.trim()) newErrors.category = 'Category is required';
-    if (!formData.gender) newErrors.gender = 'gender is required';
-    if (!formData.condition) newErrors.condition = 'condition is required';
-    if (!formData.brand) newErrors.brand = 'Brand is required';
-    if (!formData.size) newErrors.size = 'Size is required';
-    if (!formData.usage) newErrors.usage = 'Usage is required';
-    if (!formData.price.trim()) newErrors.price = 'Price is required';
-    if (formData.images.length < 2) newErrors.images = 'At least two image is required';
+    if (!formData.itemName.trim())
+      newErrors.itemName = "Product title is required";
+    if (!formData.description.trim())
+      newErrors.description = "Description is required";
+    if (!formData.category.trim()) newErrors.category = "Category is required";
+    if (!formData.gender) newErrors.gender = "gender is required";
+    if (!formData.condition) newErrors.condition = "condition is required";
+    if (!formData.brand) newErrors.brand = "Brand is required";
+    if (!formData.size) newErrors.size = "Size is required";
+    if (!formData.usage) newErrors.usage = "Usage is required";
+    if (!formData.price.trim()) newErrors.price = "Price is required";
+    if (formData.images.length < 2)
+      newErrors.images = "At least two image is required";
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -126,31 +130,35 @@ const ItemList = () => {
       setCaseState(2);
     } else {
       // Scroll to the first error
-      const firstError = document.querySelector('.text-red-500');
+      const firstError = document.querySelector(".text-red-500");
       if (firstError) {
-        firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        firstError.scrollIntoView({ behavior: "smooth", block: "center" });
       }
     }
   };
   const uploadImage = async (imageFile) => {
     const imageData = new FormData();
     for (let i = 0; i < imageFile?.length; i++) {
-      imageData.append('files', imageFile[i]);
-      imageData.append('folder', 'avatar');
+      imageData.append("files", imageFile[i]);
+      imageData.append("folder", "avatar");
     }
 
     try {
-      const token = JSON.parse(Cookies.get('auth'));
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/upload/multiple`, imageData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const token = JSON.parse(Cookies.get("auth"));
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/upload/multiple`,
+        imageData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       return response.data.fileUrls;
     } catch (error) {
-      console.error('Error uploading image:', error);
-      throw new Error('Failed to upload image');
+      console.error("Error uploading image:", error);
+      throw new Error("Failed to upload image");
     }
   };
 
@@ -164,7 +172,7 @@ const ItemList = () => {
           imageUrl = await uploadImage(formData.images);
         }
 
-        const token = JSON.parse(Cookies.get('auth'));
+        const token = JSON.parse(Cookies.get("auth"));
 
         let address = selectedAddress
           ? { ...selectedAddress } // Create a copy of selectedAddress
@@ -205,21 +213,25 @@ const ItemList = () => {
           product,
         };
 
-        const response = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/product/listing/add`, payload, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await axios.post(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/product/add`,
+          payload,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
 
         if (response.status === 201) {
           setSuccessPopups(true);
           setTimeout(() => {
             setSuccessPopups(false);
-            router.push('/');
+            router.push("/");
           }, 2000);
         }
       } catch (error) {
-        console.error('Error submitting form:', error);
+        console.error("Error submitting form:", error);
       }
     }
   };
@@ -229,11 +241,11 @@ const ItemList = () => {
   };
 
   const AddressSelection = ({ addresses, onSelect, onAddNew }) => {
-    const [selectedType, setSelectedType] = useState('existing');
+    const [selectedType, setSelectedType] = useState("existing");
 
     const handleTypeChange = (type) => {
       setSelectedType(type);
-      if (type === 'new') {
+      if (type === "new") {
         onAddNew();
       }
     };
@@ -245,8 +257,8 @@ const ItemList = () => {
             <input
               type="radio"
               name="addressType"
-              checked={selectedType === 'existing'}
-              onChange={() => handleTypeChange('existing')}
+              checked={selectedType === "existing"}
+              onChange={() => handleTypeChange("existing")}
               className="w-4 h-4 text-pink-500 border-gray-300 focus:ring-pink-500"
             />
             <span className="text-gray-700">Use Existing Address</span>
@@ -256,23 +268,23 @@ const ItemList = () => {
             <input
               type="radio"
               name="addressType"
-              checked={selectedType === 'new'}
-              onChange={() => handleTypeChange('new')}
+              checked={selectedType === "new"}
+              onChange={() => handleTypeChange("new")}
               className="w-4 h-4 text-pink-500 border-gray-300 focus:ring-pink-500"
             />
             <span className="text-gray-700">Add New Address</span>
           </label>
         </div>
 
-        {selectedType === 'existing' && addresses?.length > 0 ? (
+        {selectedType === "existing" && addresses?.length > 0 ? (
           <div className="space-y-4">
             {addresses.map((address) => (
               <div
                 key={address._id}
                 className={`border rounded-lg p-4 cursor-pointer transition-all ${
                   selectedAddress?._id === address._id
-                    ? 'border-2 border-pink-500'
-                    : 'border-gray-200 hover:border-pink-300'
+                    ? "border-2 border-pink-500"
+                    : "border-gray-200 hover:border-pink-300"
                 }`}
                 onClick={() => onSelect(address)}
               >
@@ -303,8 +315,10 @@ const ItemList = () => {
               </div>
             ))}
           </div>
-        ) : selectedType === 'existing' ? (
-          <p className="text-gray-500 italic">No saved addresses found. Please add a new address.</p>
+        ) : selectedType === "existing" ? (
+          <p className="text-gray-500 italic">
+            No saved addresses found. Please add a new address.
+          </p>
         ) : null}
       </div>
     );
@@ -317,12 +331,17 @@ const ItemList = () => {
           {successPopup && (
             <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
               <div className="bg-white p-8 rounded-lg text-center shadow-lg max-w-sm">
-                <img src="/ChechkNotfi.png" alt="Check Notification" className="w-14 h-14 mx-auto mb-4" />
+                <img
+                  src="/ChechkNotfi.png"
+                  alt="Check Notification"
+                  className="w-14 h-14 mx-auto mb-4"
+                />
                 <h2 className="text-lg font-semibold text-black">
                   Your product listing request has been successfully received
                 </h2>
                 <p className="text-gray-500 mt-2">
-                  Post the approval from our QC team, your product will be visible to other users.
+                  Post the approval from our QC team, your product will be
+                  visible to other users.
                 </p>
               </div>
             </div>
@@ -332,13 +351,13 @@ const ItemList = () => {
             className="relative w-full h-[150px] bg-cover bg-center flex items-center justify-start pl-6"
             style={{
               backgroundImage: `url('/pink-header.png')`,
-              clipPath: 'ellipse(90% 100% at 50% 0%)',
+              clipPath: "ellipse(90% 100% at 50% 0%)",
             }}
           >
             {/* Back Button */}
             <button
               className="absolute top-4 left-4 flex items-center space-x-1 px-2 py-1 text-sm text-black bg-white bg-opacity-60 hover:bg-opacity-80 rounded-md transition"
-              onClick={() => router.push('/')}
+              onClick={() => router.push("/")}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -348,7 +367,11 @@ const ItemList = () => {
                 stroke="currentColor"
                 className="w-4 h-4"
               >
-                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M15 19l-7-7 7-7"
+                />
               </svg>
               <span>Back</span>
             </button>
@@ -361,11 +384,11 @@ const ItemList = () => {
               src="/yellow-bird.png"
               alt="Yellow Bird"
               className="absolute top-6 right-24 w-12 h-12 hidden md:block"
-              style={{ marginTop: '53px', marginRight: '30px' }}
+              style={{ marginTop: "53px", marginRight: "30px" }}
             />
             <div
               className="absolute top-5 right-6 w-12 h-12 rounded-full border-2 border-black border-dotted flex items-center justify-center p-[2px] hidden md:flex"
-              style={{ marginTop: '63px' }}
+              style={{ marginTop: "63px" }}
             >
               <div className="w-5 h-5 bg-yellow-400 rounded-full border-2 border-black"></div>
             </div>
@@ -374,7 +397,9 @@ const ItemList = () => {
           <div className="px-4 sm:px-8 md:px-16 lg:px-20 py-8 sm:py-10">
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
-                <label className="block text-[#151515] text-base font-bold font-karla mb-2">Product Images</label>
+                <label className="block text-[#151515] text-base font-bold font-karla mb-2">
+                  Product Images
+                </label>
                 <div className="flex flex-wrap gap-4 sm:gap-9">
                   {Array(4)
                     .fill()
@@ -419,19 +444,27 @@ const ItemList = () => {
                             </button>
                           </>
                         ) : (
-                          <img src="/upload.png" alt="Upload Icon" className="w-8 h-8" />
+                          <img
+                            src="/upload.png"
+                            alt="Upload Icon"
+                            className="w-8 h-8"
+                          />
                         )}
                       </div>
                     ))}
                 </div>
-                {errors.images && <p className="text-red-500 mt-1">{errors.images}</p>}
+                {errors.images && (
+                  <p className="text-red-500 mt-1">{errors.images}</p>
+                )}
                 <a href="/tips" className="text-[#E4086F] mt-2 underline">
                   Read our video and photo tips
                 </a>
               </div>
 
               <div>
-                <label className="block text-[#151515] text-base font-bold font-karla mb-2">Product Title</label>
+                <label className="block text-[#151515] text-base font-bold font-karla mb-2">
+                  Product Title
+                </label>
                 <input
                   type="text"
                   name="itemName"
@@ -439,30 +472,38 @@ const ItemList = () => {
                   onChange={handleChange}
                   placeholder="Enter your product title"
                   className={`w-full p-2 border ${
-                    errors.itemName ? 'border-red-500' : 'border-[#868686]'
+                    errors.itemName ? "border-red-500" : "border-[#868686]"
                   } rounded-lg max-w-[500px]`}
                   required
                 />
-                {errors.itemName && <p className="text-red-500 mt-1">{errors.itemName}</p>}
+                {errors.itemName && (
+                  <p className="text-red-500 mt-1">{errors.itemName}</p>
+                )}
               </div>
 
               <div>
-                <label className="block text-[#151515] text-base font-bold font-karla mb-2">Product Description</label>
+                <label className="block text-[#151515] text-base font-bold font-karla mb-2">
+                  Product Description
+                </label>
                 <textarea
                   name="description"
                   value={formData.description}
                   onChange={handleChange}
                   placeholder="Enter your product description"
                   className={`w-full p-2 border ${
-                    errors.description ? 'border-red-500' : 'border-[#868686]'
+                    errors.description ? "border-red-500" : "border-[#868686]"
                   } rounded-lg max-w-[500px]`}
                   rows={4}
                 />
-                {errors.description && <p className="text-red-500 mt-1">{errors.description}</p>}
+                {errors.description && (
+                  <p className="text-red-500 mt-1">{errors.description}</p>
+                )}
               </div>
 
               <div>
-                <label className="block text-[#151515] text-base font-bold font-karla mb-2">Product Category</label>
+                <label className="block text-[#151515] text-base font-bold font-karla mb-2">
+                  Product Category
+                </label>
                 <input
                   type="text"
                   name="category"
@@ -470,14 +511,18 @@ const ItemList = () => {
                   onChange={handleChange}
                   placeholder="Enter Product Category"
                   className={`w-full p-2 border ${
-                    errors.category ? 'border-red-500' : 'border-[#868686]'
+                    errors.category ? "border-red-500" : "border-[#868686]"
                   } rounded-lg max-w-[500px]`}
                 />
-                {errors.category && <p className="text-red-500 mt-1">{errors.category}</p>}
+                {errors.category && (
+                  <p className="text-red-500 mt-1">{errors.category}</p>
+                )}
               </div>
 
               <div>
-                <label className="block text-[#151515] text-base font-bold font-karla mb-2">Product Sub Category</label>
+                <label className="block text-[#151515] text-base font-bold font-karla mb-2">
+                  Product Sub Category
+                </label>
                 <input
                   type="text"
                   name="subCategory"
@@ -485,19 +530,23 @@ const ItemList = () => {
                   onChange={handleChange}
                   placeholder="Enter Product Sub Category"
                   className={`w-full p-2 border ${
-                    errors.subCategory ? 'border-red-500' : 'border-[#868686]'
+                    errors.subCategory ? "border-red-500" : "border-[#868686]"
                   } rounded-lg max-w-[500px]`}
                 />
-                {errors.subCategory && <p className="text-red-500 mt-1">{errors.subCategory}</p>}
+                {errors.subCategory && (
+                  <p className="text-red-500 mt-1">{errors.subCategory}</p>
+                )}
               </div>
               <div>
-                <label className="block text-[#151515] text-base font-bold font-karla mb-2">Gender</label>
+                <label className="block text-[#151515] text-base font-bold font-karla mb-2">
+                  Gender
+                </label>
                 <select
                   name="gender"
                   value={formData.gender}
                   onChange={handleChange}
                   className={`w-full p-2 border ${
-                    errors.gender ? 'border-red-500' : 'border-[#868686]'
+                    errors.gender ? "border-red-500" : "border-[#868686]"
                   } rounded-lg max-w-[500px]`}
                 >
                   <option value="">Select Gender</option>
@@ -505,17 +554,21 @@ const ItemList = () => {
                   <option value="Women">Women</option>
                   {/* <option value="Kids">Kids</option> */}
                 </select>
-                {errors.gender && <p className="text-red-500 mt-1">{errors.gender}</p>}
+                {errors.gender && (
+                  <p className="text-red-500 mt-1">{errors.gender}</p>
+                )}
               </div>
 
               <div>
-                <label className="block text-[#151515] text-base font-bold font-karla mb-2">Condition</label>
+                <label className="block text-[#151515] text-base font-bold font-karla mb-2">
+                  Condition
+                </label>
                 <select
                   name="condition"
                   value={formData.condition}
                   onChange={handleChange}
                   className={`w-full p-2 border ${
-                    errors.condition ? 'border-red-500' : 'border-[#868686]'
+                    errors.condition ? "border-red-500" : "border-[#868686]"
                   } rounded-lg max-w-[500px]`}
                 >
                   <option value="">Select Condition</option>
@@ -525,11 +578,15 @@ const ItemList = () => {
                   <option value="Needs Repair">Needs Repair</option>
                   <option value="Like New">Like New</option>
                 </select>
-                {errors.condition && <p className="text-red-500 mt-1">{errors.condition}</p>}
+                {errors.condition && (
+                  <p className="text-red-500 mt-1">{errors.condition}</p>
+                )}
               </div>
 
               <div>
-                <label className="block text-[#151515] text-base font-bold font-karla mb-2">Product Brand</label>
+                <label className="block text-[#151515] text-base font-bold font-karla mb-2">
+                  Product Brand
+                </label>
                 <input
                   type="text"
                   name="brand"
@@ -537,20 +594,24 @@ const ItemList = () => {
                   onChange={handleChange}
                   placeholder="Enter Brand Name"
                   className={`w-full p-2 border ${
-                    errors.brand ? 'border-red-500' : 'border-[#868686]'
+                    errors.brand ? "border-red-500" : "border-[#868686]"
                   } rounded-lg max-w-[500px]`}
                 />
-                {errors.brand && <p className="text-red-500 mt-1">{errors.brand}</p>}
+                {errors.brand && (
+                  <p className="text-red-500 mt-1">{errors.brand}</p>
+                )}
               </div>
 
               <div>
-                <label className="block text-[#151515] text-base font-bold font-karla mb-2">Product Size</label>
+                <label className="block text-[#151515] text-base font-bold font-karla mb-2">
+                  Product Size
+                </label>
                 <select
                   name="size"
                   value={formData.size}
                   onChange={handleChange}
                   className={`w-full p-2 border ${
-                    errors.size ? 'border-red-500' : 'border-[#868686]'
+                    errors.size ? "border-red-500" : "border-[#868686]"
                   } rounded-lg max-w-[500px]`}
                 >
                   <option value="">Choose Product Size</option>
@@ -562,17 +623,21 @@ const ItemList = () => {
                   <option value="XXL">XXL (2X Large)</option>
                   <option value="XXXL">XXXL (3X Large)</option>
                 </select>
-                {errors.size && <p className="text-red-500 mt-1">{errors.size}</p>}
+                {errors.size && (
+                  <p className="text-red-500 mt-1">{errors.size}</p>
+                )}
               </div>
 
               <div>
-                <label className="block text-[#151515] text-base font-bold font-karla mb-2">Usage</label>
+                <label className="block text-[#151515] text-base font-bold font-karla mb-2">
+                  Usage
+                </label>
                 <select
                   name="usage"
                   value={formData.usage}
                   onChange={handleChange}
                   className={`w-full p-2 border ${
-                    errors.usage ? 'border-red-500' : 'border-[#868686]'
+                    errors.usage ? "border-red-500" : "border-[#868686]"
                   } rounded-lg max-w-[500px]`}
                 >
                   <option value="">Choose Usage Level</option>
@@ -581,11 +646,15 @@ const ItemList = () => {
                   <option value="Frequent">Medium used</option>
                   <option value="Occasional">Well used</option>
                 </select>
-                {errors.usage && <p className="text-red-500 mt-1">{errors.usage}</p>}
+                {errors.usage && (
+                  <p className="text-red-500 mt-1">{errors.usage}</p>
+                )}
               </div>
 
               <div>
-                <label className="block text-[#151515] text-base font-bold font-karla mb-2">Price (AED)</label>
+                <label className="block text-[#151515] text-base font-bold font-karla mb-2">
+                  Price (AED)
+                </label>
                 <input
                   type="number"
                   name="price"
@@ -593,21 +662,25 @@ const ItemList = () => {
                   onChange={handleChange}
                   placeholder="Enter Product Price in AED"
                   className={`w-full p-2 border ${
-                    errors.price ? 'border-red-500' : 'border-[#868686]'
+                    errors.price ? "border-red-500" : "border-[#868686]"
                   } rounded-lg max-w-[500px] [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none`}
                   min="0"
                   step="0.01"
                   onKeyDown={(e) => {
-                    if (e.key === 'e' || e.key === '+' || e.key === '-') {
+                    if (e.key === "e" || e.key === "+" || e.key === "-") {
                       e.preventDefault();
                     }
                   }}
                 />
-                {errors.price && <p className="text-red-500 mt-1">{errors.price}</p>}
+                {errors.price && (
+                  <p className="text-red-500 mt-1">{errors.price}</p>
+                )}
               </div>
 
               <div>
-                <label className="block text-[#151515] text-base font-bold font-karla mb-2">Damages</label>
+                <label className="block text-[#151515] text-base font-bold font-karla mb-2">
+                  Damages
+                </label>
                 <textarea
                   name="damages"
                   value={formData.damages}
@@ -624,12 +697,12 @@ const ItemList = () => {
                     <input
                       type="checkbox"
                       name="rentOption"
-                      checked={formData.rentOption === 'Yes'}
+                      checked={formData.rentOption === "Yes"}
                       onChange={(e) => {
                         handleChange({
                           target: {
-                            name: 'rentOption',
-                            value: e.target.checked ? 'Yes' : 'No',
+                            name: "rentOption",
+                            value: e.target.checked ? "Yes" : "No",
                           },
                         });
                       }}
@@ -642,9 +715,11 @@ const ItemList = () => {
                   )} */}
                 </div>
 
-                {formData.rentOption === 'Yes' && (
+                {formData.rentOption === "Yes" && (
                   <div>
-                    <label className="block text-[#151515] text-base font-bold font-karla mb-2">Rental Price</label>
+                    <label className="block text-[#151515] text-base font-bold font-karla mb-2">
+                      Rental Price
+                    </label>
                     <input
                       type="number"
                       name="rentalPrice"
@@ -652,17 +727,21 @@ const ItemList = () => {
                       onChange={handleChange}
                       placeholder="Enter rental price"
                       className={`w-full p-2 border ${
-                        errors.rentalPrice ? 'border-red-500' : 'border-[#868686]'
+                        errors.rentalPrice
+                          ? "border-red-500"
+                          : "border-[#868686]"
                       } rounded-lg max-w-[500px]`}
                     />
-                    {errors.rentalPrice && <p className="text-red-500 mt-1">{errors.rentalPrice}</p>}
+                    {errors.rentalPrice && (
+                      <p className="text-red-500 mt-1">{errors.rentalPrice}</p>
+                    )}
                   </div>
                 )}
               </div>
 
               <p className="text-gray-500 mt-1 text-left max-w-[500px]">
-                Renting option is available only when the price of the product is above{' '}
-                <span className="text-[#E4086F]">300 AED</span>
+                Renting option is available only when the price of the product
+                is above <span className="text-[#E4086F]">300 AED</span>
               </p>
 
               <div className="flex space-x-8 mt-6 justify-center">
@@ -670,7 +749,7 @@ const ItemList = () => {
                   type="submit"
                   onClick={handleNext}
                   className="px-8 py-3 bg-[#E4086F] text-yellow-400 text-lg font-semibold hover:bg-[#d4076e] transition-colors"
-                  style={{ borderRadius: '22px' }}
+                  style={{ borderRadius: "22px" }}
                 >
                   Next
                 </button>
@@ -680,7 +759,7 @@ const ItemList = () => {
                   onClick={handleBack}
                   type="button"
                   className="px-8 py-3 border border-[#E4086F] text-[#E4086F] text-lg font-semibold hover:bg-[#fce4f4] transition-colors"
-                  style={{ borderRadius: '22px' }}
+                  style={{ borderRadius: "22px" }}
                 >
                   Cancel
                 </button>
@@ -695,7 +774,7 @@ const ItemList = () => {
             className="relative w-full h-[150px] bg-cover bg-center flex items-center justify-start pl-6"
             style={{
               backgroundImage: `url('/pink-header.png')`,
-              clipPath: 'ellipse(90% 100% at 50% 0%)',
+              clipPath: "ellipse(90% 100% at 50% 0%)",
             }}
           >
             <div className="text-[#e6e6e6] text-[32px] sm:text-[46px] font-luckiest leading-[38px] sm:leading-[55.20px]">
@@ -706,11 +785,11 @@ const ItemList = () => {
               src="/yellow-bird.png"
               alt="Yellow Bird"
               className="absolute top-6 right-24 w-12 h-12 hidden md:block"
-              style={{ marginTop: '53px', marginRight: '30px' }}
+              style={{ marginTop: "53px", marginRight: "30px" }}
             />
             <div
               className="absolute top-5 right-6 w-12 h-12 rounded-full border-2 border-black border-dotted flex items-center justify-center p-[2px] hidden md:flex"
-              style={{ marginTop: '63px' }}
+              style={{ marginTop: "63px" }}
             >
               <div className="w-5 h-5 bg-yellow-400 rounded-full border-2 border-black"></div>
             </div>
@@ -718,8 +797,12 @@ const ItemList = () => {
 
           <div className="px-4 sm:px-8 md:px-16 lg:px-20 py-8 sm:py-10">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4">
-              <p className="text-[#151515] text-xl sm:text-2xl font-bold font-karla">Pickup Details</p>
-              <p className="text-black text-sm sm:text-base font-bold font-karla mt-2 sm:mt-0">Step 2 of 2</p>
+              <p className="text-[#151515] text-xl sm:text-2xl font-bold font-karla">
+                Pickup Details
+              </p>
+              <p className="text-black text-sm sm:text-base font-bold font-karla mt-2 sm:mt-0">
+                Step 2 of 2
+              </p>
             </div>
             <p className="text-[#a8a8a8] text-sm sm:text-base font-normal font-karla">
               Please enter your pickup details
@@ -747,14 +830,14 @@ const ItemList = () => {
                   setSelectedAddress(null);
                   setFormData({
                     ...formData,
-                    firstName: '',
-                    lastName: '',
-                    email: '',
-                    phone: '',
-                    addressLine1: '',
-                    addressLine2: '',
-                    city: '',
-                    country: '',
+                    firstName: "",
+                    lastName: "",
+                    email: "",
+                    phone: "",
+                    addressLine1: "",
+                    addressLine2: "",
+                    city: "",
+                    country: "",
                   });
                 }}
               />
@@ -764,7 +847,9 @@ const ItemList = () => {
                 <div className="w-full flex flex-col gap-6">
                   <div className="flex flex-wrap sm:flex-nowrap gap-6">
                     <div className="flex-1 flex flex-col">
-                      <p className="text-[#151515] text-sm sm:text-base font-bold font-karla">Country</p>
+                      <p className="text-[#151515] text-sm sm:text-base font-bold font-karla">
+                        Country
+                      </p>
                       <select
                         name="country"
                         value={formData.country}
@@ -777,11 +862,17 @@ const ItemList = () => {
                         <option value="fiat">Fiat</option>
                         <option value="audi">Audi</option>
                       </select>
-                      {errors.country && <p className="text-red-500 text-sm mt-1">{errors.country}</p>}
+                      {errors.country && (
+                        <p className="text-red-500 text-sm mt-1">
+                          {errors.country}
+                        </p>
+                      )}
                     </div>
 
                     <div className="flex-1 flex flex-col">
-                      <p className="text-[#151515] text-sm sm:text-base font-bold font-karla">City</p>
+                      <p className="text-[#151515] text-sm sm:text-base font-bold font-karla">
+                        City
+                      </p>
                       <select
                         name="city"
                         value={formData.city}
@@ -794,13 +885,19 @@ const ItemList = () => {
                         <option value="sharjah">Sharjah</option>
                         <option value="ajman">Ajman</option>
                       </select>
-                      {errors.city && <p className="text-red-500 text-sm mt-1">{errors.city}</p>}
+                      {errors.city && (
+                        <p className="text-red-500 text-sm mt-1">
+                          {errors.city}
+                        </p>
+                      )}
                     </div>
                   </div>
 
                   <div className="flex flex-wrap sm:flex-nowrap gap-6">
                     <div className="flex-1 flex flex-col">
-                      <p className="text-[#151515] text-sm sm:text-base font-bold font-karla">Address Line 1</p>
+                      <p className="text-[#151515] text-sm sm:text-base font-bold font-karla">
+                        Address Line 1
+                      </p>
                       <input
                         maxLength={25}
                         placeholder="Enter your address line 1"
@@ -810,11 +907,17 @@ const ItemList = () => {
                         onChange={handleChange}
                         className="w-full h-[50px] border-2 rounded-lg px-5 mt-2 sm:mt-5 font-karla"
                       />
-                      {errors.addressLine1 && <p className="text-red-500 text-sm mt-1">{errors.addressLine1}</p>}
+                      {errors.addressLine1 && (
+                        <p className="text-red-500 text-sm mt-1">
+                          {errors.addressLine1}
+                        </p>
+                      )}
                     </div>
 
                     <div className="flex-1 flex flex-col">
-                      <p className="text-[#151515] text-sm sm:text-base font-bold font-karla">Address Line 2</p>
+                      <p className="text-[#151515] text-sm sm:text-base font-bold font-karla">
+                        Address Line 2
+                      </p>
                       <input
                         maxLength={25}
                         placeholder="Enter your address line 2"
@@ -829,7 +932,9 @@ const ItemList = () => {
 
                   <div className="flex flex-wrap sm:flex-nowrap gap-6">
                     <div className="flex-1 flex flex-col">
-                      <p className="text-[#151515] text-sm sm:text-base font-bold font-karla">First name</p>
+                      <p className="text-[#151515] text-sm sm:text-base font-bold font-karla">
+                        First name
+                      </p>
                       <input
                         maxLength={25}
                         placeholder="Enter your first name"
@@ -839,11 +944,17 @@ const ItemList = () => {
                         onChange={handleChange}
                         className="w-full h-[50px] border-2 rounded-lg px-5 mt-2 sm:mt-5 font-karla"
                       />
-                      {errors.firstName && <p className="text-red-500 text-sm mt-1">{errors.firstName}</p>}
+                      {errors.firstName && (
+                        <p className="text-red-500 text-sm mt-1">
+                          {errors.firstName}
+                        </p>
+                      )}
                     </div>
 
                     <div className="flex-1 flex flex-col">
-                      <p className="text-[#151515] text-sm sm:text-base font-bold font-karla">Last name</p>
+                      <p className="text-[#151515] text-sm sm:text-base font-bold font-karla">
+                        Last name
+                      </p>
                       <input
                         maxLength={25}
                         placeholder="Enter your last name"
@@ -853,13 +964,19 @@ const ItemList = () => {
                         onChange={handleChange}
                         className="w-full h-[50px] border-2 rounded-lg px-5 mt-2 sm:mt-5 font-karla"
                       />
-                      {errors.lastName && <p className="text-red-500 text-sm mt-1">{errors.lastName}</p>}
+                      {errors.lastName && (
+                        <p className="text-red-500 text-sm mt-1">
+                          {errors.lastName}
+                        </p>
+                      )}
                     </div>
                   </div>
 
                   <div className="flex flex-wrap sm:flex-nowrap gap-6">
                     <div className="flex-1 flex flex-col">
-                      <p className="text-[#151515] text-sm sm:text-base font-bold font-karla">Email address</p>
+                      <p className="text-[#151515] text-sm sm:text-base font-bold font-karla">
+                        Email address
+                      </p>
                       <input
                         maxLength={50}
                         placeholder="Enter your email address"
@@ -869,11 +986,17 @@ const ItemList = () => {
                         onChange={handleChange}
                         className="w-full h-[50px] border-2 rounded-lg px-5 mt-2 sm:mt-5 font-karla"
                       />
-                      {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
+                      {errors.email && (
+                        <p className="text-red-500 text-sm mt-1">
+                          {errors.email}
+                        </p>
+                      )}
                     </div>
 
                     <div className="flex-1 flex flex-col">
-                      <p className="text-[#151515] text-sm sm:text-base font-bold font-karla">Phone number</p>
+                      <p className="text-[#151515] text-sm sm:text-base font-bold font-karla">
+                        Phone number
+                      </p>
                       <input
                         maxLength={12}
                         placeholder="Enter your phone number"
@@ -883,7 +1006,11 @@ const ItemList = () => {
                         onChange={handleChange}
                         className="w-full h-[50px] border-2 rounded-lg px-5 mt-2 sm:mt-5 font-karla"
                       />
-                      {errors.phone && <p className="text-red-500 text-sm mt-1">{errors.phone}</p>}
+                      {errors.phone && (
+                        <p className="text-red-500 text-sm mt-1">
+                          {errors.phone}
+                        </p>
+                      )}
                     </div>
                   </div>
                 </div>

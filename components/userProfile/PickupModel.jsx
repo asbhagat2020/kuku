@@ -37,7 +37,7 @@ const PickupModal = ({ isOpen, onClose, onSave, mode = 'add', initialData = null
     async function fetchData() {
       try {
         const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/products`);
-        const datavalue = response.data.products;
+        const datavalue = response.data;
 
         const uniqueSellersMap = new Map();
 

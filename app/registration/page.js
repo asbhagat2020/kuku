@@ -167,26 +167,26 @@ export default function Home() {
   };
 
   return (
-    <div className="flex flex-col md:flex-row h-[800px]">
-      {/* Left Image Section */}
-      <div className="w-1/2 bg-gray-100">
-        <img
-          src="/bag-promotional-image-bag-advertising-image-fashion-banner-poster-fashion-banner-fashion-shop-banner 2.png"
-          alt="Promotional"
-          className="w-[703px] h-[800px] object-cover"
-        />
-      </div>
+    <div className="max-w-[1550px] mx-auto">
+    <div className="flex flex-col md:flex-row h-screen lg:h-[800px]">
+    {/* Left Image Section */}
+    <div className="w-full md:w-1/2 h-screen bg-gray-100">
+      <img
+        src="/bag-promotional-image-bag-advertising-image-fashion-banner-poster-fashion-banner-fashion-shop-banner 2.png"
+        alt="Promotional"
+        className="lg:h-[800px] w-full h-full object-cover"
+      />
+    </div>
 
-      {/* Right Form Section */}
-      <div className="w-1/2 flex flex-col justify-center items-center px-[150px] py-2">
-        {/* Logo Section */}
-        <div className="flex items-center gap-2 mb-8">
-          <img src="/Group1.svg" alt="KUKU Logo" className="h-14 w-14" />
-          <div className="text-black text-3xl font-palanquin_dark font-bold">
-            KUKU
-          </div>
+    {/* Right Form Section */}
+    <div className="w-full md:w-1/2 flex flex-col justify-center items-center p-4 md:p-8">
+      {/* Logo Section */}
+      <div className="flex items-center gap-2 mb-8">
+        <img src="/Group1.svg" alt="KUKU Logo" className="h-10 w-10" />
+        <div className="text-black text-2xl font-palanquin_dark font-bold">
+          KUKU
         </div>
-
+      </div>
         <div className="text-black text-xl font-Karla font-bold mb-6">
           Create your account
         </div>
@@ -328,6 +328,7 @@ export default function Home() {
           </a>
         </p>
       </div>
+    </div>
     </div>
   );
 }

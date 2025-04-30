@@ -92,7 +92,9 @@ export default function Wishlist () {
           Authorization: `Bearer ${token}`,
         },
       });
+      console.log("response.data.wishlist..........",response.data.wishlist)
       setWishlist(response.data.wishlist);
+
 
     } catch(err) {
       setError("Failed to fetch product details");
@@ -147,7 +149,7 @@ export default function Wishlist () {
                       </div>
                       <div className="py-2 border border-[#e4086f] flex justify-center items-center min-w-[28.8px] min-h-[28.8px] px-3">
                         <div className="text-[#e4086f] text-[14px] md:text-[16px] font-normal font-karla">
-                          {item?.size}
+                        {item?.size?.sizeName || "N/A"}
                         </div>
                       </div>
                     </div>
@@ -158,7 +160,7 @@ export default function Wishlist () {
                         CONDITION:
                       </span>
                       <span className="text-[#383838] text-[14px] md:text-[16px] font-bold font-karla leading-normal">
-                        {item?.condition}
+                      {item?.condition?.conditionName || "N/A"}
                       </span>
                     </div>
                   </div>

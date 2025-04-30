@@ -17,171 +17,6 @@ import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 import { showSuccessNotification } from "@/utils/Notification/notif";
 
-// const cardData = [
-//   {
-//     id: 1,
-//     user: "Kuku1222",
-//     img: "/profile_icon.svg",
-//     productImg: ["/card_image1.png", "/card_image2.png", "/card_image3.png"],
-//     heard_img: "/heard_img.png",
-//     title: "Dress",
-//     price: "AED 120.00",
-//   },
-//   {
-//     id: 2,
-//     user: "Kuku1222",
-//     img: "/profile_icon.svg",
-//     productImg: ["/card_image2.png", "/card_image3.png", "/card_image1.png"],
-//     heard_img: "/heard_img.png",
-//     title: "Dress",
-//     price: "AED 120.00",
-//   },
-//   {
-//     id: 3,
-//     user: "Kuku1222",
-//     img: "/profile_icon.svg",
-//     productImg: ["/card_image3.png", "/card_image1.png", "/card_image2.png"],
-//     heard_img: "/heard_img.png",
-//     title: "Dress",
-//     price: "AED 120.00",
-//   },
-//   {
-//     id: 4,
-//     user: "Kuku1222",
-//     img: "/profile_icon.svg",
-//     productImg: ["/card_image4.png", "/card_image5.png", "/card_image6.png"],
-//     heard_img: "/heard_img.png",
-//     title: "Dress",
-//     price: "AED 120.00",
-//   },
-//   {
-//     id: 5,
-//     user: "Kuku1222",
-//     img: "/profile_icon.svg",
-//     productImg: ["/card_image5.png", "/card_image6.png", "/card_image4.png"],
-//     heard_img: "/heard_img.png",
-//     title: "Dress",
-//     price: "AED 120.00",
-//   },
-//   {
-//     id: 6,
-//     user: "Kuku1222",
-//     img: "/profile_icon.svg",
-//     productImg: ["/card_image6.png", "/card_image4.png", "/card_image5.png"],
-//     heard_img: "/heard_img.png",
-//     title: "Dress",
-//     price: "AED 120.00",
-//   },
-//   {
-//     id: 7,
-//     user: "Kuku1222",
-//     img: "/profile_icon.svg",
-//     productImg: ["/card_image1.png", "/card_image2.png", "/card_image3.png"],
-//     heard_img: "/heard_img.png",
-//     title: "Dress",
-//     price: "AED 120.00",
-//   },
-//   {
-//     id: 8,
-//     user: "Kuku1222",
-//     img: "/profile_icon.svg",
-//     productImg: ["/card_image2.png", "/card_image3.png", "/card_image1.png"],
-//     heard_img: "/heard_img.png",
-//     title: "Dress",
-//     price: "AED 120.00",
-//   },
-//   {
-//     id: 9,
-//     user: "Kuku1222",
-//     img: "/profile_icon.svg",
-//     productImg: ["/card_image3.png", "/card_image1.png", "/card_image2.png"],
-//     heard_img: "/heard_img.png",
-//     title: "Dress",
-//     price: "AED 120.00",
-//   },
-//   {
-//     id: 10,
-//     user: "Kuku1222",
-//     img: "/profile_icon.svg",
-//     productImg: ["/card_image1.png", "/card_image2.png", "/card_image3.png"],
-//     heard_img: "/heard_img.png",
-//     title: "Dress",
-//     price: "AED 120.00",
-//   },
-//   {
-//     id: 11,
-//     user: "Kuku1222",
-//     img: "/profile_icon.svg",
-//     productImg: ["/card_image2.png", "/card_image3.png", "/card_image1.png"],
-//     heard_img: "/heard_img.png",
-//     title: "Dress",
-//     price: "AED 120.00",
-//   },
-//   {
-//     id: 12,
-//     user: "Kuku1222",
-//     img: "/profile_icon.svg",
-//     productImg: ["/card_image3.png", "/card_image1.png", "/card_image2.png"],
-//     heard_img: "/heard_img.png",
-//     title: "Dress",
-//     price: "AED 120.00",
-//   },
-//   {
-//     id: 13,
-//     user: "Kuku1222",
-//     img: "/profile_icon.svg",
-//     productImg: ["/card_image4.png", "/card_image5.png", "/card_image6.png"],
-//     heard_img: "/heard_img.png",
-//     title: "Dress",
-//     price: "AED 120.00",
-//   },
-//   {
-//     id: 14,
-//     user: "Kuku1222",
-//     img: "/profile_icon.svg",
-//     productImg: ["/card_image5.png", "/card_image6.png", "/card_image4.png"],
-//     heard_img: "/heard_img.png",
-//     title: "Dress",
-//     price: "AED 120.00",
-//   },
-//   {
-//     id: 15,
-//     user: "Kuku1222",
-//     img: "/profile_icon.svg",
-//     productImg: ["/card_image6.png", "/card_image4.png", "/card_image5.png"],
-//     heard_img: "/heard_img.png",
-//     title: "Dress",
-//     price: "AED 120.00",
-//   },
-//   {
-//     id: 16,
-//     user: "Kuku1222",
-//     img: "/profile_icon.svg",
-//     productImg: ["/card_image1.png", "/card_image2.png", "/card_image3.png"],
-//     heard_img: "/heard_img.png",
-//     title: "Dress",
-//     price: "AED 120.00",
-//   },
-//   {
-//     id: 17,
-//     user: "Kuku1222",
-//     img: "/profile_icon.svg",
-//     productImg: ["/card_image2.png", "/card_image3.png", "/card_image1.png"],
-//     heard_img: "/heard_img.png",
-//     title: "Dress",
-//     price: "AED 120.00",
-//   },
-//   {
-//     id: 18,
-//     user: "Kuku1222",
-//     img: "/profile_icon.svg",
-//     productImg: ["/card_image3.png", "/card_image1.png", "/card_image2.png"],
-//     heard_img: "/heard_img.png",
-//     title: "Dress",
-//     price: "AED 120.00",
-//   },
-// ];
-
 export const ImagesComponent = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [isOfferPopupOpen, setIsOfferPopupOpen] = useState(false);
@@ -347,7 +182,7 @@ export const ImagesComponent = () => {
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/products`
       );
-      const datavalue = response.data.products;
+      const datavalue = response.data;
       console.log(datavalue, "dataValue");
       setData(datavalue || []);
     } catch (error) {
@@ -410,22 +245,22 @@ export const ImagesComponent = () => {
               </div>
               <button
                 className={`mt-2 px-4 sm:px-6 py-1 ${
-                  card?.seller.followers.includes(userID)
+                  card?.seller?.followers?.includes(userID)
                     ? "bg-gray-500"
                     : "bg-custom-green"
                 } text-white rounded-full`}
                 onClick={() =>
-                  card?.seller.followers.includes(userID)
+                  card?.seller?.followers?.includes(userID)
                     ? handleFollow(
                         card.seller._id,
                         "unfollow",
                         card?.seller?._id
                       )
-                    : handleFollow(card.seller._id, "follow", card?.seller?._id)
+                    : handleFollow(card?.seller?._id, "follow", card?.seller?._id)
                 }
                 disabled={loading}
               >
-                {card?.seller.followers.includes(userID)
+                {card?.seller?.followers?.includes(userID)
                   ? "Unfollow"
                   : "Follow"}
               </button>

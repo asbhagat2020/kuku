@@ -232,7 +232,7 @@ const Header = () => {
   };
 
   return (
-    <header>
+    <header className='max-w-[1550px] mx-auto'>
       <LanguageSelector />
       <div
         id="header"
@@ -284,15 +284,7 @@ const Header = () => {
                 {/* Kids */}
                 <KidsDropdown />
               </div>
-              {/* <Link
-                href="/EmergencyProducts"
-                className={`${
-                  isHome ? "text-[#fefae5]" : "text-black"
-                } text-base font-bold font-karla leading-tight hover:text-pink-500`}
-              >
-                //  Emergency 
-                Urgent Need
-              </Link> */}
+             
             </div>
           </div>
 
@@ -471,16 +463,6 @@ const Header = () => {
                       Address
                     </div>
                   </Link>
-                  {/* <Link href="/pickupaddress">
-                    <div className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold">
-                      Pickup Address
-                    </div>
-                  </Link> */}
-                  {/* <Link href="/emergencyrequirement">
-                    <div className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold">
-                      Emergency Requirement
-                    </div>
-                  </Link> */}
                   <Link href="/AllOrders">
                     <div className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold">
                       Orders

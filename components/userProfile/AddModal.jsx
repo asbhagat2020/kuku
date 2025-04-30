@@ -18,7 +18,7 @@ const AddModal = ({ isOpen, onClose, title }) => {
     try {
       const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/products`;
       const response = await axios.get(url);
-      setProducts(response.data.products);
+      setProducts(response?.data);
     } catch (err) {
       setError("Failed to fetch product details");
     } finally {

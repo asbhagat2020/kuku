@@ -202,7 +202,7 @@ const SellingCards = ({ data }) => {
 const SoldCards = ({ data }) => (
   <div className="px-[71px] mb-10 opacity-50">
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-4 relative place-items-center">
-      {data.map((i) => (
+      {data?.map((i) => (
         <div key={i.id} className="flex flex-col gap-3">
           <div className="w-[307px] h-[404px] rounded-[20px] relative mx-2 outline-none">
             <div className="absolute top-2 right-2 z-10">
@@ -221,7 +221,7 @@ const SoldCards = ({ data }) => (
               </div>
             </div>
             <Slider {...innerSliderSettings}>
-              {i.images.map((imgSrc, imgIndex) => (
+              {i?.images?.map((imgSrc, imgIndex) => (
                 <div key={imgIndex}
                   className="w-[307px] h-[390px] flex items-center justify-center overflow-hidden rounded-md "
                 >

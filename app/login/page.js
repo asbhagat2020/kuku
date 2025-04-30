@@ -1,3 +1,7 @@
+
+
+
+
 "use client"; // Ensure Client-Side rendering
 
 import { googleSignIn, signinOtp, verifySigninOtp } from "@/store/auth/authSlice";
@@ -16,22 +20,21 @@ export default function Login() {
   const router = useRouter();
   const { data: session, status } = useSession();
   const hasSentRef = useRef(false);
-  
 
   const handleSendOtp = async () => {
     const res = await dispatch(signinOtp({ emailOrPhone }));
- 
+
     setIsOtpSent(true);
-  
+
     // Calculate remaining time to expire
     const currentTime = Date.now(); // Current time in milliseconds
     const remainingTimeInMs = +res.payload.otpExpires - currentTime; // Remaining time in milliseconds
     const remainingTimeInSeconds = Math.ceil(remainingTimeInMs / 1000); // Convert to seconds and round up
-  console.log({remainingTimeInSeconds,remainingTimeInMs})
+    console.log({ remainingTimeInSeconds, remainingTimeInMs });
     setTimer(remainingTimeInSeconds);
     startTimer();
   };
-  
+
   const handleContinue = async () => {
     console.log("heree");
     const res = await dispatch(verifySigninOtp({ emailOrPhone, otp }));
@@ -62,7 +65,7 @@ export default function Login() {
   useEffect(() => {
     const handleGoogleSignIn = async () => {
       if (session) {
-        const res = await dispatch(googleSignIn({ session,status }));
+        const res = await dispatch(googleSignIn({ session, status }));
         if (res.type === "auth/googleSignIn/fulfilled") {
           router.push("/");
         }
@@ -74,26 +77,26 @@ export default function Login() {
     }
 
     // Call the async function inside useEffect
-  }, [session, dispatch,status, router]);
-
+  }, [session, dispatch, status, router]);
 
   return (
-    <div className="flex flex-col md:flex-row h-[800px]">
+    <div className="max-w-[1550px] mx-auto">
+    <div className="flex flex-col md:flex-row h-screen lg:h-[800px]">
       {/* Left Image Section */}
-      <div className="w-1/2 bg-gray-100">
+      <div className="w-full md:w-1/2 h-screen bg-gray-100">
         <img
           src="/bag-promotional-image-bag-advertising-image-fashion-banner-poster-fashion-banner-fashion-shop-banner 2.png"
           alt="Promotional"
-          className="w-[703px] h-[800px] object-cover"
+          className="lg:h-[800px] w-full h-full object-cover"
         />
       </div>
 
       {/* Right Form Section */}
-      <div className="w-1/2 flex flex-col justify-center items-center px-[150px] py-2">
+      <div className="w-full md:w-1/2 flex flex-col justify-center items-center p-4 md:p-8">
         {/* Logo Section */}
         <div className="flex items-center gap-2 mb-8">
-          <img src="/Group1.svg" alt="KUKU Logo" className="h-14 w-14" />
-          <div className="text-black text-3xl font-palanquin_dark font-bold">
+          <img src="/Group1.svg" alt="KUKU Logo" className="h-10 w-10" />
+          <div className="text-black text-2xl font-palanquin_dark font-bold">
             KUKU
           </div>
         </div>
@@ -139,8 +142,8 @@ export default function Login() {
             <div className="mt-1 text-[#e4086f] text-sm font-normal font-karla underline leading-none ">
               {timer > 0
                 ? `Resend OTP in ${Math.floor(timer / 60)}:${
-                    timer % 60 < 10 ? "0" : ""
-                  }${timer % 60}`
+                  timer % 60 < 10 ? "0" : ""
+                }${timer % 60}`
                 : "You can resend the OTP now."}
             </div>
           )}
@@ -163,23 +166,21 @@ export default function Login() {
           <div className="flex flex-col space-y-4">
             {/* Send OTP Button */}
             <button
-            type="button"
-            className={`w-full p-3 ${
-            isOtpSent && timer > 0
-            ? "bg-gray-300 cursor-not-allowed opacity-50"
-            : "bg-yellow-400"
-           } text-black font-semibold font-karla rounded-lg`}
-            onClick={handleSendOtp}
-            disabled={isOtpSent && timer > 0} // Disable when timer is running
-          >
-          {isOtpSent && timer > 0
-          ? `Resend OTP`
-          : isOtpSent
-          ? "Resend OTP"
-          : "Send OTP"}
-        </button>
-
-
+              type="button"
+              className={`w-full p-3 ${
+                isOtpSent && timer > 0
+                  ? "bg-gray-300 cursor-not-allowed opacity-50"
+                  : "bg-yellow-400"
+              } text-black font-semibold font-karla rounded-lg`}
+              onClick={handleSendOtp}
+              disabled={isOtpSent && timer > 0} // Disable when timer is running
+            >
+              {isOtpSent && timer > 0
+                ? `Resend OTP`
+                : isOtpSent
+                  ? "Resend OTP"
+                  : "Send OTP"}
+            </button>
 
             {/* Continue Button */}
             <button
@@ -200,7 +201,10 @@ export default function Login() {
         {/* Social Login */}
         <div className="w-full max-w-md mt-6">
           {/* Google Login */}
-          <button onClick={handleGoogleSignIn} className="w-full flex items-center justify-center p-3 bg-gray-100 border border-gray-300 rounded-lg mb-4">
+          <button
+            onClick={handleGoogleSignIn}
+            className="w-full flex items-center justify-center p-3 bg-gray-100 border border-gray-300 rounded-lg mb-4"
+          >
             <img
               src="/devicon_google.png"
               alt="Google"
@@ -212,7 +216,9 @@ export default function Login() {
           </button>
 
           {/* Facebook Login */}
-          <button className="w-full flex items-center justify-center p-3 bg-gray-100 border border-gray-300 rounded-lg mb-4">
+          <button
+            className="w-full flex items-center justify-center p-3 bg-gray-100 border border-gray-300 rounded-lg mb-4"
+          >
             <img
               src="/devicon_facebook.svg"
               alt="Facebook"
@@ -224,7 +230,9 @@ export default function Login() {
           </button>
 
           {/* Apple Login */}
-          <button className="w-full flex items-center justify-center p-3 bg-gray-100 border border-gray-300 rounded-lg">
+          <button
+            className="w-full flex items-center justify-center p-3 bg-gray-100 border border-gray-300 rounded-lg"
+          >
             <img
               src="/ic_round-apple.svg"
               alt="Apple"
@@ -244,6 +252,7 @@ export default function Login() {
           </a>
         </p>
       </div>
+    </div>
     </div>
   );
 }
