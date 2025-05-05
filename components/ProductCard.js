@@ -304,7 +304,7 @@ const ProductCard = (productDetails) => {
         </Link>{" "}
         |
         <Link href="/" className="hover">
-          {product?.category}
+          {product?.category?.categoryName}
         </Link>{" "}
         | <span className="font-bold">{product?.title}</span>
       </div>
@@ -402,7 +402,7 @@ const ProductCard = (productDetails) => {
               className="inline-block px-4 py-2 text-black rounded-full text-xs font-semibold border  shadow-sm"
               style={{ backgroundColor: "#E6E6E6" }}
             >
-              {product?.category}
+              {product?.category?.categoryName || "N/A"}
             </span>
             <span
               className="inline-block px-4 py-2 text-black rounded-full text-xs font-semibold border  shadow-sm"
@@ -431,12 +431,12 @@ const ProductCard = (productDetails) => {
             <div>
               <span className="font-bold">SIZE</span>
               <span className="inline-block ml-2 px-2 py-1 border border-pink-500 text-red-500 rounded">
-                {product?.size}
+                {product?.size?.sizeName || "N/A"}
               </span>
             </div>
             <div>
               <span className="font-bold">CONDITION: </span>
-              <span className="font-bold">{product?.condition}</span>
+              <span className="font-bold">{product?.condition?.conditionName}</span>
             </div>
           </div>
 
@@ -530,12 +530,12 @@ const ProductCard = (productDetails) => {
 
               <button
                 className={`mt-2 px-4 sm:px-6 py-1 ${
-                  product?.seller.followers.includes(userID)
+                  product?.seller?.followers?.includes(userID)
                     ? "bg-gray-500"
                     : "bg-custom-green"
                 } text-white rounded-full`}
                 onClick={() =>
-                  product?.seller.followers.includes(userID)
+                  product?.seller?.followers?.includes(userID)
                     ? handleFollow(
                         product.seller._id,
                         "unfollow",
@@ -549,7 +549,7 @@ const ProductCard = (productDetails) => {
                 }
                 disabled={loading}
               >
-                {product?.seller.followers.includes(userID)
+                {product?.seller?.followers?.includes(userID)
                   ? "Unfollow"
                   : "Follow"}
               </button>

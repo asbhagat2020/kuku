@@ -31,8 +31,9 @@ const fetchProductDetails = async (id) => {
     const response = await axios.get(url, {
       headers: token ? { Authorization: `Bearer ${token}` } : {}, // Only add headers if token exists
     });
-console.log(response,'fff')
+console.log('fff...........',response.data)
     setProduct(response.data.product);
+    console.log("response.data.recommendedProducts.............",response.data.recommendedProducts)
     setRecomendation(response.data.recommendedProducts);
   } catch (err) {
     setError("Failed to fetch product details");

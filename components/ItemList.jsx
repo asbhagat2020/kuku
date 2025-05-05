@@ -5,18 +5,33 @@ import Link from "next/link";
 import Cookies from "js-cookie";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { showErrorNotification, showSuccessNotification } from "@/utils/Notification/notif";
 
 const ItemList = () => {
   const [adress, setAdress] = useState([]);
   const [loading, setLoading] = useState(false);
   const [showAddressForm, setShowAddressForm] = useState(false);
   const [selectedAddress, setSelectedAddress] = useState(null);
+
+  const [brands, setBrands] = useState([]);
+  const [categories, setCategories] = useState({});
+  const [conditions, setConditions] = useState([]);
+  const [sizes, setSizes] = useState([]);
+  const [selectedGender, setSelectedGender] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedSubCategory, setSelectedSubCategory] = useState("");
+
   console.log(adress);
   const handleSelect = () => {};
   const fetchAddress = async () => {
     try {
-      const token = JSON.parse(Cookies.get("auth"));
-
+      const token = getAuthToken();
+      if (!token) {
+        // showErrorNotification("Please login to access addresses");
+        // router.push("/login");
+        return;
+      }
+  
       const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/pickup/get`;
       const response = await axios.get(url, {
         headers: {
@@ -30,9 +45,11 @@ const ItemList = () => {
       if (err.response && err.response.status === 401) {
         // If unauthorized, clear token and redirect to homepage
         Cookies.remove("auth");
-        router.push("/");
+        showErrorNotification("Session expired. Please login again");
+        router.push("/login");
       } else {
-        console.log("error");
+        // console.log("error");
+        showErrorNotification("Error fetching addresses");
       }
     } finally {
       setLoading(false);
@@ -68,8 +85,41 @@ const ItemList = () => {
   const [caseState, setCaseState] = useState(1);
   const [errors, setErrors] = useState({});
   const [successPopup, setSuccessPopup] = useState(false);
-  const [successPopups, setSuccessPopups] = useState(false);
+  // const [successPopups, setSuccessPopups] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [brandsRes, categoriesRes, conditionsRes, sizesRes] =
+          await Promise.all([
+            axios.get(
+              `${process.env.NEXT_PUBLIC_API_BASE_URL}/brands/getbrand`
+            ),
+            axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/category`),
+            axios.get(
+              `${process.env.NEXT_PUBLIC_API_BASE_URL}/conditions/getcondition`
+            ),
+            axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/sizes/getSizes`),
+          ]);
+
+        setBrands(brandsRes.data.brands || []);
+        setConditions(conditionsRes.data.conditions || []);
+        setSizes(sizesRes.data.sizes || []);
+
+        // Process categories
+        const categoriesByGender = {};
+        categoriesRes.data.data.forEach((item) => {
+          categoriesByGender[item.parentCategory] = item.categories;
+        });
+        setCategories(categoriesByGender);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -144,7 +194,10 @@ const ItemList = () => {
     }
 
     try {
-      const token = JSON.parse(Cookies.get("auth"));
+      const token = getAuthToken();
+    if (!token) {
+      throw new Error("No authentication token");
+    }
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/upload/multiple`,
         imageData,
@@ -161,61 +214,82 @@ const ItemList = () => {
       throw new Error("Failed to upload image");
     }
   };
+  const getAuthToken = () => {
+    const token = Cookies.get("auth");
+    if (!token) return null;
+    try {
+      return JSON.parse(token);
+    } catch (error) {
+      return null;
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (validateForm()) {
       try {
-        let imageUrl = null;
+        const token = getAuthToken();
 
+        if (!token) {
+          showErrorNotification("Please login to post items");
+     
+          return;
+        }
+      
+
+        let imageUrl = null;
         if (formData.images) {
           imageUrl = await uploadImage(formData.images);
         }
 
-        const token = JSON.parse(Cookies.get("auth"));
+      
 
-        let address = selectedAddress
-          ? { ...selectedAddress } // Create a copy of selectedAddress
-          : {
-              country: formData.country,
-              city: formData.city,
-              addressLine1: formData.addressLine1,
-              addressLine2: formData.addressLine2,
-              firstName: formData.firstName,
-              lastName: formData.lastName,
-              email: formData.email,
-              phone: formData.phone,
-            };
-
-        // Remove the _id property if it exists
-        if (address._id) {
-          delete address._id;
-        }
-
-        const product = {
+        // Format the product data according to the schema
+        const productData = {
           name: formData.itemName,
-          description: formData.description,
-          category: formData.category,
-          subCategory: formData.subCategory,
-          gender: formData.gender,
-          condition: formData.condition,
-          brand: formData.brand,
-          size: formData.size,
-          usage: formData.usage,
-          price: formData.price,
-          damages: formData.damages,
-          openToRent: formData.rentOption,
           images: imageUrl,
+          price: Number(formData.price),
+          description: formData.description,
+          condition: formData.condition, // This should be the condition._id
+          brand: formData.brand, // This should be the brand._id
+          category: {
+            parentCategory: selectedGender, // "Men", "Women", or "Kid"
+            categoryName: selectedCategory,
+            subCategoryName: selectedSubCategory,
+          },
+          size: formData.size, // This should be the size._id
+          openToRent: formData.rentOption, // "Yes" or "No"
+          usage: formData.usage,
+          damages: formData.damages || "",
+          productType: "Listing", // Default value
+          pricePerDay:
+            formData.rentOption === "Yes"
+              ? Number(formData.rentalPrice)
+              : undefined,
         };
 
-        const payload = {
-          address,
-          product,
-        };
+        // Handle pickup address
+        if (selectedAddress) {
+          // If using existing address, just send the ID
+          productData.pickupAddress = selectedAddress._id;
+        } else {
+          // If creating new address, send the complete address object
+          productData.pickupAddress = {
+            country: formData.country,
+            city: formData.city,
+            addressLine1: formData.addressLine1,
+            addressLine2: formData.addressLine2 || "",
+            firstName: formData.firstName,
+            lastName: formData.lastName || "",
+            email: formData.email,
+            phone: Number(formData.phone),
+            isDefault: false,
+          };
+        }
 
         const response = await axios.post(
           `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/product/add`,
-          payload,
+          productData, // Send the product data directly
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -224,14 +298,14 @@ const ItemList = () => {
         );
 
         if (response.status === 201) {
-          setSuccessPopups(true);
+          showSuccessNotification("Product added successfully!");
           setTimeout(() => {
-            setSuccessPopups(false);
             router.push("/");
           }, 2000);
         }
       } catch (error) {
         console.error("Error submitting form:", error);
+        showErrorNotification(error.response?.data?.message || "Error adding product");
       }
     }
   };
@@ -502,61 +576,84 @@ const ItemList = () => {
 
               <div>
                 <label className="block text-[#151515] text-base font-bold font-karla mb-2">
+                  Gender
+                </label>
+                <select
+                  name="gender"
+                  value={selectedGender}
+                  onChange={(e) => {
+                    setSelectedGender(e.target.value);
+                    setSelectedCategory("");
+                    setSelectedSubCategory("");
+                    handleChange(e);
+                  }}
+                  className={`w-full p-2 border ${
+                    errors.gender ? "border-red-500" : "border-[#868686]"
+                  } rounded-lg max-w-[500px]`}
+                >
+                  <option value="">Select Gender</option>
+                  {Object.keys(categories).map((gender) => (
+                    <option key={gender} value={gender}>
+                      {gender}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-[#151515] text-base font-bold font-karla mb-2">
                   Product Category
                 </label>
-                <input
-                  type="text"
+                <select
                   name="category"
-                  value={formData.category}
-                  onChange={handleChange}
-                  placeholder="Enter Product Category"
+                  value={selectedCategory}
+                  onChange={(e) => {
+                    setSelectedCategory(e.target.value);
+                    setSelectedSubCategory("");
+                    handleChange(e);
+                  }}
+                  disabled={!selectedGender}
                   className={`w-full p-2 border ${
                     errors.category ? "border-red-500" : "border-[#868686]"
                   } rounded-lg max-w-[500px]`}
-                />
-                {errors.category && (
-                  <p className="text-red-500 mt-1">{errors.category}</p>
-                )}
+                >
+                  <option value="">Select Category</option>
+                  {selectedGender &&
+                    categories[selectedGender]?.map((category) => (
+                      <option key={category._id} value={category.categoryName}>
+                        {category.categoryName}
+                      </option>
+                    ))}
+                </select>
               </div>
 
               <div>
                 <label className="block text-[#151515] text-base font-bold font-karla mb-2">
                   Product Sub Category
                 </label>
-                <input
-                  type="text"
+                <select
                   name="subCategory"
-                  value={formData.subCategory}
-                  onChange={handleChange}
-                  placeholder="Enter Product Sub Category"
+                  value={selectedSubCategory}
+                  onChange={(e) => {
+                    setSelectedSubCategory(e.target.value);
+                    handleChange(e);
+                  }}
+                  disabled={!selectedCategory}
                   className={`w-full p-2 border ${
                     errors.subCategory ? "border-red-500" : "border-[#868686]"
                   } rounded-lg max-w-[500px]`}
-                />
-                {errors.subCategory && (
-                  <p className="text-red-500 mt-1">{errors.subCategory}</p>
-                )}
-              </div>
-              <div>
-                <label className="block text-[#151515] text-base font-bold font-karla mb-2">
-                  Gender
-                </label>
-                <select
-                  name="gender"
-                  value={formData.gender}
-                  onChange={handleChange}
-                  className={`w-full p-2 border ${
-                    errors.gender ? "border-red-500" : "border-[#868686]"
-                  } rounded-lg max-w-[500px]`}
                 >
-                  <option value="">Select Gender</option>
-                  <option value="Men">Men</option>
-                  <option value="Women">Women</option>
-                  {/* <option value="Kids">Kids</option> */}
+                  <option value="">Select Sub Category</option>
+                  {selectedGender &&
+                    selectedCategory &&
+                    categories[selectedGender]
+                      ?.find((cat) => cat.categoryName === selectedCategory)
+                      ?.subCategories.map((sub) => (
+                        <option key={sub._id} value={sub.subCategoryName}>
+                          {sub.subCategoryName}
+                        </option>
+                      ))}
                 </select>
-                {errors.gender && (
-                  <p className="text-red-500 mt-1">{errors.gender}</p>
-                )}
               </div>
 
               <div>
@@ -572,34 +669,33 @@ const ItemList = () => {
                   } rounded-lg max-w-[500px]`}
                 >
                   <option value="">Select Condition</option>
-                  <option value="Excellent">Excellent</option>
-                  <option value="Good">Good</option>
-                  <option value="Bad">Bad</option>
-                  <option value="Needs Repair">Needs Repair</option>
-                  <option value="Like New">Like New</option>
+                  {conditions.map((condition) => (
+                    <option key={condition._id} value={condition._id}>
+                      {condition.conditionName}
+                    </option>
+                  ))}
                 </select>
-                {errors.condition && (
-                  <p className="text-red-500 mt-1">{errors.condition}</p>
-                )}
               </div>
 
               <div>
                 <label className="block text-[#151515] text-base font-bold font-karla mb-2">
                   Product Brand
                 </label>
-                <input
-                  type="text"
+                <select
                   name="brand"
                   value={formData.brand}
                   onChange={handleChange}
-                  placeholder="Enter Brand Name"
                   className={`w-full p-2 border ${
                     errors.brand ? "border-red-500" : "border-[#868686]"
                   } rounded-lg max-w-[500px]`}
-                />
-                {errors.brand && (
-                  <p className="text-red-500 mt-1">{errors.brand}</p>
-                )}
+                >
+                  <option value="">Select Brand</option>
+                  {brands.map((brand) => (
+                    <option key={brand._id} value={brand._id}>
+                      {brand.brandName}
+                    </option>
+                  ))}
+                </select>
               </div>
 
               <div>
@@ -615,37 +711,27 @@ const ItemList = () => {
                   } rounded-lg max-w-[500px]`}
                 >
                   <option value="">Choose Product Size</option>
-                  <option value="XS">XS (Extra Small)</option>
-                  <option value="S">S (Small)</option>
-                  <option value="M">M (Medium)</option>
-                  <option value="L">L (Large)</option>
-                  <option value="XL">XL (Extra Large)</option>
-                  <option value="XXL">XXL (2X Large)</option>
-                  <option value="XXXL">XXXL (3X Large)</option>
+                  {sizes.map((size) => (
+                    <option key={size._id} value={size._id}>
+                      {size.sizeName}
+                    </option>
+                  ))}
                 </select>
-                {errors.size && (
-                  <p className="text-red-500 mt-1">{errors.size}</p>
-                )}
               </div>
-
               <div>
                 <label className="block text-[#151515] text-base font-bold font-karla mb-2">
                   Usage
                 </label>
-                <select
+                <input
+                  type="text"
                   name="usage"
                   value={formData.usage}
                   onChange={handleChange}
+                  placeholder="Enter usage details"
                   className={`w-full p-2 border ${
                     errors.usage ? "border-red-500" : "border-[#868686]"
                   } rounded-lg max-w-[500px]`}
-                >
-                  <option value="">Choose Usage Level</option>
-                  <option value="Casual">Never used</option>
-                  <option value="Regular">Rarely used</option>
-                  <option value="Frequent">Medium used</option>
-                  <option value="Occasional">Well used</option>
-                </select>
+                />
                 {errors.usage && (
                   <p className="text-red-500 mt-1">{errors.usage}</p>
                 )}
@@ -710,9 +796,9 @@ const ItemList = () => {
                     />
                     Open to Rent
                   </label>
-                  {/* {errors.rentOption && (
+                  {errors.rentOption && (
                     <p className="text-red-500 mt-1">{errors.rentOption}</p>
-                  )} */}
+                  )}
                 </div>
 
                 {formData.rentOption === "Yes" && (
@@ -1034,11 +1120,11 @@ const ItemList = () => {
           </div>
         </>
       )}
-      {successPopups && (
+      {/* {successPopups && (
         <div className="popup fixed top-1/3 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-green-500 text-white px-6 py-4 rounded shadow-lg z-50">
           Product added successfully!
         </div>
-      )}
+      )} */}
     </div>
   );
 };

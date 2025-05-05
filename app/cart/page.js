@@ -327,7 +327,7 @@ export default function Cart () {
                           </div>
                           <div className="inline-flex border border-[#e4086f] justify-center items-center px-2 py-1">
                             <div className="text-[#e4086f] text-sm md:text-[16px] font-normal font-karla">
-                              {item?.size}
+                              {item?.size?.sizeName || 'N/A'}
                             </div>
                           </div>
                         </div>
@@ -337,7 +337,7 @@ export default function Cart () {
                             CONDITION:
                           </span>
                           <span className="text-[#383838] text-sm md:text-[16px] font-bold font-karla">
-                            {item?.condition}
+                            {item?.condition?.conditionName || 'N/A'}
                           </span>
                         </div>
                       </div>
@@ -480,7 +480,7 @@ export default function Cart () {
         ) : (
           <div className="w-full h-[50vh] flex justify-center items-center">
             <div className="text-center">
-              <h2 className="font-luckiest text-4xl mb-4">No items here :(</h2>
+              <h2 className="font-luckiest text-4xl mb-4">No items here :</h2>
               <Link
                 className="text-pink-400 font-karla text-xl"
                 href={"/selling-page"}

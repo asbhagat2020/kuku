@@ -132,7 +132,7 @@ export default function Renting() {
                         </div>
                         <div className="min-w-[24px] px-2 py-1 border border-[#e4086f] flex justify-center items-center">
                           <div className="text-[#e4086f] text-[14px] md:text-[16px] font-normal font-karla whitespace-nowrap">
-                            {product.size}
+                            {product.size?.sizeName || "N/A"}
                           </div>
                         </div>
                       </div>
@@ -141,7 +141,7 @@ export default function Renting() {
                           CONDITION:
                         </span>
                         <span className="text-[#383838] text-[14px] md:text-[16px] font-bold font-karla leading-normal">
-                          {product.condition}
+                          {product.condition?.conditionName || "N/A"}
                         </span>
                       </div>
                     </div>

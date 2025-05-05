@@ -176,6 +176,8 @@ const Recommendations = ({ product }) => {
 
   const productList = Array.isArray(product) ? product : [];
 
+  console.log("productList.........",productList)
+
   return (
     <div className="mt-8 flex flex-col items-center mb-20">
       <div className="flex justify-between items-center mb-10 w-full max-w-screen-xl">
