@@ -64,8 +64,8 @@ const SellingCards = ({ data }) => {
   const [error, setError] = useState(null);
   const [selectedProductId, setSelectedProductId] = useState(null);
   const [selectedSellerId, setSelectedSellerId] = useState(null);
-
-
+  const token = JSON.parse(Cookies.get("auth"));
+  const wishlist = useSelector((state) => state.wishlist.items);
   const details = useSelector((state) => state.auth.user);
   const userId = details._id;
 
@@ -89,7 +89,7 @@ const SellingCards = ({ data }) => {
     }
 
     try {
-      const token = JSON.parse(Cookies.get("auth"));
+
       const data = { offerPrice: price, seller: selectedSellerId };
 
       const response = await axios.post(
@@ -157,19 +157,96 @@ const SellingCards = ({ data }) => {
     handleDelete(productIdToDelete);
   };
 
+
+  console.log("datadatadata", data);
+
   return (
     <div className="px-[71px] mb-10">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-4 relative place-items-center">
-  {data.map((item, index) => (
-    <div key={item.id || index} className="flex flex-col gap-3">
-      <div className="w-[307px] h-[404px] rounded-[20px] relative mx-2 outline-none">
-        <div className="absolute top-2 right-2 z-10">
-          {/* Other content */}
-        </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-4 relative ">
+        {data?.map((card) => (
+          <div key={card._id} className="flex flex-col">
+            <div className="relative mt-4">
+              {/* Heart icon for like functionality */}
+              <Link href="/wishlist">
+                <div
+                  className="absolute top-4 right-4 w-12 h-12 flex items-center justify-center rounded-full bg-custom-gray cursor-pointer z-10"
+                  onClick={() => handleLikeClick(card?._id)}
+                >
+                  {wishlist.includes(card._id) ? (
+                    <FcLike className="text-2xl text-red-500" /> // Filled heart for wishlist items
+                  ) : (
+                    <GoHeart className="text-2xl text-gray-300" /> // Outline heart for non-wishlist items
+                  )}
+                </div>
+              </Link>
+              {/* Slider for product images */}
+              <Slider {...innerSliderSettings}>
+                {card.images.map((imgSrc, imgIndex) => (
+                  <div
+                    key={imgIndex}
+                    className="w-[307px] h-[390px] flex items-center justify-center overflow-hidden rounded-md " // Adds border and rounded corners
+                  >
+                    <Image
+                      src={imgSrc}
+                      width={307}
+                      height={390}
+                      layout="fixed" // Ensures consistent image dimensions
+                      alt=""
+                      className="w-full h-full object-cover rounded-xl" // Ensures the image matches the rounded corners
+                    />
+                  </div>
+                ))}
+              </Slider>
+
+              {/* Buy Now button and handshake icon - fixed position */}
+              <div className="absolute w-full bottom-4 flex justify-evenly items-center px-4">
+                {token ? (
+                  <Link href={`/selling-page/${card._id}`} className="w-[70%]">
+                    <button className="w-full p-2 py-[15px] sm:px-10 bg-custom-yellow text-black rounded-2xl font-bold mr-1">
+                      Buy Now
+                    </button>
+                  </Link>
+                ) : (
+                  <button
+                    className="w-full p-2 py-[15px] sm:px-10 bg-custom-yellow text-black rounded-2xl font-bold mr-1 "
+                    onClick={() => showSuccessNotification("Please Login!")}
+                  >
+                    Buy Now
+                  </button>
+                )}
+                <div className="h-12 w-12 flex items-center justify-center bg-white rounded-full">
+                  <Image
+                    unoptimized
+                    width={30}
+                    height={30}
+                    src={require("../../public/handshake_img.png")}
+                    alt="Open Offer Popup"
+                    className="cursor-pointer"
+                    onClick={() =>
+                      handleOpenOfferPopup(
+                        card._id,
+                        card.seller?._id || (card.admin?._id || "admin")
+                      )
+                    }
+                  />
+                </div>
+              </div>
+            </div>
+            <OfferPopup
+              isOpen={isOfferPopupOpen}
+              onClose={handleCloseOfferPopup}
+              onSubmit={handleOfferSubmit}
+            />
+
+            <h5 className="text-sm font-medium text-gray-700 mt-4">
+              {card?.name}
+            </h5>
+            <h2 className="text-lg sm:text-2xl font-bold text-gray-800">
+              AED {card?.price?.toFixed(2)}
+            </h2>
+          </div>
+        ))}
       </div>
-    </div>
-  ))}
-</div>
 
       {isPopupOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
@@ -256,7 +333,7 @@ const ReviewCards = ({ data }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [sortOrder, setSortOrder] = useState(null); // 'lowToHigh' or 'highToLow'
   console.log(data);
-  const dataIn=data.reviews
+  const dataIn = data.reviews
 
   const handleSort = (order) => {
     setSortOrder(order);
@@ -313,19 +390,19 @@ const ReviewCards = ({ data }) => {
               <p>Sort by</p>
             </div>
 
-            {!data.self &&(
+            {!data.self && (
               <>
-              <div className="w-5 rotate-90 h-[1px] bg-gray-400"></div>
-              <div
-              className="flex items-center gap-2 cursor-pointer"
-              onClick={() => setIsOpen(true)}
-            >
-              <IoPencil className="text-xl" />
-              <span className="text-sm font-weight: 900 text-gray-700">
-                Add Review
-              </span>
-            </div>
-            </>
+                <div className="w-5 rotate-90 h-[1px] bg-gray-400"></div>
+                <div
+                  className="flex items-center gap-2 cursor-pointer"
+                  onClick={() => setIsOpen(true)}
+                >
+                  <IoPencil className="text-xl" />
+                  <span className="text-sm font-weight: 900 text-gray-700">
+                    Add Review
+                  </span>
+                </div>
+              </>
             )}
 
             <AddModal
@@ -806,11 +883,37 @@ const Orders = () => {
 };
 
 export default function DetailsSection({ data }) {
-  console.log(data);
+  console.log("data", data);
+  const [products, setproducts] = useState([])
 
-  const sellingData = data.products;
+  const getProductsByUser = async () => {
+    const token = JSON.parse(Cookies.get("auth"));
+    try {
+      const res = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/products/getProductsByUser/${data?._id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        }
+      });
+      if (res.status === 200) {
+        setproducts(res.data.products);
+      }
+    } catch (error) {
+      console.log("Error checking user verification:", error);
 
-  // {
+    }
+  }
+
+
+  useEffect(() => {
+    if (data) {
+      getProductsByUser()
+    }
+  }, [data])
+
+  console.log("products", products);
+
+
+  // [{
   //   id: 1,
   //   productImg: ["/card_image2.png", "/card_image2.png", "/card_image3.png"],
   //   title: "Dress",
@@ -851,7 +954,7 @@ export default function DetailsSection({ data }) {
   //   title: "Dress",
   //   price: "AED 120.00",
   //   link: "/product",
-  // },
+  // }]
 
   const soldData = data.products;
 
@@ -1037,17 +1140,14 @@ export default function DetailsSection({ data }) {
     },
   ];
   const tabs = [
-    {
-      label: "Selling",
-      component: SellingCards,
-      data: sellingData,
-      count: "",
-    },
+    { label: "Selling", component: SellingCards, data: products, count: "" },
     { label: "Sold", component: SoldCards, data: soldData, count: "" },
-    { label: "Reviews", component: ReviewCards, data: reviewData,count: "" },
+    { label: "Reviews", component: ReviewCards, data: reviewData, count: "" },
     { label: "Stats", component: StatsCards, data: statsData, count: "" },
     { label: "Orders", component: Orders, data: orderData, count: "" },
   ];
+
+
 
   const [selectedTab, setSelectedTab] = useState(tabs[0]);
 
@@ -1059,8 +1159,8 @@ export default function DetailsSection({ data }) {
             <li
               key={item.label}
               className={`w-full p-3 text-center cursor-pointer relative text-[#383838] lg:text-2xl font-normal font-karla leading-[28.80px] ${selectedTab.label === item.label
-                  ? "border-b-[5px] border-[#fde504]"
-                  : ""
+                ? "border-b-[5px] border-[#fde504]"
+                : ""
                 }`}
               onClick={() => setSelectedTab(item)}
             >
@@ -1069,7 +1169,7 @@ export default function DetailsSection({ data }) {
           ))}
         </ul>
       </nav>
-      <main className="w-full bg-white mt-[56px]">
+      <main className="w-full bg-white mt-[56px] overflow-hidden">
         <selectedTab.component data={selectedTab.data} />
       </main>
     </div>

@@ -114,7 +114,7 @@ const ProfileSection = (userDetails) => {
       throw error; // Re-throw the error for handling in the calling function
     }
   };
-const fetchProfileData = async () => {
+  const fetchProfileData = async () => {
     try {
       const token = JSON.parse(Cookies.get("auth"));
       const response = await axios.get(
@@ -242,6 +242,9 @@ const fetchProfileData = async () => {
     }, 3000);
   };
   const showRemoveButton = hasSelectedNewImage || (formData.avatar && !hasSelectedNewImage);
+
+  console.log("user", user);
+
   return (
     <div className="max-w-[1550px] mx-auto">
       <div className="lg:px-[70px] px-[20px] pt-[28px]">
@@ -301,7 +304,7 @@ const fetchProfileData = async () => {
                   Share
                 </div>
               </div>
-              {user?.user?.self ===true? (
+              {user?.user?.self === true ? (
                 <div
                   className="w-[250px] h-[39.40px] p-[13.70px] bg-[#2fbc74] rounded-[20px] justify-center items-center gap-[13.70px] inline-flex cursor-pointer"
                   onClick={handleEditClick}
@@ -313,8 +316,8 @@ const fetchProfileData = async () => {
               ) : (
                 <button
                   className={`mt-2 px-4 sm:px-6 py-1 ${user?.user?.followers?.includes(id)
-                      ? "bg-gray-500"
-                      : "bg-custom-green"
+                    ? "bg-gray-500"
+                    : "bg-custom-green"
                     } text-white rounded-full`}
                   onClick={() =>
                     user?.user?.followers?.includes(id)
@@ -336,13 +339,14 @@ const fetchProfileData = async () => {
                 Description
               </p>
               <p className="text-[#515151] text-base font-medium font-karla leading-normal">
-                {user?.user?.description}
+                {user?.user?.Discription
+                }
               </p>
               <p className="text-black text-base font-bold font-karla leading-tight ">
                 Lives In
               </p>
               <p className=" text-[#515151] text-base font-medium font-karla leading-normal">
-                {user?.user?.location}
+                {user?.user?.defaultAddress[0]}
               </p>
               <p className="text-black text-base font-bold font-karla leading-tight ">
                 Joined Kuku

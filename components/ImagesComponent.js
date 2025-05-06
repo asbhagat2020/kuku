@@ -549,7 +549,7 @@ export const ImagesComponent = () => {
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/products`
       );
-      const datavalue = response.data;
+      const datavalue = response.data?.filter((item) => item?.approval.status === "Accepted");;
       console.log(datavalue, "dataValue");
       setData(datavalue || []);
     } catch (error) {
@@ -593,7 +593,7 @@ export const ImagesComponent = () => {
       setLoading(false);
     }
   };
-  
+
   // Check if a product is admin-created
   const isAdminProduct = (product) => {
     return !product.seller && product.admin;
@@ -629,18 +629,17 @@ export const ImagesComponent = () => {
               </div>
               {!isAdminProduct(card) && (
                 <button
-                  className={`mt-2 px-4 sm:px-6 py-1 ${
-                    card?.seller?.followers?.includes(userID)
+                  className={`mt-2 px-4 sm:px-6 py-1 ${card?.seller?.followers?.includes(userID)
                       ? "bg-gray-500"
                       : "bg-custom-green"
-                  } text-white rounded-full`}
+                    } text-white rounded-full`}
                   onClick={() =>
                     card?.seller?.followers?.includes(userID)
                       ? handleFollow(
-                          card.seller._id,
-                          "unfollow",
-                          card?.seller?._id
-                        )
+                        card.seller._id,
+                        "unfollow",
+                        card?.seller?._id
+                      )
                       : handleFollow(card?.seller?._id, "follow", card?.seller?._id)
                   }
                   disabled={loading}
