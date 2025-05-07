@@ -15,7 +15,7 @@ export const BottomNavigation = () => {
 
 
   const details = useSelector((state) => state.auth.user);
-  console.log(details);
+  // console.log(details);
   const id = details?._id;
     useEffect(() => {
       setUserID(id);

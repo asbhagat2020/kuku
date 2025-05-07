@@ -1,80 +1,102 @@
 import Image from 'next/image';
 import React, { useState, useRef, useEffect } from 'react';
 
-const DraggableProgressBar = ({ min = 0, max = 100, step = 1, setSelectedScale }) => {
-  const [value, setValue] = useState(min);
+const DraggableProgressBar = ({ min = 5, max = 35, step = 1, setSelectedScale, customNumber }) => {
+  const [value, setValue] = useState(min);  
   const barRef = useRef(null);
+  const [displayMax, setDisplayMax] = useState(max);
+
+   
+  useEffect(() => {
+    if (customNumber !== "" && !isNaN(customNumber)) {
+      const numValue = Number(customNumber);
+      setValue(numValue);
+      
+
+      if (numValue > displayMax) {
+        setDisplayMax(Math.ceil(numValue / 5) * 5); 
+      }
+    }
+  }, [customNumber, displayMax]);
 
   const handleMouseDown = (e) => {
-   const updateValue = (clientX) => {
-    if (barRef.current) {
-      const rect = barRef.current.getBoundingClientRect();
-      const percentage = (clientX - rect.left) / rect.width;
-      const newValue = Math.round((percentage * (max - min) + min) / step) * step;
-      setValue(Math.max(min, Math.min(max, newValue)));
-      setSelectedScale(newValue);
-    }
-   };
+    const updateValue = (clientX) => {
+      if (barRef.current) {
+        const rect = barRef.current.getBoundingClientRect();
+        const percentage = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+        const newValue = Math.round((percentage * (displayMax - min) + min) / step) * step;
+        const clampedValue = Math.max(min, Math.min(displayMax, newValue));
+        setValue(clampedValue);
+        setSelectedScale(clampedValue);
+      }
+    };
 
-   updateValue(e.clientX);
+    updateValue(e.clientX);
 
-   const handleMouseMove = (e) => updateValue(e.clientX);
-   const handleMouseUp = () => {
-    document.removeEventListener('mousemove', handleMouseMove);
-    document.removeEventListener('mouseup', handleMouseUp);
-   };
+    const handleMouseMove = (e) => updateValue(e.clientX);
+    const handleMouseUp = () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
 
-   document.addEventListener('mousemove', handleMouseMove);
-   document.addEventListener('mouseup', handleMouseUp);
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUp);
   };
 
-  return (
-   <div className="w-full max-w-[] mx-auto mt-8">
-    {/* <div className="mb-2 text-center text-lg font-semibold">{value}</div> */}
-    <div
-      ref={barRef}
-      className="h-[8px] bg-gray-200 cursor-pointer relative z-10 flex items-center"
-      onMouseDown={handleMouseDown}
-    >
-      <div
-       className="h-[15px] bg-[#e4086f] transition-all duration-100 ease-out"
-       style={{ width: `${((value - min) / (max - min)) * 100}%` }}
-      >
-      </div>
-      <Image className='ml-[-2px]' src='pink_eclipse.svg' width={40} height={40} alt='eclipse'/>
-    </div>
-    <div className='flex justify-between mt-[2px] ml-5'>
-      <div className='flex flex-col'>
-       <div className="w-[28.09px] h-[0px] origin-top-left rotate-90 border-2 border-[#cfcfcf] "></div>
-       <p className="origin-top-left mt-8 ml-[-10px] text-[32px] font-karla font-bold">5</p>
-      </div>
-      <div className='flex flex-col'>
-       <div className="w-[28.09px] h-[0px] origin-top-left rotate-90 border-2 border-[#cfcfcf] "></div>
-       <p className="origin-top-left mt-8 ml-[-10px] text-[32px] font-karla font-bold">10</p>
-      </div>
-      <div className='flex flex-col'>
-       <div className="w-[28.09px] h-[0px] origin-top-left rotate-90 border-2 border-[#cfcfcf] "></div>
-       <p className="origin-top-left mt-8 ml-[-10px] text-[32px] font-karla font-bold">15</p>
-      </div>
+  // Generate tick marks dynamically
+  const generateTicks = () => {
+    const ticks = [];
+    const step = 5;
+    for (let i = min; i <= displayMax; i += step) {
+      ticks.push(i);
+    }
+    return ticks;
+  };
 
-      <div className='flex flex-col'>
-       <div className="w-[28.09px] h-[0px] origin-top-left rotate-90 border-2 border-[#cfcfcf] "></div>
-       <p className="origin-top-left mt-8 ml-[-10px] text-[32px] font-karla font-bold">20</p>
+  const ticks = generateTicks();
+
+  return (
+    <div className="w-full mx-auto mt-4">
+      {/* Display selected items centered above the circle */}
+      <div className="text-center text-xl font-bold font-karla mb-2">
+        {value} items
       </div>
-      <div className='flex flex-col'>
-       <div className="w-[28.09px] h-[0px] origin-top-left rotate-90 border-2 border-[#cfcfcf] "></div>
-       <p className="origin-top-left mt-8 ml-[-10px] text-[32px] font-karla font-bold">25</p>
+      
+      {/* Progress bar container */}
+      <div className="relative">
+        <div
+          ref={barRef}
+          className="h-2 bg-gray-200 rounded-full cursor-pointer"
+          onMouseDown={handleMouseDown}
+        >
+          {/* Colored portion of the bar */}
+          <div
+            className="absolute h-2 bg-[#e4086f] rounded-full"
+            style={{ width: `${((value - min) / (displayMax - min)) * 100}%` }}
+          />
+          
+          {/* Draggable circle */}
+          <div 
+            className="absolute w-8 h-8 rounded-full bg-white border-4 border-[#e4086f] -mt-3 -ml-4 shadow"
+            style={{ 
+              left: `${((value - min) / (displayMax - min)) * 100}%`,
+              transform: 'translateX(-50%)',
+              top: '50%' 
+            }}
+          />
+        </div>
       </div>
-      <div className='flex flex-col'>
-       <div className="w-[28.09px] h-[0px] origin-top-left rotate-90 border-2 border-[#cfcfcf] "></div>
-       <p className="origin-top-left mt-8 ml-[-10px] text-[32px] font-karla font-bold">30</p>
-      </div>
-      <div className='flex flex-col'>
-       <div className="w-[28.09px] h-[0px] origin-top-left rotate-90 border-2 border-[#cfcfcf] "></div>
-       <p className="origin-top-left mt-8 ml-[-10px] text-[32px] font-karla font-bold">35</p>
+      
+      {/* Tick marks with values */}
+      <div className="flex justify-between mt-4 px-1">
+        {ticks.map((tick, index) => (
+          <div key={index} className="flex flex-col items-center">
+            <div className="h-4 w-0.5 bg-[#cfcfcf]"></div>
+            <span className="text-2xl font-bold font-karla mt-2">{tick}</span>
+          </div>
+        ))}
       </div>
     </div>
-   </div>
   );
 };
 

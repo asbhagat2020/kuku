@@ -46,7 +46,7 @@ const ProductCard = (productDetails) => {
   const [errorMessage, setErrorMessage] = useState("");
   const details = useSelector((state) => state.auth.user);
   const userID = details?._id;
-
+  console.log("product details......", productDetails.product);
   // Define the images array
   const images = product?.images || [amiriImg];
 
@@ -278,7 +278,6 @@ const ProductCard = (productDetails) => {
   };
 
   const handleSubmitOffer = () => {
-    console.log("Submitted offer amount:", offerAmount);
     handleCloseOfferPopup();
   };
 
@@ -417,7 +416,7 @@ const ProductCard = (productDetails) => {
           <div className="text-2xl font-bold">
             AED {product?.price}{" "}
             <span style={{ color: "#30BD75", fontSize: "1.50rem" }}>
-              20% OFF
+              {product.discountPercentage}% OFF
             </span>
             <p
               className="text-gray-400 line-through"
@@ -488,23 +487,25 @@ const ProductCard = (productDetails) => {
             <FaShoppingBag className="mr-2" />
             ADD TO BAG
           </button>
+          {
+            product.openToRent === "Yes" && <div className="flex flex-col mt-2">
+              <div className="text-center font-bold text-black">
+                Or Rent it for
+              </div>
 
-          <div className="flex flex-col mt-2">
-            <div className="text-center font-bold text-black">
-              Or Rent it for
+              <button
+                onClick={handleOpenRentPopup}
+                className="mt-2 text-black w-full font-bold bg-[#69D3FA] transition-all duration-300 hover:bg-[#9ee1fb]"
+                style={{
+                  height: "72px",
+                  borderRadius: "16px",
+                }}
+              >
+                AED {product.pricePerDay}
+              </button>
             </div>
+          }
 
-            <button
-              onClick={handleOpenRentPopup}
-              className="mt-2 text-black w-full font-bold bg-[#69D3FA] transition-all duration-300 hover:bg-[#9ee1fb]"
-              style={{
-                height: "72px",
-                borderRadius: "16px",
-              }}
-            >
-              AED 36
-            </button>
-          </div>
 
           <div
             className="mt-10 mb-0.75"
@@ -529,23 +530,22 @@ const ProductCard = (productDetails) => {
               </div>
 
               <button
-                className={`mt-2 px-4 sm:px-6 py-1 ${
-                  product?.seller?.followers?.includes(userID)
-                    ? "bg-gray-500"
-                    : "bg-custom-green"
-                } text-white rounded-full`}
+                className={`mt-2 px-4 sm:px-6 py-1 ${product?.seller?.followers?.includes(userID)
+                  ? "bg-gray-500"
+                  : "bg-custom-green"
+                  } text-white rounded-full`}
                 onClick={() =>
                   product?.seller?.followers?.includes(userID)
                     ? handleFollow(
-                        product.seller._id,
-                        "unfollow",
-                        product?.seller?._id
-                      )
+                      product.seller._id,
+                      "unfollow",
+                      product?.seller?._id
+                    )
                     : handleFollow(
-                        product.seller._id,
-                        "follow",
-                        product?.seller?._id
-                      )
+                      product.seller._id,
+                      "follow",
+                      product?.seller?._id
+                    )
                 }
                 disabled={loading}
               >
@@ -607,7 +607,7 @@ const ProductCard = (productDetails) => {
                     Rental Price:
                   </span>
                   <span className="text-[#070707] text-[14px] font-karla font-bold capitalize tracking-[1.12px] break-words">
-                    AED 70
+                    AED {product.pricePerDay}
                   </span>
                 </div>
 
@@ -698,11 +698,10 @@ const ProductCard = (productDetails) => {
                 </div>
                 <button
                   onClick={handleProceed}
-                  className={`px-4 py-2 w-full mb-2 text-[#E4086F] text-[20px] font-karla font-bold leading-[24px] break-words flex-1 h-[60px] bg-[#FDE504] rounded-[20px] flex justify-center items-center gap-[10px] ${
-                    isEndFormatted === "" || isStartFormatted === ""
-                      ? "opacity-50 cursor-not-allowed"
-                      : ""
-                  }`}
+                  className={`px-4 py-2 w-full mb-2 text-[#E4086F] text-[20px] font-karla font-bold leading-[24px] break-words flex-1 h-[60px] bg-[#FDE504] rounded-[20px] flex justify-center items-center gap-[10px] ${isEndFormatted === "" || isStartFormatted === ""
+                    ? "opacity-50 cursor-not-allowed"
+                    : ""
+                    }`}
                   disabled={isEndFormatted === "" || isStartFormatted === ""}
                 >
                   PROCEED
@@ -763,9 +762,8 @@ const ProductCard = (productDetails) => {
               }}
             >
               <button
-                className={`w-[89px] h-[41px] py-[8.66px] px-[10.93px] bg-white rounded-[6.93px] border ${
-                  selectedPrice === 200 ? "border-pink-500" : "border-[#878787]"
-                } inline-flex items-center justify-center gap-[8.66px]`}
+                className={`w-[89px] h-[41px] py-[8.66px] px-[10.93px] bg-white rounded-[6.93px] border ${selectedPrice === 200 ? "border-pink-500" : "border-[#878787]"
+                  } inline-flex items-center justify-center gap-[8.66px]`}
                 onClick={() => handlePriceSelection(200)}
                 style={{
                   width: window.innerWidth <= 768 ? "100%" : "89px",
@@ -776,9 +774,8 @@ const ProductCard = (productDetails) => {
                 </div>
               </button>
               <button
-                className={`w-[89px] h-[41px] py-[8.66px] px-[10.93px] bg-white rounded-[6.93px] border ${
-                  selectedPrice === 195 ? "border-pink-500" : "border-[#878787]"
-                } inline-flex items-center justify-center gap-[8.66px]`}
+                className={`w-[89px] h-[41px] py-[8.66px] px-[10.93px] bg-white rounded-[6.93px] border ${selectedPrice === 195 ? "border-pink-500" : "border-[#878787]"
+                  } inline-flex items-center justify-center gap-[8.66px]`}
                 onClick={() => handlePriceSelection(195)}
                 style={{
                   width: window.innerWidth <= 768 ? "100%" : "89px",
@@ -813,9 +810,8 @@ const ProductCard = (productDetails) => {
             <div className="justify-center flex-col">
               <button
                 onClick={handleOpenModal}
-                className={`bg-[#FDE504] text-[#E4086F] text-[20px] font-bold font-karla rounded-lg w-[440px] h-[65px] ${
-                  isSubmitDisabled ? "opacity-50 cursor-not-allowed" : ""
-                }`}
+                className={`bg-[#FDE504] text-[#E4086F] text-[20px] font-bold font-karla rounded-lg w-[440px] h-[65px] ${isSubmitDisabled ? "opacity-50 cursor-not-allowed" : ""
+                  }`}
                 disabled={isSubmitDisabled}
                 style={{
                   width: window.innerWidth <= 768 ? "100%" : "440px",

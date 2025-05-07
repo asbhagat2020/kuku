@@ -46,7 +46,7 @@ const Header = () => {
   }, [token]);
 
   const details = useSelector((state) => state.auth.user);
-  console.log(details);
+  // console.log(details);
   const id = details?._id;
   useEffect(() => {
     setUserID(id);
@@ -236,9 +236,8 @@ const Header = () => {
       <LanguageSelector />
       <div
         id="header"
-        className={`w-full transition-all duration-300 ${
-          isFixed ? ' top-0 left-0 right-0 shadow-md' : 'relative'
-        } max-w-full lg:px-[70px] py-[23px] h-[80px] lg:h-[108px] z-40`}
+        className={`w-full transition-all duration-300 ${isFixed ? ' top-0 left-0 right-0 shadow-md' : 'relative'
+          } max-w-full lg:px-[70px] py-[23px] h-[80px] lg:h-[108px] z-40`}
         style={{
           backgroundColor: isSpecialPath ? '#FFF' : '#EDA702',
         }}
@@ -266,25 +265,22 @@ const Header = () => {
             </div>
 
             <div className={`lg:flex gap-[30px] items-center hidden ${isSearchVisible ? 'lg:hidden xl:flex' : ''}`}>
-              <div className={`${
-                  isHome ? 'text-[#fefae5]' : 'text-black'
+              <div className={`${isHome ? 'text-[#fefae5]' : 'text-black'
                 } text-base font-bold font-karla leading-tight hover:text-pink-500`}>
                 {/* Men */}
                 <MenDropdown />
               </div>
-              <div className={`${
-                  isHome ? 'text-[#fefae5]' : 'text-black'
+              <div className={`${isHome ? 'text-[#fefae5]' : 'text-black'
                 } text-base font-bold font-karla leading-tight hover:text-pink-500`}>
                 {/* Women */}
                 <WomenDropdown />
               </div>
-              <div className={`${
-                  isHome ? 'text-[#fefae5]' : 'text-black'
+              <div className={`${isHome ? 'text-[#fefae5]' : 'text-black'
                 } text-base font-bold font-karla leading-tight hover:text-pink-500`}>
                 {/* Kids */}
                 <KidsDropdown />
               </div>
-             
+
             </div>
           </div>
 
@@ -345,9 +341,8 @@ const Header = () => {
 
             {!isNotificationDisabled && (
               <div
-                className={`h-10 w-10 lg:h-[54px] lg:w-[54px] flex items-center justify-center bg-white/40 rounded-full cursor-pointer ${
-                  isSearchVisible ? 'block' : ''
-                }`}
+                className={`h-10 w-10 lg:h-[54px] lg:w-[54px] flex items-center justify-center bg-white/40 rounded-full cursor-pointer ${isSearchVisible ? 'block' : ''
+                  }`}
                 onClick={toggleNotifications}
               >
                 <Image
@@ -371,18 +366,16 @@ const Header = () => {
             {/* Cart, Wishlist, Profile Icons */}
             <Link href="/cart">
               <div
-                className={`${
-                  cartPath ? 'bg-[#393939]' : 'bg-white/40'
-                } h-[54px] p-[15px] rounded-[100px] hidden lg:block`}
+                className={`${cartPath ? 'bg-[#393939]' : 'bg-white/40'
+                  } h-[54px] p-[15px] rounded-[100px] hidden lg:block`}
               >
                 <Image alt="cart icon" width={24} height={24} src={cartPath ? '/cart_white.svg' : '/cart.svg'} />
               </div>
             </Link>
             <Link href="/wishlist">
               <div
-                className={` h-10 w-10 lg:h-[54px] lg:w-[54px] flex items-center justify-center rounded-full cursor-pointer  ${
-                  wishPath ? 'bg-[#393939]' : 'bg-white/40'
-                } ml-[-10px] lg:ml-0`}
+                className={` h-10 w-10 lg:h-[54px] lg:w-[54px] flex items-center justify-center rounded-full cursor-pointer  ${wishPath ? 'bg-[#393939]' : 'bg-white/40'
+                  } ml-[-10px] lg:ml-0`}
               >
                 <Image
                   alt="wishlist icon"
@@ -401,9 +394,8 @@ const Header = () => {
               }}
             >
               <div
-                className={`${
-                  iconsPath ? 'bg-[#393939]' : 'bg-white/40'
-                } h-[54px] p-[15px] rounded-[100px] hidden lg:block`}
+                className={`${iconsPath ? 'bg-[#393939]' : 'bg-white/40'
+                  } h-[54px] p-[15px] rounded-[100px] hidden lg:block`}
                 style={{ cursor: 'pointer' }}
               >
                 <Image
@@ -420,9 +412,8 @@ const Header = () => {
                 <Image alt="dropdown" width={14} height={14} src="/heade_drop_down.svg" />
               </div>
 
-              {isDropdownVisible && (
+              {/* {isDropdownVisible && (
                 <div className="absolute py-[26px] px-[10px] right-0 top-[40px] min-w-[188px] bg-white border border-gray-300 rounded-lg shadow-lg z-10 ">
-                  {/* Dropdown content goes here */}
                   <div className="px-4 py-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold">
                     Account
                   </div>
@@ -430,7 +421,7 @@ const Header = () => {
                     href={`/user_profile/${id}`}
                     onClick={(e) => {
                       e.preventDefault();
-                      handleClick(id); // Ensure `handleClick` is defined and works for your logic
+                      handleClick(id); 
                     }}
                   >
                     <div
@@ -497,15 +488,89 @@ const Header = () => {
                     </button>
                   )}
                 </div>
+              )} */}
+              {isDropdownVisible && (
+                <div className="absolute py-[26px] px-[10px] right-0 top-[40px] min-w-[120px] bg-white border border-gray-300 rounded-lg shadow-lg z-10 ">
+                  {(session || isLocalToken) ? (
+                    // Show these options only when user is logged in
+                    <>
+                      <div className="px-4 py-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold">
+                        Account
+                      </div>
+                      <Link
+                        href={`/user_profile/${id}`}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handleClick(id);
+                        }}
+                      >
+                        <div className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold">
+                          Your Profile
+                        </div>
+                      </Link>
+                      <Link href="/orderdetails">
+                        <div className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold">
+                          Purchases
+                        </div>
+                      </Link>
+                      <Link href="/wishlist">
+                        <div className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold">
+                          Wishlist
+                        </div>
+                      </Link>
+                      <Link href="/co2">
+                        <div className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-bold font-karla hover:text-pink-500">
+                          Co2 Savings
+                        </div>
+                      </Link>
+                      <Link href="/addresslist">
+                        <div className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold">
+                          Address
+                        </div>
+                      </Link>
+                      <Link href="/AllOrders">
+                        <div className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold">
+                          Orders
+                        </div>
+                      </Link>
+                      <Link href="#">
+                        <div className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold">
+                          Setting
+                        </div>
+                      </Link>
+                      <button
+                        onClick={() => {
+                          if (session) {
+                            handleGoogleSignOut();
+                          } else {
+                            handleLocalSignOut();
+                          }
+                        }}
+                        className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold"
+                      >
+                        Sign out
+                      </button>
+                    </>
+                  ) : (
+                    // Show only Sign in when user is not logged in
+                    <button
+                      onClick={() => {
+                        handleLocalSignIn();
+                      }}
+                      className="px-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold"
+                    >
+                      Sign in
+                    </button>
+                  )}
+                </div>
               )}
             </div>
           </div>
         </div>
         <BottomNavigation />
         <div
-          className={`w-full h-screen bg-yellow-500 lg:hidden fixed  px-[20px] py-[20px] top-[-2px] left-0 right-0 bottom-0 z-[1000] transition-transform ease-in-out duration-300 ${
-            hamburger ? 'transform translate-x-0 z-50' : 'transform translate-x-full z-0'
-          }`}
+          className={`w-full h-screen bg-yellow-500 lg:hidden fixed  px-[20px] py-[20px] top-[-2px] left-0 right-0 bottom-0 z-[1000] transition-transform ease-in-out duration-300 ${hamburger ? 'transform translate-x-0 z-50' : 'transform translate-x-full z-0'
+            }`}
         >
           <div className="flex px-[24px] mt-[20px] justify-between">
             <div className="w-[50%] flex items-center gap-1" onClick={handleBack}>
@@ -597,20 +662,17 @@ const Header = () => {
               }
             `}</style>
             <div className="flex flex-col gap-[30px]">
-              <div className={`${
-                  isHome ? 'text-white' : 'text-black'
+              <div className={`${isHome ? 'text-white' : 'text-black'
                 } text-base font-bold font-karla leading-tight hover:text-pink-500 z-50`}>
                 {/* MEN */}
                 <MenDropdown isOpen={currentOpenDropdown === 'men'} onToggle={() => handleToggle('men')} />
               </div>
-              <div className={`${
-                  isHome ? 'text-white' : 'text-black'
+              <div className={`${isHome ? 'text-white' : 'text-black'
                 } text-base font-bold font-karla leading-tight hover:text-pink-500 z-40`}>
                 {/* WOMEN */}
                 <WomenDropdown isOpen={currentOpenDropdown === 'women'} onToggle={() => handleToggle('women')} />
               </div>
-              <div className={`${
-                  isHome ? 'text-white' : 'text-black'
+              <div className={`${isHome ? 'text-white' : 'text-black'
                 } text-base font-bold font-karla leading-tight hover:text-pink-500 z-30`}>
                 {/* KIDS */}
                 <KidsDropdown isOpen={currentOpenDropdown === 'kids'} onToggle={() => handleToggle('kids')} />

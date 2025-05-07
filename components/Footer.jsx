@@ -301,7 +301,7 @@ const Footer = () => {
                         <input
                             type="text"
                             placeholder="Enter your message"
-                            className="flex-grow p-2 bg-transparent text-[#383838] text-sm font-normal font-karla outline-none"
+                            className="flex-grow p-2 bg-transparent text-[#383838] text-sm font-normal font-karla outline-none lg:w-[500px]"
                             value={message}
                             onChange={(e) => setMessage(e.target.value)}
                         />

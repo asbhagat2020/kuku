@@ -22,7 +22,7 @@ const ItemList = () => {
   const [selectedSubCategory, setSelectedSubCategory] = useState("");
 
   console.log(adress);
-  const handleSelect = () => {};
+  const handleSelect = () => { };
   const fetchAddress = async () => {
     try {
       const token = getAuthToken();
@@ -31,7 +31,7 @@ const ItemList = () => {
         // router.push("/login");
         return;
       }
-  
+
       const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/pickup/get`;
       const response = await axios.get(url, {
         headers: {
@@ -148,6 +148,17 @@ const ItemList = () => {
       }
     }
   };
+  useEffect(() => {
+    if (Number(formData.price) < 1000 && formData.rentOption === "Yes") {
+      setFormData(prev => ({
+        ...prev,
+        rentOption: "No",
+        rentalPrice: ""
+      }));
+    }
+  }, [formData.price]);
+
+
 
   const removeImage = (index) => {
     const newImages = [...formData.images];
@@ -195,9 +206,9 @@ const ItemList = () => {
 
     try {
       const token = getAuthToken();
-    if (!token) {
-      throw new Error("No authentication token");
-    }
+      if (!token) {
+        throw new Error("No authentication token");
+      }
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/upload/multiple`,
         imageData,
@@ -232,17 +243,17 @@ const ItemList = () => {
 
         if (!token) {
           showErrorNotification("Please login to post items");
-     
+
           return;
         }
-      
+
 
         let imageUrl = null;
         if (formData.images) {
           imageUrl = await uploadImage(formData.images);
         }
 
-      
+
 
         // Format the product data according to the schema
         const productData = {
@@ -355,11 +366,10 @@ const ItemList = () => {
             {addresses.map((address) => (
               <div
                 key={address._id}
-                className={`border rounded-lg p-4 cursor-pointer transition-all ${
-                  selectedAddress?._id === address._id
-                    ? "border-2 border-pink-500"
-                    : "border-gray-200 hover:border-pink-300"
-                }`}
+                className={`border rounded-lg p-4 cursor-pointer transition-all ${selectedAddress?._id === address._id
+                  ? "border-2 border-pink-500"
+                  : "border-gray-200 hover:border-pink-300"
+                  }`}
                 onClick={() => onSelect(address)}
               >
                 <div className="flex justify-between items-start">
@@ -545,9 +555,8 @@ const ItemList = () => {
                   value={formData.itemName}
                   onChange={handleChange}
                   placeholder="Enter your product title"
-                  className={`w-full p-2 border ${
-                    errors.itemName ? "border-red-500" : "border-[#868686]"
-                  } rounded-lg max-w-[500px]`}
+                  className={`w-full p-2 border ${errors.itemName ? "border-red-500" : "border-[#868686]"
+                    } rounded-lg max-w-[500px]`}
                   required
                 />
                 {errors.itemName && (
@@ -564,9 +573,8 @@ const ItemList = () => {
                   value={formData.description}
                   onChange={handleChange}
                   placeholder="Enter your product description"
-                  className={`w-full p-2 border ${
-                    errors.description ? "border-red-500" : "border-[#868686]"
-                  } rounded-lg max-w-[500px]`}
+                  className={`w-full p-2 border ${errors.description ? "border-red-500" : "border-[#868686]"
+                    } rounded-lg max-w-[500px]`}
                   rows={4}
                 />
                 {errors.description && (
@@ -587,9 +595,8 @@ const ItemList = () => {
                     setSelectedSubCategory("");
                     handleChange(e);
                   }}
-                  className={`w-full p-2 border ${
-                    errors.gender ? "border-red-500" : "border-[#868686]"
-                  } rounded-lg max-w-[500px]`}
+                  className={`w-full p-2 border ${errors.gender ? "border-red-500" : "border-[#868686]"
+                    } rounded-lg max-w-[500px]`}
                 >
                   <option value="">Select Gender</option>
                   {Object.keys(categories).map((gender) => (
@@ -613,9 +620,8 @@ const ItemList = () => {
                     handleChange(e);
                   }}
                   disabled={!selectedGender}
-                  className={`w-full p-2 border ${
-                    errors.category ? "border-red-500" : "border-[#868686]"
-                  } rounded-lg max-w-[500px]`}
+                  className={`w-full p-2 border ${errors.category ? "border-red-500" : "border-[#868686]"
+                    } rounded-lg max-w-[500px]`}
                 >
                   <option value="">Select Category</option>
                   {selectedGender &&
@@ -639,9 +645,8 @@ const ItemList = () => {
                     handleChange(e);
                   }}
                   disabled={!selectedCategory}
-                  className={`w-full p-2 border ${
-                    errors.subCategory ? "border-red-500" : "border-[#868686]"
-                  } rounded-lg max-w-[500px]`}
+                  className={`w-full p-2 border ${errors.subCategory ? "border-red-500" : "border-[#868686]"
+                    } rounded-lg max-w-[500px]`}
                 >
                   <option value="">Select Sub Category</option>
                   {selectedGender &&
@@ -664,9 +669,8 @@ const ItemList = () => {
                   name="condition"
                   value={formData.condition}
                   onChange={handleChange}
-                  className={`w-full p-2 border ${
-                    errors.condition ? "border-red-500" : "border-[#868686]"
-                  } rounded-lg max-w-[500px]`}
+                  className={`w-full p-2 border ${errors.condition ? "border-red-500" : "border-[#868686]"
+                    } rounded-lg max-w-[500px]`}
                 >
                   <option value="">Select Condition</option>
                   {conditions.map((condition) => (
@@ -685,9 +689,8 @@ const ItemList = () => {
                   name="brand"
                   value={formData.brand}
                   onChange={handleChange}
-                  className={`w-full p-2 border ${
-                    errors.brand ? "border-red-500" : "border-[#868686]"
-                  } rounded-lg max-w-[500px]`}
+                  className={`w-full p-2 border ${errors.brand ? "border-red-500" : "border-[#868686]"
+                    } rounded-lg max-w-[500px]`}
                 >
                   <option value="">Select Brand</option>
                   {brands.map((brand) => (
@@ -706,9 +709,8 @@ const ItemList = () => {
                   name="size"
                   value={formData.size}
                   onChange={handleChange}
-                  className={`w-full p-2 border ${
-                    errors.size ? "border-red-500" : "border-[#868686]"
-                  } rounded-lg max-w-[500px]`}
+                  className={`w-full p-2 border ${errors.size ? "border-red-500" : "border-[#868686]"
+                    } rounded-lg max-w-[500px]`}
                 >
                   <option value="">Choose Product Size</option>
                   {sizes.map((size) => (
@@ -718,25 +720,28 @@ const ItemList = () => {
                   ))}
                 </select>
               </div>
+
+
               <div>
                 <label className="block text-[#151515] text-base font-bold font-karla mb-2">
                   Usage
                 </label>
-                <input
-                  type="text"
+                <select
                   name="usage"
                   value={formData.usage}
                   onChange={handleChange}
-                  placeholder="Enter usage details"
-                  className={`w-full p-2 border ${
-                    errors.usage ? "border-red-500" : "border-[#868686]"
-                  } rounded-lg max-w-[500px]`}
-                />
+                  className={`w-full p-2 border ${errors.usage ? "border-red-500" : "border-[#868686]"
+                    } rounded-lg max-w-[500px]`}
+                >
+                  <option value="">Select usage</option>
+                  <option value="Used Once">Used Once</option>
+                  <option value="Rarely Used">Rarely Used</option>
+                  <option value="Never Used">Never Used</option>
+                </select>
                 {errors.usage && (
                   <p className="text-red-500 mt-1">{errors.usage}</p>
                 )}
               </div>
-
               <div>
                 <label className="block text-[#151515] text-base font-bold font-karla mb-2">
                   Price (AED)
@@ -747,9 +752,8 @@ const ItemList = () => {
                   value={formData.price}
                   onChange={handleChange}
                   placeholder="Enter Product Price in AED"
-                  className={`w-full p-2 border ${
-                    errors.price ? "border-red-500" : "border-[#868686]"
-                  } rounded-lg max-w-[500px] [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none`}
+                  className={`w-full p-2 border ${errors.price ? "border-red-500" : "border-[#868686]"
+                    } rounded-lg max-w-[500px] [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none`}
                   min="0"
                   step="0.01"
                   onKeyDown={(e) => {
@@ -777,31 +781,35 @@ const ItemList = () => {
                 />
               </div>
 
-              <div>
-                <div className="mb-4">
-                  <label className="flex items-center text-[#151515] text-base font-bold font-karla">
-                    <input
-                      type="checkbox"
-                      name="rentOption"
-                      checked={formData.rentOption === "Yes"}
-                      onChange={(e) => {
-                        handleChange({
-                          target: {
-                            name: "rentOption",
-                            value: e.target.checked ? "Yes" : "No",
-                          },
-                        });
-                      }}
-                      className="mr-2 h-4 w-4"
-                    />
-                    Open to Rent
-                  </label>
-                  {errors.rentOption && (
-                    <p className="text-red-500 mt-1">{errors.rentOption}</p>
-                  )}
-                </div>
+           
 
-                {formData.rentOption === "Yes" && (
+              <div>
+                {Number(formData.price) >= 1000 ? (
+                  <div className="mb-4">
+                    <label className="flex items-center text-[#151515] text-base font-bold font-karla">
+                      <input
+                        type="checkbox"
+                        name="rentOption"
+                        checked={formData.rentOption === "Yes"}
+                        onChange={(e) => {
+                          handleChange({
+                            target: {
+                              name: "rentOption",
+                              value: e.target.checked ? "Yes" : "No",
+                            },
+                          });
+                        }}
+                        className="mr-2 h-4 w-4"
+                      />
+                      Open to Rent
+                    </label>
+                    {errors.rentOption && (
+                      <p className="text-red-500 mt-1">{errors.rentOption}</p>
+                    )}
+                  </div>
+                ) : null}
+
+                {formData.rentOption === "Yes" && Number(formData.price) >= 1000 && (
                   <div>
                     <label className="block text-[#151515] text-base font-bold font-karla mb-2">
                       Rental Price
@@ -812,11 +820,8 @@ const ItemList = () => {
                       value={formData.rentalPrice}
                       onChange={handleChange}
                       placeholder="Enter rental price"
-                      className={`w-full p-2 border ${
-                        errors.rentalPrice
-                          ? "border-red-500"
-                          : "border-[#868686]"
-                      } rounded-lg max-w-[500px]`}
+                      className={`w-full p-2 border ${errors.rentalPrice ? "border-red-500" : "border-[#868686]"
+                        } rounded-lg max-w-[500px]`}
                     />
                     {errors.rentalPrice && (
                       <p className="text-red-500 mt-1">{errors.rentalPrice}</p>
@@ -827,7 +832,7 @@ const ItemList = () => {
 
               <p className="text-gray-500 mt-1 text-left max-w-[500px]">
                 Renting option is available only when the price of the product
-                is above <span className="text-[#E4086F]">300 AED</span>
+                is above <span className="text-[#E4086F]">1000 AED</span>
               </p>
 
               <div className="flex space-x-8 mt-6 justify-center">

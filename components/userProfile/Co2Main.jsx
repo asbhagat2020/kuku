@@ -7,13 +7,30 @@ import { buildStyles, CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import Lottie from "react-lottie-player";
 import { useRouter } from "next/navigation";
+import axios from "axios";
 
 
 const Co2Main = () => {
   const [co2Animation, setCo2Animation] = useState(null);
+  const token = useSelector((store) => store.auth.token)
 
- 
+  const [userName, setUserName] = useState("");
+  const fetchUserDetails = async () => {
+    try {
+      const res = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/profile/userDetails`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+      setUserName(res?.data?.name);
 
+    } catch (error) {
+      console.log("Error", error);
+    }
+  }
+  useEffect(() => {
+    fetchUserDetails();
+  }, [])
   useEffect(() => {
     const loadAnimation = async () => {
       const response = await fetch("/lottieFiles/co2.json");
@@ -23,13 +40,13 @@ const Co2Main = () => {
     loadAnimation();
   }, []);
 
-  const token = useSelector((store)=>store.auth.token)
+
   const router = useRouter()
-    useEffect(() => {
-      if (!token) {
-        router.push("/");
-      }
-    }, [token]);
+  useEffect(() => {
+    if (!token) {
+      router.push("/");
+    }
+  }, [token]);
 
   if (!co2Animation) return null;
   const percentage = 68;
@@ -56,7 +73,7 @@ const Co2Main = () => {
             <div className=" sm:w-auto py-[60px] lg:pl-[12px] sm:py-6 lg:py-12">
               <p className="space-y-1 sm:space-y-2">
                 <span className="block text-white text-xl sm:text-2xl lg:text-5xl font-bold font-karla">
-                  Hi Palak,
+                  Hi {userName},
                 </span>
                 <span className="block text-white text-sm sm:text-base lg:text-2xl font-bold font-karla">
                   you have saved 68 kgs of CO

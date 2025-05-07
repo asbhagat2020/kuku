@@ -12,7 +12,6 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
 
-
 const KukuitMain = () => {
   const notify = () => toast.success('Please Login');
   const [location, setLocation] = useState(null);
@@ -148,7 +147,6 @@ const KukuitMain = () => {
   };
 
 
-
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData((prevData) => ({
@@ -156,13 +154,29 @@ const KukuitMain = () => {
       [name]: type === "checkbox" ? checked : value,
     }));
   };
-
+ 
   const handleCustomNumberChange = (e) => {
     const value = e.target.value;
-    if (!isNaN(value) && value >= 0) {
+ 
+    if (!isNaN(value)) {
       setCustomNumber(value);
+      
+      if (value === "") {
+        setSelectedScale(null);
+      } else {
+        const numValue = Number(value);
+        if (numValue >= 5) {
+          setSelectedScale(numValue);
+        } else {
+          setSelectedScale(null);
+        }
+      }
     }
   };
+
+  
+
+
 
   const router = useRouter();
   const validateStep2 = () => {
@@ -199,13 +213,20 @@ const KukuitMain = () => {
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
-
+ 
   const validateStep1 = () => {
     if (selectedScale === null && customNumber === "") {
       return false;
     }
+    
+ 
+    if (selectedScale === null && customNumber !== "") {
+      return false;
+    }
+    
     return true;
   };
+
 
   const handleClick = () => {
     if (validateForm()) {
@@ -220,7 +241,7 @@ const KukuitMain = () => {
     try {
       // Prepare the data to be sent
       const details = {
-        numberOfItems: customNumber || selectedScale,
+        numberOfItems: selectedScale,
         pickupDate: new Date(formData.date).getTime(),
         pickupTime: formData.time,
 
@@ -238,6 +259,7 @@ const KukuitMain = () => {
         phone: formData.phone,
       };
 
+ 
       console.log("Cookies.get('auth')", Cookies.get('auth'));
 
       if (Cookies.get('auth')) {
@@ -308,7 +330,14 @@ const KukuitMain = () => {
                 Step 1 of 3
               </p>
             </div>
-            <DraggableProgressBar setSelectedScale={setSelectedScale} />
+            {/* <DraggableProgressBar setSelectedScale={setSelectedScale} /> */}
+            <DraggableProgressBar
+              setSelectedScale={setSelectedScale}
+              customNumber={customNumber}
+              min={5}
+              max={35}
+              step={1}
+            />
             <div className="mt-4">
               <p className="text-[#151515] text-sm sm:text-base font-bold font-karla mb-2">
                 Or enter custom number:

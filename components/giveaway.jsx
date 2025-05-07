@@ -18,9 +18,8 @@ const AddressSelection = ({ addresses, selectedAddress, onSelect, onAddNew }) =>
         <div
           key={index}
           onClick={() => onSelect(address)}
-          className={`p-4 border-2 rounded-lg cursor-pointer ${
-            selectedAddress === address ? 'border-green-500' : 'hover:border-green-500'
-          }`}
+          className={`p-4 border-2 rounded-lg cursor-pointer ${selectedAddress === address ? 'border-green-500' : 'hover:border-green-500'
+            }`}
         >
           <p className="font-bold">{`${address.firstName} ${address.lastName}`}</p>
           <p>{address.addressLine1}</p>
@@ -167,7 +166,7 @@ const Giveaway = () => {
           'Content-Type': 'application/json',
         },
       });
-    
+
       if (response.status === 201) {
         showSuccessNotification('Giveaway Created successfully');
       } else {
@@ -224,6 +223,16 @@ const Giveaway = () => {
         : [...prev.items, value], // Add new item
     }));
   };
+
+  const handleBackButton = () => {
+    if (currentStep === 1) {
+      window.location.href = '/';
+    } else {
+      setCurrentStep(currentStep - 1);
+    }
+  };
+
+
   const renderStepContent = () => {
     switch (currentStep) {
       case 1:
@@ -253,9 +262,8 @@ const Giveaway = () => {
                   placeholder="First Name"
                   value={formData.firstName}
                   onChange={handleInputChange}
-                  className={`w-full px-4 py-3 rounded-lg border ${
-                    formErrors.firstName ? 'border-red-500' : 'border-gray-300'
-                  } focus:outline-none focus:ring-2 focus:ring-green-500`}
+                  className={`w-full px-4 py-3 rounded-lg border ${formErrors.firstName ? 'border-red-500' : 'border-gray-300'
+                    } focus:outline-none focus:ring-2 focus:ring-green-500`}
                 />
                 {formErrors.firstName && <p className="text-red-500 text-sm mt-1 ml-4">{formErrors.firstName}</p>}
               </div>
@@ -266,9 +274,8 @@ const Giveaway = () => {
                   placeholder="Last Name"
                   value={formData.lastName}
                   onChange={handleInputChange}
-                  className={`w-full px-4 py-3 rounded-lg border ${
-                    formErrors.lastName ? 'border-red-500' : 'border-gray-300'
-                  } focus:outline-none focus:ring-2 focus:ring-green-500`}
+                  className={`w-full px-4 py-3 rounded-lg border ${formErrors.lastName ? 'border-red-500' : 'border-gray-300'
+                    } focus:outline-none focus:ring-2 focus:ring-green-500`}
                 />
                 {formErrors.lastName && <p className="text-red-500 text-sm mt-1 ml-4">{formErrors.lastName}</p>}
               </div>
@@ -279,9 +286,8 @@ const Giveaway = () => {
                   placeholder="Email Address"
                   value={formData.email}
                   onChange={handleInputChange}
-                  className={`w-full px-4 py-3 rounded-lg border ${
-                    formErrors.email ? 'border-red-500' : 'border-gray-300'
-                  } focus:outline-none focus:ring-2 focus:ring-green-500`}
+                  className={`w-full px-4 py-3 rounded-lg border ${formErrors.email ? 'border-red-500' : 'border-gray-300'
+                    } focus:outline-none focus:ring-2 focus:ring-green-500`}
                 />
                 {formErrors.email && <p className="text-red-500 text-sm mt-1 ml-4">{formErrors.email}</p>}
               </div>
@@ -292,9 +298,8 @@ const Giveaway = () => {
                   placeholder="Phone Number"
                   value={formData.phone}
                   onChange={handleInputChange}
-                  className={`w-full px-4 py-3 rounded-lg border ${
-                    formErrors.phone ? 'border-red-500' : 'border-gray-300'
-                  } focus:outline-none focus:ring-2 focus:ring-green-500`}
+                  className={`w-full px-4 py-3 rounded-lg border ${formErrors.phone ? 'border-red-500' : 'border-gray-300'
+                    } focus:outline-none focus:ring-2 focus:ring-green-500`}
                 />
                 {formErrors.phone && <p className="text-red-500 text-sm mt-1 ml-4">{formErrors.phone}</p>}
               </div>
@@ -425,9 +430,8 @@ const Giveaway = () => {
                   name="pickTime"
                   value={formData.pickTime}
                   onChange={handleInputChange}
-                  className={`w-full h-[50px] border-2 rounded-lg px-5 mt-2 sm:mt-5 font-karla ${
-                    formErrors.pickTime ? 'border-red-500' : ''
-                  }`}
+                  className={`w-full h-[50px] border-2 rounded-lg px-5 mt-2 sm:mt-5 font-karla ${formErrors.pickTime ? 'border-red-500' : ''
+                    }`}
                 >
                   <option value="">Select pickup time</option>
                   <option value="morning">9:30-12:00</option>
@@ -496,9 +500,8 @@ const Giveaway = () => {
                   name="category"
                   value={formData.category}
                   onChange={handleInputChange}
-                  className={`w-full h-[50px] border-2 rounded-lg px-5 mt-2 sm:mt-5 font-karla ${
-                    formErrors.category ? 'border-red-500' : ''
-                  }`}
+                  className={`w-full h-[50px] border-2 rounded-lg px-5 mt-2 sm:mt-5 font-karla ${formErrors.category ? 'border-red-500' : ''
+                    }`}
                 >
                   <option value="">Select Category</option>
                   <option value="Reusable">Reusable</option>
@@ -569,9 +572,13 @@ const Giveaway = () => {
 
           <div className="relative z-10 w-full max-w-7xl px-6 pt-4">
             <div className="flex justify-between items-center mb-8">
-              <Link href="/">
+              {/* <Link href="/">
                 <img src="/gv_arrow.png" alt="Back" className="w-8 h-8" />
-              </Link>
+              </Link> */}
+              <div onClick={handleBackButton} className="cursor-pointer">
+                <img src="/gv_arrow.png" alt="Back" className="w-8 h-8" />
+              </div>
+
               <img src="/help_gv.png" alt="Help" className="w-24 h-8" />
             </div>
 
@@ -580,9 +587,8 @@ const Giveaway = () => {
                 <span
                   key={step}
                   onClick={() => goToStep(step)}
-                  className={`w-1/3 h-1 mx-3 cursor-pointer ${
-                    currentStep >= step ? 'bg-green-500' : 'bg-gray-300'
-                  } rounded-full`}
+                  className={`w-1/3 h-1 mx-3 cursor-pointer ${currentStep >= step ? 'bg-green-500' : 'bg-gray-300'
+                    } rounded-full`}
                 />
               ))}
             </div>
