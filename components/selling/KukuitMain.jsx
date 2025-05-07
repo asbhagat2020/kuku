@@ -1,5 +1,5 @@
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import DraggableProgressBar from "./DraggableProgressBar";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -7,9 +7,114 @@ import CustomDateInput from "./CustomDateInput";
 import Cookies from 'js-cookie';
 import axios from "axios";
 import toast from 'react-hot-toast';
+import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from 'react-leaflet';
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
+
+
 
 const KukuitMain = () => {
   const notify = () => toast.success('Please Login');
+  const [location, setLocation] = useState(null);
+  const [address, setAddress] = useState('');
+  const [markerPosition, setMarkerPosition] = useState([51.505, -0.09]);
+  const [addressType, setAddressType] = useState(false);
+
+  const [selectedScale, setSelectedScale] = useState(null);
+  const [currentStep, setCurrentStep] = useState(1);
+  const [submit, setSubmit] = useState(false);
+  const [modal, setModal] = useState(false);
+  const [customNumber, setCustomNumber] = useState("");
+  const [formData, setFormData] = useState({
+    country: "",
+    city: "",
+    addressLine1: "",
+    addressLine2: "",
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: "",
+    date: "",
+    time: "",
+    agreeTerms: false,
+  });
+
+
+  const [errors, setErrors] = useState({});
+
+  const defaultMarkerIcon = new L.Icon({
+    iconUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png',
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png',
+    shadowSize: [41, 41],
+  });
+
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          const { latitude, longitude } = position.coords;
+          setMarkerPosition([latitude, longitude]);
+          await fetchAddress(latitude, longitude);
+        },
+        (err) => console.error('Geolocation error:', err)
+      );
+    }
+  }, []);
+
+  // Function to reverse geocode coordinates
+  const fetchAddress = async (latitude, longitude) => {
+    try {
+      const response = await fetch(
+        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=AIzaSyCl2ftJURDx6LbMCxcXzpVZ-KFXJNT7DfY`
+      );
+      const data = await response.json();
+      if (data?.results?.length > 0) {
+        const formattedAddress = data?.results[0]?.formatted_address;
+        setAddress(formattedAddress);
+        setLocation({ latitude, longitude });
+      } else {
+        setAddress("Address not found");
+      }
+    } catch (error) {
+      console.error('Error fetching address:', error);
+    }
+  };
+
+  useEffect(() => {
+    if (addressType && address) {
+      const addressarry = address?.split(",")
+      setFormData((prevData) => ({
+        ...prevData,          // Spread the previous form data
+        country: addressarry[addressarry?.length - 1],
+        city: addressarry?.length > 2 ? addressarry[addressarry?.length - 3] + "," + addressarry[addressarry?.length - 2] : addressarry[addressarry?.length - 2],
+        addressLine1: addressarry?.length > 3 ? addressarry[addressarry?.length - 4] : "",
+        addressLine2: addressarry?.length > 4 ? addressarry[addressarry?.length - 5] : "",    // Update the country field with the new value
+      }));
+    }
+  }, [addressType, address])
+
+
+
+  function MapClickHandler() {
+    console.log("function called");
+
+    const map = useMapEvents({
+      click: (event) => {
+        const { lat, lng } = event.latlng;
+        setMarkerPosition([lat, lng]); // Update marker position
+        fetchAddress(lat, lng); // Fetch address for the clicked coordinates
+      },
+    });
+    console.log("map", map);
+
+    return null; // This component doesn't render anything itself
+  }
+  console.log("address", address);
+
+
   const Modal = ({ onClose }) => {
     const handleOutsideClick = (e) => {
       if (e.target === e.currentTarget) {
@@ -42,27 +147,7 @@ const KukuitMain = () => {
     );
   };
 
-  const [selectedScale, setSelectedScale] = useState(null);
-  const [currentStep, setCurrentStep] = useState(1);
-  const [submit, setSubmit] = useState(false);
-  const [modal, setModal] = useState(false);
-  const [customNumber, setCustomNumber] = useState("");
-  const [formData, setFormData] = useState({
-    country: "",
-    city: "",
-    addressLine1: "",
-    addressLine2: "",
-    firstName: "",
-    lastName: "",
-    email: "",
-    phone: "",
-    date: "",
-    time: "",
-    agreeTerms: false,
-  });
 
-
-  const [errors, setErrors] = useState({});
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -207,7 +292,10 @@ const KukuitMain = () => {
     }
   };
 
-  const renderStepContent = () => {
+
+
+
+  const renderStepContent = (markerPosition) => {
     switch (currentStep) {
       case 1:
         return (
@@ -354,13 +442,36 @@ const KukuitMain = () => {
               Please enter your pickup details
             </p>
             <div className="w-full h-[200px] sm:h-[392px] mt-6 sm:mt-[36px] shadow">
-              <iframe
+              {/* <iframe
                 className="w-full h-full"
                 src="https://www.google.com/maps/embed?pb=!1m10!1m8!1m3!1d3613.8073542448806!2d55.1406664!3d25.0745178!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sin!4v1728306215066!5m2!1sen!2sin"
                 allowFullScreen=""
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
-              ></iframe>
+              ></iframe> */}
+
+              <MapContainer
+                center={markerPosition}
+                zoom={13}
+                // style={{ width: '100%', height: '450px' }}
+                className="w-full h-full"
+
+              >
+                <TileLayer
+                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                />
+
+                {/* MapClickHandler listens for map click events */}
+                <MapClickHandler />
+
+                <Marker position={markerPosition} icon={defaultMarkerIcon}>
+                  <Popup>{address}</Popup>
+                </Marker>
+              </MapContainer>
+            </div>
+            <div>
+              <button style={{ color: "rgb(228 8 111 / var(--tw-bg-opacity))" }} onClick={() => setAddressType(!addressType)}>Select address from Map</button>
             </div>
             <div className="flex flex-col lg:flex-row mt-6 sm:mt-[36px] gap-6 lg:gap-[54px]">
               <div className="w-full lg:w-1/2 flex flex-col gap-6">
@@ -368,18 +479,28 @@ const KukuitMain = () => {
                   <p className="text-[#151515] text-sm sm:text-base font-bold font-karla">
                     Country
                   </p>
-                  <select
-                    name="country"
-                    value={formData.country}
-                    onChange={handleInputChange}
-                    className="w-full h-[50px] border-2 rounded-lg px-5 mt-2 sm:mt-5 font-karla"
-                  >
-                    <option value="">Select a country</option>
-                    <option value="uae">UAE</option>
-                    <option value="saab">Saab</option>
-                    <option value="fiat">Fiat</option>
-                    <option value="audi">Audi</option>
-                  </select>
+
+                  {addressType ?
+                    <input
+                      maxLength={25}
+                      placeholder="Enter your address line 1"
+                      type="text"
+                      value={formData.country}
+                      className="w-full h-[50px] border-2 rounded-lg px-5 mt-2 sm:mt-5 font-karla"
+                    /> : <select
+                      name="country"
+                      value={formData.country}
+                      onChange={handleInputChange}
+                      className="w-full h-[50px] border-2 rounded-lg px-5 mt-2 sm:mt-5 font-karla"
+                    >
+                      <option value="">Select a country</option>
+                      <option value="uae">UAE</option>
+                      <option value="saab">Saab</option>
+                      <option value="fiat">Fiat</option>
+                      <option value="audi">Audi</option>
+                    </select>}
+
+
                   {errors.country && (
                     <p className="text-red-500 text-sm mt-1">
                       {errors.country}
@@ -391,18 +512,25 @@ const KukuitMain = () => {
                   <p className="text-[#151515] text-sm sm:text-base font-bold font-karla">
                     City
                   </p>
-                  <select
-                    name="city"
-                    value={formData.city}
-                    onChange={handleInputChange}
-                    className="w-full h-[50px] border-2 rounded-lg px-5 mt-2 sm:mt-5 font-karla"
-                  >
-                    <option value="">Select a city</option>
-                    <option value="dubai">Dubai</option>
-                    <option value="abudhabi">Abu Dhabi</option>
-                    <option value="sharjah">Sharjah</option>
-                    <option value="ajman">Ajman</option>
-                  </select>
+                  {addressType ?
+                    <input
+                      maxLength={25}
+                      placeholder="Enter your address line 1"
+                      type="text"
+                      value={formData.city}
+                      className="w-full h-[50px] border-2 rounded-lg px-5 mt-2 sm:mt-5 font-karla"
+                    /> : <select
+                      name="city"
+                      value={formData.city}
+                      onChange={handleInputChange}
+                      className="w-full h-[50px] border-2 rounded-lg px-5 mt-2 sm:mt-5 font-karla"
+                    >
+                      <option value="">Select a city</option>
+                      <option value="dubai">Dubai</option>
+                      <option value="abudhabi">Abu Dhabi</option>
+                      <option value="sharjah">Sharjah</option>
+                      <option value="ajman">Ajman</option>
+                    </select>}
                   {errors.city && (
                     <p className="text-red-500 text-sm mt-1">{errors.city}</p>
                   )}
@@ -591,7 +719,7 @@ const KukuitMain = () => {
         </div>
 
         <div className="px-4 sm:px-8 lg:px-[94px] mt-8 sm:mt-[56px]">
-          {renderStepContent()}
+          {renderStepContent(markerPosition)}
         </div>
       </div>
       {modal && <Modal onClose={handleCloseModal} />}
