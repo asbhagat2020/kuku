@@ -138,8 +138,7 @@ const KukuitMain = () => {
             Your pickup schedule has been sent to us
           </h2>
           <div className="text-[#7f808c] text-base sm:text-xl font-normal font-karla leading-7 sm:leading-9 text-center mt-2 sm:mt-4">
-            Sit back & relax while we send an email confirmation from our team
-            for the further steps
+            Sit back and Relax while our team contacts you to confirm the pick up
           </div>
         </div>
       </div>
@@ -154,13 +153,13 @@ const KukuitMain = () => {
       [name]: type === "checkbox" ? checked : value,
     }));
   };
- 
+
   const handleCustomNumberChange = (e) => {
     const value = e.target.value;
- 
+
     if (!isNaN(value)) {
       setCustomNumber(value);
-      
+
       if (value === "") {
         setSelectedScale(null);
       } else {
@@ -174,7 +173,7 @@ const KukuitMain = () => {
     }
   };
 
-  
+
 
 
 
@@ -213,17 +212,17 @@ const KukuitMain = () => {
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
- 
+
   const validateStep1 = () => {
     if (selectedScale === null && customNumber === "") {
       return false;
     }
-    
- 
+
+
     if (selectedScale === null && customNumber !== "") {
       return false;
     }
-    
+
     return true;
   };
 
@@ -259,7 +258,7 @@ const KukuitMain = () => {
         phone: formData.phone,
       };
 
- 
+
       console.log("Cookies.get('auth')", Cookies.get('auth'));
 
       if (Cookies.get('auth')) {
