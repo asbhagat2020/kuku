@@ -61,8 +61,9 @@ const ProductCard = (productDetails) => {
       }
 
       const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/product/add/cart/${product._id}`,
-        {},
+        // `${process.env.NEXT_PUBLIC_API_BASE_URL}/product/add/cart/${product._id}`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL1}/cart/add`,
+        { productId: product._id },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -70,7 +71,7 @@ const ProductCard = (productDetails) => {
         }
       );
 
-      if (response.status === 201) {
+      if (response.status === 200) {
         dispatch(addToCart(product));
         router.push("/cart");
       } else {

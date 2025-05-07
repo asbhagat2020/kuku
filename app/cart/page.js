@@ -14,7 +14,7 @@ import AddressList from "@/components/userProfile/AddressList";
 import CartAddress from "@/components/userProfile/CartAddress";
 
 
-export default function Cart () {
+export default function Cart() {
   const [isCouponPopupVisible, setIsCouponPopupVisible] = useState(false);
   const [appliedCoupon, setAppliedCoupon] = useState("");
   const [isCouponApplied, setisCouponApplied] = useState(false);
@@ -55,7 +55,7 @@ export default function Cart () {
   // Calculate totals based on selected items
   const calculateTotals = (selected) => {
     const total = cart.reduce((sum, item) => {
-      if(selected[item._id]) {
+      if (selected[item._id]) {
         return sum + (item.price || 0);
       }
       return sum;
@@ -82,7 +82,7 @@ export default function Cart () {
       console.log("Selected Products for Order:", selectedProducts);
 
       // Only proceed if there are selected items
-      if(selectedProducts.length === 0) {
+      if (selectedProducts.length === 0) {
         setErrorMessage("Please select at least one item to checkout");
         setErrorPopupOpen(true);
         return;
@@ -111,14 +111,14 @@ export default function Cart () {
         }
       );
       console.log(response.data);
-      if(response.status === 201) {
+      if (response.status === 201) {
         // Order created successfully
         setCart(response.data.updatedCart);
         showSuccessNotification("Order placed successfully");
       } else {
         throw new Error(response.data.message || "Failed to create order");
       }
-    } catch(error) {
+    } catch (error) {
       setErrorMessage(
         error.response?.data?.message || "Failed to process checkout"
       );
@@ -134,22 +134,25 @@ export default function Cart () {
     setDiscount(0);
   };
 
-  const handleRemove = async (id) => {
+  const handleRemove = async (item) => {
     try {
+      let id = item.productId
+      let _id = item._id
       const token = JSON.parse(Cookies.get('auth'));
-      const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/product/cart/${id}`;
-      const response = await axios.delete(url, {
+      const res = await axios.put(`${process.env.NEXT_PUBLIC_API_BASE_URL1}/cart/remove/${id}`, {},{
         headers: {
-          Authorization: `Bearer ${token}`,
-        },
+          Authorization: `Bearer ${token}`
+        }
       });
-      setCart(response.data.cart);
+      let newUpdatedData = cart.filter((el => el.productId !== id));
+     
       // Update selected items after removal
+      setCart(newUpdatedData);
       const newSelectedItems = { ...selectedItems };
-      delete newSelectedItems[id];
+      delete newSelectedItems[_id];
       setSelectedItems(newSelectedItems);
       calculateTotals(newSelectedItems);
-    } catch(err) {
+    } catch (err) {
       setError("Failed to remove item from cart");
       setErrorMessage("Failed to remove item from cart");
       setErrorPopupOpen(true);
@@ -181,16 +184,16 @@ export default function Cart () {
 
   const handleApplyCoupon = (couponCode) => {
     const coupon = coupons.find((c) => c.code === couponCode);
-    if(coupon) {
+    if (coupon) {
       setAppliedCoupon(couponCode);
       setIsCouponPopupVisible(false);
       setisCouponApplied(true);
 
-      if(coupon.type === "percentage") {
+      if (coupon.type === "percentage") {
         setDiscount((subtotal * coupon.value) / 100);
-      } else if(coupon.type === "flat") {
+      } else if (coupon.type === "flat") {
         setDiscount(coupon.value);
-      } else if(coupon.type === "freeShipping") {
+      } else if (coupon.type === "freeShipping") {
         setDiscount(0);
       }
     }
@@ -201,25 +204,26 @@ export default function Cart () {
   const fetchCartDetails = async () => {
     try {
       const token = JSON.parse(Cookies.get("auth"));
-      const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/product/get/cart`;
+      const url = `${process.env.NEXT_PUBLIC_API_BASE_URL1}/cart/details`;
       const response = await axios.get(url, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-      setCart(response.data.cart);
+      console.log("response of user cart...", response.data.products);
+      setCart(response.data.products);
       // Initialize selected items
       const initialSelected = {};
       response.data.cart.forEach((item) => {
         initialSelected[item._id] = false;
       });
       setSelectedItems(initialSelected);
-    } catch(err) {
+    } catch (err) {
       // showSuccessNotification("Please login")
       // setError("Failed to fetch cart details");
       // setErrorMessage("Failed to fetch cart details");
       // setErrorPopupOpen(true);
-      
+
     }
   };
 
@@ -227,8 +231,9 @@ export default function Cart () {
     try {
       const token = JSON.parse(Cookies.get("auth"));
       const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/product/wishlist/${id}`,
-        {},
+        // `${process.env.NEXT_PUBLIC_API_BASE_URL}/product/wishlist/${id}`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL1}/wishlist/add`,
+        {productId:id},
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -236,13 +241,13 @@ export default function Cart () {
         }
       );
 
-      if(response.status === 201) {
+      if (response.status === 200) {
         router.push("/wishlist");
       } else {
         setErrorMessage(`Failed to add to wishlist: ${response.data.message}`);
         setErrorPopupOpen(true);
       }
-    } catch(error) {
+    } catch (error) {
       setErrorMessage(error.response?.data?.message || error.message);
       setErrorPopupOpen(true);
     }
@@ -306,7 +311,7 @@ export default function Cart () {
 
                     <img
                       className="w-24 h-auto md:w-[159.2px] rounded-md"
-                      src={item?.images?.[0]}
+                      src={item?.image}
                       alt="Product"
                     />
 
@@ -327,7 +332,7 @@ export default function Cart () {
                           </div>
                           <div className="inline-flex border border-[#e4086f] justify-center items-center px-2 py-1">
                             <div className="text-[#e4086f] text-sm md:text-[16px] font-normal font-karla">
-                              {item?.size?.sizeName || 'N/A'}
+                              {item?.size || 'N/A'}
                             </div>
                           </div>
                         </div>
@@ -337,14 +342,14 @@ export default function Cart () {
                             CONDITION:
                           </span>
                           <span className="text-[#383838] text-sm md:text-[16px] font-bold font-karla">
-                            {item?.condition?.conditionName || 'N/A'}
+                            {item?.condition || 'N/A'}
                           </span>
                         </div>
                       </div>
 
                       <div className="flex flex-col md:flex-row mt-2 gap-4 w-full">
                         <button
-                          onClick={() => handleRemove(item._id)}
+                          onClick={() => handleRemove(item)}
                           className="w-full md:w-[200px] h-[40px] md:h-[50px] rounded-lg hover:border-white hover:text-white text-black border-2 border-[#0f0f0f] flex justify-center items-center hover:bg-[#e4086f]"
                         >
                           <span className="text-sm md:text-[14px] font-bold font-karla uppercase">
@@ -353,7 +358,7 @@ export default function Cart () {
                         </button>
                         <button
                           className="w-full md:w-[200px] h-[40px] md:h-[50px] rounded-lg text-black hover:border-white hover:text-white border-2 border-[#0f0f0f] flex justify-center items-center hover:bg-[#e4086f]"
-                          onClick={() => handleAddToWishlist(item._id)}
+                          onClick={() => handleAddToWishlist(item.productId)}
                         >
                           <span className="text-sm md:text-[14px] font-bold font-karla uppercase">
                             Add to Wishlist

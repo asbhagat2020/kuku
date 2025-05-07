@@ -10,8 +10,8 @@ import { useSelector } from "react-redux";
 import axios from "axios";
 import Cookies from 'js-cookie';
 
-export default function Wishlist () {
-  const [wishlist, setWishlist] = useState(null);
+export default function Wishlist() {
+  const [wishlist, setWishlist] = useState([]);
   const [loading, setLoading] = useState(null);
   const [error, setError] = useState(null);
   const [errorPopupOpen, setErrorPopupOpen] = useState(false);
@@ -26,48 +26,46 @@ export default function Wishlist () {
   //   }
   // }, [token]);
 
-  const handleRemove = async (id) => {
+
+  const handleRemove = async (item) => {
     try {
+
       const token = JSON.parse(Cookies.get('auth'));
-      const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/product/wishlist/${id}`;
 
-      const response = await axios.delete(url, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      setWishlist(response.data.wishlist);
-      console.log(response.data, "Wish Data");
+      const res = await axios.put(`${process.env.NEXT_PUBLIC_API_BASE_URL1}/wishlist/remove/${item.productId}`,{},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
+      const updatedWishlistData = wishlist.filter((el) => el.productId !== item.productId);
 
-    } catch(err) {
-      setError("Failed to fetch Wishlist details");
+      setWishlist(updatedWishlistData);
+    } catch (err) {
+      console.error("Error while removing from wishlist:", err);
+      setError("Failed to remove item from wishlist");
     } finally {
       setLoading(false);
     }
   };
 
+
   const handleAddToCart = async (id) => {
     try {
 
       const token = JSON.parse(Cookies.get('auth'));
-
-
-      // Make the POST request to your API
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/product/add/cart/${id}`,
-        {},
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL1}/cart/add`,
+        { productId: id },
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        } // or any other data you need to send
+        }
       );
 
-      if(response.status === 201) {
-        // If the request is successful, dispatch the action to add to cart
-
-
-        // Navigate to the cart page
+      if (response.status === 200) {
         router.push('/cart');
       } else {
         // Handle the case where the request is not successful
@@ -75,7 +73,7 @@ export default function Wishlist () {
         setErrorMessage(`Failed to submit offer: ${response.data.message}`);
         setErrorPopupOpen(true);
       }
-    } catch(error) {
+    } catch (error) {
       // Handle any errors that occur during the request
       console.error('An error occurred while adding product to wishlist:', error);
       setErrorMessage(` ${error.response?.data?.message || error.message}`);
@@ -86,17 +84,15 @@ export default function Wishlist () {
   const fetchWishlist = async () => {
     try {
       const token = JSON.parse(Cookies.get('auth'));
-      const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/product/get/wishlist`;
+      const url = `${process.env.NEXT_PUBLIC_API_BASE_URL1}/wishlist`;
       const response = await axios.get(url, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log("response.data.wishlist..........",response.data.wishlist)
-      setWishlist(response.data.wishlist);
-
-
-    } catch(err) {
+      console.log("response.data.wishlist..........", response.data.wishlist.products)
+      setWishlist(response.data.wishlist.products);
+    } catch (err) {
       setError("Failed to fetch product details");
     } finally {
       setLoading(false);
@@ -118,13 +114,13 @@ export default function Wishlist () {
         </div>
         <div className="w-full">
           {/* Check if wishlist is an array and has items */}
-          {Array.isArray(wishlist) && wishlist.length > 0 ? (
-            wishlist.map((item, index) => (
+          {wishlist.length > 0 ? (
+            wishlist?.map((item, index) => (
               <div key={index} className="h-auto flex flex-col md:flex-row justify-start items-start gap-4 mb-4">
                 {/* Product Image */}
                 <img
                   className="w-[120px] h-[120px] md:w-[159.2px] md:h-[157.6px] rounded-[7.58px]"
-                  src={item?.images[0]}
+                  src={item?.image}
                   alt="Product"
                 />
 
@@ -149,7 +145,7 @@ export default function Wishlist () {
                       </div>
                       <div className="py-2 border border-[#e4086f] flex justify-center items-center min-w-[28.8px] min-h-[28.8px] px-3">
                         <div className="text-[#e4086f] text-[14px] md:text-[16px] font-normal font-karla">
-                        {item?.size?.sizeName || "N/A"}
+                          {item?.size || "N/A"}
                         </div>
                       </div>
                     </div>
@@ -160,7 +156,7 @@ export default function Wishlist () {
                         CONDITION:
                       </span>
                       <span className="text-[#383838] text-[14px] md:text-[16px] font-bold font-karla leading-normal">
-                      {item?.condition?.conditionName || "N/A"}
+                        {item?.condition || "N/A"}
                       </span>
                     </div>
                   </div>
@@ -169,7 +165,7 @@ export default function Wishlist () {
                   <div className="flex flex-col md:flex-row justify-start mt-1 items-start gap-4">
                     {/* <Link href="/selling-page"> */}
                     <button
-                      onClick={() => handleRemove(item._id)}
+                      onClick={() => handleRemove(item)}
                       className="w-[160px] md:w-[200px] h-[45px] md:h-[50px] rounded-[14px] hover:border-white hover:text-white hover:bg-[#e4086f] text-black border-2 border-[#0f0f0f] justify-center items-center gap-[8.8px] inline-flex">
                       <span className="text-[12px] md:text-[14px] font-bold font-karla uppercase leading-snug">
                         Remove
@@ -178,7 +174,7 @@ export default function Wishlist () {
                     {/* </Link> */}
                     {/* <Link href="/cart"> */}
                     <button
-                      onClick={() => handleAddToCart(item._id)}
+                      onClick={() => handleAddToCart(item.productId)}
                       className="w-[160px] md:w-[200px] h-[45px] md:h-[50px] rounded-[14px] hover:border-white hover:text-white text-black border-2 border-[#0f0f0f] justify-center items-center gap-[8.8px] inline-flex hover:bg-[#fde504]">
                       <span className="text-[12px] md:text-[14px] font-bold font-karla uppercase leading-snug">
                         Add To Bag
@@ -192,7 +188,7 @@ export default function Wishlist () {
                 <div className="flex flex-col justify-start items-start gap-2">
                   <div className="flex justify-start items-center gap-2">
                     <div className="text-black text-[14px] md:text-[16px] font-bold font-karla leading-[16px]">
-                      {item?.price}
+                      AED {item?.price}
                     </div>
                     <div className="text-[#30bd75] text-[14px] md:text-[16px] font-bold font-karla leading-[16px]">
                       {item?.discount}
