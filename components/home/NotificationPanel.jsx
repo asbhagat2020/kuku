@@ -3,6 +3,7 @@ import Cookies from "js-cookie";
 import axios from "axios";
 import Image from "next/image";
 import { useDispatch, useSelector } from "react-redux";
+import { useRouter } from "next/navigation";
 
 const NotificationPanel = ({ notifications, offers, onClose }) => {
   const [activeTab, setActiveTab] = useState("notifications");
@@ -12,7 +13,8 @@ const NotificationPanel = ({ notifications, offers, onClose }) => {
   const [data, setData] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
-
+  const [isChecked, setIsChecked] = useState(false);
+  const router = useRouter()
   const details = useSelector((state) => state.auth.user);
   const id = details?._id;
   console.log(id, "hhhh")
@@ -37,12 +39,17 @@ const NotificationPanel = ({ notifications, offers, onClose }) => {
   };
   console.log("isPopupOpen", isPopupOpen, currentOffer);
 
-  const closePopup = async (id) => {
+  const closePopup = async (offer) => {
+    if (!isChecked) {
+      alert("Please read the Terms and conditions")
+      return;
+    }
     try {
       const token = JSON.parse(Cookies.get("auth"));
+      const data = { buyerID: offer?.buyer?._id, Amount: offer?.offerPrice };
       const response = await axios.patch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/offer/reject/${id}`,
-        { _id: id },
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/offer/reject/${offer?._id}`,
+        { data },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -66,12 +73,17 @@ const NotificationPanel = ({ notifications, offers, onClose }) => {
   };
   console.log(data, "data")
 
-  const closeAcceptPopup = async (id) => {
+  const closeAcceptPopup = async (offer) => {
+    if (!isChecked) {
+      alert("Please read the Terms and conditions")
+      return;
+    }
     try {
       const token = JSON.parse(Cookies.get("auth"));
+      const data = { buyerID: offer?.buyer?._id, Amount: offer?.offerPrice };
       const response = await axios.patch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/offer/accept/${id}`,
-        {},
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/offer/accept/${offer?._id}`,
+        { data },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -228,11 +240,11 @@ const NotificationPanel = ({ notifications, offers, onClose }) => {
 
                 {id === offer?.buyer?._id ?
                   <p className="text-sm text-[#5d5d5d] font-bold font-karla">
-                    &quot;
+
                     {offer?.status === "Pending" ? "Your offer is still in Progress" : offer?.status === "Accepted" ? "Your offer is Approved by the seller" : "Your offer is Rejected by the seller"}
                   </p> :
                   <p className="text-sm text-[#5d5d5d] font-bold font-karla">
-                    &quot;
+
                     Great news! <p style={{
                       fontWeight: "bold", color: "#5D5D5D"
                     }}>{offer?.buyer?.name}</p> has made you an offer. Tap here to check it out
@@ -266,7 +278,7 @@ const NotificationPanel = ({ notifications, offers, onClose }) => {
                           Sorry...! You have exceeded your Offer limit, Better luck Next Time
                         </p> :
                         <button
-                          onClick={() => openPopup(offer)}
+                          onClick={() => router.push(`/selling-page/${offer?.product?._id}`)}
                           className="text-[#30bd75] text-xs font-medium underline"
                         >
                           Click to make offer again
@@ -328,14 +340,14 @@ const NotificationPanel = ({ notifications, offers, onClose }) => {
               </p>
               <div className="flex items-center gap-5">
                 <Image
-                  src={currentOffer?.seller?.avatar}
+                  src={currentOffer?.buyer?.ProfileImg}
                   alt="Buyer"
                   width={48}
                   height={48}
                   className="w-12 h-12 rounded-full"
                 />
                 <p className="text-sm text-gray-700">
-                  {currentOffer?.seller?.username}
+                  {currentOffer?.buyer?.name}
                 </p>
               </div>
             </div>
@@ -349,52 +361,105 @@ const NotificationPanel = ({ notifications, offers, onClose }) => {
                 Price Information
               </p>
               <div className="flex justify-between text-sm text-gray-700 mb-2">
-                <p>Buyer&apos;s Offer</p>
+                <p>Seller&apos;s Offer</p>
+
                 <p className="font-bold text-[#FDE504]">
                   {currentOffer?.product?.price}
                 </p>
               </div>
-              <div className="flex justify-between text-sm text-gray-700">
-                <p>Seller&apos;s Offer</p>
-                <p className="font-bold text-[#FDE504]">
-                  {currentOffer?.offerPrice}
-                </p>
-              </div>
+              {currentOffer?.statusHistory?.map((history) =>
+                <div className="flex justify-between text-sm text-gray-700">
+                  <p>Buyer&apos;s Offer</p>
+                  <p className="font-bold text-[#FDE504]">
+                    {history?.Amount}
+                  </p>
+                </div>
+              )}
             </div>
 
             {/* Agreement Checkbox */}
-            <div className="flex items-start gap-3 mb-8">
-              <input
-                type="checkbox"
-                id="terms"
-                className="w-5 h-5 text-[#FDE504] border-gray-300 rounded focus:ring-[#FDE504]"
-              />
-              <label
-                htmlFor="terms"
-                className="text-sm text-gray-600 leading-tight"
-              >
-                I agree to the terms and conditions by KUKU.{" "}
-                <a href="#" className="text-[#FDE504] underline">
-                  Click here to know more
-                </a>
-              </label>
-            </div>
+
+
+            {currentOffer?.statusHistory?.length > 0 ?
+
+              currentOffer?.statusHistory[currentOffer?.statusHistory?.length - 1]?.status === "Rejected" || currentOffer?.statusHistory[currentOffer?.statusHistory?.length - 1]?.status == "Accepted" ?
+                <></> :
+                <div className="flex items-start gap-3 mb-8">
+                  <input
+                    type="checkbox"
+                    id="terms"
+                    className="w-5 h-5 text-[#FDE504] border-gray-300 rounded focus:ring-[#FDE504]"
+                    onChange={(e) => setIsChecked(e.target.checked)}
+                  />
+                  <label
+                    htmlFor="terms"
+                    className="text-sm text-gray-600 leading-tight"
+                  >
+                    I agree to the terms and conditions by KUKU.{" "}
+                    <a href="#" className="text-[#FDE504] underline">
+                      Click here to know more
+                    </a>
+                  </label>
+                </div>
+              :
+              <div className="flex items-start gap-3 mb-8">
+                <input
+                  type="checkbox"
+                  id="terms"
+                  className="w-5 h-5 text-[#FDE504] border-gray-300 rounded focus:ring-[#FDE504]"
+                />
+                <label
+                  htmlFor="terms"
+                  className="text-sm text-gray-600 leading-tight"
+                >
+                  I agree to the terms and conditions by KUKU.{" "}
+                  <a href="#" className="text-[#FDE504] underline">
+                    Click here to know more
+                  </a>
+                </label>
+              </div>}
+
+
 
             {/* Action Buttons */}
-            <div className="flex justify-between">
-              <button
-                onClick={() => closePopup(currentOffer?._id)}
-                className="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg shadow hover:bg-gray-300 transition"
-              >
-                Reject
-              </button>
-              <button
-                onClick={() => closeAcceptPopup(currentOffer?._id)}
-                className="px-6 py-3 bg-[#FDE504] text-gray-900 font-bold rounded-lg shadow hover:bg-yellow-400 transition"
-              >
-                Accept
-              </button>
-            </div>
+            {currentOffer?.statusHistory?.length > 0 ?
+              currentOffer?.statusHistory[currentOffer?.statusHistory?.length - 1]?.status === "Rejected" || currentOffer?.statusHistory[currentOffer?.statusHistory?.length - 1]?.status == "Accepted" ?
+                <p style={{ fontFamily: 'Karla-Bold', textAlign: "center", margin: "10%" }}>{currentOffer?.statusHistory[currentOffer?.statusHistory?.length - 1]?.status}</p>
+
+                :
+
+                <div className="flex justify-between">
+                  <button
+                    onClick={() => closePopup(currentOffer)}
+                    className="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg shadow hover:bg-gray-300 transition"
+                  >
+                    Reject
+                  </button>
+                  <button
+                    onClick={() => closeAcceptPopup(currentOffer)}
+                    className="px-6 py-3 bg-[#FDE504] text-gray-900 font-bold rounded-lg shadow hover:bg-yellow-400 transition"
+                  >
+                    Accept
+                  </button>
+                </div>
+              :
+              <div className="flex justify-between">
+                <button
+                  onClick={() => closePopup(currentOffer)}
+                  className="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg shadow hover:bg-gray-300 transition"
+                >
+                  Reject
+                </button>
+                <button
+                  onClick={() => closeAcceptPopup(currentOffer)}
+                  className="px-6 py-3 bg-[#FDE504] text-gray-900 font-bold rounded-lg shadow hover:bg-yellow-400 transition"
+                >
+                  Accept
+                </button>
+              </div>
+            }
+
+
           </div>
         </div>
       )}

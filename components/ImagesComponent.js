@@ -468,12 +468,13 @@ export const ImagesComponent = () => {
           },
         }
       );
+      console.log("response", response);
 
-      if (response.status === 201) {
+      if (response.status === 200) {
         setOfferSubmitted(true);
         handleCloseOfferPopup();
       } else {
-        console.error("Failed to submit offer:", response.statusText);
+        console.error("Failed to submit offer:", response);
         setErrorMessage(`Failed to submit offer: ${response.data.message}`);
         setErrorPopupOpen(true);
       }
@@ -630,8 +631,8 @@ export const ImagesComponent = () => {
               {!isAdminProduct(card) && (
                 <button
                   className={`mt-2 px-4 sm:px-6 py-1 ${card?.seller?.followers?.includes(userID)
-                      ? "bg-gray-500"
-                      : "bg-custom-green"
+                    ? "bg-gray-500"
+                    : "bg-custom-green"
                     } text-white rounded-full`}
                   onClick={() =>
                     card?.seller?.followers?.includes(userID)

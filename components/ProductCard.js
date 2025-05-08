@@ -220,11 +220,11 @@ const ProductCard = (productDetails) => {
         }
       );
 
-      if (response.status === 201) {
+      if (response.status === 200) {
         setIsModalOpen(true);
         setOfferPopupOpen(false);
       } else {
-        console.error("Failed to submit offer:", response.statusText);
+        console.error("Failed to submit offer:", response);
         setErrorMessage(`Failed to submit offer: ${response.data.message}`);
         setErrorPopupOpen(true);
       }
