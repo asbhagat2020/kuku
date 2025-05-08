@@ -31,9 +31,11 @@ const NotificationPanel = ({ notifications, offers, onClose }) => {
   }, []);
 
   const openPopup = (offer) => {
+    console.log("offer", offer);
     setCurrentOffer(offer);
     setIsPopupOpen(true);
   };
+  console.log("isPopupOpen", isPopupOpen, currentOffer);
 
   const closePopup = async (id) => {
     try {
@@ -62,7 +64,7 @@ const NotificationPanel = ({ notifications, offers, onClose }) => {
       );
     }
   };
-  console.log(data, "ooo")
+  console.log(data, "data")
 
   const closeAcceptPopup = async (id) => {
     try {
@@ -113,6 +115,8 @@ const NotificationPanel = ({ notifications, offers, onClose }) => {
           Authorization: `Bearer ${token}`,
         },
       });
+      console.log("response.data.offers", response.data);
+
       setData(response.data.offers);
     } catch (err) {
       setError("Failed to fetch product details");
@@ -135,8 +139,8 @@ const NotificationPanel = ({ notifications, offers, onClose }) => {
         <div
           onClick={() => toggleTab("notifications")}
           className={`flex items-center cursor-pointer gap-2 text-black pt-2 font-karla text-[16px] pb-2 flex-grow justify-center ${activeTab === "notifications"
-              ? "border-b-4 border-[#FDE504] font-bold"
-              : "font-normal"
+            ? "border-b-4 border-[#FDE504] font-bold"
+            : "font-normal"
             }`}
         >
           Notifications
@@ -148,8 +152,8 @@ const NotificationPanel = ({ notifications, offers, onClose }) => {
         <div
           onClick={() => toggleTab("offers")}
           className={`flex items-center cursor-pointer gap-2 text-black pt-2 font-karla text-[16px] pb-2 flex-grow justify-center ${activeTab === "offers"
-              ? "border-b-4 border-[#FDE504] font-bold"
-              : "font-normal"
+            ? "border-b-4 border-[#FDE504] font-bold"
+            : "font-normal"
             }`}
         >
           Offers
@@ -212,7 +216,7 @@ const NotificationPanel = ({ notifications, offers, onClose }) => {
                 )}
                 <div className="flex justify-between">
                   <p className="text-sm text-[#1e1f23] font-bold font-karla">
-                    Offer received
+                    {id === offer?.buyer?._id ? `Your made an offer to ${offer?.seller?.name}` : "Offer received"}
                   </p>
                   <span className="text-xs text-gray-500">
                     {new Date(offer?.createdAt).toLocaleTimeString([], {
@@ -221,23 +225,73 @@ const NotificationPanel = ({ notifications, offers, onClose }) => {
                     })}
                   </span>
                 </div>
-                <p className="text-sm text-[#5d5d5d] font-bold font-karla">
-                  &quot;Great news! Someone has made you an offer. Tap here to
-                  check it out&quot;
-                </p>
-                <button
-                  onClick={() => openPopup(offer)}
-                  className="text-[#30bd75] text-xs font-medium underline"
-                >
-                  Click to review the offer
-                </button>
+
+                {id === offer?.buyer?._id ?
+                  <p className="text-sm text-[#5d5d5d] font-bold font-karla">
+                    &quot;
+                    {offer?.status === "Pending" ? "Your offer is still in Progress" : offer?.status === "Accepted" ? "Your offer is Approved by the seller" : "Your offer is Rejected by the seller"}
+                  </p> :
+                  <p className="text-sm text-[#5d5d5d] font-bold font-karla">
+                    &quot;
+                    Great news! <p style={{
+                      fontWeight: "bold", color: "#5D5D5D"
+                    }}>{offer?.buyer?.name}</p> has made you an offer. Tap here to check it out
+                  </p>
+                }
+                {id === offer?.buyer?._id ?
+
+                  offer?.status === "Pending" ? <></> :
+                    offer?.status === "Accepted" ?
+
+                      <button
+                        onClick={() => openPopup(offer)}
+                        className="text-[#30bd75] text-xs font-medium underline"
+                      >
+                        Make a Payment to get your product
+                      </button>
+
+
+                      :
+                      offer?.statusHistory?.length == 3 ?
+                        <p
+                          style={{
+                            fontSize: 14,
+                            color: "#30bd75",
+                            fontWeight: "500",
+                            marginBlockStart: 3,
+                            textDecorationLine: "underline",
+                            fontFamily: 'Inter-Medium'
+                          }}
+                        >
+                          Sorry...! You have exceeded your Offer limit, Better luck Next Time
+                        </p> :
+                        <button
+                          onClick={() => openPopup(offer)}
+                          className="text-[#30bd75] text-xs font-medium underline"
+                        >
+                          Click to make offer again
+                        </button>
+
+
+                  :
+
+                  <button
+                    onClick={() => openPopup(offer)}
+                    className="text-[#30bd75] text-xs font-medium underline"
+                  >
+                    Click to review the offer
+                  </button>
+
+                }
+
+
               </div>
             </li>
           ))}
       </ul>
 
       {/* Popup */}
-      {isPopupOpen && (
+      {isPopupOpen && currentOffer && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white p-8 rounded-xl shadow-xl w-[400px] relative">
             {/* Header */}
@@ -259,7 +313,7 @@ const NotificationPanel = ({ notifications, offers, onClose }) => {
                   {currentOffer?.product?.name}
                 </p>
                 <p className="text-sm text-gray-500">
-                  Size: {currentOffer?.product?.size}
+                  Size: {currentOffer?.product?.size?.sizeName}
                 </p>
               </div>
             </div>
