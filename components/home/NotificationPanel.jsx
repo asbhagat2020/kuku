@@ -12,10 +12,10 @@ const NotificationPanel = ({ notifications, offers, onClose }) => {
   const [data, setData] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
-  
+
   const details = useSelector((state) => state.auth.user);
   const id = details?._id;
-  console.log(id,"hhhh")
+  console.log(id, "hhhh")
 
   const toggleTab = (tab) => setActiveTab(tab);
 
@@ -40,7 +40,7 @@ const NotificationPanel = ({ notifications, offers, onClose }) => {
       const token = JSON.parse(Cookies.get("auth"));
       const response = await axios.patch(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/offer/reject/${id}`,
-        {_id:id},
+        { _id: id },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -62,7 +62,7 @@ const NotificationPanel = ({ notifications, offers, onClose }) => {
       );
     }
   };
-  console.log(data,"ooo")
+  console.log(data, "ooo")
 
   const closeAcceptPopup = async (id) => {
     try {
@@ -134,11 +134,10 @@ const NotificationPanel = ({ notifications, offers, onClose }) => {
       <div className="flex gap-2 items-center border-b-2">
         <div
           onClick={() => toggleTab("notifications")}
-          className={`flex items-center cursor-pointer gap-2 text-black pt-2 font-karla text-[16px] pb-2 flex-grow justify-center ${
-            activeTab === "notifications"
+          className={`flex items-center cursor-pointer gap-2 text-black pt-2 font-karla text-[16px] pb-2 flex-grow justify-center ${activeTab === "notifications"
               ? "border-b-4 border-[#FDE504] font-bold"
               : "font-normal"
-          }`}
+            }`}
         >
           Notifications
           <span className="bg-[#FDE504] text-black font-karla font-semibold rounded-full h-[24px] w-[24px] flex items-center justify-center">
@@ -148,11 +147,10 @@ const NotificationPanel = ({ notifications, offers, onClose }) => {
 
         <div
           onClick={() => toggleTab("offers")}
-          className={`flex items-center cursor-pointer gap-2 text-black pt-2 font-karla text-[16px] pb-2 flex-grow justify-center ${
-            activeTab === "offers"
+          className={`flex items-center cursor-pointer gap-2 text-black pt-2 font-karla text-[16px] pb-2 flex-grow justify-center ${activeTab === "offers"
               ? "border-b-4 border-[#FDE504] font-bold"
               : "font-normal"
-          }`}
+            }`}
         >
           Offers
           <span className="bg-[#FDE504] text-black font-karla font-semibold rounded-full h-[24px] w-[24px] flex items-center justify-center">
@@ -207,7 +205,7 @@ const NotificationPanel = ({ notifications, offers, onClose }) => {
                   <span className="text-xs text-gray-500">
                     {Math.floor(
                       (new Date() - new Date(offer.createdAt)) /
-                        (1000 * 60 * 60 * 24)
+                      (1000 * 60 * 60 * 24)
                     )}{" "}
                     days ago
                   </span>

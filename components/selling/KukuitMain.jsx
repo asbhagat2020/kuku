@@ -7,11 +7,21 @@ import CustomDateInput from "./CustomDateInput";
 import Cookies from 'js-cookie';
 import axios from "axios";
 import toast from 'react-hot-toast';
-import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from 'react-leaflet';
-import L from 'leaflet';
+// import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from 'react-leaflet';
+// import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import dynamic from 'next/dynamic';
 
+const MapContainer = dynamic(() => import('react-leaflet').then(mod => mod.MapContainer), { ssr: false });
+const TileLayer = dynamic(() => import('react-leaflet').then(mod => mod.TileLayer), { ssr: false });
+const Marker = dynamic(() => import('react-leaflet').then(mod => mod.Marker), { ssr: false });
+const Popup = dynamic(() => import('react-leaflet').then(mod => mod.Popup), { ssr: false });
+const useMapEvents = dynamic(() => import('react-leaflet').then(mod => mod.useMapEvents), { ssr: false });
 
+let L;
+if (typeof window !== "undefined") {
+  L = require('leaflet');
+}
 const KukuitMain = () => {
   const notify = () => toast.success('Please Login');
   const [location, setLocation] = useState(null);
@@ -41,14 +51,30 @@ const KukuitMain = () => {
 
   const [errors, setErrors] = useState({});
 
-  const defaultMarkerIcon = new L.Icon({
-    iconUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png',
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34],
-    shadowUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png',
-    shadowSize: [41, 41],
-  });
+  // const defaultMarkerIcon = new L.Icon({
+  //   iconUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png',
+  //   iconSize: [25, 41],
+  //   iconAnchor: [12, 41],
+  //   popupAnchor: [1, -34],
+  //   shadowUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png',
+  //   shadowSize: [41, 41],
+  // });
+
+  const [markerIcon, setMarkerIcon] = useState(null);
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const icon = new L.Icon({
+        iconUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png',
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+        shadowUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png',
+        shadowSize: [41, 41],
+      });
+      setMarkerIcon(icon); // Set the marker icon in state
+    }
+  }, []);
+
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -493,9 +519,12 @@ const KukuitMain = () => {
                 {/* MapClickHandler listens for map click events */}
                 <MapClickHandler />
 
-                <Marker position={markerPosition} icon={defaultMarkerIcon}>
-                  <Popup>{address}</Popup>
-                </Marker>
+
+                {markerIcon && (  // Ensure the icon is set before rendering the marker
+                  <Marker position={markerPosition} icon={markerIcon}>
+                    <Popup>{address}</Popup>
+                  </Marker>
+                )}
               </MapContainer>
             </div>
             <div>
@@ -514,6 +543,7 @@ const KukuitMain = () => {
                       placeholder="Enter your address line 1"
                       type="text"
                       value={formData.country}
+                      onChange={handleInputChange}
                       className="w-full h-[50px] border-2 rounded-lg px-5 mt-2 sm:mt-5 font-karla"
                     /> : <select
                       name="country"
@@ -546,6 +576,7 @@ const KukuitMain = () => {
                       placeholder="Enter your address line 1"
                       type="text"
                       value={formData.city}
+                      onChange={handleInputChange}
                       className="w-full h-[50px] border-2 rounded-lg px-5 mt-2 sm:mt-5 font-karla"
                     /> : <select
                       name="city"
