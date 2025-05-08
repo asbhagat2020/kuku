@@ -73,6 +73,7 @@ export default function Cart() {
         .filter((item) => selectedItems[item._id])
         .map((item) => ({
           product: item._id,
+          productName:item.name,
           quantity: 1,
           price: item.price,
           size: item.size || "",
