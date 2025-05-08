@@ -8,6 +8,8 @@ import Cookies from 'js-cookie';
 import axios from "axios";
 import toast from 'react-hot-toast';
 // import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from 'react-leaflet';
+import { useMapEvents } from 'react-leaflet';
+
 // import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import dynamic from 'next/dynamic';
@@ -16,12 +18,14 @@ const MapContainer = dynamic(() => import('react-leaflet').then(mod => mod.MapCo
 const TileLayer = dynamic(() => import('react-leaflet').then(mod => mod.TileLayer), { ssr: false });
 const Marker = dynamic(() => import('react-leaflet').then(mod => mod.Marker), { ssr: false });
 const Popup = dynamic(() => import('react-leaflet').then(mod => mod.Popup), { ssr: false });
-const useMapEvents = dynamic(() => import('react-leaflet').then(mod => mod.useMapEvents), { ssr: false });
-
+// const useMapEvents = dynamic(() => import('react-leaflet').then(mod => mod.useMapEvents), { ssr: false });
 let L;
 if (typeof window !== "undefined") {
   L = require('leaflet');
 }
+
+
+
 const KukuitMain = () => {
   const notify = () => toast.success('Please Login');
   const [location, setLocation] = useState(null);
@@ -62,7 +66,7 @@ const KukuitMain = () => {
 
   const [markerIcon, setMarkerIcon] = useState(null);
   useEffect(() => {
-    if (typeof window !== "undefined") {
+    if (typeof window !== "undefined" && L) {
       const icon = new L.Icon({
         iconUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png',
         iconSize: [25, 41],
@@ -129,6 +133,7 @@ const KukuitMain = () => {
     const map = useMapEvents({
       click: (event) => {
         const { lat, lng } = event.latlng;
+        console.log("Map clicked", lat, lng);
         setMarkerPosition([lat, lng]); // Update marker position
         fetchAddress(lat, lng); // Fetch address for the clicked coordinates
       },
