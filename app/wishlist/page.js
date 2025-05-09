@@ -32,7 +32,7 @@ export default function Wishlist() {
 
       const token = JSON.parse(Cookies.get('auth'));
 
-      const res = await axios.put(`${process.env.NEXT_PUBLIC_API_BASE_URL1}/wishlist/remove/${item.productId}`,{},
+      const res = await axios.put(`${process.env.NEXT_PUBLIC_API_BASE_URL}/wishlist/remove/${item.productId}`,{},
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -56,7 +56,7 @@ export default function Wishlist() {
     try {
 
       const token = JSON.parse(Cookies.get('auth'));
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL1}/cart/add`,
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/cart/add`,
         { productId: id },
         {
           headers: {
@@ -84,7 +84,7 @@ export default function Wishlist() {
   const fetchWishlist = async () => {
     try {
       const token = JSON.parse(Cookies.get('auth'));
-      const url = `${process.env.NEXT_PUBLIC_API_BASE_URL1}/wishlist`;
+      const url =  `${process.env.NEXT_PUBLIC_API_BASE_URL}/wishlist`;
       const response = await axios.get(url, {
         headers: {
           Authorization: `Bearer ${token}`,

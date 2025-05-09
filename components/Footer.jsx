@@ -1,30 +1,76 @@
+
+
+
 // "use client"
 // import Image from 'next/image'
-// import React from 'react'
+// import React, { useState } from 'react'
 // import toast from 'react-hot-toast';
-// import { useState } from 'react';
 // import { usePathname } from 'next/navigation';
 // import Link from 'next/link';
+// import Cookies from 'js-cookie';
+// import { useRouter } from 'next/navigation';
+// import { showErrorNotification, showSuccessNotification } from '@/utils/Notification/notif';
+
 // const Footer = () => {
-//     const notify = () => toast.success('Suscription request sent');
-//     const [email, setEmail] = useState('');
-//     const [error, setError] = useState('');
+//     const router = useRouter();
+//     const [message, setMessage] = useState('');
+//     const getAuthToken = () => {
+//         let token = Cookies.get("auth");
+//         if (token) {
+//           token = decodeURIComponent(token).replace(/^"|"$/g, ""); // Remove encoded quotes
+//         }
+//         return token;
+//       };
+      
+//       const token = getAuthToken();
+      
 
-//     const validateEmail = (email) => {
-//         // Basic email validation regex
-//         const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-//         return regex.test(email);
-//     };
+//     const handleSendMessage = () => {
+//         const token = getAuthToken();
+    
+//         if (!token) {
+//             // toast.error("Please login to send a message", {
+//             //     duration: 3000,
+//             //     position: "top-center",
+//             // });
 
-//     const handleSubscribe = () => {
-//         if (!validateEmail(email)) {
-//             setError('Please enter a valid email address.');
+//              showSuccessNotification("Please login to send a message");
 //             return;
 //         }
-//         setError('');
-//         // Call your subscription logic or notification here
-//         notify();
+    
+//         if (message.trim()) {
+//             fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/comp/send-email`, {
+//                 method: "POST",
+//                 headers: {
+//                     "Content-Type": "application/json",
+//                     "Authorization": `Bearer ${token}`, // Now correctly formatted
+//                 },
+//                 body: JSON.stringify({ message }),
+//             })
+//             .then((response) => response.json())
+//             .then((data) => {
+//                 if (data.success) {
+//                     // toast.success("Message sent successfully");
+//                     showSuccessNotification("Message sent successfully");
+//                     setMessage(""); // Clear the input
+//                 } else {
+//                     // toast.error("Error sending message");
+//                     showErrorNotification("Error sending message");
+//                 }
+//             })
+//             .catch((error) => {
+//                 console.error(error);
+//                 // toast.error("Error sending message");
+//                 showErrorNotification("Error sending message");
+//             });
+//         } else {
+//             // toast.error("Please enter a message");
+//             showSuccessNotification("Please enter a message");
+//         }
 //     };
+    
+    
+
 //     return (
 //         <footer className='max-w-[1550px] mx-auto bg-[#FDE504] pt-12 pb-0'>
 //             <div className="px-4 sm:px-8 lg:px-[71px] grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-8 mb-16">
@@ -82,21 +128,19 @@
 //                     </p>
 //                     <div className="w-fit max-w-md flex flex-col sm:flex-row items-center gap-2 p-2 rounded-[20px] border border-[#393939]">
 //                         <input
-//                             required
-//                             type="email"
+//                             type="text"
 //                             placeholder="Enter your message"
-//                             className="flex-grow p-2 bg-transparent text-[#383838] text-sm font-normal font-karla outline-none"
-//                             value={email}
-//                             onChange={(e) => setEmail(e.target.value)}
+//                             className="flex-grow p-2 bg-transparent text-[#383838] text-sm font-normal font-karla outline-none lg:w-[500px]"
+//                             value={message}
+//                             onChange={(e) => setMessage(e.target.value)}
 //                         />
 //                         <button
-//                             onClick={handleSubscribe}
+//                             onClick={handleSendMessage}
 //                             className="w-full sm:w-auto px-6 py-3 bg-[#e4086f] rounded-[15px] text-[#fde504] text-base font-bold font-karla"
 //                         >
 //                             Send
 //                         </button>
 //                     </div>
-//                     {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
 //                 </div>
 
 //                 <div className='flex flex-col gap-4 items-center md:items-end'>
@@ -169,18 +213,15 @@
 
 
 
-
-
-
 "use client"
 import Image from 'next/image'
 import React, { useState } from 'react'
-import toast from 'react-hot-toast';
+import { toast } from 'react-hot-toast'; // Import toast directly like in authSlice
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
-import { showErrorNotification, showSuccessNotification } from '@/utils/Notification/notif';
+// Remove the import for showErrorNotification and showSuccessNotification
 
 const Footer = () => {
     const router = useRouter();
@@ -200,12 +241,8 @@ const Footer = () => {
         const token = getAuthToken();
     
         if (!token) {
-            // toast.error("Please login to send a message", {
-            //     duration: 3000,
-            //     position: "top-center",
-            // });
-
-             showSuccessNotification("Please login to send a message");
+            // Replace custom notification with direct toast call
+            toast.error("Please login to send a message");
             return;
         }
     
@@ -221,22 +258,22 @@ const Footer = () => {
             .then((response) => response.json())
             .then((data) => {
                 if (data.success) {
-                    // toast.success("Message sent successfully");
-                    showSuccessNotification("Message sent successfully");
+                    // Replace custom notification with direct toast call
+                    toast.success("Message sent successfully");
                     setMessage(""); // Clear the input
                 } else {
-                    // toast.error("Error sending message");
-                    showErrorNotification("Error sending message");
+                    // Replace custom notification with direct toast call
+                    toast.error("Error sending message");
                 }
             })
             .catch((error) => {
                 console.error(error);
-                // toast.error("Error sending message");
-                showErrorNotification("Error sending message");
+                // Replace custom notification with direct toast call
+                toast.error("Error sending message");
             });
         } else {
-            // toast.error("Please enter a message");
-            showSuccessNotification("Please enter a message");
+            // Replace custom notification with direct toast call
+            toast.error("Please enter a message");
         }
     };
     
@@ -377,10 +414,3 @@ const PaymentIcon = ({ src }) => (
 )
 
 export default Footer
-
-
-
-
-
-
-

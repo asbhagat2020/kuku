@@ -60,7 +60,8 @@ const Page = () => {
         <div className="absolute inset-0 w-full h-full">
           <Lottie
             loop={true}
-            play={true}
+            // play={true}
+            play="true" 
             rendererSettings={{ preserveAspectRatio: "xMidYMid slice" }}
             animationData={homeAnimation}
             style={{
@@ -79,7 +80,8 @@ const Page = () => {
         <div className="flex justify-center items-center w-full lg:h-[50vh]">
           <Lottie
             loop={true}
-            play={true}
+            // play={true}
+            play="true" 
             animationData={homeAnimation}
             className="w-full"
           />

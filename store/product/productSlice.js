@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from 'axios';
-import { showErrorNotification, showSuccessNotification } from '@/utils/Notification/notif';
-
+// import { toast.error, toast.success } from '@/utils/Notification/notif';
+import { toast } from 'react-hot-toast';
 // Initial state
 const initialState = {
     products: [],
@@ -18,7 +18,7 @@ export const getProducts = createAsyncThunk(
                 "https://fakestoreapi.com/products"
             );
             if (!notificationShown) {
-                showSuccessNotification(
+                toast.success(
                     'Success',
                     'Product Fetched Successfully',
                     3000
@@ -28,7 +28,7 @@ export const getProducts = createAsyncThunk(
             return response.data;
         } catch (error) {
             if (!notificationShown) {
-                showErrorNotification(
+                toast.error(
                     'Error',
                     'Product Fetch failed',
                     3000

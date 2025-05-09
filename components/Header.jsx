@@ -17,6 +17,7 @@ import Cookies from 'js-cookie';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout, token } from '@/store/auth/authSlice';
 import { showSuccessNotification } from '@/utils/Notification/notif';
+import toast from 'react-hot-toast';
 
 const Header = () => {
   const [isSearchVisible, setIsSearchVisible] = useState(false);
@@ -225,7 +226,7 @@ const Header = () => {
   const handleClick = (userID) => {
     const token = Cookies.get('auth');
     if (!token) {
-      showSuccessNotification('Please Login!');
+      toast.success('Please Login!');
     } else {
       window.location.href = `/user_profile/${userID}`;
     }

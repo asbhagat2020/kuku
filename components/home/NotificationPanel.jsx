@@ -207,7 +207,7 @@ const NotificationPanel = ({ notifications, offers, onClose }) => {
           ))}
 
         {activeTab === "offers" &&
-          data.map((offer, index) => (
+          data?.map((offer, index) => (
             <li key={index} className="mb-4 flex gap-4 items-start">
               <Image
                 src="/image 139.png"
@@ -244,10 +244,7 @@ const NotificationPanel = ({ notifications, offers, onClose }) => {
                     {offer?.status === "Pending" ? "Your offer is still in Progress" : offer?.status === "Accepted" ? "Your offer is Approved by the seller" : "Your offer is Rejected by the seller"}
                   </p> :
                   <p className="text-sm text-[#5d5d5d] font-bold font-karla">
-
-                    Great news! <p style={{
-                      fontWeight: "bold", color: "#5D5D5D"
-                    }}>{offer?.buyer?.name}</p> has made you an offer. Tap here to check it out
+                    Great news! <b>{offer?.buyer?.name}</b> has made you an offer. Tap here to check it out
                   </p>
                 }
                 {id === offer?.buyer?._id ?
@@ -340,7 +337,8 @@ const NotificationPanel = ({ notifications, offers, onClose }) => {
               </p>
               <div className="flex items-center gap-5">
                 <Image
-                  src={currentOffer?.buyer?.ProfileImg}
+                  // src={currentOffer?.buyer?.ProfileImg}
+                  src={currentOffer?.buyer?.ProfileImg || "/default-profile-img.png"}
                   alt="Buyer"
                   width={48}
                   height={48}
@@ -367,8 +365,8 @@ const NotificationPanel = ({ notifications, offers, onClose }) => {
                   {currentOffer?.product?.price}
                 </p>
               </div>
-              {currentOffer?.statusHistory?.map((history) =>
-                <div className="flex justify-between text-sm text-gray-700">
+              {currentOffer?.statusHistory?.map((history,index) =>
+                <div className="flex justify-between text-sm text-gray-700" key={index}>
                   <p>Buyer&apos;s Offer</p>
                   <p className="font-bold text-[#FDE504]">
                     {history?.Amount}

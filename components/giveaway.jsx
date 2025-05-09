@@ -9,7 +9,8 @@ import giftboxAnimation from '../public/lottieFiles/giftbox.json';
 import homeAnimation from '../public/lottieFiles/kukuhomenew.json';
 import axios from 'axios';
 import Cookies from 'js-cookie';
-import { showSuccessNotification } from '@/utils/Notification/notif';
+// import { showSuccessNotification } from '@/utils/Notification/notif';
+import toast from 'react-hot-toast';
 
 const AddressSelection = ({ addresses, selectedAddress, onSelect, onAddNew }) => {
   return (
@@ -168,7 +169,7 @@ const Giveaway = () => {
       });
 
       if (response.status === 201) {
-        showSuccessNotification('Giveaway Created successfully');
+        toast.success('Giveaway Created successfully');
       } else {
         throw new Error(response.data.message || 'Failed to create order');
       }

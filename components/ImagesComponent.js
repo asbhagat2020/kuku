@@ -392,7 +392,8 @@ import { toggleWishlist } from "@/store/wishlist/wishlistSlice";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
-import { showSuccessNotification } from "@/utils/Notification/notif";
+// import { showSuccessNotification } from "@/utils/Notification/notif";
+import toast from "react-hot-toast";
 
 export const ImagesComponent = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -485,19 +486,20 @@ export const ImagesComponent = () => {
     }
   };
 
+
   const handleLikeClick = async (id) => {
     try {
       const token = JSON.parse(Cookies.get("auth"));
       const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/product/wishlist/${id}`,
-        {},
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/wishlist/add`,
+        { productId: id },  // Send productId in the body
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       );
-
+  
       if (response.status === 201) {
         router.push("/wishlist");
       } else {
@@ -509,6 +511,7 @@ export const ImagesComponent = () => {
       setErrorPopupOpen(true);
     }
   };
+  
 
   const innerSliderSettings = {
     dots: true,
@@ -696,7 +699,7 @@ export const ImagesComponent = () => {
                 ) : (
                   <button
                     className="w-full p-2 py-[15px] sm:px-10 bg-custom-yellow text-black rounded-2xl font-bold mr-1 "
-                    onClick={() => showSuccessNotification("Please Login!")}
+                    onClick={() => toast.success("Please Login!")}
                   >
                     Buy Now
                   </button>

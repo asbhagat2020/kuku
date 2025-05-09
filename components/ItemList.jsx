@@ -1,11 +1,12 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { toast } from 'react-hot-toast'; 
 import Link from "next/link";
 import Cookies from "js-cookie";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { showErrorNotification, showSuccessNotification } from "@/utils/Notification/notif";
+// import {showErrorNotification, showSuccessNotification } from "@/utils/Notification/notif";
 
 const ItemList = () => {
   const [adress, setAdress] = useState([]);
@@ -27,7 +28,7 @@ const ItemList = () => {
     try {
       const token = getAuthToken();
       if (!token) {
-        // showErrorNotification("Please login to access addresses");
+        //       toast.error("Please login to access addresses");
         // router.push("/login");
         return;
       }
@@ -45,11 +46,11 @@ const ItemList = () => {
       if (err.response && err.response.status === 401) {
         // If unauthorized, clear token and redirect to homepage
         Cookies.remove("auth");
-        showErrorNotification("Session expired. Please login again");
+              toast.error("Session expired. Please login again");
         router.push("/login");
       } else {
         // console.log("error");
-        showErrorNotification("Error fetching addresses");
+              toast.error("Error fetching addresses");
       }
     } finally {
       setLoading(false);
@@ -242,7 +243,7 @@ const ItemList = () => {
         const token = getAuthToken();
 
         if (!token) {
-          showErrorNotification("Please login to post items");
+                toast.error("Please login to post items");
 
           return;
         }
@@ -309,14 +310,14 @@ const ItemList = () => {
         );
 
         if (response.status === 201) {
-          showSuccessNotification("Product added successfully!");
+          toast.success("Product added successfully!");
           setTimeout(() => {
             router.push("/");
           }, 2000);
         }
       } catch (error) {
         console.error("Error submitting form:", error);
-        showErrorNotification(error.response?.data?.message || "Error adding product");
+              toast.error(error.response?.data?.message || "Error adding product");
       }
     }
   };

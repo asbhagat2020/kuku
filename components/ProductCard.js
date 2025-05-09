@@ -20,7 +20,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { addToCart } from "@/store/cart/cartSlice";
 import axios from "axios";
 import Cookies from "js-cookie";
-import { showSuccessNotification } from "@/utils/Notification/notif";
+// import { showSuccessNotification } from "@/utils/Notification/notif";
+import toast from "react-hot-toast";
 
 const ProductCard = (productDetails) => {
   const [product, setProduct] = useState(productDetails?.product);
@@ -56,13 +57,13 @@ const ProductCard = (productDetails) => {
       const token = rawToken ? JSON.parse(rawToken) : null;
 
       if (!token) {
-        showSuccessNotification("Please Login!");
+        toast.success("Please Login!");
         return;
       }
 
       const response = await axios.post(
         // `${process.env.NEXT_PUBLIC_API_BASE_URL}/product/add/cart/${product._id}`,
-        `${process.env.NEXT_PUBLIC_API_BASE_URL1}/cart/add`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/cart/add`,
         { productId: product._id },
         {
           headers: {
@@ -92,13 +93,13 @@ const ProductCard = (productDetails) => {
       const token = rawToken ? JSON.parse(rawToken) : null;
 
       if (!token) {
-        showSuccessNotification("Please Login!");
+        toast.success("Please Login!");
         return;
       }
 
       const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/product/wishlist/${product._id}`,
-        {},
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/wishlist/add`,
+        { productId: id },
         {
           headers: {
             Authorization: `Bearer ${token}`,

@@ -18,6 +18,7 @@ import Cookies from "js-cookie";
 import axios from "axios";
 import { HiOutlinePencil } from "react-icons/hi";
 import { useDispatch, useSelector } from "react-redux";
+import toast from "react-hot-toast";
 
 const innerSliderSettings = {
   dots: true,
@@ -209,7 +210,7 @@ const SellingCards = ({ data }) => {
                 ) : (
                   <button
                     className="w-full p-2 py-[15px] sm:px-10 bg-custom-yellow text-black rounded-2xl font-bold mr-1 "
-                    onClick={() => showSuccessNotification("Please Login!")}
+                    onClick={() => toast.success("Please Login!")}
                   >
                     Buy Now
                   </button>

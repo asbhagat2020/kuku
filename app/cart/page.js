@@ -140,7 +140,7 @@ export default function Cart() {
       let id = item.productId
       let _id = item._id
       const token = JSON.parse(Cookies.get('auth'));
-      const res = await axios.put(`${process.env.NEXT_PUBLIC_API_BASE_URL1}/cart/remove/${id}`, {},{
+      const res = await axios.put(`${process.env.NEXT_PUBLIC_API_BASE_URL}/cart/remove/${id}`, {},{
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -205,7 +205,7 @@ export default function Cart() {
   const fetchCartDetails = async () => {
     try {
       const token = JSON.parse(Cookies.get("auth"));
-      const url = `${process.env.NEXT_PUBLIC_API_BASE_URL1}/cart/details`;
+      const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/cart/details`;
       const response = await axios.get(url, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -233,7 +233,7 @@ export default function Cart() {
       const token = JSON.parse(Cookies.get("auth"));
       const response = await axios.post(
         // `${process.env.NEXT_PUBLIC_API_BASE_URL}/product/wishlist/${id}`,
-        `${process.env.NEXT_PUBLIC_API_BASE_URL1}/wishlist/add`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/wishlist/add`,
         {productId:id},
         {
           headers: {
