@@ -299,9 +299,12 @@
 //   );
 // };
 
-// export default SideBar;
 
-"use client";
+
+
+
+
+"use client"; 
 
 import { useState, useEffect, useRef } from "react";
 import { FiMenu, FiChevronUp, FiChevronDown, FiX } from "react-icons/fi";
@@ -311,7 +314,7 @@ export const SideBar = () => {
   const [openDropdown, setOpenDropdown] = useState(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const sidebarRef = useRef(null);
-
+  
   // Access filter context
   const { filters, toggleFilter, filterOptions } = useFilter();
 
@@ -362,13 +365,11 @@ export const SideBar = () => {
       <div className="mt-2 mb-3">
         <div className="text-sm text-gray-600">Selected:</div>
         <div className="flex flex-wrap gap-2 mt-1">
-          {filters[type].map((value) => (
-            <div
-              key={`selected-${type}-${value}`}
-              className="bg-custom-pink bg-opacity-10 text-custom-pink text-xs px-2 py-1 rounded-full flex items-center"
-            >
+          {filters[type].map(value => (
+            <div key={`selected-${type}-${value}`} 
+              className="bg-custom-pink bg-opacity-10 text-custom-pink text-xs px-2 py-1 rounded-full flex items-center">
               {value}
-              <button
+              <button 
                 onClick={(e) => {
                   e.stopPropagation();
                   handleFilterChange(type, value);
@@ -395,26 +396,16 @@ export const SideBar = () => {
           <FiMenu />
         </button>
       </div>
+
       {/* Sidebar */}
-      {/* <div
-        ref={sidebarRef}
-        className={`fixed lg:sticky top-20 left-0 h-auto lg:h-[calc(100vh-210px)] w-64 pl-0 pr-4 pt-4 pb-4 z-10 transform ${
-          isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-        } transition-transform duration-300 ease-in-out lg:translate-x-0 lg:w-80 lg:mt-10 lg:ml-2 lg:block overflow-y-auto`}
-        
-      > */}
-      // In the sidebar container div, add "hide-scrollbar" class // Change this
-      div's className to add hide-scrollbar
       <div
         ref={sidebarRef}
         className={`fixed lg:sticky top-20 left-0 h-auto lg:h-[calc(100vh-210px)] w-64 pl-0 pr-4 pt-4 pb-4 z-10 transform ${
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-        } transition-transform duration-300 ease-in-out lg:translate-x-0 lg:w-80 lg:mt-10 lg:ml-2 lg:block overflow-y-auto hide-scrollbar`}
+        } transition-transform duration-300 ease-in-out lg:translate-x-0 lg:w-80 lg:mt-10 lg:ml-2 lg:block overflow-y-auto`}
       >
         <div className="p-4 lg:p-4 shadow-md bg-white rounded-lg">
-          <h1 className="text-2xl pt-1 text-custom-pink font-bold">
-            Filter by
-          </h1>
+          <h1 className="text-2xl pt-1 text-custom-pink font-bold">Filter by</h1>
 
           <div className="mt-4 filter-section flex flex-col space-y-4">
             {/* Category Filter */}
@@ -436,10 +427,10 @@ export const SideBar = () => {
                   </span>
                 </div>
               </div>
-
+              
               {/* Show selected category filters */}
               {renderSelectedFilters("category")}
-
+              
               {openDropdown === "category" && (
                 <div
                   id="category-options"
@@ -453,22 +444,16 @@ export const SideBar = () => {
                         name="category"
                         value={category}
                         checked={isFilterSelected("category", category)}
-                        onChange={() =>
-                          handleFilterChange("category", category)
-                        }
+                        onChange={() => handleFilterChange("category", category)}
                         className="hidden"
                       />
                       <label
                         htmlFor={`category-${category}`}
                         className="flex items-center cursor-pointer"
                       >
-                        <span
-                          className={`custom-checkbox ${
-                            isFilterSelected("category", category)
-                              ? "checked"
-                              : ""
-                          }`}
-                        />
+                        <span className={`custom-checkbox ${
+                          isFilterSelected("category", category) ? "checked" : ""
+                        }`} />
                         {category}
                       </label>
                     </div>
@@ -498,10 +483,10 @@ export const SideBar = () => {
                   </span>
                 </div>
               </div>
-
+              
               {/* Show selected price filters */}
               {renderSelectedFilters("price")}
-
+              
               {openDropdown === "price" && (
                 <div
                   id="price-options"
@@ -522,11 +507,9 @@ export const SideBar = () => {
                         htmlFor={`price-${price}`}
                         className="flex items-center cursor-pointer"
                       >
-                        <span
-                          className={`custom-checkbox ${
-                            isFilterSelected("price", price) ? "checked" : ""
-                          }`}
-                        />
+                        <span className={`custom-checkbox ${
+                          isFilterSelected("price", price) ? "checked" : ""
+                        }`} />
                         {price}
                       </label>
                     </div>
@@ -556,10 +539,10 @@ export const SideBar = () => {
                   </span>
                 </div>
               </div>
-
+              
               {/* Show selected size filters */}
               {renderSelectedFilters("size")}
-
+              
               {openDropdown === "size" && (
                 <div
                   id="size-options"
@@ -580,11 +563,9 @@ export const SideBar = () => {
                         htmlFor={`size-${size}`}
                         className="flex items-center cursor-pointer"
                       >
-                        <span
-                          className={`custom-checkbox ${
-                            isFilterSelected("size", size) ? "checked" : ""
-                          }`}
-                        />
+                        <span className={`custom-checkbox ${
+                          isFilterSelected("size", size) ? "checked" : ""
+                        }`} />
                         {size}
                       </label>
                     </div>
@@ -614,10 +595,10 @@ export const SideBar = () => {
                   </span>
                 </div>
               </div>
-
+              
               {/* Show selected condition filters */}
               {renderSelectedFilters("condition")}
-
+              
               {openDropdown === "condition" && (
                 <div
                   id="condition-options"
@@ -631,22 +612,16 @@ export const SideBar = () => {
                         name="condition"
                         value={condition}
                         checked={isFilterSelected("condition", condition)}
-                        onChange={() =>
-                          handleFilterChange("condition", condition)
-                        }
+                        onChange={() => handleFilterChange("condition", condition)}
                         className="hidden"
                       />
                       <label
                         htmlFor={`condition-${condition}`}
                         className="flex items-center cursor-pointer"
                       >
-                        <span
-                          className={`custom-checkbox ${
-                            isFilterSelected("condition", condition)
-                              ? "checked"
-                              : ""
-                          }`}
-                        />
+                        <span className={`custom-checkbox ${
+                          isFilterSelected("condition", condition) ? "checked" : ""
+                        }`} />
                         {condition}
                       </label>
                     </div>
@@ -657,6 +632,7 @@ export const SideBar = () => {
           </div>
         </div>
       </div>
+
       <style jsx>{`
         .custom-checkbox {
           display: inline-block;
@@ -694,25 +670,9 @@ export const SideBar = () => {
         .custom-checkbox.checked::after {
           opacity: 1;
         }
-
-        .hide-scrollbar::-webkit-scrollbar {
-          display: none;
-        }
-
-        .hide-scrollbar {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
-        }
-
-        .hide-scrollbar::-webkit-scrollbar {
-          display: none;
-        }
-
-        .hide-scrollbar {
-          -ms-overflow-style: none; /* For Internet Explorer and Edge */
-          scrollbar-width: none; /* For Firefox */
-        }
       `}</style>
     </>
   );
 };
+
+export default SideBar;
