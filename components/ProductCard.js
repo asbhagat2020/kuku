@@ -2,11 +2,11 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import amiriImg from "../public/product-image.png";
-import kukuLogo from "../public/emojiKuku.png";
+// import amiriImg from "../public/product-image.png";
+// import kukuLogo from "../public/emojiKuku.png";
 import CustomCalendar from "./CustomCalendar";
 import { useState, useEffect, useRef } from "react";
-import calendarImg from "../public/Calendar.png";
+// import calendarImg from "../public/Calendar.png";
 import {
   FaStar,
   FaRegHeart,
@@ -673,7 +673,7 @@ const ProductCard = (productDetails) => {
                   />
                   <div className="w-[34px] h-[30px] px-[2px] cursor-pointer">
                     <Image
-                      src={calendarImg}
+                      src="/Calender.png"
                       alt="Calendar Icon"
                       className="w-[100%] h-[100%]"
                       onClick={() =>
