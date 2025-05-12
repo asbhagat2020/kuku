@@ -30,4 +30,7 @@ module.exports = {
     },
   },
   plugins: [],
+  images: {
+    unoptimized: true, // disables Next.js image optimization, avoids using sharp
+  },
 };

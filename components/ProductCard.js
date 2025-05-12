@@ -49,7 +49,7 @@ const ProductCard = (productDetails) => {
   const userID = details?._id;
   console.log("product details......", productDetails.product);
   // Define the images array
-  const images = product?.images || [amiriImg];
+  const images = product?.images;
 
   const handleBuy = async () => {
     try {
@@ -518,7 +518,7 @@ const ProductCard = (productDetails) => {
               <div className="flex items-center">
                 <Link href={`/user_profile/${product?.seller?._id}`}>
                   <Image
-                    src={product?.seller?.avatar || kukuLogo}
+                    src={product?.seller?.avatar || "/emojiKuku.png"}
                     alt="Kuku Logo"
                     className="object-contain w-12 h-12"
                     width={48}
@@ -634,7 +634,8 @@ const ProductCard = (productDetails) => {
                   />
                   <div className="w-[34px] h-[30px] px-[2px] cursor-pointer">
                     <Image
-                      src={calendarImg}
+                      // src={calendarImg}
+                      src="Calendar.png"
                       alt="Calendar Icon"
                       className="w-[100%] h-[100%]"
                       onClick={() =>

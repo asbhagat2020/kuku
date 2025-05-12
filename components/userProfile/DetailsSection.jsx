@@ -220,7 +220,8 @@ const SellingCards = ({ data }) => {
                     unoptimized
                     width={30}
                     height={30}
-                    src={require("../../public/handshake_img.png")}
+                    // src={require("../../public/handshake_img.png")}
+                       src="/handshake_img.png"
                     alt="Open Offer Popup"
                     className="cursor-pointer"
                     onClick={() =>
