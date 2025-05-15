@@ -2,9 +2,23 @@ import Image from "next/image";
 import React from "react";
 import { useMediaQuery } from "@mui/material"; // Import useMediaQuery from Material-UI
 import Link from "next/link";
+import { useDispatch, useSelector } from "react-redux";
+import { openPopup, closePopup } from '../../store/popup/popupSlice';
+import Popup from "./Popup";
+
 
 const DownloadKuku = () => {
   const isMobileOrTablet = useMediaQuery("(max-width: 1024px)"); // Check for mobile and tablet view (iPad)
+   const dispatch = useDispatch();
+    const isPopupOpen = useSelector((state) => state.popup.isOpen);
+
+    const handleSellNowClick = () => {
+        dispatch(openPopup());
+    };
+
+    const handleClosePopup = () => {
+        dispatch(closePopup());
+    };
 
   return (
     <div
@@ -27,7 +41,8 @@ const DownloadKuku = () => {
         <div className="flex flex-col items-center gap-[43px] order-2">
           <Image width={80} height={80} src="/round.svg" alt="" />
           <div className="w-[346px] text-center text-[#fde504] text-[46px] font-normal font-luckiest leading-[55.20px]">
-            Clear your wardrobe and sell now
+            Clear your wardrobe and
+            <button onClick={handleSellNowClick} >Sell Now</button>
           </div>
         </div>
         {/* Right Dress Image - Hidden on Mobile and Tablet */}
@@ -77,6 +92,9 @@ const DownloadKuku = () => {
         />{" "}
         {/* Adjusted size for mobile */}
       </div>
+
+       {/* Popup Component */}
+            <Popup isOpen={isPopupOpen} onClose={handleClosePopup} />
     </div>
   );
 };

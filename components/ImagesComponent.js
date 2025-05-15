@@ -1091,7 +1091,7 @@ export const ImagesComponent = () => {
                 {card.name}
               </h5>
               <h2 className="text-lg sm:text-2xl font-bold text-gray-800">
-                ₹{card.price}
+                AED {card.price}
               </h2>
               
               {/* Display additional product details */}

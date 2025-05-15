@@ -98,7 +98,7 @@ const MarketPlace = () => {
 
     const verticalData = {
         number: "3",
-        title: "but You are going to help us avoid doing that :)",
+        title: "Making just one pair of jeans uses 7,500 liters of water — that’s enough drinking water for one person for 7 years",
         url: "marketPlaceBg3.png"
     };
 

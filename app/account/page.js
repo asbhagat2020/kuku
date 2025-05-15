@@ -113,7 +113,7 @@ export default function Account() {
           </div>
 
           {/* Description */}
-          <div className="mb-4">
+          {/* <div className="mb-4">
             <label className="text-black text-base font-karla font-bold mb-2 block">
               Description
             </label>
@@ -124,10 +124,10 @@ export default function Account() {
               onChange={(e) => setDescription(e.target.value)}
               className="w-full p-3 border border-gray-300 bg-gray-100 rounded-lg text-start text-black text-sm font-normal font-karla leading-none outline-none"
             />
-          </div>
+          </div> */}
 
           {/* Location */}
-          <div className="mb-4">
+          {/* <div className="mb-4">
             <label className="text-black text-base font-karla font-bold mb-2 block">
               Location
             </label>
@@ -139,7 +139,7 @@ export default function Account() {
               className="w-full p-3 border border-gray-300 bg-gray-100 rounded-lg text-start text-black text-sm font-normal font-karla leading-none outline-none"
               required
             />
-          </div>
+          </div> */}
 
           {/* Checkbox */}
           <div className="flex flex-col items-start h-1 mb-12">

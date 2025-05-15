@@ -110,12 +110,18 @@ const ProductCard = (productDetails) => {
       if (response.status === 201) {
         router.push("/wishlist");
       } else {
-        console.error("Failed to add product to wishlist:", response.statusText);
+        console.error(
+          "Failed to add product to wishlist:",
+          response.statusText
+        );
         setErrorMessage(`Failed to submit offer: ${response.data.message}`);
         setErrorPopupOpen(true);
       }
     } catch (error) {
-      console.error("An error occurred while adding product to wishlist:", error);
+      console.error(
+        "An error occurred while adding product to wishlist:",
+        error
+      );
       setErrorMessage(` ${error.response?.data?.message || error.message}`);
       setErrorPopupOpen(true);
     }
@@ -437,7 +443,9 @@ const ProductCard = (productDetails) => {
             </div>
             <div>
               <span className="font-bold">CONDITION: </span>
-              <span className="font-bold">{product?.condition?.conditionName}</span>
+              <span className="font-bold">
+                {product?.condition?.conditionName}
+              </span>
             </div>
           </div>
 
@@ -489,8 +497,8 @@ const ProductCard = (productDetails) => {
             <FaShoppingBag className="mr-2" />
             ADD TO BAG
           </button>
-          {
-            product.openToRent === "Yes" && <div className="flex flex-col mt-2">
+          {product.openToRent === "Yes" && (
+            <div className="flex flex-col mt-2">
               <div className="text-center font-bold text-black">
                 Or Rent it for
               </div>
@@ -506,8 +514,7 @@ const ProductCard = (productDetails) => {
                 AED {product.pricePerDay}
               </button>
             </div>
-          }
-
+          )}
 
           <div
             className="mt-10 mb-0.75"
@@ -532,22 +539,23 @@ const ProductCard = (productDetails) => {
               </div>
 
               <button
-                className={`mt-2 px-4 sm:px-6 py-1 ${product?.seller?.followers?.includes(userID)
-                  ? "bg-gray-500"
-                  : "bg-custom-green"
-                  } text-white rounded-full`}
+                className={`mt-2 px-4 sm:px-6 py-1 ${
+                  product?.seller?.followers?.includes(userID)
+                    ? "bg-gray-500"
+                    : "bg-custom-green"
+                } text-white rounded-full`}
                 onClick={() =>
                   product?.seller?.followers?.includes(userID)
                     ? handleFollow(
-                      product.seller._id,
-                      "unfollow",
-                      product?.seller?._id
-                    )
+                        product.seller._id,
+                        "unfollow",
+                        product?.seller?._id
+                      )
                     : handleFollow(
-                      product.seller._id,
-                      "follow",
-                      product?.seller?._id
-                    )
+                        product.seller._id,
+                        "follow",
+                        product?.seller?._id
+                      )
                 }
                 disabled={loading}
               >
@@ -634,9 +642,10 @@ const ProductCard = (productDetails) => {
                   />
                   <div className="w-[34px] h-[30px] px-[2px] cursor-pointer">
                     <Image
-                      // src={calendarImg}
-                      src="Calendar.png"
+                      src="/Calendar.png"
                       alt="Calendar Icon"
+                      width={34} // Add the width for the image
+                      height={30} // Add the height for the image
                       className="w-[100%] h-[100%]"
                       onClick={() =>
                         document.getElementById("rentalDate").click()
@@ -673,8 +682,10 @@ const ProductCard = (productDetails) => {
                   />
                   <div className="w-[34px] h-[30px] px-[2px] cursor-pointer">
                     <Image
-                      src="/Calender.png"
+                      src="/Calendar.png"
                       alt="Calendar Icon"
+                      width={34} // Specify the width
+                      height={30} // Specify the height
                       className="w-[100%] h-[100%]"
                       onClick={() =>
                         document.getElementById("rentalEndDate").click()
@@ -701,10 +712,11 @@ const ProductCard = (productDetails) => {
                 </div>
                 <button
                   onClick={handleProceed}
-                  className={`px-4 py-2 w-full mb-2 text-[#E4086F] text-[20px] font-karla font-bold leading-[24px] break-words flex-1 h-[60px] bg-[#FDE504] rounded-[20px] flex justify-center items-center gap-[10px] ${isEndFormatted === "" || isStartFormatted === ""
-                    ? "opacity-50 cursor-not-allowed"
-                    : ""
-                    }`}
+                  className={`px-4 py-2 w-full mb-2 text-[#E4086F] text-[20px] font-karla font-bold leading-[24px] break-words flex-1 h-[60px] bg-[#FDE504] rounded-[20px] flex justify-center items-center gap-[10px] ${
+                    isEndFormatted === "" || isStartFormatted === ""
+                      ? "opacity-50 cursor-not-allowed"
+                      : ""
+                  }`}
                   disabled={isEndFormatted === "" || isStartFormatted === ""}
                 >
                   PROCEED
@@ -765,8 +777,9 @@ const ProductCard = (productDetails) => {
               }}
             >
               <button
-                className={`w-[89px] h-[41px] py-[8.66px] px-[10.93px] bg-white rounded-[6.93px] border ${selectedPrice === 200 ? "border-pink-500" : "border-[#878787]"
-                  } inline-flex items-center justify-center gap-[8.66px]`}
+                className={`w-[89px] h-[41px] py-[8.66px] px-[10.93px] bg-white rounded-[6.93px] border ${
+                  selectedPrice === 200 ? "border-pink-500" : "border-[#878787]"
+                } inline-flex items-center justify-center gap-[8.66px]`}
                 onClick={() => handlePriceSelection(200)}
                 style={{
                   width: window.innerWidth <= 768 ? "100%" : "89px",
@@ -777,8 +790,9 @@ const ProductCard = (productDetails) => {
                 </div>
               </button>
               <button
-                className={`w-[89px] h-[41px] py-[8.66px] px-[10.93px] bg-white rounded-[6.93px] border ${selectedPrice === 195 ? "border-pink-500" : "border-[#878787]"
-                  } inline-flex items-center justify-center gap-[8.66px]`}
+                className={`w-[89px] h-[41px] py-[8.66px] px-[10.93px] bg-white rounded-[6.93px] border ${
+                  selectedPrice === 195 ? "border-pink-500" : "border-[#878787]"
+                } inline-flex items-center justify-center gap-[8.66px]`}
                 onClick={() => handlePriceSelection(195)}
                 style={{
                   width: window.innerWidth <= 768 ? "100%" : "89px",
@@ -813,8 +827,9 @@ const ProductCard = (productDetails) => {
             <div className="justify-center flex-col">
               <button
                 onClick={handleOpenModal}
-                className={`bg-[#FDE504] text-[#E4086F] text-[20px] font-bold font-karla rounded-lg w-[440px] h-[65px] ${isSubmitDisabled ? "opacity-50 cursor-not-allowed" : ""
-                  }`}
+                className={`bg-[#FDE504] text-[#E4086F] text-[20px] font-bold font-karla rounded-lg w-[440px] h-[65px] ${
+                  isSubmitDisabled ? "opacity-50 cursor-not-allowed" : ""
+                }`}
                 disabled={isSubmitDisabled}
                 style={{
                   width: window.innerWidth <= 768 ? "100%" : "440px",
