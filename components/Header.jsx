@@ -413,87 +413,10 @@ const Header = () => {
                 <Image alt="dropdown" width={14} height={14} src="/heade_drop_down.svg" />
               </div>
 
-              {/* {isDropdownVisible && (
-                <div className="absolute py-[26px] px-[10px] right-0 top-[40px] min-w-[188px] bg-white border border-gray-300 rounded-lg shadow-lg z-10 ">
-                  <div className="px-4 py-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold">
-                    Account
-                  </div>
-                  <Link
-                    href={`/user_profile/${id}`}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      handleClick(id); 
-                    }}
-                  >
-                    <div
-                      className={`${
-                        iconsPath ? 'bg-[#393939]' : 'bg-white/40'
-                      } px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold`}
-                      style={{ borderRadius: '100px' }}
-                    >
-                      Your Profile
-                    </div>
-                  </Link>
-
-                  <Link href="/orderdetails">
-                    <div className="px-4 pb-2  hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold">
-                      Purchases
-                    </div>
-                  </Link>
-                  <Link href="/wishlist">
-                    <div className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold">
-                      Wishlist
-                    </div>
-                  </Link>
-                  <Link href="/co2">
-                    <div className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-bold font-karla hover:text-pink-500">
-                      Co2 Savings
-                    </div>
-                  </Link>
-                  <Link href="/addresslist">
-                    <div className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold">
-                      Address
-                    </div>
-                  </Link>
-                  <Link href="/AllOrders">
-                    <div className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold">
-                      Orders
-                    </div>
-                  </Link>
-                  <Link href="#">
-                    <div className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold">
-                      Setting
-                    </div>
-                  </Link>
-                  {session || isLocalToken ? (
-                    <button
-                      onClick={() => {
-                        if (session) {
-                          handleGoogleSignOut();
-                        } else {
-                          handleLocalSignOut();
-                        }
-                      }}
-                      className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold"
-                    >
-                      Sign out
-                    </button>
-                  ) : (
-                    <button
-                      onClick={() => {
-                        handleLocalSignIn();
-                      }}
-                      className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold"
-                    >
-                      Sign in
-                    </button>
-                  )}
-                </div>
-              )} */}
+  
               {isDropdownVisible && (
                 <div className="absolute py-[26px] px-[10px] right-0 top-[40px] min-w-[120px] bg-white border border-gray-300 rounded-lg shadow-lg z-10 ">
                   {(session || isLocalToken) ? (
-                    // Show these options only when user is logged in
                     <>
                       <div className="px-4 py-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold">
                         Account

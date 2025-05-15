@@ -99,7 +99,7 @@ const ProductCard = (productDetails) => {
 
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/wishlist/add`,
-        { productId: id },
+        { productId: product._id },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -107,7 +107,7 @@ const ProductCard = (productDetails) => {
         }
       );
 
-      if (response.status === 201) {
+      if (response.status === 200) {
         router.push("/wishlist");
       } else {
         console.error(
@@ -539,23 +539,22 @@ const ProductCard = (productDetails) => {
               </div>
 
               <button
-                className={`mt-2 px-4 sm:px-6 py-1 ${
-                  product?.seller?.followers?.includes(userID)
+                className={`mt-2 px-4 sm:px-6 py-1 ${product?.seller?.followers?.includes(userID)
                     ? "bg-gray-500"
                     : "bg-custom-green"
-                } text-white rounded-full`}
+                  } text-white rounded-full`}
                 onClick={() =>
                   product?.seller?.followers?.includes(userID)
                     ? handleFollow(
-                        product.seller._id,
-                        "unfollow",
-                        product?.seller?._id
-                      )
+                      product.seller._id,
+                      "unfollow",
+                      product?.seller?._id
+                    )
                     : handleFollow(
-                        product.seller._id,
-                        "follow",
-                        product?.seller?._id
-                      )
+                      product.seller._id,
+                      "follow",
+                      product?.seller?._id
+                    )
                 }
                 disabled={loading}
               >
@@ -712,11 +711,10 @@ const ProductCard = (productDetails) => {
                 </div>
                 <button
                   onClick={handleProceed}
-                  className={`px-4 py-2 w-full mb-2 text-[#E4086F] text-[20px] font-karla font-bold leading-[24px] break-words flex-1 h-[60px] bg-[#FDE504] rounded-[20px] flex justify-center items-center gap-[10px] ${
-                    isEndFormatted === "" || isStartFormatted === ""
+                  className={`px-4 py-2 w-full mb-2 text-[#E4086F] text-[20px] font-karla font-bold leading-[24px] break-words flex-1 h-[60px] bg-[#FDE504] rounded-[20px] flex justify-center items-center gap-[10px] ${isEndFormatted === "" || isStartFormatted === ""
                       ? "opacity-50 cursor-not-allowed"
                       : ""
-                  }`}
+                    }`}
                   disabled={isEndFormatted === "" || isStartFormatted === ""}
                 >
                   PROCEED
@@ -777,9 +775,8 @@ const ProductCard = (productDetails) => {
               }}
             >
               <button
-                className={`w-[89px] h-[41px] py-[8.66px] px-[10.93px] bg-white rounded-[6.93px] border ${
-                  selectedPrice === 200 ? "border-pink-500" : "border-[#878787]"
-                } inline-flex items-center justify-center gap-[8.66px]`}
+                className={`w-[89px] h-[41px] py-[8.66px] px-[10.93px] bg-white rounded-[6.93px] border ${selectedPrice === 200 ? "border-pink-500" : "border-[#878787]"
+                  } inline-flex items-center justify-center gap-[8.66px]`}
                 onClick={() => handlePriceSelection(200)}
                 style={{
                   width: window.innerWidth <= 768 ? "100%" : "89px",
@@ -790,9 +787,8 @@ const ProductCard = (productDetails) => {
                 </div>
               </button>
               <button
-                className={`w-[89px] h-[41px] py-[8.66px] px-[10.93px] bg-white rounded-[6.93px] border ${
-                  selectedPrice === 195 ? "border-pink-500" : "border-[#878787]"
-                } inline-flex items-center justify-center gap-[8.66px]`}
+                className={`w-[89px] h-[41px] py-[8.66px] px-[10.93px] bg-white rounded-[6.93px] border ${selectedPrice === 195 ? "border-pink-500" : "border-[#878787]"
+                  } inline-flex items-center justify-center gap-[8.66px]`}
                 onClick={() => handlePriceSelection(195)}
                 style={{
                   width: window.innerWidth <= 768 ? "100%" : "89px",
@@ -827,9 +823,8 @@ const ProductCard = (productDetails) => {
             <div className="justify-center flex-col">
               <button
                 onClick={handleOpenModal}
-                className={`bg-[#FDE504] text-[#E4086F] text-[20px] font-bold font-karla rounded-lg w-[440px] h-[65px] ${
-                  isSubmitDisabled ? "opacity-50 cursor-not-allowed" : ""
-                }`}
+                className={`bg-[#FDE504] text-[#E4086F] text-[20px] font-bold font-karla rounded-lg w-[440px] h-[65px] ${isSubmitDisabled ? "opacity-50 cursor-not-allowed" : ""
+                  }`}
                 disabled={isSubmitDisabled}
                 style={{
                   width: window.innerWidth <= 768 ? "100%" : "440px",

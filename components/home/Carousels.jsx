@@ -16,9 +16,11 @@ import { toggleWishlist } from "@/store/wishlist/wishlistSlice";
 import axios from "axios";
 import toast from "react-hot-toast";
 import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
 // import { showSuccessNotification } from "@/utils/Notification/notif";
 
-const Carousels = ({ router }) => {
+const Carousels = () => {
+  const router = useRouter();
   const [isOfferPopupOpen, setIsOfferPopupOpen] = useState(false);
   const [offerSubmitted, setOfferSubmitted] = useState(false);
   const [isCardHovered, setIsCardHovered] = useState(false);
@@ -36,34 +38,76 @@ const Carousels = ({ router }) => {
   const userID = details?._id;
 
   const token = Cookies.get("auth") ? JSON.parse(Cookies.get("auth")) : null;
+  const [AllWishlist, setAllWishlist] = useState([]);
+
+  const getUserWishlistdata = async () => {
+    try {
+      const token = JSON.parse(Cookies.get("auth"));
+      const res = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/wishlist`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+      setAllWishlist(res.data.wishlist.products);
+    } catch (error) {
+      console.log("Error", error);
+    }
+  }
+
+  useEffect(() => {
+    if (token) {
+      getUserWishlistdata();
+    }
+  }, [token])
 
   const handleLikeClick = async (item) => {
     try {
       console.log("items..............", item);
       let id = item._id;
       const token = JSON.parse(Cookies.get("auth"));
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/product/wishlist/${id}`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
 
-      if (response.status === 201) {
-        router.push("/wishlist");
+      // Check if product is already in wishlist
+      if (isProductInWishlist(id)) {
+        // Remove from wishlist
+        const response = await axios.put(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/wishlist/remove/${id}`,
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (response.status === 200) {
+          // Update local wishlist state
+          setAllWishlist(prevWishlist =>
+            prevWishlist.filter(item => item.productId !== id)
+          );
+        }
       } else {
-        setErrorMessage(`Failed to add to wishlist: ${response.data.message}`);
-        setErrorPopupOpen(true);
+        // Add to wishlist
+        const response = await axios.post(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/wishlist/add`,
+          { productId: id },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (response.status === 200) {
+          // Refresh wishlist data
+          getUserWishlistdata();
+        }
       }
     } catch (error) {
       setErrorMessage(error.response?.data?.message || error.message);
       setErrorPopupOpen(true);
     }
   };
-
   const handleOpenOfferPopup = () => {
     setIsOfferPopupOpen(true);
   };
@@ -80,42 +124,44 @@ const Carousels = ({ router }) => {
 
   const handleFollow = async (id, type, sellerID) => {
     if (!token) {
-      toast.success("Please login to follow this user");
-      return;
+      router.push("/login")
+
     }
 
     setLoading(true);
-
     try {
-      const token = JSON.parse(Cookies.get("auth"));
-      const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/profile/${type}/${id}`;
-      console.log("Making request to:", url);
-      let res = await axios.post(
-        url,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      console.log("API Response:", res.data);
-      let updatedFollowers = res.data.followers;
-
-      setProduct(
-        product.map((item) => {
-          if (item.seller._id === sellerID) {
-            return {
-              ...item,
-              seller: {
-                ...item.seller,
-                followers: updatedFollowers,
-              },
-            };
+      if (token) {
+        const token = JSON.parse(Cookies.get("auth"));
+        const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/profile/${type}/${id}`;
+        console.log("Making request to:", url);
+        let res = await axios.post(
+          url,
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           }
-          return item;
-        })
-      );
+        );
+        console.log("API Response:", res.data);
+        let updatedFollowers = res.data.followers;
+
+        setProduct(
+          product.map((item) => {
+            if (item.seller._id === sellerID) {
+              return {
+                ...item,
+                seller: {
+                  ...item.seller,
+                  followers: updatedFollowers,
+                },
+              };
+            }
+            return item;
+          })
+        );
+      }
+
     } catch (error) {
       console.error("Error while following/unfollowing", error);
     } finally {
@@ -129,7 +175,6 @@ const Carousels = ({ router }) => {
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/products`
       );
       const datavalue = response?.data;
-      console.log("card............", datavalue);
       setProduct(datavalue || []);
     } catch (error) {
       toast.error(error);
@@ -139,6 +184,10 @@ const Carousels = ({ router }) => {
   useEffect(() => {
     fetchProducts();
   }, []);
+
+  const isProductInWishlist = (productId) => {
+    return AllWishlist.some(wishlistItem => wishlistItem.productId === productId);
+  };
 
   // Main slider settings
   const settings = {
@@ -245,7 +294,11 @@ const Carousels = ({ router }) => {
   };
 
   const handleLoginNotification = () => {
-    router.push("/login");
+
+    toast.success("Please Login!")
+    setTimeout(() => {
+      router.push("/login");
+    }, 3000)
   };
 
   return (
@@ -266,23 +319,22 @@ const Carousels = ({ router }) => {
                   <p className="font-bold text-sm">{item?.seller?.username}</p>
                 </div>
                 <button
-                  className={`mt-2 px-4 sm:px-6 py-1 ${
-                    item?.seller?.followers?.includes(userID)
-                      ? "bg-gray-500"
-                      : "bg-custom-green"
-                  } text-white rounded-full`}
+                  className={`mt-2 px-4 sm:px-6 py-1 ${item?.seller?.followers?.includes(userID)
+                    ? "bg-gray-500"
+                    : "bg-custom-green"
+                    } text-white rounded-full`}
                   onClick={() =>
                     item?.seller?.followers?.includes(userID)
                       ? handleFollow(
-                          item.seller._id,
-                          "unfollow",
-                          item?.seller?._id
-                        )
+                        item.seller._id,
+                        "unfollow",
+                        item?.seller?._id
+                      )
                       : handleFollow(
-                          item.seller._id,
-                          "follow",
-                          item?.seller?._id
-                        )
+                        item.seller._id,
+                        "follow",
+                        item?.seller?._id
+                      )
                   }
                   disabled={loading}
                 >
@@ -301,22 +353,22 @@ const Carousels = ({ router }) => {
               >
                 <div className="absolute top-2 right-2 z-10">
                   {token ? (
-                    <Link href="/wishlist">
-                      <div
-                        className="absolute top-4 right-4 w-12 h-12 flex items-center justify-center rounded-full bg-custom-gray cursor-pointer"
-                        onClick={() => handleLikeClick(item)}
-                      >
-                        {wishlist.includes(item._id) ? (
-                          <FcLike className="text-2xl w-8 h-8" />
-                        ) : (
-                          <GoHeart className="text-2xl text-gray-300" />
-                        )}
-                      </div>
-                    </Link>
+
+                    <div
+                      className="absolute top-4 right-4 w-12 h-12 flex items-center justify-center rounded-full bg-custom-gray cursor-pointer"
+                      onClick={() => handleLikeClick(item)}
+                    >
+                      {isProductInWishlist(item._id) ? (
+                        <FcLike className="text-2xl w-8 h-8" />
+                      ) : (
+                        <GoHeart className="text-2xl text-gray-300" />
+                      )}
+                    </div>
+
                   ) : (
                     <div
                       className="absolute top-4 right-4 w-12 h-12 flex items-center justify-center rounded-full bg-custom-gray cursor-pointer"
-                      onClick={() => toast.success("Please Login!")}
+                      onClick={handleLoginNotification}
                     >
                       <GoHeart className="text-2xl text-gray-300" />
                     </div>
@@ -334,7 +386,8 @@ const Carousels = ({ router }) => {
                   <div className="absolute min-w-[204px] bottom-4 left-4 text-center z-10 bg-[#fde504] px-[50px] py-[20px] rounded-[20px]">
                     <button
                       className="text-[#202020] text-base font-bold font-karla leading-tight"
-                      onClick={() => toast.success("Please Login!")}
+                      // onClick={() => toast.success("Please Login!")}
+                      onClick={handleLoginNotification}
                     >
                       Buy Now
                     </button>
@@ -364,9 +417,8 @@ const Carousels = ({ router }) => {
                         <div className="relative h-[404px] w-full">
                           <Image
                             src={imgSrc}
-                            alt={`Image ${imgIndex + 1} of ${
-                              item?.name || "carousel item"
-                            }`}
+                            alt={`Image ${imgIndex + 1} of ${item?.name || "carousel item"
+                              }`}
                             layout="fill"
                             objectFit="cover"
                             className="rounded-[20px]"

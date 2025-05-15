@@ -17,7 +17,7 @@ const Popup = ({ isOpen, onClose }) => {
         className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-50"
         onClick={handleOutsideClick}
       >
-        <div className="h-[577px] px-4 py-[22px] bg-white rounded-[10px] flex-col justify-start items-center gap-4 inline-flex">
+        <div className="h-[677px] px-4 py-[22px] bg-white rounded-[10px] flex-col justify-start items-center gap-4 inline-flex">
           {/* Section 1 */}
           <div className="w-[328px] h-[154px] relative rounded-xl border border-[#e0e0e0] flex flex-col p-4">
             <div className="flex items-center">
@@ -127,10 +127,16 @@ const Popup = ({ isOpen, onClose }) => {
           <div className="text-[#a7a7a7] text-base font-normal">Or</div>
 
           {/* Section 3 */}
-          <div className="w-[328px] h-[114px] relative rounded-xl border border-[#e0e0e0] flex flex-col p-4">
-            <div className="text-[#070707] text-base font-normal">
-              Give away clothes for rebate per kg
+          <div className="w-[328px] h-[165px] relative rounded-xl border border-[#e0e0e0] flex flex-col p-4">
+
+            
+            <div className="flex items-start gap-2">
+              <Image src="/green-tick.png" alt="tick" width={18} height={18} />
+              <span className="text-[#070707] text-base font-normal leading-tight">
+                Don't want to sell? Schedule pick up and we repurpose/recycle or give it for charity.
+              </span>
             </div>
+
             <Link href="/giveaway">
               <button className="w-[292px] h-[52px] bg-[#30bd75] rounded-[10px] flex items-center justify-between mt-2">
                 <div className="flex items-center">
