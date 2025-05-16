@@ -20,7 +20,6 @@ const Page = () => {
   useEffect(() => {
     const token = Cookies.get("auth");
     if (!token) {
-      // If no token, redirect to homepage
       router.push("/");
       return;
     }

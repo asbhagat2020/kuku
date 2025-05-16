@@ -63,7 +63,6 @@ const Carousels = () => {
 
   const handleLikeClick = async (item) => {
     try {
-      console.log("items..............", item);
       let id = item._id;
       const token = JSON.parse(Cookies.get("auth"));
 
@@ -109,7 +108,15 @@ const Carousels = () => {
     }
   };
   const handleOpenOfferPopup = () => {
-    setIsOfferPopupOpen(true);
+    if (!token) {
+      toast.success("please login");
+      setTimeout(() => {
+        router.push("/login")
+      }, [500])
+    }
+    else {
+      setIsOfferPopupOpen(true);
+    }
   };
 
   const handleCloseOfferPopup = () => {

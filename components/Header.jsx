@@ -232,6 +232,21 @@ const Header = () => {
     }
   };
 
+
+
+  const handleNavigation = (route) => {
+    if (isLocalToken) {
+      router.push(`/${route}`);
+    }
+    else {
+      toast.success("please login");
+      setTimeout(() => {
+        router.push("/login");
+      }, [1000])
+
+    }
+  }
+
   return (
     <header className='max-w-[1550px] mx-auto'>
       <LanguageSelector />
@@ -365,28 +380,32 @@ const Header = () => {
             )}
 
             {/* Cart, Wishlist, Profile Icons */}
-            <Link href="/cart">
-              <div
-                className={`${cartPath ? 'bg-[#393939]' : 'bg-white/40'
-                  } h-[54px] p-[15px] rounded-[100px] hidden lg:block`}
-              >
-                <Image alt="cart icon" width={24} height={24} src={cartPath ? '/cart_white.svg' : '/cart.svg'} />
-              </div>
-            </Link>
-            <Link href="/wishlist">
-              <div
-                className={` h-10 w-10 lg:h-[54px] lg:w-[54px] flex items-center justify-center rounded-full cursor-pointer  ${wishPath ? 'bg-[#393939]' : 'bg-white/40'
-                  } ml-[-10px] lg:ml-0`}
-              >
-                <Image
-                  alt="wishlist icon"
-                  width={24}
-                  height={24}
-                  src={wishPath ? '/wishlist_white.svg' : '/wishlist.svg'}
-                  className="w-5 h-5 lg:w-6 lg:h-6"
-                />
-              </div>
-            </Link>
+
+            <div
+              className={`${cartPath ? 'bg-[#393939]' : 'bg-white/40'
+                } h-[54px] p-[15px] rounded-[100px] hidden lg:block`}
+              onClick={() => {handleNavigation("cart")}}
+            >
+              <Image alt="cart icon" width={24} height={24} src={cartPath ? '/cart_white.svg' : '/cart.svg'} />
+            </div>
+
+
+
+            <div
+              className={` h-10 w-10 lg:h-[54px] lg:w-[54px] flex items-center justify-center rounded-full cursor-pointer  ${wishPath ? 'bg-[#393939]' : 'bg-white/40'
+                } ml-[-10px] lg:ml-0`}
+              onClick={() => {handleNavigation("wishlist")}}
+            >
+              <Image
+                alt="wishlist icon"
+                width={24}
+                height={24}
+                src={wishPath ? '/wishlist_white.svg' : '/wishlist.svg'}
+                className="w-5 h-5 lg:w-6 lg:h-6"
+              />
+            </div>
+
+
             <Link
               href={`/user_profile/${userID}`}
               onClick={(e) => {
@@ -413,7 +432,7 @@ const Header = () => {
                 <Image alt="dropdown" width={14} height={14} src="/heade_drop_down.svg" />
               </div>
 
-  
+
               {isDropdownVisible && (
                 <div className="absolute py-[26px] px-[10px] right-0 top-[40px] min-w-[120px] bg-white border border-gray-300 rounded-lg shadow-lg z-10 ">
                   {(session || isLocalToken) ? (

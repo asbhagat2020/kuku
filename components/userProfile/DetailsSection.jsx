@@ -19,6 +19,8 @@ import axios from "axios";
 import { HiOutlinePencil } from "react-icons/hi";
 import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
+
 
 const innerSliderSettings = {
   dots: true,
@@ -221,7 +223,7 @@ const SellingCards = ({ data }) => {
                     width={30}
                     height={30}
                     // src={require("../../public/handshake_img.png")}
-                       src="/handshake_img.png"
+                    src="/handshake_img.png"
                     alt="Open Offer Popup"
                     className="cursor-pointer"
                     onClick={() =>
@@ -1141,12 +1143,26 @@ export default function DetailsSection({ data }) {
       ],
     },
   ];
+
+  const AddProductComponent = () => {
+
+    const router = useRouter();
+
+    const handleProductAddition = () => {
+      router.push("/listingproduct");
+    }
+    return <div className="w-full mb-4">
+      <div className=" w-[250px] mx-auto py-4 rounded-lg text-center bg-[#e4086f] text-[#fde504]" onClick={handleProductAddition}>Add New Products</div>
+    </div>
+  }
+
   const tabs = [
     { label: "Selling", component: SellingCards, data: products, count: "" },
     { label: "Sold", component: SoldCards, data: soldData, count: "" },
     { label: "Reviews", component: ReviewCards, data: reviewData, count: "" },
     { label: "Stats", component: StatsCards, data: statsData, count: "" },
     { label: "Orders", component: Orders, data: orderData, count: "" },
+    { label: "Add Products", component: AddProductComponent }
   ];
 
 

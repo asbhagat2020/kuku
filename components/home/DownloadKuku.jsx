@@ -5,20 +5,34 @@ import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
 import { openPopup, closePopup } from '../../store/popup/popupSlice';
 import Popup from "./Popup";
-
+import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 const DownloadKuku = () => {
+  
+  const router = useRouter();
+  const token = Cookies.get("auth") ? JSON.parse(Cookies.get("auth")) : null;
+
   const isMobileOrTablet = useMediaQuery("(max-width: 1024px)"); // Check for mobile and tablet view (iPad)
-   const dispatch = useDispatch();
-    const isPopupOpen = useSelector((state) => state.popup.isOpen);
+  const dispatch = useDispatch();
+  const isPopupOpen = useSelector((state) => state.popup.isOpen);
 
-    const handleSellNowClick = () => {
-        dispatch(openPopup());
-    };
+  const handleSellNowClick = () => {
+    if (!token) {
+      toast.success("please login");
+      setTimeout(() => {
+        router.push("/login")
+      }, [500])
+    }
+    else{
+      dispatch(openPopup());
+    }
+  };
 
-    const handleClosePopup = () => {
-        dispatch(closePopup());
-    };
+  const handleClosePopup = () => {
+    dispatch(closePopup());
+  };
 
   return (
     <div
@@ -54,11 +68,10 @@ const DownloadKuku = () => {
       </div>
       {/* Conditional stacking for mobile view */}
       <div
-        className={`flex ${
-          isMobileOrTablet
+        className={`flex ${isMobileOrTablet
             ? "flex-col items-center"
             : "justify-center ml-3.5 gap-[150px]"
-        } pt-[41px]`}
+          } pt-[41px]`}
       >
         {/* <Link href={"#"}>
           <Image
@@ -93,8 +106,8 @@ const DownloadKuku = () => {
         {/* Adjusted size for mobile */}
       </div>
 
-       {/* Popup Component */}
-            <Popup isOpen={isPopupOpen} onClose={handleClosePopup} />
+      {/* Popup Component */}
+      <Popup isOpen={isPopupOpen} onClose={handleClosePopup} />
     </div>
   );
 };

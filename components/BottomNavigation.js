@@ -1,10 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Cookies from "js-cookie"; // Added missing import
 import { showSuccessNotification } from '@/utils/Notification/notif';
 import { useDispatch, useSelector } from 'react-redux';
+import toast from "react-hot-toast";
 
 export const BottomNavigation = () => {
   const [userID, setUserID] = useState(null); // Initialize properly
@@ -13,18 +14,22 @@ export const BottomNavigation = () => {
   const isCart = pathname === "/cart";
   const isProfile = pathname.startsWith("/user_profile");
 
-
+  const router = useRouter();
   const details = useSelector((state) => state.auth.user);
   // console.log(details);
   const id = details?._id;
-    useEffect(() => {
-      setUserID(id);
-    }, [id]);
+  useEffect(() => {
+    setUserID(id);
+  }, [id]);
 
   const handleClick = () => {
     const token = Cookies.get("auth");
     if (!token) {
-          showSuccessNotification('Please Login!');
+      // showSuccessNotification('Please Login!');
+      toast.success("please login");
+      setTimeout(() => {
+        router.push("/login");
+      }, [500])
     } else if (userID) {
       window.location.href = `/user_profile/${userID}`;
     }
@@ -43,11 +48,10 @@ export const BottomNavigation = () => {
             className={isHome ? "opacity-100" : "opacity-70"}
           />
           <span
-            className={`text-xs mt-1 font-karla ${
-              isHome
-                ? "text-pink-500 font-bold border-b-2 border-pink-500"
-                : "text-gray-500"
-            }`}
+            className={`text-xs mt-1 font-karla ${isHome
+              ? "text-pink-500 font-bold border-b-2 border-pink-500"
+              : "text-gray-500"
+              }`}
           >
             Home
           </span>
@@ -58,9 +62,8 @@ export const BottomNavigation = () => {
       <Link href="/cart">
         <div className="flex flex-col items-center">
           <div
-            className={`${
-              isCart ? "bg-[#393939]" : "bg-[#EDA702]/40"
-            } h-[35px] w-[35px] flex items-center justify-center rounded-full`}
+            className={`${isCart ? "bg-[#393939]" : "bg-[#EDA702]/40"
+              } h-[35px] w-[35px] flex items-center justify-center rounded-full`}
           >
             <Image
               alt="Cart Icon"
@@ -70,11 +73,10 @@ export const BottomNavigation = () => {
             />
           </div>
           <span
-            className={`text-xs mt-1 font-karla ${
-              isCart
-                ? "text-pink-500 font-bold border-b-2 border-pink-500"
-                : "text-gray-500"
-            }`}
+            className={`text-xs mt-1 font-karla ${isCart
+              ? "text-pink-500 font-bold border-b-2 border-pink-500"
+              : "text-gray-500"
+              }`}
           >
             Cart
           </span>
@@ -85,9 +87,8 @@ export const BottomNavigation = () => {
       <div onClick={handleClick}>
         <div className="flex flex-col items-center cursor-pointer">
           <div
-            className={`${
-              isProfile ? "bg-[#393939]" : "bg-[#EDA702]/40"
-            } h-[35px] w-[35px] flex items-center justify-center rounded-full`}
+            className={`${isProfile ? "bg-[#393939]" : "bg-[#EDA702]/40"
+              } h-[35px] w-[35px] flex items-center justify-center rounded-full`}
           >
             <Image
               alt="Profile Icon"
@@ -97,11 +98,10 @@ export const BottomNavigation = () => {
             />
           </div>
           <span
-            className={`text-xs mt-1 font-karla ${
-              isProfile
-                ? "text-pink-500 font-bold border-b-2 border-pink-500"
-                : "text-gray-500"
-            }`}
+            className={`text-xs mt-1 font-karla ${isProfile
+              ? "text-pink-500 font-bold border-b-2 border-pink-500"
+              : "text-gray-500"
+              }`}
           >
             Profile
           </span>

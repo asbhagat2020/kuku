@@ -521,9 +521,17 @@ export const ImagesComponent = () => {
   };
 
   const handleOpenOfferPopup = (id, sellerid) => {
-    setSelectedProductId(id);
-    setSelectedSellerId(sellerid || "admin");
-    setIsOfferPopupOpen(true);
+    if (!token) {
+      toast.success('please login');
+      setTimeout(() => {
+        router.push("/login");
+      }, [500])
+    }
+    else {
+      setSelectedProductId(id);
+      setSelectedSellerId(sellerid || "admin");
+      setIsOfferPopupOpen(true);
+    }
   };
 
   const handleCloseOfferPopup = () => {
@@ -573,7 +581,7 @@ export const ImagesComponent = () => {
 
       if (response.status === 200) {
         // Update local wishlist state after successful API call
-        setAllWishlist(prevWishlist => 
+        setAllWishlist(prevWishlist =>
           prevWishlist.filter(item => item.productId !== id)
         );
       } else {
@@ -591,7 +599,7 @@ export const ImagesComponent = () => {
       toast.success('please Login First.');
       setTimeout(() => {
         router.push("/login");
-      }, [2000])
+      }, [500])
     }
     else {
       try {
@@ -627,7 +635,7 @@ export const ImagesComponent = () => {
         toast.success('please Login First.');
         setTimeout(() => {
           router.push("/login");
-        }, [2000])
+        }, [500])
       }
       const token = JSON.parse(Cookies.get("auth"));
       const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/profile/${type}/${id}`;
@@ -686,6 +694,13 @@ export const ImagesComponent = () => {
       </div>
     ),
   };
+
+  const handleCartNavigation = () => {
+    toast.success("please Login");
+    setTimeout(() => {
+      router.push("/login");
+    }, [500])
+  }
 
   return (
     <div className="p-6 ml-8 h-auto w-auto font-karla z-10">
@@ -793,11 +808,12 @@ export const ImagesComponent = () => {
                   ) : (
                     <button
                       className="w-[70%] p-2 py-[15px] sm:px-10 bg-custom-yellow text-black rounded-2xl font-bold mr-1 hover:bg-yellow-400 transition-colors duration-300"
-                      onClick={() => toast.success("Please Login!")}
+                      onClick={handleCartNavigation}
                     >
                       Buy Now
                     </button>
                   )}
+
                   <div className="h-12 w-12 flex items-center justify-center bg-white rounded-full hover:bg-gray-100 transition-colors duration-300">
                     <Image
                       unoptimized

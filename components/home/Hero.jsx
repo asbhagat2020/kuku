@@ -4,13 +4,26 @@ import React from 'react';
 import Popup from './Popup';
 import { useDispatch, useSelector } from 'react-redux';
 import { openPopup, closePopup } from '../../store/popup/popupSlice';
-
+import toast from 'react-hot-toast';
+import { useRouter } from 'next/navigation';
+import Cookies from "js-cookie";
 const Hero = () => {
     const dispatch = useDispatch();
+    const router = useRouter();
     const isPopupOpen = useSelector((state) => state.popup.isOpen);
+    const token = Cookies.get("auth") ? JSON.parse(Cookies.get("auth")) : null;
 
     const handleSellNowClick = () => {
-        dispatch(openPopup());
+        if (!token) {
+            toast.success("please login");
+
+            setTimeout(() => {
+                router.push("/login");
+            }, [500])
+        }
+        else {
+            dispatch(openPopup());
+        }
     };
 
     const handleClosePopup = () => {
@@ -23,10 +36,10 @@ const Hero = () => {
                 <Image unoptimized={true} src='/home_bg.png' layout='fill' objectFit='cover' alt='home_bg' />
             </div>
             <div className='absolute top-[100px] left-[350px] w-full h-[90%]'>
-                <Image width={60} height={60} unoptimized src='/star.png' objectFit='cover' alt='star'/>
+                <Image width={60} height={60} unoptimized src='/star.png' objectFit='cover' alt='star' />
             </div>
             <div className='absolute top-48 right-[350px]'>
-                <Image width={60} height={60} unoptimized src='/smile.png' objectFit='cover' alt='smile'/>
+                <Image width={60} height={60} unoptimized src='/smile.png' objectFit='cover' alt='smile' />
             </div>
             <div className='absolute top-[500px] left-[380px] w-full h-[90%]'>
                 <Image width={60} height={60} unoptimized src='/flower.png' objectFit='cover' alt='flower' />
