@@ -19,8 +19,9 @@ const AddressSelection = ({ addresses, selectedAddress, onSelect, onAddNew }) =>
         <div
           key={index}
           onClick={() => onSelect(address)}
-          className={`p-4 border-2 rounded-lg cursor-pointer ${selectedAddress === address ? 'border-green-500' : 'hover:border-green-500'
-            }`}
+          className={`p-4 border-2 rounded-lg cursor-pointer ${
+            selectedAddress === address ? 'border-green-500' : 'hover:border-green-500'
+          }`}
         >
           <p className="font-bold">{`${address.firstName} ${address.lastName}`}</p>
           <p>{address.addressLine1}</p>
@@ -63,6 +64,7 @@ const Giveaway = () => {
   const [formErrors, setFormErrors] = useState({});
   const [sampleAddresses, setSampleAddresses] = useState([]);
   const [loading, setLoading] = useState(false);
+
   const fetchAddress = async () => {
     try {
       const token = JSON.parse(Cookies.get('auth'));
@@ -109,16 +111,24 @@ const Giveaway = () => {
 
   const validateForm = () => {
     const errors = {};
+
     if (currentStep === 2) {
       if (!formData.firstName.trim()) errors.firstName = 'First name is required';
       if (!formData.lastName.trim()) errors.lastName = 'Last name is required';
       if (!formData.email.trim()) errors.email = 'Email is required';
       if (!formData.phone.trim()) errors.phone = 'Phone number is required';
-    } else if (currentStep === 3 && showAddressForm) {
-      if (!formData.addressLine1) errors.addressLine1 = 'Address Line 1 is required';
-      if (!formData.city) errors.city = 'City is required';
-      if (!formData.country) errors.country = 'Country is required';
+    }
+
+    if (currentStep === 3) {
+      if (!selectedAddress) {
+        if (!formData.addressLine1.trim()) errors.addressLine1 = 'Address Line 1 is required';
+        if (!formData.city.trim()) errors.city = 'City is required';
+        if (!formData.country.trim()) errors.country = 'Country is required';
+      }
       if (!formData.pickTime) errors.pickTime = 'Pick time is required';
+      if (!formData.weight || Number(formData.weight) <= 0) errors.weight = 'Number of items is required';
+      if (!formData.items || formData.items.length === 0) errors.items = 'At least one item must be selected';
+      if (!formData.category) errors.category = 'Category is required';
     }
 
     setFormErrors(errors);
@@ -141,7 +151,14 @@ const Giveaway = () => {
   };
 
   const handleFinalScreen = async () => {
+    // Validate all required fields before submitting final data
+    if (!validateForm()) {
+      toast.error('Please fill all required fields');
+      return;
+    }
+
     setShowFinalScreen(true);
+
     const finalData = {
       firstName: formData.firstName,
       lastName: formData.lastName,
@@ -175,8 +192,8 @@ const Giveaway = () => {
       }
     } catch (error) {
       console.log(error, 'failed to create an giveaway');
+      toast.error('Failed to create giveaway. Please try again.');
     }
-    // console.log('Final Form Data:', finalData);
   };
 
   const handleFinalScreenClick = () => {
@@ -196,7 +213,11 @@ const Giveaway = () => {
       country: '',
       items: [],
       category: '',
+      weight: '',
     });
+    setSelectedAddress(null);
+    setFormErrors({});
+    setShowAddressForm(false);
   };
 
   const handleInputChange = (e) => {
@@ -223,6 +244,14 @@ const Giveaway = () => {
         ? prev.items.filter((item) => item !== value) // Remove if already selected
         : [...prev.items, value], // Add new item
     }));
+
+    // Clear item error on change
+    if (formErrors.items) {
+      setFormErrors((prev) => ({
+        ...prev,
+        items: '',
+      }));
+    }
   };
 
   const handleBackButton = () => {
@@ -232,7 +261,6 @@ const Giveaway = () => {
       setCurrentStep(currentStep - 1);
     }
   };
-
 
   const renderStepContent = () => {
     switch (currentStep) {
@@ -263,8 +291,9 @@ const Giveaway = () => {
                   placeholder="First Name"
                   value={formData.firstName}
                   onChange={handleInputChange}
-                  className={`w-full px-4 py-3 rounded-lg border ${formErrors.firstName ? 'border-red-500' : 'border-gray-300'
-                    } focus:outline-none focus:ring-2 focus:ring-green-500`}
+                  className={`w-full px-4 py-3 rounded-lg border ${
+                    formErrors.firstName ? 'border-red-500' : 'border-gray-300'
+                  } focus:outline-none focus:ring-2 focus:ring-green-500`}
                 />
                 {formErrors.firstName && <p className="text-red-500 text-sm mt-1 ml-4">{formErrors.firstName}</p>}
               </div>
@@ -275,8 +304,9 @@ const Giveaway = () => {
                   placeholder="Last Name"
                   value={formData.lastName}
                   onChange={handleInputChange}
-                  className={`w-full px-4 py-3 rounded-lg border ${formErrors.lastName ? 'border-red-500' : 'border-gray-300'
-                    } focus:outline-none focus:ring-2 focus:ring-green-500`}
+                  className={`w-full px-4 py-3 rounded-lg border ${
+                    formErrors.lastName ? 'border-red-500' : 'border-gray-300'
+                  } focus:outline-none focus:ring-2 focus:ring-green-500`}
                 />
                 {formErrors.lastName && <p className="text-red-500 text-sm mt-1 ml-4">{formErrors.lastName}</p>}
               </div>
@@ -287,8 +317,9 @@ const Giveaway = () => {
                   placeholder="Email Address"
                   value={formData.email}
                   onChange={handleInputChange}
-                  className={`w-full px-4 py-3 rounded-lg border ${formErrors.email ? 'border-red-500' : 'border-gray-300'
-                    } focus:outline-none focus:ring-2 focus:ring-green-500`}
+                  className={`w-full px-4 py-3 rounded-lg border ${
+                    formErrors.email ? 'border-red-500' : 'border-gray-300'
+                  } focus:outline-none focus:ring-2 focus:ring-green-500`}
                 />
                 {formErrors.email && <p className="text-red-500 text-sm mt-1 ml-4">{formErrors.email}</p>}
               </div>
@@ -299,8 +330,9 @@ const Giveaway = () => {
                   placeholder="Phone Number"
                   value={formData.phone}
                   onChange={handleInputChange}
-                  className={`w-full px-4 py-3 rounded-lg border ${formErrors.phone ? 'border-red-500' : 'border-gray-300'
-                    } focus:outline-none focus:ring-2 focus:ring-green-500`}
+                  className={`w-full px-4 py-3 rounded-lg border ${
+                    formErrors.phone ? 'border-red-500' : 'border-gray-300'
+                  } focus:outline-none focus:ring-2 focus:ring-green-500`}
                 />
                 {formErrors.phone && <p className="text-red-500 text-sm mt-1 ml-4">{formErrors.phone}</p>}
               </div>
@@ -338,6 +370,13 @@ const Giveaway = () => {
                     city: address.city,
                     country: address.country,
                   });
+                  // Clear address errors on selection
+                  setFormErrors((prev) => ({
+                    ...prev,
+                    addressLine1: '',
+                    city: '',
+                    country: '',
+                  }));
                 }}
                 onAddNew={() => {
                   setShowAddressForm(true);
@@ -431,8 +470,9 @@ const Giveaway = () => {
                   name="pickTime"
                   value={formData.pickTime}
                   onChange={handleInputChange}
-                  className={`w-full h-[50px] border-2 rounded-lg px-5 mt-2 sm:mt-5 font-karla ${formErrors.pickTime ? 'border-red-500' : ''
-                    }`}
+                  className={`w-full h-[50px] border-2 rounded-lg px-5 mt-2 sm:mt-5 font-karla ${
+                    formErrors.pickTime ? 'border-red-500' : ''
+                  }`}
                 >
                   <option value="">Select pickup time</option>
                   <option value="morning">9:30-12:00</option>
@@ -451,8 +491,11 @@ const Giveaway = () => {
                   name="weight"
                   value={formData.weight}
                   onChange={handleInputChange}
-                  className="w-full h-[50px] border-2 rounded-lg px-5 mt-2 sm:mt-5 font-karla"
+                  className={`w-full h-[50px] border-2 rounded-lg px-5 mt-2 sm:mt-5 font-karla ${
+                    formErrors.weight ? 'border-red-500' : ''
+                  }`}
                 />
+                {formErrors.weight && <p className="text-red-500 text-sm mt-1">{formErrors.weight}</p>}
               </div>
             </div>
             <div className="flex flex-wrap sm:flex-nowrap gap-6 mt-6">
@@ -461,13 +504,16 @@ const Giveaway = () => {
                 <select
                   name="items"
                   onChange={handleItemsChange}
-                  className="w-full h-[50px] border-2 rounded-lg px-5 mt-2 sm:mt-5 font-karla"
+                  className={`w-full h-[50px] border-2 rounded-lg px-5 mt-2 sm:mt-5 font-karla ${
+                    formErrors.items ? 'border-red-500' : ''
+                  }`}
                 >
                   <option value="">Select Item</option>
                   <option value="cloths">Clothes</option>
                   <option value="curtain">Curtains</option>
                   <option value="bedsheet">Bedsheets</option>
                 </select>
+                {formErrors.items && <p className="text-red-500 text-sm mt-1">{formErrors.items}</p>}
 
                 {/* Display Selected Items */}
                 {formData.items.length > 0 && (
@@ -475,7 +521,10 @@ const Giveaway = () => {
                     <p className="text-sm font-karla font-bold">Selected Items:</p>
                     <div className="flex flex-wrap gap-2 mt-1">
                       {formData.items.map((item) => (
-                        <span key={item} className="bg-gray-200 text-sm px-3 py-1 rounded-lg flex items-center gap-2">
+                        <span
+                          key={item}
+                          className="bg-gray-200 text-sm px-3 py-1 rounded-lg flex items-center gap-2"
+                        >
                           {item}
                           <button
                             onClick={() =>
@@ -501,8 +550,9 @@ const Giveaway = () => {
                   name="category"
                   value={formData.category}
                   onChange={handleInputChange}
-                  className={`w-full h-[50px] border-2 rounded-lg px-5 mt-2 sm:mt-5 font-karla ${formErrors.category ? 'border-red-500' : ''
-                    }`}
+                  className={`w-full h-[50px] border-2 rounded-lg px-5 mt-2 sm:mt-5 font-karla ${
+                    formErrors.category ? 'border-red-500' : ''
+                  }`}
                 >
                   <option value="">Select Category</option>
                   <option value="Reusable">Reusable</option>
@@ -588,8 +638,9 @@ const Giveaway = () => {
                 <span
                   key={step}
                   onClick={() => goToStep(step)}
-                  className={`w-1/3 h-1 mx-3 cursor-pointer ${currentStep >= step ? 'bg-green-500' : 'bg-gray-300'
-                    } rounded-full`}
+                  className={`w-1/3 h-1 mx-3 cursor-pointer ${
+                    currentStep >= step ? 'bg-green-500' : 'bg-gray-300'
+                  } rounded-full`}
                 />
               ))}
             </div>

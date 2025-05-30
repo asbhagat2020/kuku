@@ -1,19 +1,18 @@
-
 import React from "react";
-import { SideBar } from "./SideBar";
-import { ImagesComponent } from "./ImagesComponent";
-import { ActiveFilters } from "./ActiveFilters";
 import { FilterProvider } from "../context/FilterContext";
+import { FilterBySubcategory } from "./FilterBySubcategory";
+import MegaSideBar from "./MegaSideBar";
+import MegaActiveFilters from "./MegaActiveFilters";
 
-export const MainComponent = () => {
+export const MegaFilterComponent = () => {
   return (
     <FilterProvider>
       <div className="max-w-screen-xl mx-auto px-4">
         <div className="h-auto lg:w-[1297px] flex flex-col lg:flex-row">
-          <SideBar />
+          <MegaSideBar/>
           <main className="flex-1 mt-4 lg:mt-0">
-            <ActiveFilters />
-            <ImagesComponent />
+            <MegaActiveFilters/>
+            <FilterBySubcategory />
           </main>
         </div>
       </div>
@@ -21,4 +20,4 @@ export const MainComponent = () => {
   );
 };
 
-export default MainComponent;
+export default MegaFilterComponent;
