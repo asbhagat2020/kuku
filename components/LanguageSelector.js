@@ -5,15 +5,6 @@ const LanguageSelector = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [currentLang, setCurrentLang] = useState("en");
 
-  const countries = [
-    { code: "sa", name: "Saudi Arabia", flag: "🇸🇦" },
-    { code: "ae", name: "United Arab Emirates", flag: "🇦🇪" },
-    { code: "kw", name: "Kuwait", flag: "🇰🇼" },
-    { code: "qa", name: "Qatar", flag: "🇶🇦" },
-    { code: "bh", name: "Bahrain", flag: "🇧🇭" },
-    { code: "om", name: "Oman", flag: "🇴🇲" },
-    { code: "iq", name: "Iraq", flag: "🇮🇶" },
-  ];
 
   // Handle click outside to close dropdown
   useEffect(() => {
@@ -106,19 +97,6 @@ const LanguageSelector = () => {
 
               {/* Divider */}
               <hr className="my-2 border-blue-100" />
-
-              {/* Country List */}
-              <div className="max-h-48 overflow-y-auto">
-                {countries.map((country) => (
-                  <div
-                    key={country.code}
-                    className="px-4 py-2 hover:bg-blue-50 flex items-center justify-between cursor-pointer"
-                  >
-                    <span>{country.name}</span>
-                    <span className="text-xl">{country.flag}</span>
-                  </div>
-                ))}
-              </div>
             </div>
           </div>
         )}
