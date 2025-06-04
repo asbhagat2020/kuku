@@ -12,7 +12,7 @@ import { GoHeart } from "react-icons/go";
 import Link from "next/link";
 import axios from "axios";
 import Cookies from "js-cookie";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 import { useFilter } from "../context/FilterContext";
@@ -31,7 +31,7 @@ export const ImagesComponent = () => {
   const cardsPerPage = 9;
 
   // Access the filtered products from context
-  const { filteredProducts } = useFilter();
+const { filteredProducts, searchTerm, clearSearch } = useFilter();
   const [followingIds, setFollowingIds] = useState([]);
 
   // Calculate pagination
@@ -45,6 +45,15 @@ export const ImagesComponent = () => {
   const userID = details?._id;
 
   const [AllWishlist, setAllWishlist] = useState([]);
+
+   const handleClearSearch = () => {
+    const params = new URLSearchParams(useSearchParams.toString());
+    params.delete('search');
+    
+    router.push(`/selling-page?${params.toString()}`);
+    clearSearch();
+  };
+
 
   const getUserWishlistdata = async () => {
     try {
@@ -307,9 +316,27 @@ export const ImagesComponent = () => {
 
   return (
     <div className="p-6 ml-8 h-auto w-auto font-karla z-10">
+        {searchTerm && (
+        <div className="mb-4 flex items-center justify-between bg-gray-100 p-4 rounded-lg">
+          <p className="text-gray-600">
+            Showing results for "{searchTerm}"
+          </p>
+          <button 
+            onClick={handleClearSearch}
+            className="text-blue-500 hover:text-blue-700 font-medium"
+          >
+            Clear search
+          </button>
+        </div>
+      )}
       {filteredProducts.length === 0 ? (
         <div className="flex flex-col items-center justify-center h-64">
-          <p className="text-xl text-gray-500 mb-4">No products found matching your filters</p>
+          {/* <p className="text-xl text-gray-500 mb-4">No products found matching your filters</p> */}
+           <p className="text-xl text-gray-500 mb-4">
+            {searchTerm 
+              ? `No products found matching "${searchTerm}"` 
+              : "No products found matching your filters"}
+          </p>
           <Image
             src="/no-results.svg"
             alt="No results"
