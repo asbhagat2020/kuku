@@ -659,7 +659,6 @@
 // };
 
 // export default Header;
-
 "use client";
 import Image from "next/image";
 
@@ -837,8 +836,6 @@ const handleSearch = async (subcategory) => {
 };
 
 
-
-
   const toggleSearch = () => {
     if (hamburger) {
       // If in mobile menu, toggle mobile search
@@ -1006,13 +1003,15 @@ const handleSearch = async (subcategory) => {
         id="header"
         className={`w-full transition-all duration-300 ${
           isFixed ? " top-0 left-0 right-0 shadow-md" : "relative"
-        } max-w-full lg:px-[70px] py-[23px] h-[80px] lg:h-[108px] z-40`}
+        } max-w-full px-4 sm:px-6 md:px-8 lg:px-[70px] py-[23px] h-[80px] lg:h-[108px] z-40`}
         style={{
           backgroundColor: isSpecialPath ? "#FFF" : "#EDA702",
         }}
       >
         <div className="flex justify-between items-center">
-          <div className="flex items-center sm:gap-[20px] lg:gap-[60px] lg:ml-[-40px]">
+          {/* LEFT SECTION - Logo and Navigation */}
+          <div className="flex items-center gap-4 sm:gap-[20px] lg:gap-[60px] lg:ml-[-40px]">
+            {/* Desktop Logo */}
             <Link href="/" className="flex gap-[1rem] items-center pl-0">
               <Image
                 src="/kuku_logo.svg"
@@ -1025,16 +1024,20 @@ const handleSearch = async (subcategory) => {
                 KUKU
               </h1>
             </Link>
+            
+            {/* Mobile Menu Button */}
             <Image
               onClick={handleHandburger}
               src="/menu.svg"
               width={30}
               height={30}
               alt=""
-              className="pl-2 lg:hidden"
+              className="pl-2 lg:hidden cursor-pointer"
             />
+            
+            {/* Mobile Logo */}
             <div
-              className={`lg:hidden pl-4 ${
+              className={`lg:hidden pl-2 sm:pl-4 ${
                 isSearchVisible ? "lg:block hidden" : ""
               }`}
             >
@@ -1049,6 +1052,7 @@ const handleSearch = async (subcategory) => {
               </Link>
             </div>
 
+            {/* Desktop Navigation Menu */}
             <div
               className={`lg:flex gap-[30px] items-center hidden ${
                 isSearchVisible ? "lg:hidden xl:flex" : ""
@@ -1059,7 +1063,6 @@ const handleSearch = async (subcategory) => {
                   isHome ? "text-[#fefae5]" : "text-black"
                 } text-base font-bold font-karla leading-tight hover:text-pink-500`}
               >
-                {/* Men */}
                 <MenDropdown />
               </div>
               <div
@@ -1067,7 +1070,6 @@ const handleSearch = async (subcategory) => {
                   isHome ? "text-[#fefae5]" : "text-black"
                 } text-base font-bold font-karla leading-tight hover:text-pink-500`}
               >
-                {/* Women */}
                 <WomenDropdown />
               </div>
               <div
@@ -1075,17 +1077,18 @@ const handleSearch = async (subcategory) => {
                   isHome ? "text-[#fefae5]" : "text-black"
                 } text-base font-bold font-karla leading-tight hover:text-pink-500`}
               >
-                {/* Kids */}
                 <KidsDropdown />
               </div>
             </div>
           </div>
 
-          <div className="flex gap-[10px] items-center">
+          {/* RIGHT SECTION - Search and Action Icons */}
+          <div className="flex items-center gap-2 sm:gap-3 md:gap-4 lg:gap-[10px]">
+            {/* Search Section */}
             {isSearchVisible ? (
-              <div ref={searchRef} className="relative h-[54px] pl-5">
+              <div ref={searchRef} className="relative h-[42px] sm:h-[48px] lg:h-[54px] pl-2 sm:pl-4 lg:pl-5">
                 <input
-                  className="w-full sm:w-[300px] md:w-[400px] lg:w-[500px] xl:w-[550px] h-full bg-white rounded-lg px-8 md:px-6 lg:px-8 outline-none appearance-none transition-all duration-300"
+                  className="w-[180px] xs:w-[220px] sm:w-[280px] md:w-[380px] lg:w-[480px] xl:w-[550px] h-full bg-white rounded-lg px-6 md:px-6 lg:px-8 outline-none appearance-none transition-all duration-300 text-sm sm:text-base"
                   type="text"
                   placeholder="Search by subcategory (e.g., Legging, T-Shirt)"
                   autoFocus
@@ -1105,13 +1108,14 @@ const handleSearch = async (subcategory) => {
                   onClick={() =>
                     searchValue.trim() && handleSearch(searchValue.trim())
                   }
-                  className="absolute left-6 top-1/2 transform -translate-y-1/2 cursor-pointer"
+                  className="absolute left-4 sm:left-6 top-1/2 transform -translate-y-1/2 cursor-pointer"
                 >
                   <Image
                     alt="search icon"
-                    width={24}
-                    height={24}
+                    width={20}
+                    height={20}
                     src="/search_button.svg"
+                    className="w-5 h-5 lg:w-6 lg:h-6"
                   />
                 </div>
 
@@ -1122,34 +1126,37 @@ const handleSearch = async (subcategory) => {
                   </div>
                 )}
 
+                {/* Search Suggestions Dropdown */}
                 {suggestions.length > 0 && !isLoading && (
-                  <div className="absolute top-full left-6 w-[50%] lg:w-[95%] bg-white border border-gray-300 rounded-bl-lg rounded-br-lg mt-1 z-10">
+                  <div className="absolute top-full left-4 sm:left-6 w-[90%] lg:w-[95%] bg-white border border-gray-300 rounded-bl-lg rounded-br-lg mt-1 z-10">
                     {suggestions.map((suggestion, index) => (
                       <React.Fragment key={index}>
                         <div
-                          className="px-4 py-7 cursor-pointer hover:bg-gray-100 font-karla flex justify-between gap-4"
+                          className="px-4 py-5 sm:py-6 lg:py-7 cursor-pointer hover:bg-gray-100 font-karla flex justify-between gap-4"
                           onClick={() => handleSearch(suggestion)}
                         >
-                          <div className="flex gap-4 ">
+                          <div className="flex gap-3 sm:gap-4">
                             <Image
-                              width={24}
-                              height={24}
+                              width={20}
+                              height={20}
                               src="/search_button.svg"
                               alt=""
+                              className="w-5 h-5 lg:w-6 lg:h-6"
                             />
-                            <p className="text-[#070707] text-base font-normal font-karla leading-snug tracking-tight">
+                            <p className="text-[#070707] text-sm sm:text-base font-normal font-karla leading-snug tracking-tight">
                               {suggestion}
                             </p>
                           </div>
                           <Image
-                            width={24}
-                            height={24}
+                            width={20}
+                            height={20}
                             src="/arrow-up-right.svg"
                             alt=""
+                            className="w-5 h-5 lg:w-6 lg:h-6"
                           />
                         </div>
 
-                        {/* Conditionally render the line */}
+                        {/* Separator line */}
                         {index !== suggestions.length - 1 && (
                           <div className="w-[95%] mx-auto h-[1px] bg-[#383838]"></div>
                         )}
@@ -1160,36 +1167,38 @@ const handleSearch = async (subcategory) => {
               </div>
             ) : (
               <div
-                className="h-10 w-10 lg:h-[54px] lg:w-[54px] flex items-center justify-center bg-[#393939] rounded-full cursor-pointer"
+                className="h-8 w-8 sm:h-10 sm:w-10 lg:h-[54px] lg:w-[54px] flex items-center justify-center bg-[#393939] rounded-full cursor-pointer"
                 onClick={toggleSearch}
               >
                 <Image
                   alt="search icon"
-                  width={24}
-                  height={24}
+                  width={20}
+                  height={20}
                   src="/search.svg"
-                  className="w-4 h-4 lg:w-6 lg:h-6"
+                  className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6"
                 />
               </div>
             )}
 
+            {/* Notification Icon - Fixed spacing issue */}
             {!isNotificationDisabled && (
               <div
-                className={`h-10 w-10 lg:h-[54px] lg:w-[54px] flex items-center justify-center bg-white/40 rounded-full cursor-pointer ${
+                className={`h-8 w-8 sm:h-10 sm:w-10 lg:h-[54px] lg:w-[54px] flex items-center justify-center bg-white/40 rounded-full cursor-pointer ${
                   isSearchVisible ? "block" : ""
                 }`}
                 onClick={toggleNotifications}
               >
                 <Image
                   alt="notification icon"
-                  width={24}
-                  height={24}
+                  width={20}
+                  height={20}
                   src="/notification.svg"
-                  className="w-5 h-5 lg:w-6 lg:h-6"
+                  className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6"
                 />
               </div>
             )}
 
+            {/* Notification Panel */}
             {isNotificationOpen && (
               <NotificationPanel
                 notifications={notifications}
@@ -1198,12 +1207,11 @@ const handleSearch = async (subcategory) => {
               />
             )}
 
-            {/* Cart, Wishlist, Profile Icons */}
-
+            {/* Cart Icon - Desktop Only */}
             <div
               className={`${
                 cartPath ? "bg-[#393939]" : "bg-white/40"
-              } h-[54px] p-[15px] rounded-[100px] hidden lg:block`}
+              } h-[54px] p-[15px] rounded-[100px] hidden lg:block cursor-pointer`}
               onClick={() => {
                 handleNavigation("cart");
               }}
@@ -1216,23 +1224,25 @@ const handleSearch = async (subcategory) => {
               />
             </div>
 
+            {/* Wishlist Icon - Fixed spacing and responsive sizing */}
             <div
-              className={` h-10 w-10 lg:h-[54px] lg:w-[54px] flex items-center justify-center rounded-full cursor-pointer  ${
+              className={`h-8 w-8 sm:h-10 sm:w-10 lg:h-[54px] lg:w-[54px] flex items-center justify-center rounded-full cursor-pointer ${
                 wishPath ? "bg-[#393939]" : "bg-white/40"
-              } ml-[-10px] lg:ml-0`}
+              }`}
               onClick={() => {
                 handleNavigation("wishlist");
               }}
             >
               <Image
                 alt="wishlist icon"
-                width={24}
-                height={24}
+                width={20}
+                height={20}
                 src={wishPath ? "/wishlist_white.svg" : "/wishlist.svg"}
-                className="w-5 h-5 lg:w-6 lg:h-6"
+                className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6"
               />
             </div>
 
+            {/* Profile Icon - Desktop Only */}
             <Link
               href={`/user_profile/${userID}`}
               onClick={(e) => {
@@ -1243,8 +1253,7 @@ const handleSearch = async (subcategory) => {
               <div
                 className={`${
                   iconsPath ? "bg-[#393939]" : "bg-white/40"
-                } h-[54px] p-[15px] rounded-[100px] hidden lg:block`}
-                style={{ cursor: "pointer" }}
+                } h-[54px] p-[15px] rounded-[100px] hidden lg:block cursor-pointer`}
               >
                 <Image
                   alt="profile icon"
@@ -1255,6 +1264,7 @@ const handleSearch = async (subcategory) => {
               </div>
             </Link>
 
+            {/* Dropdown Menu - Desktop Only */}
             <div ref={dropdownRef} className="relative">
               <div
                 onClick={toggleDropdown}
@@ -1345,17 +1355,22 @@ const handleSearch = async (subcategory) => {
             </div>
           </div>
         </div>
+        
+        {/* Bottom Navigation Component */}
         <BottomNavigation />
+        
+        {/* Mobile Hamburger Menu - Enhanced responsive design */}
         <div
-          className={`w-full h-screen bg-yellow-500 lg:hidden fixed  px-[20px] py-[20px] top-[-2px] left-0 right-0 bottom-0 z-[1000] transition-transform ease-in-out duration-300 ${
+          className={`w-full h-screen bg-yellow-500 lg:hidden fixed px-4 sm:px-[20px] py-[20px] top-[-2px] left-0 right-0 bottom-0 z-[1000] transition-transform ease-in-out duration-300 ${
             hamburger
               ? "transform translate-x-0 z-50"
               : "transform translate-x-full z-0"
           }`}
         >
-          <div className="flex px-[24px] mt-[20px] justify-between">
+          {/* Mobile Menu Header */}
+          <div className="flex px-4 sm:px-[24px] mt-[20px] justify-between items-center">
             <div
-              className="w-[50%] flex items-center gap-1"
+              className="w-[50%] flex items-center gap-1 cursor-pointer"
               onClick={handleBack}
             >
               <Image
@@ -1366,15 +1381,15 @@ const handleSearch = async (subcategory) => {
                 alt="back-arrow"
                 className="align-middle"
               />
-              <p className="font-karla font-bold">Back</p>
+              <p className="font-karla font-bold text-sm sm:text-base">Back</p>
             </div>
 
-            {/* Mobile Search Section */}
-            <div className="flex items-center justify-evenly gap-[40px]">
+            {/* Mobile Search Section - Enhanced responsiveness */}
+            <div className="flex items-center justify-evenly gap-4 sm:gap-[40px]">
               {isMobileSearchVisible ? (
-                <div ref={mobileSearchRef} className="relative flex-1 mx-4">
+                <div ref={mobileSearchRef} className="relative flex-1 mx-2 sm:mx-4">
                   <input
-                    className="w-full h-10 bg-white rounded-lg px-[50px] outline-none appearance-none"
+                    className="w-full h-8 sm:h-10 bg-white rounded-lg px-8 sm:px-[50px] outline-none appearance-none text-sm sm:text-base"
                     type="text"
                     placeholder="Search by subcategory"
                     autoFocus
@@ -1386,19 +1401,20 @@ const handleSearch = async (subcategory) => {
                     onClick={() =>
                       searchValue.trim() && handleSearch(searchValue.trim())
                     }
-                    className="absolute left-4 top-1/2 transform -translate-y-1/2 cursor-pointer"
+                    className="absolute left-2 sm:left-4 top-1/2 transform -translate-y-1/2 cursor-pointer"
                   >
                     <Image
                       alt="search icon"
-                      width={20}
-                      height={20}
+                      width={16}
+                      height={16}
                       src="/search_button.svg"
+                      className="w-4 h-4 sm:w-5 sm:h-5"
                     />
                   </div>
 
                   {/* Mobile Loading indicator */}
                   {isLoading && (
-                    <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
+                    <div className="absolute right-2 sm:right-4 top-1/2 transform -translate-y-1/2">
                       <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-gray-900"></div>
                     </div>
                   )}
@@ -1409,25 +1425,27 @@ const handleSearch = async (subcategory) => {
                       {suggestions.map((suggestion, index) => (
                         <React.Fragment key={index}>
                           <div
-                            className="px-4 py-3 cursor-pointer hover:bg-gray-100 font-karla flex justify-between gap-4"
+                            className="px-3 sm:px-4 py-2 sm:py-3 cursor-pointer hover:bg-gray-100 font-karla flex justify-between gap-2 sm:gap-4"
                             onClick={() => handleSearch(suggestion)}
                           >
-                            <div className="flex gap-4">
+                            <div className="flex gap-2 sm:gap-4">
                               <Image
-                                width={20}
-                                height={20}
+                                width={16}
+                                height={16}
                                 src="/search_button.svg"
                                 alt=""
+                                className="w-4 h-4 sm:w-5 sm:h-5"
                               />
-                              <p className="text-[#070707] text-sm font-normal font-karla leading-snug tracking-tight">
+                              <p className="text-[#070707] text-xs sm:text-sm font-normal font-karla leading-snug tracking-tight">
                                 {suggestion}
                               </p>
                             </div>
                             <Image
-                              width={20}
-                              height={20}
+                              width={16}
+                              height={16}
                               src="/arrow-up-right.svg"
                               alt=""
+                              className="w-4 h-4 sm:w-5 sm:h-5"
                             />
                           </div>
                           {index !== suggestions.length - 1 && (
