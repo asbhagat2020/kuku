@@ -26,14 +26,14 @@ export const FilterBySubcategory = () => {
   const [offerSubmitted, setOfferSubmitted] = useState(false);
   const [selectedProductId, setSelectedProductId] = useState([]);
   const [selectedSellerId, setSelectedSellerId] = useState([]);
- 
+
   const [errorPopupOpen, setErrorPopupOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const cardsPerPage = 9;
 
   // Access the filter context
   const filterContext = useFilter();
-  
+
   // Get context values with error handling
   const contextFilteredProducts = filterContext?.filteredProducts || [];
   const apiFilteredProducts = filterContext?.apiFilteredProducts || [];
@@ -41,22 +41,29 @@ export const FilterBySubcategory = () => {
   const apiError = filterContext?.apiError || null;
   const fetchProductsWithFilters = filterContext?.fetchProductsWithFilters;
   const clearApiFilters = filterContext?.clearApiFilters;
-  
+
   const [followingIds, setFollowingIds] = useState([]);
 
   // Get URL parameters
-  const parentCategory = searchParams.get('parentCategory');
-  const categoryName = searchParams.get('categoryName');
-  const subCategoryName = searchParams.get('subCategoryName');
+  const parentCategory = searchParams.get("parentCategory");
+  const categoryName = searchParams.get("categoryName");
+  const subCategoryName = searchParams.get("subCategoryName");
 
   // Determine which products to use - prioritize API filtered products if we have filter params
-  const hasFilterParams = Boolean(parentCategory || categoryName || subCategoryName);
-  const productsToDisplay = hasFilterParams ? apiFilteredProducts : contextFilteredProducts;
+  const hasFilterParams = Boolean(
+    parentCategory || categoryName || subCategoryName
+  );
+  const productsToDisplay = hasFilterParams
+    ? apiFilteredProducts
+    : contextFilteredProducts;
 
   // Calculate pagination
   const indexOfLastCard = currentPage * cardsPerPage;
   const indexOfFirstCard = indexOfLastCard - cardsPerPage;
-  const currentCards = productsToDisplay.slice(indexOfFirstCard, indexOfLastCard);
+  const currentCards = productsToDisplay.slice(
+    indexOfFirstCard,
+    indexOfLastCard
+  );
   const totalPages = Math.ceil(productsToDisplay.length / cardsPerPage);
 
   const wishlist = useSelector((state) => state.wishlist.items);
@@ -84,32 +91,37 @@ export const FilterBySubcategory = () => {
   const getUserWishlistdata = async () => {
     try {
       const token = JSON.parse(Cookies.get("auth"));
-      const res = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/wishlist`,
+      const res = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/wishlist`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        })
+        }
+      );
       setAllWishlist(res.data.wishlist.products);
     } catch (error) {
       console.log("Error", error);
     }
-  }
+  };
 
   const getUserFollowingList = async () => {
     try {
       const token = JSON.parse(Cookies.get("auth"));
-      const res = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/profile/following-ids`, {
-        headers: {
-          Authorization: `Bearer ${token}`
+      const res = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/profile/following-ids`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
-      })
+      );
       setFollowingIds(res.data?.following);
     } catch (error) {
       console.log("Error", error);
     }
-  }
-  
+  };
+
   useEffect(() => {
     if (token) {
       getUserWishlistdata();
@@ -124,12 +136,14 @@ export const FilterBySubcategory = () => {
 
   // Check if a product is in the wishlist
   const isProductInWishlist = (productId) => {
-    return AllWishlist.some(wishlistItem => wishlistItem.productId === productId);
+    return AllWishlist.some(
+      (wishlistItem) => wishlistItem.productId === productId
+    );
   };
 
   // Check if the user is following a seller
   const isFollowingSeller = (sellerId) => {
-    return followingIds.some(id => id === sellerId);
+    return followingIds.some((id) => id === sellerId);
   };
 
   const handleNextPage = () => {
@@ -146,12 +160,11 @@ export const FilterBySubcategory = () => {
 
   const handleOpenOfferPopup = (id, sellerid) => {
     if (!token) {
-      toast.success('please login');
+      toast.success("please login");
       setTimeout(() => {
         router.push("/login");
-      }, [500])
-    }
-    else {
+      }, [500]);
+    } else {
       setSelectedProductId(id);
       setSelectedSellerId(sellerid || "admin");
       setIsOfferPopupOpen(true);
@@ -205,11 +218,13 @@ export const FilterBySubcategory = () => {
 
       if (response.status === 200) {
         // Update local wishlist state after successful API call
-        setAllWishlist(prevWishlist =>
-          prevWishlist.filter(item => item.productId !== id)
+        setAllWishlist((prevWishlist) =>
+          prevWishlist.filter((item) => item.productId !== id)
         );
       } else {
-        setErrorMessage(`Failed to remove from wishlist: ${response.data.message}`);
+        setErrorMessage(
+          `Failed to remove from wishlist: ${response.data.message}`
+        );
         setErrorPopupOpen(true);
       }
     } catch (error) {
@@ -220,12 +235,11 @@ export const FilterBySubcategory = () => {
 
   const handleLoginNotification = async (id) => {
     if (!token) {
-      toast.success('please Login First.');
+      toast.success("please Login First.");
       setTimeout(() => {
         router.push("/login");
-      }, [500])
-    }
-    else {
+      }, [500]);
+    } else {
       try {
         const token = JSON.parse(Cookies.get("auth"));
         const response = await axios.post(
@@ -242,7 +256,9 @@ export const FilterBySubcategory = () => {
           // Update local wishlist state after successful API call
           getUserWishlistdata();
         } else {
-          setErrorMessage(`Failed to add to wishlist: ${response.data.message}`);
+          setErrorMessage(
+            `Failed to add to wishlist: ${response.data.message}`
+          );
           setErrorPopupOpen(true);
         }
       } catch (error) {
@@ -250,17 +266,17 @@ export const FilterBySubcategory = () => {
         setErrorPopupOpen(true);
       }
     }
-  }
+  };
 
   const handleToggleFollow = async (sellerId) => {
     if (!token) {
-      toast.success('please Login First.');
+      toast.success("please Login First.");
       setTimeout(() => {
         router.push("/login");
       }, [500]);
       return;
     }
-    
+
     try {
       const token = JSON.parse(Cookies.get("auth"));
       const response = await axios.post(
@@ -272,15 +288,15 @@ export const FilterBySubcategory = () => {
           },
         }
       );
-      
+
       if (response.status === 200) {
         // Update the followingIds state based on the response
         if (response.data.isFollowing) {
-          setFollowingIds(prev => [...prev, sellerId]);
+          setFollowingIds((prev) => [...prev, sellerId]);
         } else {
-          setFollowingIds(prev => prev.filter(id => id !== sellerId));
+          setFollowingIds((prev) => prev.filter((id) => id !== sellerId));
         }
-        
+
         // Show success toast
         toast.success(response.data.message);
       }
@@ -334,15 +350,15 @@ export const FilterBySubcategory = () => {
     toast.success("please Login");
     setTimeout(() => {
       router.push("/login");
-    }, [500])
-  }
+    }, [500]);
+  };
 
   const handleClearFilters = () => {
     if (clearApiFilters) {
       clearApiFilters();
     }
     // Clear URL parameters and navigate to base page
-    router.push('/selling-page');
+    router.push("/selling-page");
   };
 
   // Show loading state while fetching filtered products
@@ -351,7 +367,9 @@ export const FilterBySubcategory = () => {
       <div className="p-6 ml-8 h-auto w-auto font-karla z-10">
         <div className="flex flex-col items-center justify-center h-64">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
-          <p className="text-xl text-gray-500 mt-4">Loading filtered products...</p>
+          <p className="text-xl text-gray-500 mt-4">
+            Loading filtered products...
+          </p>
         </div>
       </div>
     );
@@ -367,7 +385,11 @@ export const FilterBySubcategory = () => {
             <button
               onClick={() => {
                 if (fetchProductsWithFilters) {
-                  fetchProductsWithFilters(parentCategory, categoryName, subCategoryName);
+                  fetchProductsWithFilters(
+                    parentCategory,
+                    categoryName,
+                    subCategoryName
+                  );
                 }
               }}
               className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
@@ -414,7 +436,8 @@ export const FilterBySubcategory = () => {
                 )}
               </div>
               <p className="text-sm text-gray-600 mt-2">
-                Showing {productsToDisplay.length} product{productsToDisplay.length !== 1 ? 's' : ''}
+                Showing {productsToDisplay.length} product
+                {productsToDisplay.length !== 1 ? "s" : ""}
               </p>
             </div>
             <button
@@ -430,7 +453,9 @@ export const FilterBySubcategory = () => {
       {productsToDisplay.length === 0 ? (
         <div className="flex flex-col items-center justify-center h-64">
           <p className="text-xl text-gray-500 mb-4">
-            {hasFilterParams ? "No products found for the selected filters" : "No products found matching your filters"}
+            {hasFilterParams
+              ? "No products found for the selected filters"
+              : "No products found matching your filters"}
           </p>
           <Image
             src="/no-results.svg"
@@ -454,16 +479,20 @@ export const FilterBySubcategory = () => {
                 <div className="flex space-x-4 items-center">
                   {!isAdminProduct(card) ? (
                     <Link href={`/user_profile/${card?.seller?._id}`}>
-                      <img
+                      <Image
                         src={card?.seller?.avatar || "/profile_icon.svg"}
                         alt="User avatar"
+                        width={48}
+                        height={48}
                         className="object-contain h-12 w-12"
                       />
                     </Link>
                   ) : (
-                    <img
-                      src={"/profile_icon.svg"}
+                    <Image
+                      src="/profile_icon.svg"
                       alt="Admin avatar"
+                      width={48}
+                      height={48}
                       className="object-contain h-12 w-12"
                     />
                   )}
@@ -491,13 +520,17 @@ export const FilterBySubcategory = () => {
 
               <div className="relative mt-4">
                 {/* Heart icon for like functionality */}
-                <div
-                  className="absolute top-4 right-4 w-12 h-12 flex items-center justify-center rounded-full bg-custom-gray cursor-pointer z-10 hover:bg-gray-300 transition-colors duration-300"
-                >
+                <div className="absolute top-4 right-4 w-12 h-12 flex items-center justify-center rounded-full bg-custom-gray cursor-pointer z-10 hover:bg-gray-300 transition-colors duration-300">
                   {isProductInWishlist(card._id) ? (
-                    <FcLike className="text-2xl text-red-500" onClick={() => handleLikeClick(card._id)} />
+                    <FcLike
+                      className="text-2xl text-red-500"
+                      onClick={() => handleLikeClick(card._id)}
+                    />
                   ) : (
-                    <GoHeart className="text-2xl text-gray-300" onClick={() => handleLoginNotification(card._id)} />
+                    <GoHeart
+                      className="text-2xl text-gray-300"
+                      onClick={() => handleLoginNotification(card._id)}
+                    />
                   )}
                 </div>
 
@@ -523,7 +556,10 @@ export const FilterBySubcategory = () => {
                 {/* Buy Now button and handshake icon */}
                 <div className="absolute w-full bottom-4 flex justify-evenly items-center px-4">
                   {token ? (
-                    <Link href={`/selling-page/${card._id}`} className="w-[70%]">
+                    <Link
+                      href={`/selling-page/${card._id}`}
+                      className="w-[70%]"
+                    >
                       <button className="w-full p-2 py-[15px] sm:px-10 bg-custom-yellow text-black rounded-2xl font-bold mr-1 hover:bg-yellow-400 transition-colors duration-300">
                         Buy Now
                       </button>
@@ -548,7 +584,7 @@ export const FilterBySubcategory = () => {
                       onClick={() =>
                         handleOpenOfferPopup(
                           card._id,
-                          card.seller?._id || (card.admin?._id || "admin")
+                          card.seller?._id || card.admin?._id || "admin"
                         )
                       }
                     />
