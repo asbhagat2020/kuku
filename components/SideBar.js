@@ -470,9 +470,9 @@ export const SideBar = () => {
       {/* Sidebar */}
       <div
         ref={sidebarRef}
-        className={`fixed lg:sticky top-20 left-0 h-auto lg:h-[calc(100vh-210px)] w-64 pl-0 pr-4 pt-4 pb-4 z-10 transform ${
+        className={`fixed lg:sticky top-20 left-0 h-auto lg:h-[calc(100vh-210px)] w-64 pl-0 pr-4 pt-4 pb-4 z-30 transform ${
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-        } transition-transform duration-300 ease-in-out lg:translate-x-0 lg:w-80 lg:mt-10 lg:ml-2 lg:block overflow-y-auto scrollbar-hide`}
+        } transition-transform duration-300 ease-in-out lg:translate-x-0 lg:w-[260px] xl:w-80 lg:mt-10 lg:ml-2 lg:block overflow-y-auto scrollbar-hide`}
       >
         <div className="p-4 lg:p-4 shadow-md bg-white rounded-lg">
           <h1 className="text-2xl pt-1 text-custom-pink font-bold">Filter by</h1>

@@ -25,13 +25,6 @@
 
 
 
-
-
-
-
-
-
-
 "use client";
 import React from "react";
 import { SideBar } from "./SideBar";
@@ -42,10 +35,10 @@ import { FilterProvider } from "../context/FilterContext";
 export const MainComponent = ({ initialSearch }) => {
   return (
     <FilterProvider initialSearch={initialSearch}>
-      <div className="max-w-screen-xl mx-auto px-4">
-        <div className="h-auto lg:w-[1297px] flex flex-col lg:flex-row">
+      <div className="w-full mx-auto">
+        <div className="h-auto flex flex-col lg:flex-row gap-4 lg:gap-6 xl:gap-8">
           <SideBar />
-          <main className="flex-1 mt-4 lg:mt-0">
+          <main className="flex-1 mt-4 sm:mt-6 lg:mt-0 px-6 sm-px-8">
             <ActiveFilters />
             <ImagesComponent />
           </main>
