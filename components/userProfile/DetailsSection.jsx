@@ -917,87 +917,10 @@ export default function DetailsSection({ data }) {
   console.log("products", products);
 
 
-  // [{
-  //   id: 1,
-  //   productImg: ["/card_image2.png", "/card_image2.png", "/card_image3.png"],
-  //   title: "Dress",
-  //   price: "AED 120.00",
-  //   link: "/product",
-  // },
-  // {
-  //   id: 2,
-  //   productImg: ["/card_image1.png", "/card_image2.png", "/card_image3.png"],
-  //   title: "Dress",
-  //   price: "AED 120.00",
-  //   link: "/product",
-  // },
-  // {
-  //   id: 3,
-  //   productImg: ["/card_image3.png", "/card_image2.png", "/card_image3.png"],
-  //   title: "Dress",
-  //   price: "AED 120.00",
-  //   link: "/product",
-  // },
-  // {
-  //   id: 4,
-  //   productImg: ["/card_image2.png", "/card_image2.png", "/card_image3.png"],
-  //   title: "Dress",
-  //   price: "AED 120.00",
-  //   link: "/product",
-  // },
-  // {
-  //   id: 5,
-  //   productImg: ["/card_image1.png", "/card_image2.png", "/card_image3.png"],
-  //   title: "Dress",
-  //   price: "AED 120.00",
-  //   link: "/product",
-  // },
-  // {
-  //   id: 6,
-  //   productImg: ["/card_image3.png", "/card_image2.png", "/card_image3.png"],
-  //   title: "Dress",
-  //   price: "AED 120.00",
-  //   link: "/product",
-  // }]
+
 
   const soldData = data.products;
 
-  // {
-  //   id: 7,
-  //   productImg: ["/card_image2.png", "/card_image2.png", "/card_image3.png"],
-  //   title: "Dress",
-  //   price: "AED 120.00",
-  // },
-  // {
-  //   id: 8,
-  //   productImg: ["/card_image1.png", "/card_image2.png", "/card_image3.png"],
-  //   title: "Dress",
-  //   price: "AED 120.00",
-  // },
-  // {
-  //   id: 9,
-  //   productImg: ["/card_image3.png", "/card_image2.png", "/card_image3.png"],
-  //   title: "Dress",
-  //   price: "AED 120.00",
-  // },
-  // {
-  //   id: 10,
-  //   productImg: ["/card_image2.png", "/card_image2.png", "/card_image3.png"],
-  //   title: "Dress",
-  //   price: "AED 120.00",
-  // },
-  // {
-  //   id: 11,
-  //   productImg: ["/card_image1.png", "/card_image2.png", "/card_image3.png"],
-  //   title: "Dress",
-  //   price: "AED 120.00",
-  // },
-  // {
-  //   id: 12,
-  //   productImg: ["/card_image3.png", "/card_image2.png", "/card_image3.png"],
-  //   title: "Dress",
-  //   price: "AED 120.00",
-  // },
 
   const reviewData = data;
 
