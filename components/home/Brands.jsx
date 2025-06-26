@@ -4,7 +4,7 @@ import BrandsCurousel from "@/components/home/BrandsCurousel";
 const Brands = () => {
   return (
     <div
-      className="max-w-[1550px] mx-auto h-[665px] flex flex-col items-center px-[20px]"
+      className="w-full mx-auto h-[665px] flex flex-col items-center px-[20px]"
       style={{
         backgroundImage: "url('brands_background.png')",
         backgroundSize: "cover",

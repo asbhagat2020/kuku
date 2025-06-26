@@ -6,7 +6,7 @@ import Link from 'next/link';
 
 const Selling = () => {
     return (
-        <div className="min-h-[760px] max-w-[1550px] mx-auto relative bg-white pt-[113px]">
+        <div className="min-h-[760px] w-full mx-auto relative bg-white pt-[113px]">
             <Image className='absolute right-[430px] top-[188px]' width={44} height={44} src='/cube.svg' alt='cube' />
             <div className="h-[70px] w-full justify-between items-center inline-flex px-[20px] lg:px-[73px] ">
                 <div className='flex gap-4'>

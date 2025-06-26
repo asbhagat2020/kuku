@@ -194,7 +194,7 @@ const Popup = ({ isOpen, onClose }) => {
     isOpen && (
       <div
         id="popup-container"
-        className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-50"
+        className="fixed inset-0 w-full flex justify-center items-center bg-black bg-opacity-50 z-50"
         onClick={handleOutsideClick}
       >
         <div className="h-[677px] px-4 py-[22px] bg-white rounded-[10px] flex-col justify-start items-center gap-4 inline-flex">

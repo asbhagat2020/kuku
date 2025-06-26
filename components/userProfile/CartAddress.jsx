@@ -118,7 +118,7 @@ const CartAddress = () => {
     }
   };
   return (
-    <div className="container mx-auto px-4 py-8 font-karla">
+    <div className="container px-12 py-8 font-karla">
       {/* Heading */}
       <h1 className="text-3xl font-luckiest mb-6">SHIPING ADDRESS LIST</h1>
 

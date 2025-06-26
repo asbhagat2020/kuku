@@ -66,7 +66,7 @@ const Footer = () => {
     
 
     return (
-        <footer className='max-w-[1550px] mx-auto bg-[#FDE504] pt-12 pb-0'>
+        <footer className='w-full mx-auto bg-[#FDE504] pt-12 pb-0'>
             <div className="px-4 sm:px-8 lg:px-[71px] grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-8 mb-16">
                 <FooterColumn title="About">
                     <FooterLink href="#">Who we are ?</FooterLink>

@@ -10,7 +10,7 @@
 // // Create context for filter state
 // export const FilterContext = createContext();
 
-// export const FilterProvider = ({ children }) => {
+// export const FilterProvider = ({ children, initialSearch }) => {
 //   // Initialize filter state with empty selections
 //   const [filters, setFilters] = useState({
 //     category: [],
@@ -28,7 +28,7 @@
 //   const [baseApiProducts, setBaseApiProducts] = useState([]); // Store original API results
 //   const [apiLoading, setApiLoading] = useState(false);
 //   const [apiError, setApiError] = useState(null);
-//   const [searchTerm, setSearchTerm] = useState("");
+//    const [searchTerm, setSearchTerm] = useState(initialSearch || "");
 
 //   // Store category information from URL parameters
 //   const [categoryInfo, setCategoryInfo] = useState({
@@ -44,6 +44,12 @@
 //     size: [],
 //     condition: [],
 //   });
+
+//     useEffect(() => {
+//     if (initialSearch) {
+//       setSearchTerm(initialSearch);
+//     }
+//   }, [initialSearch]);
 
 //   // Load products from API - KEEP THIS UNCHANGED
 //   useEffect(() => {
@@ -196,18 +202,34 @@
 
 //   // Apply filters to regular products (when not using API filtered products)
 //   useEffect(() => {
-//     if (products.length === 0 || baseApiProducts.length > 0) return;
-
-//     // If no filters are selected, show all products
+//     if (products.length === 0) return;
+    
+//     // Start with all products
+//     let filtered = [...products];
+    
+//     // Apply search term filter if present - THIS IS THE KEY FIX
+//     if (searchTerm) {
+//       filtered = filtered.filter(product => {
+//         const matchesSearch =
+//           product.category?.subCategoryName
+//             ?.toLowerCase()
+//             .includes(searchTerm.toLowerCase()) ||
+//           product.name?.toLowerCase().includes(searchTerm.toLowerCase());
+//         return matchesSearch;
+//       });
+//     }
+    
+//     // Skip further filtering if no filters are selected and there's no search term
 //     if (
+//       !searchTerm &&
 //       Object.values(filters).every((filterGroup) => filterGroup.length === 0)
 //     ) {
-//       setFilteredProducts(products);
+//       setFilteredProducts(filtered);
 //       return;
 //     }
 
-//     // Apply filters
-//     const filtered = products.filter((product) => {
+//     // Apply remaining filters
+//     filtered = filtered.filter((product) => {
 //       // Check category filter
 //       if (
 //         filters.category.length > 0 &&
@@ -257,7 +279,7 @@
 //     });
 
 //     setFilteredProducts(filtered);
-//   }, [filters, products, baseApiProducts]);
+//   }, [filters, products, searchTerm]);
 
 //   // Apply filters to API filtered products
 //   useEffect(() => {
@@ -271,89 +293,109 @@
 //       (filters.category.length > 0 &&
 //         !filters.category.includes(categoryInfo.parentCategory));
 
-//     if (
-//       !hasActiveFilters &&
-//       categoryInfo.parentCategory &&
-//       filters.category.includes(categoryInfo.parentCategory)
-//     ) {
-//       setApiFilteredProducts(baseApiProducts);
-//       return;
-//     }
-
-//     // Apply filters to base API products
-//     const filtered = baseApiProducts.filter((product) => {
-//       if (searchTerm) {
-//         const matchesSearch =
-//           product.category?.subCategoryName
-//             ?.toLowerCase()
-//             .includes(searchTerm.toLowerCase()) ||
-//           product.name?.toLowerCase().includes(searchTerm.toLowerCase());
-//         if (!matchesSearch) return false;
-//       }
-//       // Check category filter (only if different from pre-selected parent category)
-//       if (filters.category.length > 0) {
-//         const nonParentCategoryFilters = filters.category.filter(
-//           (cat) => cat !== categoryInfo.parentCategory
-//         );
-//         if (
-//           nonParentCategoryFilters.length > 0 &&
-//           !nonParentCategoryFilters.includes(product.category?.parentCategory)
-//         ) {
-//           return false;
+//     // Always apply search term filter regardless of other filters
+//     if (searchTerm || hasActiveFilters) {
+//       // Apply filters to base API products
+//       const filtered = baseApiProducts.filter((product) => {
+//         // Always apply search term filter
+//         if (searchTerm) {
+//           const matchesSearch =
+//             product.category?.subCategoryName
+//               ?.toLowerCase()
+//               .includes(searchTerm.toLowerCase()) ||
+//             product.name?.toLowerCase().includes(searchTerm.toLowerCase());
+//           if (!matchesSearch) return false;
 //         }
-//       }
 
-//       // Check size filter
-//       if (
-//         filters.size.length > 0 &&
-//         !filters.size.includes(product.size?.sizeName)
-//       ) {
-//         return false;
-//       }
-
-//       // Check condition filter
-//       if (
-//         filters.condition.length > 0 &&
-//         !filters.condition.includes(product.condition?.conditionName)
-//       ) {
-//         return false;
-//       }
-
-//       // Check price filter
-//       if (filters.price.length > 0) {
-//         const price = product.price;
-//         let priceMatch = false;
-
-//         for (const range of filters.price) {
-//           if (range === "0 - 300" && price <= 300) {
-//             priceMatch = true;
-//             break;
-//           } else if (range === "300 - 500" && price > 300 && price <= 500) {
-//             priceMatch = true;
-//             break;
-//           } else if (range === "500 Above" && price > 500) {
-//             priceMatch = true;
-//             break;
+//         // Check category filter (only if different from pre-selected parent category)
+//         if (filters.category.length > 0) {
+//           const nonParentCategoryFilters = filters.category.filter(
+//             (cat) => cat !== categoryInfo.parentCategory
+//           );
+//           if (
+//             nonParentCategoryFilters.length > 0 &&
+//             !nonParentCategoryFilters.includes(product.category?.parentCategory)
+//           ) {
+//             return false;
 //           }
 //         }
 
-//         if (!priceMatch) return false;
-//       }
+//         // Check size filter
+//         if (
+//           filters.size.length > 0 &&
+//           !filters.size.includes(product.size?.sizeName)
+//         ) {
+//           return false;
+//         }
 
-//       return true;
-//     });
+//         // Check condition filter
+//         if (
+//           filters.condition.length > 0 &&
+//           !filters.condition.includes(product.condition?.conditionName)
+//         ) {
+//           return false;
+//         }
 
-//     setApiFilteredProducts(filtered);
+//         // Check price filter
+//         if (filters.price.length > 0) {
+//           const price = product.price;
+//           let priceMatch = false;
+
+//           for (const range of filters.price) {
+//             if (range === "0 - 300" && price <= 300) {
+//               priceMatch = true;
+//               break;
+//             } else if (range === "300 - 500" && price > 300 && price <= 500) {
+//               priceMatch = true;
+//               break;
+//             } else if (range === "500 Above" && price > 500) {
+//               priceMatch = true;
+//               break;
+//             }
+//           }
+
+//           if (!priceMatch) return false;
+//         }
+
+//         return true;
+//       });
+
+//       setApiFilteredProducts(filtered);
+//     } else {
+//       setApiFilteredProducts(baseApiProducts);
+//     }
 //   }, [filters, baseApiProducts, categoryInfo.parentCategory, searchTerm]);
 
 //   // Add search methods
-//   const setSearch = (term) => {
+// const setSearch = useCallback((term) => {
 //     setSearchTerm(term);
-//   };
+    
+//     // Update URL with search parameter
+//     if (typeof window !== 'undefined') {
+//       const searchParams = new URLSearchParams(window.location.search);
+//       if (term) {
+//         searchParams.set('search', term);
+//       } else {
+//         searchParams.delete('search');
+//       }
+      
+//       const newUrl = `${window.location.pathname}?${searchParams.toString()}`;
+//       window.history.pushState({}, '', newUrl);
+//     }
+//   }, []);
 
-//   const clearSearch = () => {
-//     setSearchTerm("");
-//   };
+//   const clearSearch = useCallback(() => {
+//     setSearchTerm('');
+    
+//     // Remove search parameter from URL
+//     if (typeof window !== 'undefined') {
+//       const searchParams = new URLSearchParams(window.location.search);
+//       searchParams.delete('search');
+      
+//       const newUrl = `${window.location.pathname}?${searchParams.toString()}`;
+//       window.history.pushState({}, '', newUrl);
+//     }
+//   }, []);
 
 //   // Toggle filter selection
 //   const toggleFilter = (type, value) => {
@@ -393,6 +435,9 @@
 //         condition: [],
 //       });
 //     }
+    
+//     // Don't clear search when clearing other filters
+//     // This allows users to maintain their search while adjusting other filters
 //   };
 
 //   // Clear API filters
@@ -412,6 +457,7 @@
 //       size: [],
 //       condition: [],
 //     });
+//     // Keep search term when clearing API filters
 //   }, []);
 
 //   // Determine which products to show
@@ -660,42 +706,129 @@ export const FilterProvider = ({ children, initialSearch }) => {
     }));
   };
 
-  // Apply filters to regular products (when not using API filtered products)
+
   useEffect(() => {
-    if (products.length === 0) return;
-    
-    // Start with all products
-    let filtered = [...products];
-    
-    // Apply search term filter if present - THIS IS THE KEY FIX
-    if (searchTerm) {
-      filtered = filtered.filter(product => {
+  if (products.length === 0) return;
+  
+  // Start with all products
+  let filtered = [...products];
+  
+  // Apply search term filter if present - UPDATED TO INCLUDE CATEGORYNAME
+  if (searchTerm) {
+    filtered = filtered.filter(product => {
+      const matchesSearch =
+        product.category?.subCategoryName
+          ?.toLowerCase()
+          .includes(searchTerm.toLowerCase()) ||
+        product.category?.categoryName  // Added this line
+          ?.toLowerCase()
+          .includes(searchTerm.toLowerCase()) ||
+        product.name?.toLowerCase().includes(searchTerm.toLowerCase());
+      return matchesSearch;
+    });
+  }
+  
+  // Skip further filtering if no filters are selected and there's no search term
+  if (
+    !searchTerm &&
+    Object.values(filters).every((filterGroup) => filterGroup.length === 0)
+  ) {
+    setFilteredProducts(filtered);
+    return;
+  }
+
+  // Apply remaining filters (category, size, condition, price)
+  filtered = filtered.filter((product) => {
+    // Check category filter
+    if (
+      filters.category.length > 0 &&
+      !filters.category.includes(product.category?.parentCategory)
+    ) {
+      return false;
+    }
+
+    // Check size filter
+    if (
+      filters.size.length > 0 &&
+      !filters.size.includes(product.size?.sizeName)
+    ) {
+      return false;
+    }
+
+    // Check condition filter
+    if (
+      filters.condition.length > 0 &&
+      !filters.condition.includes(product.condition?.conditionName)
+    ) {
+      return false;
+    }
+
+    // Check price filter
+    if (filters.price.length > 0) {
+      const price = product.price;
+      let priceMatch = false;
+
+      for (const range of filters.price) {
+        if (range === "0 - 300" && price <= 300) {
+          priceMatch = true;
+          break;
+        } else if (range === "300 - 500" && price > 300 && price <= 500) {
+          priceMatch = true;
+          break;
+        } else if (range === "500 Above" && price > 500) {
+          priceMatch = true;
+          break;
+        }
+      }
+
+      if (!priceMatch) return false;
+    }
+
+    return true;
+  });
+
+  setFilteredProducts(filtered);
+}, [filters, products, searchTerm]);
+
+useEffect(() => {
+  if (baseApiProducts.length === 0) return;
+
+  // If no filters are selected except category (which might be pre-selected), show all API products
+  const hasActiveFilters =
+    filters.price.length > 0 ||
+    filters.size.length > 0 ||
+    filters.condition.length > 0 ||
+    (filters.category.length > 0 &&
+      !filters.category.includes(categoryInfo.parentCategory));
+
+  // Always apply search term filter regardless of other filters
+  if (searchTerm || hasActiveFilters) {
+    // Apply filters to base API products
+    const filtered = baseApiProducts.filter((product) => {
+      // Always apply search term filter - UPDATED TO INCLUDE CATEGORYNAME
+      if (searchTerm) {
         const matchesSearch =
           product.category?.subCategoryName
             ?.toLowerCase()
             .includes(searchTerm.toLowerCase()) ||
+          product.category?.categoryName  // Added this line
+            ?.toLowerCase()
+            .includes(searchTerm.toLowerCase()) ||
           product.name?.toLowerCase().includes(searchTerm.toLowerCase());
-        return matchesSearch;
-      });
-    }
-    
-    // Skip further filtering if no filters are selected and there's no search term
-    if (
-      !searchTerm &&
-      Object.values(filters).every((filterGroup) => filterGroup.length === 0)
-    ) {
-      setFilteredProducts(filtered);
-      return;
-    }
+        if (!matchesSearch) return false;
+      }
 
-    // Apply remaining filters
-    filtered = filtered.filter((product) => {
-      // Check category filter
-      if (
-        filters.category.length > 0 &&
-        !filters.category.includes(product.category?.parentCategory)
-      ) {
-        return false;
+      // Check category filter (only if different from pre-selected parent category)
+      if (filters.category.length > 0) {
+        const nonParentCategoryFilters = filters.category.filter(
+          (cat) => cat !== categoryInfo.parentCategory
+        );
+        if (
+          nonParentCategoryFilters.length > 0 &&
+          !nonParentCategoryFilters.includes(product.category?.parentCategory)
+        ) {
+          return false;
+        }
       }
 
       // Check size filter
@@ -738,93 +871,11 @@ export const FilterProvider = ({ children, initialSearch }) => {
       return true;
     });
 
-    setFilteredProducts(filtered);
-  }, [filters, products, searchTerm]);
-
-  // Apply filters to API filtered products
-  useEffect(() => {
-    if (baseApiProducts.length === 0) return;
-
-    // If no filters are selected except category (which might be pre-selected), show all API products
-    const hasActiveFilters =
-      filters.price.length > 0 ||
-      filters.size.length > 0 ||
-      filters.condition.length > 0 ||
-      (filters.category.length > 0 &&
-        !filters.category.includes(categoryInfo.parentCategory));
-
-    // Always apply search term filter regardless of other filters
-    if (searchTerm || hasActiveFilters) {
-      // Apply filters to base API products
-      const filtered = baseApiProducts.filter((product) => {
-        // Always apply search term filter
-        if (searchTerm) {
-          const matchesSearch =
-            product.category?.subCategoryName
-              ?.toLowerCase()
-              .includes(searchTerm.toLowerCase()) ||
-            product.name?.toLowerCase().includes(searchTerm.toLowerCase());
-          if (!matchesSearch) return false;
-        }
-
-        // Check category filter (only if different from pre-selected parent category)
-        if (filters.category.length > 0) {
-          const nonParentCategoryFilters = filters.category.filter(
-            (cat) => cat !== categoryInfo.parentCategory
-          );
-          if (
-            nonParentCategoryFilters.length > 0 &&
-            !nonParentCategoryFilters.includes(product.category?.parentCategory)
-          ) {
-            return false;
-          }
-        }
-
-        // Check size filter
-        if (
-          filters.size.length > 0 &&
-          !filters.size.includes(product.size?.sizeName)
-        ) {
-          return false;
-        }
-
-        // Check condition filter
-        if (
-          filters.condition.length > 0 &&
-          !filters.condition.includes(product.condition?.conditionName)
-        ) {
-          return false;
-        }
-
-        // Check price filter
-        if (filters.price.length > 0) {
-          const price = product.price;
-          let priceMatch = false;
-
-          for (const range of filters.price) {
-            if (range === "0 - 300" && price <= 300) {
-              priceMatch = true;
-              break;
-            } else if (range === "300 - 500" && price > 300 && price <= 500) {
-              priceMatch = true;
-              break;
-            } else if (range === "500 Above" && price > 500) {
-              priceMatch = true;
-              break;
-            }
-          }
-
-          if (!priceMatch) return false;
-        }
-
-        return true;
-      });
-
-      setApiFilteredProducts(filtered);
-    } else {
-      setApiFilteredProducts(baseApiProducts);
-    }
-  }, [filters, baseApiProducts, categoryInfo.parentCategory, searchTerm]);
+    setApiFilteredProducts(filtered);
+  } else {
+    setApiFilteredProducts(baseApiProducts);
+  }
+}, [filters, baseApiProducts, categoryInfo.parentCategory, searchTerm]);
 
   // Add search methods
 const setSearch = useCallback((term) => {

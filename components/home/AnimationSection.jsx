@@ -113,9 +113,9 @@ const AnimationSection = () => {
   return (
     <div
       ref={ref}
-      className="max-w-[1550px] mx-auto mb-[53px] relative lg:h-[700px]"
+      className="w-full mx-auto mb-[53px] relative lg:h-[700px] 2xl:py-[50px]"
     >
-      <div className="absolute top-[-50px] right-[20px] sm:top-[-80px] sm:right-[80px] z-30">
+      <div className="absolute top-[-50px] right-[20px] sm:top-[-80px] sm:right-[80px] 2xl:top-[5px] z-30">
         <Image src="list_top_image.svg" width={111} height={121} alt="" />
       </div>
 

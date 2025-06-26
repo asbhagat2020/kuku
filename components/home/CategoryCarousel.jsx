@@ -105,7 +105,7 @@ const CategoryCarousel = () => {
   const currentTitle = products[currentSlide]?.title.toUpperCase() || "T-SHIRT";
 
   return (
-    <div className="flex flex-col overflow-hidden px-[20px] md:px-0 ">
+    <div className="w-full mx-auto flex flex-col overflow-hidden px-[20px] md:px-0 ">
       <Slider ref={sliderRef} {...settings}>
         {products.map((item, index) => (
           <div className="relative" key={index}>

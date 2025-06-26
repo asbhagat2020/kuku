@@ -889,6 +889,11 @@ const Orders = () => {
 export default function DetailsSection({ data }) {
   console.log("data", data);
   const [products, setproducts] = useState([])
+   const details = useSelector((state) => state.auth.user);
+  const currentUserId = details?._id;
+  
+  // Check if this is the current user's profile
+  const isOwnProfile = currentUserId === data?._id;
 
   const getProductsByUser = async () => {
     const token = JSON.parse(Cookies.get("auth"));
@@ -1079,30 +1084,41 @@ export default function DetailsSection({ data }) {
     </div>
   }
 
-  const tabs = [
+  const baseTabs = [
     { label: "Selling", component: SellingCards, data: products, count: "" },
     { label: "Sold", component: SoldCards, data: soldData, count: "" },
     { label: "Reviews", component: ReviewCards, data: reviewData, count: "" },
     { label: "Stats", component: StatsCards, data: statsData, count: "" },
     { label: "Orders", component: Orders, data: orderData, count: "" },
-    { label: "Add Products", component: AddProductComponent }
   ];
 
-
+  // Only add "Add Products" tab if viewing own profile
+  const tabs = isOwnProfile 
+    ? [...baseTabs, { label: "Add Products", component: AddProductComponent }]
+    : baseTabs;
 
   const [selectedTab, setSelectedTab] = useState(tabs[0]);
 
+  // Update selectedTab if tabs change (when isOwnProfile changes)
+  useEffect(() => {
+    // If current selected tab is "Add Products" but user is no longer viewing own profile
+    if (selectedTab.label === "Add Products" && !isOwnProfile) {
+      setSelectedTab(tabs[0]); // Reset to first tab
+    }
+  }, [isOwnProfile, tabs]);
+
   return (
     <div className="mt-24 flex flex-col items-center">
-      <nav className=" w-full max-w-[1300px]">
+      <nav className="w-full max-w-[1300px]">
         <ul className="flex relative">
           {tabs.map((item) => (
             <li
               key={item.label}
-              className={`w-full p-3 text-center cursor-pointer relative text-[#383838] lg:text-2xl font-normal font-karla leading-[28.80px] ${selectedTab.label === item.label
-                ? "border-b-[5px] border-[#fde504]"
-                : ""
-                }`}
+              className={`w-full p-3 text-center cursor-pointer relative text-[#383838] lg:text-2xl font-normal font-karla leading-[28.80px] ${
+                selectedTab.label === item.label
+                  ? "border-b-[5px] border-[#fde504]"
+                  : ""
+              }`}
               onClick={() => setSelectedTab(item)}
             >
               {item.label} {item.count ? `(${item.count})` : ""}

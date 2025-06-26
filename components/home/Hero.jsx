@@ -31,7 +31,7 @@ const Hero = () => {
     };
 
     return (
-        <div className='relative max-w-[1550px] mx-auto h-[1024px] bg-gradient-to-l from-[#F3B202] via-[#F4B202] to-[#EDA702] overflow-hidden pb-5'>
+        <div className='relative w-full mx-auto h-[1024px] 2xl-[1400px] bg-gradient-to-l from-[#F3B202] via-[#F4B202] to-[#EDA702] overflow-hidden pb-5'>
             <div className='absolute top-10 left-0 w-full h-[90%]'>
                 <Image unoptimized={true} src='/home_bg.png' layout='fill' objectFit='cover' alt='home_bg' />
             </div>

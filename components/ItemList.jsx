@@ -16,7 +16,7 @@ const ItemList = () => {
 
   const [brands, setBrands] = useState([]);
   const [categories, setCategories] = useState({});
-  const [conditions, setConditions] = useState([]);
+  // const [conditions, setConditions] = useState([]);
   const [sizes, setSizes] = useState([]);
   const [selectedGender, setSelectedGender] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
@@ -65,7 +65,7 @@ const ItemList = () => {
     category: "",
     subCategory: "",
     gender: "",
-    condition: "",
+    // condition: "",
     brand: "",
     size: "",
     usage: "",
@@ -92,20 +92,21 @@ const ItemList = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [brandsRes, categoriesRes, conditionsRes, sizesRes] =
+        // const [brandsRes, categoriesRes, conditionsRes, sizesRes] =
+        const [brandsRes, categoriesRes, sizesRes] =
           await Promise.all([
             axios.get(
               `${process.env.NEXT_PUBLIC_API_BASE_URL}/brands/getbrand`
             ),
             axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/category`),
-            axios.get(
-              `${process.env.NEXT_PUBLIC_API_BASE_URL}/conditions/getcondition`
-            ),
+            // axios.get(
+            //   `${process.env.NEXT_PUBLIC_API_BASE_URL}/conditions/getcondition`
+            // ),
             axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/sizes/getSizes`),
           ]);
 
         setBrands(brandsRes.data.brands || []);
-        setConditions(conditionsRes.data.conditions || []);
+        // setConditions(conditionsRes.data.conditions || []);
         setSizes(sizesRes.data.sizes || []);
 
         // Process categories
@@ -175,7 +176,7 @@ const ItemList = () => {
       newErrors.description = "Description is required";
     if (!formData.category.trim()) newErrors.category = "Category is required";
     if (!formData.gender) newErrors.gender = "gender is required";
-    if (!formData.condition) newErrors.condition = "condition is required";
+    // if (!formData.condition) newErrors.condition = "condition is required";
     if (!formData.brand) newErrors.brand = "Brand is required";
     if (!formData.size) newErrors.size = "Size is required";
     if (!formData.usage) newErrors.usage = "Usage is required";
@@ -262,7 +263,7 @@ const ItemList = () => {
           images: imageUrl,
           price: Number(formData.price),
           description: formData.description,
-          condition: formData.condition, // This should be the condition._id
+          // condition: formData.condition, 
           brand: formData.brand, // This should be the brand._id
           category: {
             parentCategory: selectedGender, // "Men", "Women", or "Kid"
@@ -662,7 +663,7 @@ const ItemList = () => {
                 </select>
               </div>
 
-              <div>
+              {/* <div>
                 <label className="block text-[#151515] text-base font-bold font-karla mb-2">
                   Condition
                 </label>
@@ -680,7 +681,7 @@ const ItemList = () => {
                     </option>
                   ))}
                 </select>
-              </div>
+              </div> */}
 
               <div>
                 <label className="block text-[#151515] text-base font-bold font-karla mb-2">
@@ -737,6 +738,7 @@ const ItemList = () => {
                   <option value="">Select usage</option>
                   <option value="Used Once">Used Once</option>
                   <option value="Rarely Used">Rarely Used</option>
+                  <option value="Well Used">Well Used</option>
                   <option value="Never Used">Never Used</option>
                 </select>
                 {errors.usage && (

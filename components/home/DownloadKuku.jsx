@@ -3,14 +3,13 @@ import React from "react";
 import { useMediaQuery } from "@mui/material"; // Import useMediaQuery from Material-UI
 import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
-import { openPopup, closePopup } from '../../store/popup/popupSlice';
+import { openPopup, closePopup } from "../../store/popup/popupSlice";
 import Popup from "./Popup";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 
 const DownloadKuku = () => {
-  
   const router = useRouter();
   const token = Cookies.get("auth") ? JSON.parse(Cookies.get("auth")) : null;
 
@@ -22,10 +21,9 @@ const DownloadKuku = () => {
     if (!token) {
       toast.success("please login");
       setTimeout(() => {
-        router.push("/login")
-      }, [500])
-    }
-    else{
+        router.push("/login");
+      }, [500]);
+    } else {
       dispatch(openPopup());
     }
   };
@@ -35,8 +33,10 @@ const DownloadKuku = () => {
   };
 
   return (
+    // <div
+    //   className="w-full mx-auto h-[890px] px-[70px] mb-[0px]"
     <div
-      className="max-w-[1550px] mx-auto h-[890px] px-[70px] mb-[0px]"
+      className="w-full mx-auto px-[70px] mb-0 h-[600px] sm:h-[700px] md:h-[800px] lg:h-[890px] xl:h-[1100px] 2xl:h-[1350px]"
       style={{
         backgroundImage: "url('/download_bg3.png')",
         backgroundSize: "cover",
@@ -56,7 +56,7 @@ const DownloadKuku = () => {
           <Image width={80} height={80} src="/round.svg" alt="" />
           <div className="w-[346px] text-center text-[#fde504] text-[46px] font-normal font-luckiest leading-[55.20px]">
             Clear your wardrobe and
-            <button onClick={handleSellNowClick} >Sell Now</button>
+            <button onClick={handleSellNowClick}>Sell Now</button>
           </div>
         </div>
         {/* Right Dress Image - Hidden on Mobile and Tablet */}
@@ -68,10 +68,11 @@ const DownloadKuku = () => {
       </div>
       {/* Conditional stacking for mobile view */}
       <div
-        className={`flex ${isMobileOrTablet
+        className={`flex ${
+          isMobileOrTablet
             ? "flex-col items-center"
             : "justify-center ml-3.5 gap-[150px]"
-          } pt-[41px]`}
+        } pt-[41px]`}
       >
         {/* <Link href={"#"}>
           <Image

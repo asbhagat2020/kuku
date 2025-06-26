@@ -7,7 +7,7 @@ const CategoryCarousel = dynamic(() => import('@/components/home/CategoryCarouse
 
 const Categories = () => {
     return (
-        <div className='max-w-[1550px] mx-auto h-[939px]  py-[100px]'
+        <div className='w-full mx-auto h-[939px]  py-[100px]'
         style={{ backgroundImage: "url('/category_bg.png')", backgroundSize: 'cover', backgroundPosition: 'center' }}
         >
             <div className='flex flex-col items-center px-[20px]'>
