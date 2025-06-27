@@ -129,7 +129,6 @@
 //           {/* Section 3 */}
 //           <div className="w-[328px] h-[165px] relative rounded-xl border border-[#e0e0e0] flex flex-col p-4">
 
-            
 //             <div className="flex items-start gap-2">
 //               <Image src="/green-tick.png" alt="tick" width={18} height={18} />
 //               <span className="text-[#070707] text-base font-normal leading-tight">
@@ -176,8 +175,6 @@
 // };
 
 // export default Popup;
-
-
 
 import { useState } from "react";
 import Link from "next/link";
@@ -254,13 +251,13 @@ const Popup = ({ isOpen, onClose }) => {
             <div className="flex items-center">
               <Image src="/green-tick.png" alt="tick" width={18} height={18} />
               <span className="ml-2 text-[#070707] text-base font-normal leading-tight">
-                You click photos and pack order
+                You schedule pick up.
               </span>
             </div>
             <div className="flex items-center mt-2">
               <Image src="/green-tick.png" alt="tick" width={18} height={18} />
               <span className="ml-2 text-[#070707] text-base font-normal leading-tight">
-                We pick up order at your doorstep
+                We do the rest
               </span>
             </div>
             <div className="text-[#070707]/30 text-xs font-normal mt-2 mb-2">
@@ -307,7 +304,9 @@ const Popup = ({ isOpen, onClose }) => {
             <div className="flex items-start gap-2">
               <Image src="/green-tick.png" alt="tick" width={18} height={18} />
               <span className="text-[#070707] text-base font-normal leading-tight">
-                {"Don't want to sell? Schedule pick up and we repurpose/recycle or give it for charity."}
+                {
+                  "Don't want to sell? Schedule pick up and we repurpose/recycle or give it for charity."
+                }
               </span>
             </div>
 
