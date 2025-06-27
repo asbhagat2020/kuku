@@ -1112,7 +1112,7 @@ const NotificationPanel = ({ onClose }) => {
               </p>
               <div className="flex justify-between text-sm text-gray-700 mb-2">
                 {/* <p>Seller's Offer</p> */}
-                <p>Buyer&apos;s Offer</p>
+                <p>Seller&apos;s Offer</p>
                 <p className="font-bold text-[#FDE504]">
                   {currentOffer?.product?.price}
                 </p>
@@ -1122,7 +1122,8 @@ const NotificationPanel = ({ onClose }) => {
                   key={index}
                   className="flex justify-between text-sm text-gray-700"
                 >
-                  <p>Buyer's Offer</p>
+                  {/* <p>Buyer's Offer</p> */}
+                  <p>Buyer&apos;s Offer</p>
                   <p className="font-bold text-[#FDE504]">{history?.Amount}</p>
                 </div>
               ))}
