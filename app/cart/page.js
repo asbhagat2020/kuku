@@ -1364,8 +1364,12 @@ export default function Cart() {
                             Min purchase: AED {coupon.minPurchase}
                           </div>
                           {applicabilityCheck.applicable && (
+                            // <div className="text-xs text-green-600 font-medium">
+                            //   You'll save: AED {potentialDiscount.toFixed(2)}
+                            // </div>
                             <div className="text-xs text-green-600 font-medium">
-                              You'll save: AED {potentialDiscount.toFixed(2)}
+                              You&apos;ll save: AED{" "}
+                              {potentialDiscount.toFixed(2)}
                             </div>
                           )}
                           {!applicabilityCheck.applicable && (
