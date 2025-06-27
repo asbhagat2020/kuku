@@ -1146,7 +1146,7 @@ const NotificationPanel = ({ onClose }) => {
                     htmlFor="terms"
                     className="text-sm text-gray-600 leading-tight"
                   >
-                    I agree to the terms and conditions by KUKU.{" "}
+                    I agree to the terms and conditions by KUKU.
                     <a href="#" className="text-[#FDE504] underline">
                       Click here to know more
                     </a>
@@ -1165,7 +1165,7 @@ const NotificationPanel = ({ onClose }) => {
                   htmlFor="terms"
                   className="text-sm text-gray-600 leading-tight"
                 >
-                  I agree to the terms and conditions by KUKU.{" "}
+                  I agree to the terms and conditions by KUKU.
                   <a href="#" className="text-[#FDE504] underline">
                     Click here to know more
                   </a>
