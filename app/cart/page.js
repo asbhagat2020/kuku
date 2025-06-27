@@ -612,10 +612,6 @@
 //   );
 // }
 
-
-
-
-
 "use client";
 
 import Link from "next/link";
@@ -631,6 +627,7 @@ import Cookies from "js-cookie";
 import AddressList from "@/components/userProfile/AddressList";
 import CartAddress from "@/components/userProfile/CartAddress";
 import toast from "react-hot-toast";
+import Image from "next/image";
 
 export default function Cart() {
   const [isCouponPopupVisible, setIsCouponPopupVisible] = useState(false);
@@ -647,7 +644,7 @@ export default function Cart() {
   const [errorPopupOpen, setErrorPopupOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [showAddress, setShowAddress] = useState(true);
-  
+
   // New state for coupons
   const [coupons, setCoupons] = useState([]);
   const [couponCode, setCouponCode] = useState("");
@@ -664,20 +661,22 @@ export default function Cart() {
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/coupon/getCoupons`
       );
-      
+
       if (response.data && response.data.coupons) {
         // Filter active coupons and check date validity
-        const activeCoupons = response.data.coupons.filter(coupon => {
+        const activeCoupons = response.data.coupons.filter((coupon) => {
           const currentDate = new Date();
           const startDate = new Date(coupon.startDate);
           const endDate = new Date(coupon.endDate);
-          
-          return coupon.isActive && 
-                 currentDate >= startDate && 
-                 currentDate <= endDate &&
-                 coupon.usedCount < coupon.usageLimit;
+
+          return (
+            coupon.isActive &&
+            currentDate >= startDate &&
+            currentDate <= endDate &&
+            coupon.usedCount < coupon.usageLimit
+          );
         });
-        
+
         setCoupons(activeCoupons);
       }
     } catch (error) {
@@ -694,7 +693,7 @@ export default function Cart() {
     if (subtotal < coupon.minPurchase) {
       return {
         applicable: false,
-        reason: `Minimum purchase of AED ${coupon.minPurchase} required`
+        reason: `Minimum purchase of AED ${coupon.minPurchase} required`,
       };
     }
 
@@ -702,7 +701,7 @@ export default function Cart() {
     if (coupon.usedCount >= coupon.usageLimit) {
       return {
         applicable: false,
-        reason: "Coupon usage limit exceeded"
+        reason: "Coupon usage limit exceeded",
       };
     }
 
@@ -710,11 +709,11 @@ export default function Cart() {
     const currentDate = new Date();
     const startDate = new Date(coupon.startDate);
     const endDate = new Date(coupon.endDate);
-    
+
     if (currentDate < startDate || currentDate > endDate) {
       return {
         applicable: false,
-        reason: "Coupon has expired or not yet active"
+        reason: "Coupon has expired or not yet active",
       };
     }
 
@@ -760,10 +759,10 @@ export default function Cart() {
       return sum;
     }, 0);
     setSubtotal(total);
-    
+
     // Recalculate discount if coupon is applied
     if (isCouponApplied && appliedCoupon) {
-      const coupon = coupons.find(c => c.code === appliedCoupon);
+      const coupon = coupons.find((c) => c.code === appliedCoupon);
       if (coupon) {
         const newDiscount = calculateDiscount(coupon, total);
         setDiscount(newDiscount);
@@ -839,7 +838,7 @@ export default function Cart() {
       console.log("API Response received:", {
         status: response.status,
         statusText: response.statusText,
-        data: response.data
+        data: response.data,
       });
 
       // Handle successful response
@@ -869,17 +868,18 @@ export default function Cart() {
       // If we got here, something is wrong with the response
       console.error("Invalid response structure:", response.data);
       throw new Error("Invalid response from server");
-
     } catch (error) {
       console.error("Checkout Error Details:", {
         message: error.message,
         responseData: error.response?.data,
         responseStatus: error.response?.status,
-        stack: error.stack
+        stack: error.stack,
       });
 
       setErrorMessage(
-        error.response?.data?.message || error.message || "Failed to process checkout"
+        error.response?.data?.message ||
+          error.message ||
+          "Failed to process checkout"
       );
       setErrorPopupOpen(true);
     } finally {
@@ -896,15 +896,19 @@ export default function Cart() {
 
   const handleRemove = async (item) => {
     try {
-      let id = item.productId
-      let _id = item._id
-      const token = JSON.parse(Cookies.get('auth'));
-      const res = await axios.put(`${process.env.NEXT_PUBLIC_API_BASE_URL}/cart/remove/${id}`, {},{
-        headers: {
-          Authorization: `Bearer ${token}`
+      let id = item.productId;
+      let _id = item._id;
+      const token = JSON.parse(Cookies.get("auth"));
+      const res = await axios.put(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/cart/remove/${id}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
-      });
-      let newUpdatedData = cart.filter((el => el.productId !== id));
+      );
+      let newUpdatedData = cart.filter((el) => el.productId !== id);
 
       // Update selected items after removal
       setCart(newUpdatedData);
@@ -924,20 +928,20 @@ export default function Cart() {
     const coupon = coupons.find((c) => c.code === couponCode);
     if (coupon) {
       const applicabilityCheck = isCouponApplicable(coupon);
-      
+
       if (!applicabilityCheck.applicable) {
         toast.error(applicabilityCheck.reason);
         return;
       }
 
       const discountAmount = calculateDiscount(coupon, subtotal);
-      
+
       setAppliedCoupon(couponCode);
       setIsCouponPopupVisible(false);
       setisCouponApplied(true);
       setDiscount(discountAmount);
       setCouponCode(couponCode);
-      
+
       toast.success(`Coupon ${couponCode} applied successfully!`);
     } else {
       toast.error("Invalid coupon code");
@@ -951,21 +955,23 @@ export default function Cart() {
       return;
     }
 
-    const coupon = coupons.find((c) => c.code.toLowerCase() === couponCode.toLowerCase());
+    const coupon = coupons.find(
+      (c) => c.code.toLowerCase() === couponCode.toLowerCase()
+    );
     if (coupon) {
       const applicabilityCheck = isCouponApplicable(coupon);
-      
+
       if (!applicabilityCheck.applicable) {
         toast.error(applicabilityCheck.reason);
         return;
       }
 
       const discountAmount = calculateDiscount(coupon, subtotal);
-      
+
       setAppliedCoupon(coupon.code);
       setisCouponApplied(true);
       setDiscount(discountAmount);
-      
+
       toast.success(`Coupon ${coupon.code} applied successfully!`);
     } else {
       toast.error("Invalid coupon code");
@@ -1005,7 +1011,7 @@ export default function Cart() {
       const response = await axios.post(
         // `${process.env.NEXT_PUBLIC_API_BASE_URL}/product/wishlist/${id}`,
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/wishlist/add`,
-        {productId:id},
+        { productId: id },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -1076,10 +1082,18 @@ export default function Cart() {
                       <span className="checkmark"></span>
                     </label>
 
-                    <img
+                    {/* <img
                       className="w-24 h-auto md:w-[159.2px] rounded-md"
                       src={item?.image}
                       alt="Product"
+                    /> */}
+
+                    <Image
+                      className="rounded-md"
+                      src={item?.image}
+                      alt="Product"
+                      width={159} // set appropriate width
+                      height={200} // set appropriate height
                     />
 
                     <div className="flex flex-col justify-start items-start gap-3 w-full">
@@ -1099,7 +1113,7 @@ export default function Cart() {
                           </div>
                           <div className="inline-flex border border-[#e4086f] justify-center items-center px-2 py-1">
                             <div className="text-[#e4086f] text-sm md:text-[16px] font-normal font-karla">
-                              {item?.size || 'N/A'}
+                              {item?.size || "N/A"}
                             </div>
                           </div>
                         </div>
@@ -1109,7 +1123,7 @@ export default function Cart() {
                             CONDITION:
                           </span>
                           <span className="text-[#383838] text-sm md:text-[16px] font-bold font-karla">
-                            {item?.condition || 'N/A'}
+                            {item?.condition || "N/A"}
                           </span>
                         </div>
                       </div>
@@ -1196,10 +1210,12 @@ export default function Cart() {
                         type="text"
                         placeholder="Add coupon"
                         value={couponCode}
-                        onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
+                        onChange={(e) =>
+                          setCouponCode(e.target.value.toUpperCase())
+                        }
                         className="w-[150px] md:w-[200px] h-[36px] p-2 border border-[#b4b4b4] rounded-lg text-sm font-karla outline-[#e4086f] outline-4"
                       />
-                      <button 
+                      <button
                         onClick={handleApplyCouponFromInput}
                         className="text-[#e4086f] text-sm md:text-[16px] font-medium hover:underline"
                       >
@@ -1248,7 +1264,7 @@ export default function Cart() {
                     </div>
                   </button>
 
-                  <div className="flex justify-around mt-3">
+                  {/* <div className="flex justify-around mt-3">
                     <img className="h-5" src="/payment1.png" alt="Payment1" />
                     <img
                       className="h-5"
@@ -1257,6 +1273,37 @@ export default function Cart() {
                     />
                     <img className="h-5" src="/paypal.png" alt="PayPal" />
                     <img className="h-5" src="/visa.png" alt="Visa" />
+                  </div> */}
+
+                  <div className="flex justify-around mt-3">
+                    <Image
+                      className="h-5"
+                      src="/payment1.png"
+                      alt="Payment1"
+                      width={40} // Add appropriate width
+                      height={20} // Add appropriate height
+                    />
+                    <Image
+                      className="h-5"
+                      src="/mastercard.png"
+                      alt="MasterCard"
+                      width={40}
+                      height={20}
+                    />
+                    <Image
+                      className="h-5"
+                      src="/paypal.png"
+                      alt="PayPal"
+                      width={40}
+                      height={20}
+                    />
+                    <Image
+                      className="h-5"
+                      src="/visa.png"
+                      alt="Visa"
+                      width={40}
+                      height={20}
+                    />
                   </div>
                 </div>
               </div>
@@ -1290,27 +1337,28 @@ export default function Cart() {
                 {coupons.map((coupon) => {
                   const applicabilityCheck = isCouponApplicable(coupon);
                   const potentialDiscount = calculateDiscount(coupon, subtotal);
-                  
+
                   return (
                     <li
                       key={coupon._id}
                       className={`border p-3 rounded-lg ${
-                        applicabilityCheck.applicable 
-                          ? 'border-green-200 bg-green-50' 
-                          : 'border-red-200 bg-red-50'
+                        applicabilityCheck.applicable
+                          ? "border-green-200 bg-green-50"
+                          : "border-red-200 bg-red-50"
                       }`}
                     >
                       <div className="flex justify-between items-start">
                         <div className="flex-1">
-                          <div className="font-semibold text-lg">{coupon.code}</div>
+                          <div className="font-semibold text-lg">
+                            {coupon.code}
+                          </div>
                           <div className="text-sm text-gray-600 mb-1">
                             {coupon.description}
                           </div>
                           <div className="text-xs text-gray-500">
-                            {coupon.discountType === "Percentage" 
+                            {coupon.discountType === "Percentage"
                               ? `${coupon.discountValue}% off (max AED ${coupon.maxDiscount})`
-                              : `AED ${coupon.discountValue} off`
-                            }
+                              : `AED ${coupon.discountValue} off`}
                           </div>
                           <div className="text-xs text-gray-500">
                             Min purchase: AED {coupon.minPurchase}
@@ -1331,8 +1379,8 @@ export default function Cart() {
                           disabled={!applicabilityCheck.applicable}
                           className={`px-4 py-2 rounded-lg ml-2 ${
                             applicabilityCheck.applicable
-                              ? 'bg-[#e4086f] text-white hover:bg-[#c5076b]'
-                              : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                              ? "bg-[#e4086f] text-white hover:bg-[#c5076b]"
+                              : "bg-gray-300 text-gray-500 cursor-not-allowed"
                           }`}
                         >
                           Apply
@@ -1384,12 +1432,7 @@ export default function Cart() {
   );
 }
 
-
-
-
-
 //Payment Integration code
-
 
 // "use client";
 
@@ -1525,7 +1568,7 @@ export default function Cart() {
 //     const stripe = await stripePromise;
 
 //     console.log("Stripe session:", session); // Debug log
-    
+
 //     // Redirect to Stripe checkout
 //     if (session?.id) {
 //       const { error } = await stripe.redirectToCheckout({
