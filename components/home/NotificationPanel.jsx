@@ -518,16 +518,27 @@ const NotificationPanel = ({ onClose }) => {
 
   const toggleTab = (tab) => setActiveTab(tab);
 
+  // const handleClickOutside = (event) => {
+  //   if (panelRef.current && !panelRef.current.contains(event.target)) {
+  //     onClose();
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   document.addEventListener("mousedown", handleClickOutside);
+  //   return () => document.removeEventListener("mousedown", handleClickOutside);
+  // }, []);
+
+  useEffect(() => {
   const handleClickOutside = (event) => {
     if (panelRef.current && !panelRef.current.contains(event.target)) {
       onClose();
     }
   };
 
-  useEffect(() => {
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+  document.addEventListener("mousedown", handleClickOutside);
+  return () => document.removeEventListener("mousedown", handleClickOutside);
+}, [onClose]);
 
   const openPopup = (offer) => {
     setCurrentOffer(offer);
@@ -1100,7 +1111,8 @@ const NotificationPanel = ({ onClose }) => {
                 Price Information
               </p>
               <div className="flex justify-between text-sm text-gray-700 mb-2">
-                <p>Seller's Offer</p>
+                {/* <p>Seller's Offer</p> */}
+                <p>Buyer&apos;s Offer</p>
                 <p className="font-bold text-[#FDE504]">
                   {currentOffer?.product?.price}
                 </p>
