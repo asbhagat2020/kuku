@@ -1,10 +1,11 @@
 
 
+
 "use client";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
-import Modal from "./Modal"; // Adjust the import path as needed
-import Link from "next/link";
+import Modal from "./Modal";
+import ShareModal from "./ShareModal"; // Import the ShareModal component
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import Cookies from "js-cookie";
@@ -13,16 +14,18 @@ import FollowersModal from "./FollowersModal"; // Import the new modal component
 
 const ProfileSection = (userDetails) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false); // Add state for share modal
   const [isFollowersModalOpen, setIsFollowersModalOpen] = useState(false);
   const [isFollowingModalOpen, setIsFollowingModalOpen] = useState(false);
   const [modalType, setModalType] = useState(""); // "followers" or "following"
   const [imageSrc, setImageSrc] = useState("/kuku-suit 2.png");
   const [image, setImage] = useState("/kuku-suit 2.png");
-  const [loading, setLoading] = useState();
   const [error, setError] = useState();
   const [successMessage, setSuccessMessage] = useState("");
   const [user, setUser] = useState(userDetails);
   const [hasSelectedNewImage, setHasSelectedNewImage] = useState(false);
+  const [followLoading, setFollowLoading] = useState(false); // Separate loading state for follow button
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
   console.log(user);
 
   const details = useSelector((state) => state.auth.user);
@@ -52,6 +55,15 @@ const ProfileSection = (userDetails) => {
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setHasSelectedNewImage(false);
+  };
+
+  // Add handlers for share modal
+  const handleShareClick = () => {
+    setIsShareModalOpen(true);
+  };
+
+  const handleCloseShareModal = () => {
+    setIsShareModalOpen(false);
   };
 
   // New handlers for followers/following modals
@@ -146,29 +158,6 @@ const ProfileSection = (userDetails) => {
     }
   };
 
-  const fetchProfileData = async () => {
-    try {
-      const token = JSON.parse(Cookies.get("auth"));
-      const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/profile/${user.user._id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      setUser(response.data);
-      console.log("Fetched profile data:", response.data);
-      setFormData({
-        ...response.data.user,
-        description: response.data.user?.Discription || "",
-      });
-    } catch (error) {
-      console.error("Error fetching profile data:", error);
-      setError("Failed to fetch updated profile data");
-    }
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     const errors = validateForm();
@@ -234,13 +223,16 @@ const ProfileSection = (userDetails) => {
     }
   };
 
-  const handleFollow = async (id, type) => {
-    setLoading(true);
+  // Updated toggle follow function
+  const handleToggleFollow = async (followerId) => {
+    setFollowLoading(true);
+    setError(null);
 
     try {
       const token = JSON.parse(Cookies.get("auth"));
-      const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/profile/${type}/${id}`;
-      const res = await axios.post(
+      const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/profile/toggleFollowUser/${followerId}`;
+
+      const response = await axios.post(
         url,
         {},
         {
@@ -250,9 +242,23 @@ const ProfileSection = (userDetails) => {
         }
       );
 
-      const updatedFollowers = res.data.followers;
-      console.log("updatedFollowers", updatedFollowers);
+      console.log("Toggle follow response:", response.data);
 
+      // Update the followers list based on current status
+      const currentlyFollowing = user?.user?.followers?.includes(id);
+      let updatedFollowers;
+
+      if (currentlyFollowing) {
+        // If currently following, remove from followers list
+        updatedFollowers = user.user.followers.filter(
+          (followerId) => followerId !== id
+        );
+      } else {
+        // If not following, add to followers list
+        updatedFollowers = [...(user.user.followers || []), id];
+      }
+
+      // Update the user state
       setUser({
         ...user,
         user: {
@@ -260,10 +266,27 @@ const ProfileSection = (userDetails) => {
           followers: updatedFollowers,
         },
       });
+
+      // ✅ ADD THIS: Trigger refresh for followers modal
+      setRefreshTrigger((prev) => prev + 1);
+
+      // Show success message
+      setSuccessMessage(
+        !currentlyFollowing
+          ? "Successfully followed user!"
+          : "Successfully unfollowed user!"
+      );
+      setTimeout(() => {
+        setSuccessMessage("");
+      }, 3000);
     } catch (error) {
-      console.error("Error while following/unfollowing", error);
+      console.error("Error while toggling follow status:", error);
+      setError("Failed to update follow status. Please try again.");
+      setTimeout(() => {
+        setError(null);
+      }, 3000);
     } finally {
-      setLoading(false);
+      setFollowLoading(false);
     }
   };
 
@@ -282,7 +305,13 @@ const ProfileSection = (userDetails) => {
   const showRemoveButton =
     hasSelectedNewImage || (formData.avatar && !hasSelectedNewImage);
 
+  // Check if current user is following this profile
+  const isFollowing = user?.user?.followers?.includes(id);
+
   console.log("user", user);
+  console.log("Current user ID:", id);
+  console.log("Profile followers:", user?.user?.followers);
+  console.log("Is following:", isFollowing);
 
   return (
     <div className="max-w-[1550px] mx-auto">
@@ -308,14 +337,13 @@ const ProfileSection = (userDetails) => {
             <div className="flex flex-wrap sm:flex-nowrap px-4 sm:px-6 md:px-8 lg:px-12 xl:px-[64px] pt-12 sm:pt-16 md:pt-20 lg:pt-24 xl:pt-[93px] gap-2 sm:gap-3 md:gap-4 lg:gap-6 xl:gap-[52px]">
               {/* Name and Username */}
               <div className="flex flex-col min-w-0 flex-1 sm:flex-none">
-               
                 <p className="text-black/60 text-sm sm:text-base md:text-lg lg:text-lg xl:text-[20px] font-normal font-karla truncate mt-4">
                   {user?.user?.username}
                 </p>
               </div>
 
               {/* Followers - Now clickable */}
-              <div 
+              <div
                 className="flex flex-col text-center sm:text-left cursor-pointer hover:bg-gray-50 p-2 rounded transition-colors"
                 onClick={handleFollowersClick}
               >
@@ -328,7 +356,7 @@ const ProfileSection = (userDetails) => {
               </div>
 
               {/* Following - Now clickable */}
-              <div 
+              <div
                 className="flex flex-col text-center sm:text-left cursor-pointer hover:bg-gray-50 p-2 rounded transition-colors"
                 onClick={handleFollowingClick}
               >
@@ -362,9 +390,12 @@ const ProfileSection = (userDetails) => {
 
             {/* Action Buttons */}
             <div className="px-4 sm:px-6 md:px-8 lg:px-12 xl:px-[65px] flex flex-col sm:flex-row gap-3 sm:gap-4 md:gap-6 mt-auto pb-6 sm:pb-8">
-              {/* Share Button */}
-              <div className="flex-1 sm:flex-none sm:w-[200px] md:w-[220px] lg:w-[240px] xl:w-[252px] h-10 sm:h-[39.40px] p-3 sm:p-[13.70px] rounded-[20px] border border-[#b25cf3] flex justify-center items-center">
-                <div className="text-[#b25cf3] text-base sm:text-lg md:text-[19.18px] font-bold font-karla">
+              {/* Share Button - Made clickable */}
+              <div 
+                className="flex-1 sm:flex-none sm:w-[200px] md:w-[220px] lg:w-[240px] xl:w-[252px] h-10 sm:h-[39.40px] p-3 sm:p-[13.70px] rounded-[20px] border border-[#b25cf3] flex justify-center items-center cursor-pointer hover:bg-[#b25cf3] hover:text-white transition-colors"
+                onClick={handleShareClick}
+              >
+                <div className="text-[#b25cf3] hover:text-white transition-colors text-base sm:text-lg md:text-[19.18px] font-bold font-karla">
                   Share
                 </div>
               </div>
@@ -382,18 +413,23 @@ const ProfileSection = (userDetails) => {
               ) : (
                 <button
                   className={`flex-1 sm:flex-none sm:w-[200px] md:w-[220px] lg:w-[240px] xl:w-[250px] h-10 sm:h-[39.40px] px-4 py-2 ${
-                    user?.user?.followers?.includes(id)
-                      ? "bg-gray-500"
-                      : "bg-[#2fbc74]"
-                  } text-white rounded-[20px] font-bold font-karla`}
-                  onClick={() =>
-                    user?.user?.followers?.includes(id)
-                      ? handleFollow(user.user._id, "unfollow", user?.user?._id)
-                      : handleFollow(user.user._id, "follow", user?.user?._id)
-                  }
-                  disabled={loading}
+                    isFollowing
+                      ? "bg-gray-500 hover:bg-gray-600"
+                      : "bg-[#2fbc74] hover:bg-[#25a866]"
+                  } text-white rounded-[20px] font-bold font-karla transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed`}
+                  onClick={() => handleToggleFollow(user?.user?._id)}
+                  disabled={followLoading}
                 >
-                  {user?.user?.followers?.includes(id) ? "Unfollow" : "Follow"}
+                  {followLoading ? (
+                    <div className="flex items-center justify-center">
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                      {isFollowing ? "Unfollowing..." : "Following..."}
+                    </div>
+                  ) : isFollowing ? (
+                    "Unfollow"
+                  ) : (
+                    "Follow"
+                  )}
                 </button>
               )}
             </div>
@@ -411,18 +447,6 @@ const ProfileSection = (userDetails) => {
                   {user?.user?.Discription || "No description provided"}
                 </p>
               </div>
-
-              {/* Location */}
-              {/* <div>
-                <p className="text-black text-sm sm:text-base font-bold font-karla leading-tight mb-2">
-                  Lives In
-                </p>
-                <p className="text-[#515151] text-sm sm:text-base font-medium font-karla leading-normal">
-                  {user?.user?.defaultAddress?.[0]}
-                </p>
-              </div> */}
-
-              {/* Join Date */}
               <div>
                 <p className="text-black text-sm sm:text-base font-bold font-karla leading-tight mb-2">
                   Joined Kuku
@@ -436,73 +460,122 @@ const ProfileSection = (userDetails) => {
         </div>
       </div>
 
+      {/* Share Modal */}
+      <ShareModal
+        isOpen={isShareModalOpen}
+        onClose={handleCloseShareModal}
+        userDetails={user}
+      />
+
       {/* Edit Profile Modal */}
-      <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
-        <div
-          className="flex flex-col items-center p-4 sm:p-6 max-h-[90vh] overflow-y-auto scrollbar-hide"
-          style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-        >
-          <h2 className="text-[#070707] text-lg sm:text-xl md:text-[22.91px] font-bold font-karla leading-7 pb-4 sm:pb-6 md:pb-8 text-center">
-            Edit Profile
-          </h2>
-
-          {/* Profile Image Section */}
-          <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-[114px] md:h-[114px] rounded-full bg-[#fde504] flex justify-center items-center relative mb-4 sm:mb-6 flex-shrink-0">
-            <Image
-              unoptimized
-              width={80}
-              height={80}
-              className="w-20 h-20 sm:w-24 sm:h-24 md:w-[100px] md:h-[100px] rounded-full object-cover"
-              src={
-                typeof window !== "undefined" && formData.avatar instanceof File
-                  ? URL.createObjectURL(formData.avatar)
-                  : user?.user?.avatar
-                  ? user?.user?.avatar
-                  : imageSrc
-              }
-              alt="Profile Picture"
-            />
-
-            <input
-              type="file"
-              accept="image/*"
-              className="absolute inset-0 opacity-0 cursor-pointer"
-              onChange={handleImageChange}
-            />
-
-            {/* Edit Icon */}
-            <div className="absolute bottom-0 right-0 w-6 h-6 sm:w-7 sm:h-7 md:w-[30px] md:h-[30px] bg-white rounded-full flex justify-center items-center cursor-pointer shadow-sm">
-              <Image
-                className="cursor-pointer w-4 h-4 sm:w-5 sm:h-5"
-                unoptimized
-                width={20}
-                height={20}
-                src={"/edit.png"}
-                alt="Edit"
-              />
-              <input
-                type="file"
-                accept="image/*"
-                className="absolute inset-0 opacity-0 cursor-pointer"
-                onChange={handleImageChange}
-              />
-            </div>
-
-            {/* Remove Button */}
-            {hasSelectedNewImage && (
-              <button
-                onClick={handleRemoveImage}
-                className="absolute -bottom-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 sm:w-7 sm:h-7 flex items-center justify-center hover:bg-red-600 transition-colors text-sm sm:text-base shadow-sm"
-                type="button"
+      <Modal
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        showCloseButton={false}
+      >
+        {/* Responsive container - compact modal for all screen sizes */}
+        <div className="flex flex-col w-full max-w-xs mx-auto h-auto max-h-[85vh] sm:max-w-sm rounded-lg bg-white shadow-lg m-2 sm:m-4">
+          {/* Header - responsive padding and text size */}
+          <div className="flex items-center justify-between p-4 sm:p-4 lg:p-5 border-b border-gray-200 bg-white rounded-t-lg">
+            <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-black">
+              Edit Profile
+            </h2>
+            {/* Close button for modal */}
+            <button
+              onClick={handleCloseModal}
+              className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+              type="button"
+              aria-label="Close modal"
+            >
+              <svg
+                className="w-5 h-5 sm:w-6 sm:h-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
               >
-                ×
-              </button>
-            )}
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
           </div>
 
-          {/* Form Container with proper scrolling */}
-          <div className="w-full max-w-xs sm:max-w-sm md:max-w-md">
-            <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
+          {/* Form Container - with hidden scrollbar */}
+          <div 
+            className="flex-1 overflow-y-auto p-4 sm:p-4 lg:p-5 bg-white rounded-b-lg min-h-[200px] max-h-[70vh]"
+            style={{
+              msOverflowStyle: 'none',
+              scrollbarWidth: 'none'
+            }}
+          >
+            <style jsx>{`
+              div::-webkit-scrollbar {
+                display: none;
+              }
+            `}</style>
+            
+            {/* Profile Image Section */}
+            <div className="flex justify-center mb-4 sm:mb-6">
+              <div className="w-20 h-20 sm:w-24 sm:h-24 lg:w-28 lg:h-28 rounded-full bg-[#fde504] flex justify-center items-center relative flex-shrink-0">
+                <Image
+                  unoptimized
+                  width={80}
+                  height={80}
+                  className="w-full h-full rounded-full object-cover"
+                  src={
+                    typeof window !== "undefined" &&
+                    formData.avatar instanceof File
+                      ? URL.createObjectURL(formData.avatar)
+                      : user?.user?.avatar
+                      ? user?.user?.avatar
+                      : imageSrc
+                  }
+                  alt="Profile Picture"
+                />
+
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="absolute inset-0 opacity-0 cursor-pointer"
+                  onChange={handleImageChange}
+                />
+
+                {/* Edit Icon */}
+                <div className="absolute bottom-0 right-0 w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8 bg-white rounded-full flex justify-center items-center cursor-pointer shadow-sm border-2 border-gray-200">
+                  <Image
+                    className="cursor-pointer w-4 h-4 sm:w-5 sm:h-5"
+                    unoptimized
+                    width={20}
+                    height={20}
+                    src={"/edit.png"}
+                    alt="Edit"
+                  />
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="absolute inset-0 opacity-0 cursor-pointer"
+                    onChange={handleImageChange}
+                  />
+                </div>
+
+                {/* Remove Button */}
+                {hasSelectedNewImage && (
+                  <button
+                    onClick={handleRemoveImage}
+                    className="absolute -bottom-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 sm:w-7 sm:h-7 flex items-center justify-center hover:bg-red-600 transition-colors text-sm sm:text-base shadow-sm"
+                    type="button"
+                  >
+                    ×
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {/* Form Fields */}
+            <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-3">
               {/* Name Input */}
               <div>
                 <input
@@ -510,7 +583,7 @@ const ProfileSection = (userDetails) => {
                   name="name"
                   value={formData.name}
                   onChange={handleInputChange}
-                  className="border border-gray-200 rounded-[13px] w-full p-2 sm:p-3 bg-[#F7F7F7] text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
+                  className="w-full px-4 py-2 sm:px-4 sm:py-3 lg:px-4 lg:py-3 text-sm sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all bg-[#F7F7F7]"
                   placeholder="Full Name"
                 />
                 {formErrors.name && (
@@ -523,7 +596,7 @@ const ProfileSection = (userDetails) => {
               {/* Email Input */}
               <div>
                 <input
-                  className="border border-gray-200 rounded-[13px] w-full p-2 sm:p-3 bg-[#F7F7F7] text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
+                  className="w-full px-4 py-2 sm:px-4 sm:py-3 lg:px-4 lg:py-3 text-sm sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all bg-[#F7F7F7]"
                   placeholder="Email address"
                   type="email"
                   name="email"
@@ -544,7 +617,7 @@ const ProfileSection = (userDetails) => {
                   name="phone"
                   value={formData.phone}
                   onChange={handleInputChange}
-                  className="border border-gray-200 rounded-[13px] w-full p-2 sm:p-3 bg-[#F7F7F7] text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
+                  className="w-full px-4 py-2 sm:px-4 sm:py-3 lg:px-4 lg:py-3 text-sm sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all bg-[#F7F7F7]"
                   placeholder="Phone Number"
                 />
                 {formErrors.phone && (
@@ -558,8 +631,7 @@ const ProfileSection = (userDetails) => {
               <div>
                 <textarea
                   rows={3}
-                  className="border border-gray-200 rounded-[13px] w-full p-2 sm:p-3 bg-[#F7F7F7] resize-none text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent scrollbar-hide overflow-hidden"
-                  style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+                  className="w-full px-4 py-2 sm:px-4 sm:py-3 lg:px-4 lg:py-3 text-sm sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all bg-[#F7F7F7] resize-none min-h-[80px]"
                   placeholder="Description (optional)"
                   name="description"
                   value={formData.description}
@@ -576,8 +648,7 @@ const ProfileSection = (userDetails) => {
               <div>
                 <textarea
                   rows={3}
-                  className="border border-gray-200 rounded-[13px] w-full p-2 sm:p-3 bg-[#F7F7F7] resize-none text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent scrollbar-hide overflow-hidden"
-                  style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+                  className="w-full px-4 py-2 sm:px-4 sm:py-3 lg:px-4 lg:py-3 text-sm sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all bg-[#F7F7F7] resize-none min-h-[80px]"
                   placeholder="Address"
                   name="location"
                   value={formData.location}
@@ -591,10 +662,10 @@ const ProfileSection = (userDetails) => {
               </div>
 
               {/* Submit Button */}
-              <div className="pt-2 sm:pt-4">
+              <div className="pt-4 sm:pt-4 lg:pt-5">
                 <button
                   type="submit"
-                  className="bg-yellow-500 hover:bg-yellow-600 text-white rounded-[13px] px-4 py-2 sm:py-3 w-full font-medium text-sm sm:text-base transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-400"
+                  className="w-full px-4 py-2 sm:px-4 sm:py-3 lg:px-4 lg:py-3 text-sm sm:text-base bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-400 shadow-sm hover:shadow-md active:bg-yellow-700"
                 >
                   Save Details
                 </button>
@@ -610,6 +681,7 @@ const ProfileSection = (userDetails) => {
         onClose={handleCloseFollowersModal}
         type="followers"
         userId={user?.user?._id}
+        refreshTrigger={refreshTrigger}
       />
 
       {/* Following Modal */}
@@ -618,12 +690,20 @@ const ProfileSection = (userDetails) => {
         onClose={handleCloseFollowingModal}
         type="following"
         userId={user?.user?._id}
+        refreshTrigger={refreshTrigger}
       />
 
       {/* Success Notification */}
       {successMessage && (
         <div className="fixed top-4 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-4 sm:px-6 py-3 sm:py-4 rounded shadow-lg z-50 transition-opacity duration-500 text-sm sm:text-base max-w-[90vw] text-center">
           {successMessage}
+        </div>
+      )}
+
+      {/* Error Notification */}
+      {error && (
+        <div className="fixed top-4 left-1/2 transform -translate-x-1/2 bg-red-500 text-white px-4 sm:px-6 py-3 sm:py-4 rounded shadow-lg z-50 transition-opacity duration-500 text-sm sm:text-base max-w-[90vw] text-center">
+          {error}
         </div>
       )}
     </div>

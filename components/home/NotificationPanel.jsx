@@ -566,7 +566,7 @@ const NotificationPanel = ({ onClose }) => {
   // Dynamic API functions
   const fetchNotifications = async () => {
     try {
-      const token = JSON.parse(Cookies.get("auth"));
+      const token = JSON.parse(Cookies.get("auth")  || 'null');
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/notification`,
         {
@@ -598,7 +598,7 @@ const NotificationPanel = ({ onClose }) => {
 
   const fetchOffers = async () => {
     try {
-      const token = JSON.parse(Cookies.get("auth"));
+      const token = JSON.parse(Cookies.get("auth") || 'null');
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/offer/get`,
         {
@@ -617,7 +617,7 @@ const NotificationPanel = ({ onClose }) => {
 
   const markAsRead = async (notificationId) => {
     try {
-      const token = JSON.parse(Cookies.get("auth"));
+      const token = JSON.parse(Cookies.get("auth") || 'null');
       await axios.patch(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/notification/${notificationId}/read`,
         {},
@@ -653,7 +653,7 @@ const NotificationPanel = ({ onClose }) => {
 
   const deleteNotification = async (notificationId) => {
     try {
-      const token = JSON.parse(Cookies.get("auth"));
+      const token = JSON.parse(Cookies.get("auth") || 'null');
       await axios.delete(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/notification/${notificationId}`,
         { headers: { Authorization: `Bearer ${token}` } }
@@ -676,7 +676,7 @@ const NotificationPanel = ({ onClose }) => {
       return;
     }
     try {
-      const token = JSON.parse(Cookies.get("auth"));
+      const token = JSON.parse(Cookies.get("auth") || 'null');
       const data = { buyerID: offer?.buyer?._id, Amount: offer?.offerPrice };
       const response = await axios.patch(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/offer/reject/${offer?._id}`,
@@ -707,7 +707,7 @@ const NotificationPanel = ({ onClose }) => {
       return;
     }
     try {
-      const token = JSON.parse(Cookies.get("auth"));
+      const token = JSON.parse(Cookies.get("auth")  || 'null');
       const data = { buyerID: offer?.buyer?._id, Amount: offer?.offerPrice };
       const response = await axios.patch(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/offer/accept/${offer?._id}`,
