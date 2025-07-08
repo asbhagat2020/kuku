@@ -215,12 +215,12 @@ export const SellingProducts = ({ data }) => {
                   {card.images.map((imgSrc, imgIndex) => (
                     <div
                       key={imgIndex}
-                      className="w-[307px] h-[490px] flex items-center justify-center overflow-hidden rounded-md"
+                      className="w-[307px] h-[420px] flex items-center justify-center overflow-hidden rounded-md"
                     >
                       <Image
                         src={imgSrc}
                         width={307}
-                        height={490}
+                        height={420}
                         layout="fixed"
                         alt=""
                         className="w-full h-full object-cover rounded-xl"
