@@ -2820,7 +2820,6 @@ export default function Cart() {
     }
   };
 
-
   const prepareItemsForStripe = () => {
     const selectedProducts = cart.filter((item) => selectedItems[item._id]);
     const totalPrice = selectedProducts.reduce(
@@ -2857,344 +2856,176 @@ export default function Cart() {
     });
   };
 
-  // const handleCheckout = async () => {
-  //   setShowAddress(false);
-  //   try {
-  //     setLoading(true);
-  //     setProcessingPayment(true);
-  //     console.log("Starting checkout process...");
-  //     console.log("Auth Token:", token);
-  //     console.log("Cart:", cart);
-  //     console.log("Selected Items:", selectedItems);
-
-  //     if (!token) {
-  //       console.error("No auth token found");
-  //       setErrorMessage("Please log in to proceed with checkout");
-  //       setErrorPopupOpen(true);
-  //       return;
-  //     }
-
-  //     const selectedProducts = cart
-  //       .filter((item) => selectedItems[item._id])
-  //       .map((item) => ({
-  //         product: item.productId,
-  //         productName: item.name,
-  //         quantity: item.qty || 1,
-  //         price: item.price,
-  //         size: item.size || "",
-  //       }));
-
-  //     console.log("Selected Products:", selectedProducts);
-
-  //     if (selectedProducts.length === 0) {
-  //       console.log("No products selected");
-  //       setErrorMessage("Please select at least one item to checkout");
-  //       setErrorPopupOpen(true);
-  //       return;
-  //     }
-
-  //     if (!selectedAddress?._id) {
-  //       console.log("No shipping address selected");
-  //       setErrorMessage("Please select a shipping address before checking out");
-  //       setErrorPopupOpen(true);
-  //       return;
-  //     }
-
-  //     let user;
-  //     try {
-  //       user = JSON.parse(Cookies.get("user"));
-  //       console.log("User data retrieved:", user ? "Success" : "No user data");
-  //     } catch (cookieError) {
-  //       console.error("Error parsing user cookie:", cookieError);
-  //       throw new Error("Invalid user data");
-  //     }
-
-  //     const total = subtotal - discount;
-  //     const orderData = {
-  //       products: selectedProducts,
-  //       totalAmount: subtotal,
-  //       discount: discount,
-  //       couponCode: appliedCoupon || null,
-  //       buyer: user?._id,
-  //       buyerName: user?.name || "",
-  //       finalAmount: total,
-  //       shippingAddress: selectedAddress._id,
-  //       paymentMethod: "Credit Card",
-  //     };
-
-  //     console.log("Order data prepared:", orderData);
-
-  //     const orderResponse = await axios.post(
-  //       `${process.env.NEXT_PUBLIC_API_BASE_URL}/order/create`,
-  //       orderData,
-  //       {
-  //         headers: {
-  //           Authorization: `Bearer ${token}`,
-  //           "Content-Type": "application/json",
-  //         },
-  //       }
-  //     );
-
-  //     console.log("Order API Response:", {
-  //       status: orderResponse.status,
-  //       statusText: orderResponse.statusText,
-  //       data: orderResponse.data,
-  //     });
-
-  //     if (orderResponse.data && orderResponse.data.order) {
-  //       console.log("Order created successfully");
-
-  //       const stripeItems = prepareItemsForStripe();
-  //       console.log(
-  //         "Stripe items prepared:",
-  //         JSON.stringify(stripeItems, null, 2)
-  //       );
-
-  //       if (stripeItems.length === 0) {
-  //         console.error("No items prepared for Stripe payment");
-  //         throw new Error("No items selected for payment");
-  //       }
-
-  //       const stripeResponse = await axios.post(
-  //         `${process.env.NEXT_PUBLIC_API_BASE_URL}/makePayment`,
-  //         {
-  //           products: stripeItems,
-  //           orderId: orderResponse.data.order._id,
-  //           discount: discount, // Pass discount explicitly
-  //           finalAmount: total,
-  //         },
-  //         {
-  //           headers: {
-  //             "Content-Type": "application/json",
-  //             Authorization: `Bearer ${token}`,
-  //           },
-  //         }
-  //       );
-
-  //       const session = stripeResponse.data;
-  //       console.log("Stripe session:", session);
-
-  //       if (session?.id) {
-  //         const stripe = await stripePromise;
-  //         const { error } = await stripe.redirectToCheckout({
-  //           sessionId: session.id,
-  //         });
-
-  //         if (error) {
-  //           console.error("Error redirecting to checkout:", error);
-  //           setErrorMessage("Payment processing failed. Please try again.");
-  //           setErrorPopupOpen(true);
-  //           return;
-  //         }
-  //       } else {
-  //         throw new Error("Failed to create payment session");
-  //       }
-
-  //       if (orderResponse.data.updatedCart) {
-  //         console.log("Updated cart received, updating state");
-  //         setCart(orderResponse.data.updatedCart.products || []);
-  //         setSelectedItems({});
-  //       }
-
-  //       toast.success("Order created successfully, redirecting to payment...");
-  //     } else {
-  //       console.error("Invalid order response structure:", orderResponse.data);
-  //       throw new Error("Invalid response from server");
-  //     }
-  //   } catch (error) {
-  //     console.error("Checkout Error Details:", {
-  //       message: error.message,
-  //       responseData: error.response?.data,
-  //       responseStatus: error.response?.status,
-  //       stack: error.stack,
-  //     });
-
-  //     const errorMsg =
-  //       error.response?.data?.message ||
-  //       error.message ||
-  //       "Failed to process checkout";
-
-  //     if (errorMsg.includes("shippingAddress")) {
-  //       setErrorMessage("Please provide a valid shipping address.");
-  //     } else if (errorMsg.includes("User not authenticated")) {
-  //       setErrorMessage("Please log in to proceed with checkout");
-  //     } else {
-  //       setErrorMessage(errorMsg);
-  //     }
-  //     setErrorPopupOpen(true);
-  //   } finally {
-  //     setLoading(false);
-  //     setProcessingPayment(false);
-  //   }
-  // };
-
-const handleCheckout = async () => {
-  setShowAddress(false);
-  try {
-    setLoading(true);
-    setProcessingPayment(true);
-    console.log("Starting checkout process...");
-    console.log("Auth Token:", token);
-    console.log("Cart:", cart);
-    console.log("Selected Items:", selectedItems);
-
-    if (!token) {
-      console.error("No auth token found");
-      setErrorMessage("Please log in to proceed with checkout");
-      setErrorPopupOpen(true);
-      return;
-    }
-
-    const selectedProducts = cart
-      .filter((item) => selectedItems[item._id])
-      .map((item) => ({
-        product: item.productId,
-        productName: item.name,
-        quantity: item.qty || 1,
-        price: item.price, // Ensure price matches backend
-        size: item.size || "",
-      }));
-
-    if (selectedProducts.length === 0) {
-      console.log("No products selected");
-      setErrorMessage("Please select at least one item to checkout");
-      setErrorPopupOpen(true);
-      return;
-    }
-
-    if (!selectedAddress?._id) {
-      console.log("No shipping address selected");
-      setErrorMessage("Please select a shipping address before checking out");
-      setErrorPopupOpen(true);
-      return;
-    }
-
-    let user;
+  const handleCheckout = async () => {
+    setShowAddress(false);
     try {
-      user = JSON.parse(Cookies.get("user"));
-      console.log("User data retrieved:", user ? "Success" : "No user data");
-    } catch (cookieError) {
-      console.error("Error parsing user cookie:", cookieError);
-      throw new Error("Invalid user data");
-    }
+      setLoading(true);
+      setProcessingPayment(true);
+      console.log("Starting checkout process...");
+      console.log("Auth Token:", token);
+      console.log("Cart:", cart);
+      console.log("Selected Items:", selectedItems);
 
-    const orderData = {
-      products: selectedProducts,
-      totalAmount: subtotal,
-      discount: discount,
-      couponCode: appliedCoupon || null,
-      buyer: user?._id,
-      buyerName: user?.name || "",
-      finalAmount: subtotal, // Raw total before discount
-      shippingAddress: selectedAddress._id,
-      paymentMethod: "Credit Card",
-    };
-
-    console.log("Order data prepared:", orderData);
-
-    const orderResponse = await axios.post(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/order/create`,
-      orderData,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
-
-    console.log("Order API Response:", {
-      status: orderResponse.status,
-      statusText: orderResponse.statusText,
-      data: orderResponse.data,
-    });
-
-    if (orderResponse.data && orderResponse.data.order) {
-      console.log("Order created successfully");
-
-      const stripeItems = prepareItemsForStripe();
-      console.log(
-        "Stripe items prepared:",
-        JSON.stringify(stripeItems, null, 2)
-      );
-
-      if (stripeItems.length === 0) {
-        console.error("No items prepared for Stripe payment");
-        throw new Error("No items selected for payment");
+      if (!token) {
+        console.error("No auth token found");
+        setErrorMessage("Please log in to proceed with checkout");
+        setErrorPopupOpen(true);
+        return;
       }
 
-      const stripeResponse = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/makePayment`,
-        {
-          products: stripeItems,
-          orderId: orderResponse.data.order._id,
-          discount: discount,
-          finalAmount: subtotal - discount, // Discounted total for Stripe
-        },
+      const selectedProducts = cart
+        .filter((item) => selectedItems[item._id])
+        .map((item) => ({
+          product: item.productId,
+          productName: item.name,
+          quantity: item.qty || 1,
+          price: item.price,
+          size: item.size || "",
+        }));
+
+      console.log("Selected Products:", selectedProducts);
+
+      if (selectedProducts.length === 0) {
+        console.log("No products selected");
+        setErrorMessage("Please select at least one item to checkout");
+        setErrorPopupOpen(true);
+        return;
+      }
+
+      if (!selectedAddress?._id) {
+        console.log("No shipping address selected");
+        setErrorMessage("Please select a shipping address before checking out");
+        setErrorPopupOpen(true);
+        return;
+      }
+
+      let user;
+      try {
+        user = JSON.parse(Cookies.get("user"));
+        console.log("User data retrieved:", user ? "Success" : "No user data");
+      } catch (cookieError) {
+        console.error("Error parsing user cookie:", cookieError);
+        throw new Error("Invalid user data");
+      }
+
+      const total = subtotal - discount;
+      const orderData = {
+        products: selectedProducts,
+        totalAmount: subtotal,
+        discount: discount,
+        couponCode: appliedCoupon || null,
+        buyer: user?._id,
+        buyerName: user?.name || "",
+        finalAmount: total,
+        shippingAddress: selectedAddress._id,
+        paymentMethod: "Credit Card",
+      };
+
+      console.log("Order data prepared:", orderData);
+
+      const orderResponse = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/order/create`,
+        orderData,
         {
           headers: {
-            "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
           },
         }
       );
 
-      const session = stripeResponse.data;
-      console.log("Stripe session:", session);
+      console.log("Order API Response:", {
+        status: orderResponse.status,
+        statusText: orderResponse.statusText,
+        data: orderResponse.data,
+      });
 
-      if (session?.id) {
-        const stripe = await stripePromise;
-        const { error } = await stripe.redirectToCheckout({
-          sessionId: session.id,
-        });
+      if (orderResponse.data && orderResponse.data.order) {
+        console.log("Order created successfully");
 
-        if (error) {
-          console.error("Error redirecting to checkout:", error);
-          setErrorMessage("Payment processing failed. Please try again.");
-          setErrorPopupOpen(true);
-          return;
+        const stripeItems = prepareItemsForStripe();
+        console.log(
+          "Stripe items prepared:",
+          JSON.stringify(stripeItems, null, 2)
+        );
+
+        if (stripeItems.length === 0) {
+          console.error("No items prepared for Stripe payment");
+          throw new Error("No items selected for payment");
         }
+
+        const stripeResponse = await axios.post(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/makePayment`,
+          {
+            products: stripeItems,
+            orderId: orderResponse.data.order._id,
+            discount: discount, // Pass discount explicitly
+            finalAmount: total,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        const session = stripeResponse.data;
+        console.log("Stripe session:", session);
+
+        if (session?.id) {
+          const stripe = await stripePromise;
+          const { error } = await stripe.redirectToCheckout({
+            sessionId: session.id,
+          });
+
+          if (error) {
+            console.error("Error redirecting to checkout:", error);
+            setErrorMessage("Payment processing failed. Please try again.");
+            setErrorPopupOpen(true);
+            return;
+          }
+        } else {
+          throw new Error("Failed to create payment session");
+        }
+
+        if (orderResponse.data.updatedCart) {
+          console.log("Updated cart received, updating state");
+          setCart(orderResponse.data.updatedCart.products || []);
+          setSelectedItems({});
+        }
+
+        toast.success("Order created successfully, redirecting to payment...");
       } else {
-        throw new Error("Failed to create payment session");
+        console.error("Invalid order response structure:", orderResponse.data);
+        throw new Error("Invalid response from server");
       }
+    } catch (error) {
+      console.error("Checkout Error Details:", {
+        message: error.message,
+        responseData: error.response?.data,
+        responseStatus: error.response?.status,
+        stack: error.stack,
+      });
 
-      if (orderResponse.data.updatedCart) {
-        console.log("Updated cart received, updating state");
-        setCart(orderResponse.data.updatedCart.products || []);
-        setSelectedItems({});
+      const errorMsg =
+        error.response?.data?.message ||
+        error.message ||
+        "Failed to process checkout";
+
+      if (errorMsg.includes("shippingAddress")) {
+        setErrorMessage("Please provide a valid shipping address.");
+      } else if (errorMsg.includes("User not authenticated")) {
+        setErrorMessage("Please log in to proceed with checkout");
+      } else {
+        setErrorMessage(errorMsg);
       }
-
-      toast.success("Order created successfully, redirecting to payment...");
-    } else {
-      console.error("Invalid order response structure:", orderResponse.data);
-      throw new Error("Invalid response from server");
+      setErrorPopupOpen(true);
+    } finally {
+      setLoading(false);
+      setProcessingPayment(false);
     }
-  } catch (error) {
-    console.error("Checkout Error Details:", {
-      message: error.message,
-      responseData: error.response?.data,
-      responseStatus: error.response?.status,
-      stack: error.stack,
-    });
-
-    const errorMsg =
-      error.response?.data?.message ||
-      error.message ||
-      "Failed to process checkout";
-
-    if (errorMsg.includes("shippingAddress")) {
-      setErrorMessage("Please provide a valid shipping address.");
-    } else if (errorMsg.includes("User not authenticated")) {
-      setErrorMessage("Please log in to proceed with checkout");
-    } else {
-      setErrorMessage(errorMsg);
-    }
-    setErrorPopupOpen(true);
-  } finally {
-    setLoading(false);
-    setProcessingPayment(false);
-  }
-};
+  };
 
   const handleRemoveCoupon = () => {
     setAppliedCoupon("");
@@ -3669,8 +3500,12 @@ const handleCheckout = async () => {
                             Min purchase: AED {coupon.minPurchase}
                           </div>
                           {applicabilityCheck.applicable && (
+                            // <div className="text-xs text-green-600 font-medium">
+                            //   You'll save: AED {potentialDiscount.toFixed(2)}
+                            // </div>
                             <div className="text-xs text-green-600 font-medium">
-                              You'll save: AED {potentialDiscount.toFixed(2)}
+                              You&apos;ll save: AED{" "}
+                              {potentialDiscount.toFixed(2)}
                             </div>
                           )}
                           {!applicabilityCheck.applicable && (
