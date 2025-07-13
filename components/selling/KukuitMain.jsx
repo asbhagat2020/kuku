@@ -209,54 +209,108 @@ const KukuitMain = () => {
 
 
   const router = useRouter();
-  const validateStep2 = () => {
-    let newErrors = {};
-    if (!formData.date) newErrors.date = "Date is required";
-    if (!formData.time) newErrors.time = "Time is required";
-    if (!formData.agreeTerms)
-      newErrors.agreeTerms = "You must agree to the terms";
+  // const validateStep2 = () => {
+  //   let newErrors = {};
+  //   if (!formData.date) newErrors.date = "Date is required";
+  //   if (!formData.time) newErrors.time = "Time is required";
+  //   if (!formData.agreeTerms)
+  //     newErrors.agreeTerms = "You must agree to the terms";
 
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
+  //   setErrors(newErrors);
+  //   return Object.keys(newErrors).length === 0;
+  // };
 
-  const validateForm = () => {
-    let newErrors = {};
-    if (!formData.country) newErrors.country = "Country is required";
-    if (!formData.city) newErrors.city = "City is required";
-    if (!formData.addressLine1)
-      newErrors.addressLine1 = "Address Line 1 is required";
-    if (!formData.firstName) newErrors.firstName = "First name is required";
-    if (!formData.lastName) newErrors.lastName = "Last name is required";
-    if (!formData.email) newErrors.email = "Email is required";
-    else if (!/\S+@\S+\.\S+/.test(formData.email))
-      newErrors.email = "Email is invalid";
-    if (!formData.phone) newErrors.phone = "Phone number is required";
-    else if (!/^\d{10}$/.test(formData.phone))
-      newErrors.phone = "Phone number is invalid";
-    if (submit) {
-      if (!formData.date) newErrors.date = "Date is required";
-      if (!formData.time) newErrors.time = "Time is required";
-      if (!formData.agreeTerms)
-        newErrors.agreeTerms = "You must agree to the terms";
-    }
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const validateStep1 = () => {
-    if (selectedScale === null && customNumber === "") {
-      return false;
-    }
+  // const validateForm = () => {
+  //   let newErrors = {};
+  //   if (!formData.country) newErrors.country = "Country is required";
+  //   if (!formData.city) newErrors.city = "City is required";
+  //   if (!formData.addressLine1)
+  //     newErrors.addressLine1 = "Address Line 1 is required";
+  //   if (!formData.firstName) newErrors.firstName = "First name is required";
+  //   if (!formData.lastName) newErrors.lastName = "Last name is required";
+  //   if (!formData.email) newErrors.email = "Email is required";
+  //   else if (!/\S+@\S+\.\S+/.test(formData.email))
+  //     newErrors.email = "Email is invalid";
+  //   if (!formData.phone) newErrors.phone = "Phone number is required";
+  //   else if (!/^\d{10}$/.test(formData.phone))
+  //     newErrors.phone = "Phone number is invalid";
+  //   if (submit) {
+  //     if (!formData.date) newErrors.date = "Date is required";
+  //     if (!formData.time) newErrors.time = "Time is required";
+  //     if (!formData.agreeTerms)
+  //       newErrors.agreeTerms = "You must agree to the terms";
+  //   }
+  //   setErrors(newErrors);
+  //   return Object.keys(newErrors).length === 0;
+  // };
 
 
-    if (selectedScale === null && customNumber !== "") {
-      return false;
-    }
+const validateStep2 = () => {
+  let newErrors = {};
+  if (!formData.date || isNaN(new Date(formData.date).getTime())) {
+    newErrors.date = "Valid pickup date is required";
+  }
+  if (!formData.time) {
+    newErrors.time = "Pickup time is required";
+  }
+  if (!formData.agreeTerms) {
+    newErrors.agreeTerms = "You must agree to the terms";
+  }
 
-    return true;
-  };
+  setErrors(newErrors);
+  return Object.keys(newErrors).length === 0;
+};
 
+const validateForm = () => {
+  let newErrors = {};
+  if (!selectedScale || selectedScale < 5) {
+    newErrors.numberOfItems = "Please select at least 5 items";
+  }
+  if (!formData.date || isNaN(new Date(formData.date).getTime())) {
+    newErrors.date = "Valid pickup date is required";
+  }
+  if (!formData.time) {
+    newErrors.time = "Pickup time is required";
+  }
+  if (!formData.country) newErrors.country = "Country is required";
+  if (!formData.city) newErrors.city = "City is required";
+  if (!formData.addressLine1) newErrors.addressLine1 = "Address Line 1 is required";
+  if (!formData.firstName) newErrors.firstName = "First name is required";
+  if (!formData.lastName) newErrors.lastName = "Last name is required";
+  if (!formData.email) newErrors.email = "Email is required";
+  else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+    newErrors.email = "Email is invalid";
+  }
+  if (!formData.phone) newErrors.phone = "Phone number is required";
+  else if (!/^\d{10}$/.test(formData.phone)) {
+    newErrors.phone = "Phone number must be 10 digits";
+  }
+  if (!formData.agreeTerms) newErrors.agreeTerms = "You must agree to the terms";
+
+  setErrors(newErrors);
+  return Object.keys(newErrors).length === 0;
+};
+
+  // const validateStep1 = () => {
+  //   if (selectedScale === null && customNumber === "") {
+  //     return false;
+  //   }
+
+
+  //   if (selectedScale === null && customNumber !== "") {
+  //     return false;
+  //   }
+
+  //   return true;
+  // };
+
+const validateStep1 = () => {
+  if (!selectedScale || selectedScale < 5) {
+    setErrors({ numberOfItems: "Please select at least 5 items" });
+    return false;
+  }
+  return true;
+};
 
   const handleClick = () => {
     if (validateForm()) {
@@ -265,66 +319,120 @@ const KukuitMain = () => {
     }
   };
 
-  const handleConfirmClick = async () => {
-    if (!validateForm()) return; // Exit if the form is invalid
+  // const handleConfirmClick = async () => {
+  //   if (!validateForm()) return; // Exit if the form is invalid
 
-    try {
-      // Prepare the data to be sent
-      const details = {
-        numberOfItems: selectedScale,
-        pickupDate: new Date(formData.date).getTime(),
-        pickupTime: formData.time,
+  //   try {
+  //     // Prepare the data to be sent
+  //     const details = {
+  //       numberOfItems: selectedScale,
+  //       pickupDate: new Date(formData.date).getTime(),
+  //       pickupTime: formData.time,
 
-        // Replace with your form data
-      };
+  //       // Replace with your form data
+  //     };
 
-      const pickupLocation = {
-        country: formData.country,
-        city: formData.city,
-        addressLine1: formData.addressLine1,
-        addressLine2: formData.addressLine2,
-        firstName: formData.firstName, // Replace with your form data
-        lastName: formData.lastName,
-        email: formData.email, // Replace with your form data
-        phone: formData.phone,
-      };
+  //     const pickupLocation = {
+  //       country: formData.country,
+  //       city: formData.city,
+  //       addressLine1: formData.addressLine1,
+  //       addressLine2: formData.addressLine2,
+  //       firstName: formData.firstName, // Replace with your form data
+  //       lastName: formData.lastName,
+  //       email: formData.email, // Replace with your form data
+  //       phone: formData.phone,
+  //     };
 
 
-      console.log("Cookies.get('auth')", Cookies.get('auth'));
+  //     console.log("Cookies.get('auth')", Cookies.get('auth'));
 
-      if (Cookies.get('auth')) {
-        // Get token from cookies
-        const token = JSON.parse(Cookies.get('auth'));
-        console.log("token", token);
+  //     if (Cookies.get('auth')) {
+  //       // Get token from cookies
+  //       const token = JSON.parse(Cookies.get('auth'));
+  //       console.log("token", token);
 
-        // Make the API call
-        const response = await axios.post(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/kukuit/add`, // Replace with your endpoint
-          { details, pickupLocation },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+  //       // Make the API call
+  //       const response = await axios.post(
+  //         `${process.env.NEXT_PUBLIC_API_BASE_URL}/kukuits/add`, // Replace with your endpoint
+  //         { details, pickupLocation },
+  //         {
+  //           headers: {
+  //             Authorization: `Bearer ${token}`,
+  //           },
+  //         }
+  //       );
 
-        // Handle successful response
-        if (response.status === 201 || response.status === 200) {
-          setModal(true); // Show the modal on success
-        } else {
-          console.error("Failed to add kukuit:", response.statusText);
+  //       // Handle successful response
+  //       if (response.status === 201 || response.status === 200) {
+  //         setModal(true); // Show the modal on success
+  //       } else {
+  //         console.error("Failed to add kukuit:", response.statusText);
+  //       }
+  //     }
+  //     else {
+  //       notify();
+  //     }
+  //   } catch (error) {
+  //     // Handle errors
+  //     console.error("An error occurred:", error.message);
+  //   }
+  // };
+
+const handleConfirmClick = async () => {
+  if (!validateForm()) return; // Exit if form validation fails
+
+  try {
+    // Prepare the data to send
+    const details = {
+      numberOfItems: selectedScale, // Ensure this is a number >= 5
+      pickupDate: formData.date, // Send as ISO string (e.g., "2025-07-13")
+      pickupTime: formData.time, // Ensure this is a non-empty string
+      variation: "", // Optional: Add default or dynamic value if needed
+      Amount: 0, // Default value as per schema
+    };
+
+    const pickupLocation = {
+      country: formData.country,
+      city: formData.city,
+      addressLine1: formData.addressLine1,
+      addressLine2: formData.addressLine2,
+      firstName: formData.firstName,
+      lastName: formData.lastName,
+      email: formData.email,
+      phone: formData.phone,
+    };
+
+    // Log payload for debugging
+    console.log("Payload:", { ...details, pickupLocation });
+
+    if (Cookies.get("auth")) {
+      const token = JSON.parse(Cookies.get("auth"));
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/kukuits/add`,
+        { ...details, pickupLocation }, // Send as a single object
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
+      );
+
+      if (response.status === 201 || response.status === 200) {
+        setModal(true); // Show success modal
+      } else {
+        console.error("Failed to add kukuit:", response.statusText);
+        toast.error("Failed to schedule pickup");
       }
-      else {
-        notify();
-      }
-    } catch (error) {
-      // Handle errors
-      console.error("An error occurred:", error.message);
+    } else {
+      notify(); // Show login prompt
     }
-  };
+  } catch (error) {
+    console.error("API Error:", error.response?.data || error.message);
+    toast.error(error.response?.data?.message || "Failed to schedule pickup");
+  }
+};
 
-
+  
   const handleCloseModal = () => {
     setModal(false);
     router.push("/");
