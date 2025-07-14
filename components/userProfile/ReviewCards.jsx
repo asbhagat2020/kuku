@@ -3,8 +3,8 @@ import { useState } from "react";
 import Image from "next/image";
 import { IoPencil } from "react-icons/io5";
 import { FaStar } from "react-icons/fa";
-import { ReviewItem } from "./ReviewItem";
 import AddModal from "./AddModal";
+import ReviewItem from "./ReviewItem";
 
 
 export const ReviewCards = ({ data }) => {
