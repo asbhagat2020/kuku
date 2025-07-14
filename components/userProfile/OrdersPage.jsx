@@ -1,40 +1,234 @@
-"use client"
+// "use client"
 
-import { useState } from 'react';
-import Image from 'next/image';
-import { useRouter } from 'next/navigation';
+// import { useState } from 'react';
+// import Image from 'next/image';
+// import { useRouter } from 'next/navigation';
+// import Link from "next/link";
+
+// const OrdersPage = () => {
+//   const router = useRouter();
+//   const [activeSection, setActiveSection] = useState('orders');
+
+//   const orders = [
+//     {
+//       id: 1,
+//       productName: "AMIRI | Men Oversize T-shirt",
+//       description: "Lorem ipsum dollor dummy text",
+//       price: 250.00,
+//       mrp: 650,
+//       discount: "55%OFF",
+//       size: "OS",
+//       condition: "GOOD",
+//       deliveryDate: "Dec Tue 31'Dec",
+//       image: "/product-image.png"
+//     },
+//     {
+//       id: 2,
+//       productName: "AMIRI | Men Oversize T-shirt",
+//       description: "Lorem ipsum dollor dummy text",
+//       price: 250.00,
+//       mrp: 650,
+//       discount: "55%OFF",
+//       size: "OS",
+//       condition: "GOOD",
+//       deliveryDate: "Dec Tue 31'Dec",
+//       image: "/product-image.png"
+//     }
+//   ];
+
+//   return (
+//     <div className="flex flex-col md:flex-row min-h-screen bg-gray-50 p-8">
+//       <div className="w-full md:w-64">
+//         <h1 className="text-4xl font-luckiest mb-8 text-center md:text-left">
+//           All Orders
+//         </h1>
+//         <div className="bg-white rounded-lg shadow-sm p-8 w-[300px]">
+//           <div className="space-y-8">
+//             {/* Sidebar content remains the same */}
+//             <div>
+//               <p className="text-[11px] text-gray-400 font-medium tracking-wide uppercase mb-4">ORDERS</p>
+//               <div>
+//                 <button
+//                   className={`w-full text-left py-1 text-[13px] ${
+//                     activeSection === 'orders' ? 'text-pink-500 font-medium' : 'text-gray-700'
+//                   }`}
+//                   onClick={() => setActiveSection('orders')}
+//                 >
+//                   Order & Returns
+//                 </button>
+//               </div>
+//             </div>
+//             <hr className="border-gray-200" />
+//             <div>
+//               <p className="text-[11px] text-gray-400 font-medium tracking-wide uppercase mb-4">CREDITS</p>
+//               <div>
+//                 <button
+//                   className={`w-full text-left py-1 text-[13px] ${
+//                     activeSection === 'coupons' ? 'text-pink-500 font-medium' : 'text-gray-700'
+//                   }`}
+//                   onClick={() => setActiveSection('coupons')}
+//                 >
+//                   Coupons
+//                 </button>
+//               </div>
+//             </div>
+//             <hr className="border-gray-200" />
+//             <div>
+//               <p className="text-[11px] text-gray-400 font-medium tracking-wide uppercase mb-4">ACCOUNTS</p>
+//               <div className="space-y-2">
+//                 <button
+//                   className={`w-full text-left py-1 text-[13px] ${
+//                     activeSection === 'profile' ? 'text-pink-500 font-medium' : 'text-gray-700'
+//                   }`}
+//                   onClick={() => setActiveSection('profile')}
+//                 >
+//                   Profile
+//                 </button>
+//                 <button
+//                   className={`w-full text-left py-1 text-[13px] ${
+//                     activeSection === 'addresses' ? 'text-pink-500 font-medium' : 'text-gray-700'
+//                   }`}
+//                   onClick={() => setActiveSection('addresses')}
+//                 >
+//                   Addresses
+//                 </button>
+//               </div>
+//             </div>
+//           </div>
+//         </div>
+//       </div>
+
+//       {/* Main Content */}
+//       <div className="flex-1 md:ml-16 mt-[70px]">
+//         <div className="space-y-4">
+//           {orders.map((order) => (
+//             <div key={order.id} className="bg-white rounded-lg p-6 shadow-sm">
+//               <div className="flex items-center gap-2 mb-6 border-b border-gray-100 pb-4">
+//                 <Image
+//                   src="/delivery_icon.png"
+//                   alt="Delivery"
+//                   width={20}
+//                   height={20}
+//                   className="w-8 h-8"
+//                 />
+//                 <div>
+//                   <span className="text-pink-500 font-medium">Delivered</span>
+//                   <span className="text-gray-400 text-sm ml-2">{order.deliveryDate}</span>
+//                 </div>
+//               </div>
+
+//               <div className="flex gap-8">
+//                 <div className="w-[120px] h-[120px] flex-shrink-0">
+//                   <Image
+//                     src={order.image}
+//                     alt={order.productName}
+//                     width={120}
+//                     height={120}
+//                     className="w-full h-full object-cover rounded-md"
+//                   />
+//                 </div>
+
+//                 <div className="flex-1">
+//                   <div className="flex justify-between items-start">
+//                     <div>
+//                       <h3 className="font-karla font-semibold text-gray-900 mb-1">{order.productName}</h3>
+//                       <p className="text-sm text-gray-500">{order.description}</p>
+//                     </div>
+//                     <div className="text-right">
+//                       <p className="font-medium text-[15px] font-semibold">AED{order.price.toFixed(2)}</p>
+//                       <p className="text-sm text-gray-400 line-through">MRP AED{order.mrp}</p>
+//                       <span className="text-green-500 text-sm">({order.discount})</span>
+//                     </div>
+//                   </div>
+
+//                   <div className="flex gap-8 mt-6 mb-6">
+//                     <div className="flex items-center gap-2">
+//                       <span className="text-gray-500 text-sm">SIZE</span>
+//                       <span className="px-2 py-0.5 border border-[#E4086F] text-[#E4086F] rounded text-sm bg-white">
+//                         {order.size}
+//                       </span>
+//                     </div>
+//                     <div className="flex items-center gap-2">
+//                       <span className="font-karla text-sm font-semibold">CONDITION:</span>
+//                       <span className="text-sm text-gray-500 font-semibold">{order.condition}</span>
+//                     </div>
+//                   </div>
+//                   <Link href="/returnorder">
+//                     <button
+//                       className="text-pink-500 font-medium text-sm border-b border-pink-500"
+//                     >
+//                       RETURN ORDER
+//                     </button>
+//                   </Link>
+//                 </div>
+//               </div>
+//             </div>
+//           ))}
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default OrdersPage;
+
+"use client";
+
+import { useState, useEffect } from "react";
+import Image from "next/image";
 import Link from "next/link";
+import { useSelector } from "react-redux"; // For Redux state
+import Cookies from "js-cookie"; // For token handling
+import toast from "react-hot-toast"; // For notifications
 
 const OrdersPage = () => {
-  const router = useRouter();
-  const [activeSection, setActiveSection] = useState('orders');
+  const [activeSection, setActiveSection] = useState("orders");
+  const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [userId, setUserId] = useState(null); // Dynamic userId state
 
-  const orders = [
-    {
-      id: 1,
-      productName: "AMIRI | Men Oversize T-shirt",
-      description: "Lorem ipsum dollor dummy text",
-      price: 250.00,
-      mrp: 650,
-      discount: "55%OFF",
-      size: "OS",
-      condition: "GOOD",
-      deliveryDate: "Dec Tue 31'Dec",
-      image: "/product-image.png"
-    },
-    {
-      id: 2,
-      productName: "AMIRI | Men Oversize T-shirt",
-      description: "Lorem ipsum dollor dummy text",
-      price: 250.00,
-      mrp: 650,
-      discount: "55%OFF",
-      size: "OS",
-      condition: "GOOD",
-      deliveryDate: "Dec Tue 31'Dec",
-      image: "/product-image.png"
-    }
-  ];
+  // Get user details from Redux store
+  const details = useSelector((state) => state.auth.user);
+  const id = details?._id;
+
+  // Set userId when id changes
+  useEffect(() => {
+    setUserId(id);
+  }, [id]);
+
+  // Fetch orders when userId is available
+  useEffect(() => {
+    const fetchOrders = async () => {
+      if (!userId) {
+        const token = Cookies.get("auth");
+        if (!token) {
+          toast.error("Please login to view orders");
+          setLoading(false);
+          return;
+        }
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/order/UserOrders/${userId}`
+        );
+        if (!response.ok) throw new Error("Failed to fetch orders");
+        const data = await response.json();
+        setOrders(data.orders || []);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchOrders();
+  }, [userId]);
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-gray-50 p-8">
@@ -44,51 +238,60 @@ const OrdersPage = () => {
         </h1>
         <div className="bg-white rounded-lg shadow-sm p-8 w-[300px]">
           <div className="space-y-8">
-            {/* Sidebar content remains the same */}
             <div>
-              <p className="text-[11px] text-gray-400 font-medium tracking-wide uppercase mb-4">ORDERS</p>
-              <div>
-                <button 
-                  className={`w-full text-left py-1 text-[13px] ${
-                    activeSection === 'orders' ? 'text-pink-500 font-medium' : 'text-gray-700'
-                  }`}
-                  onClick={() => setActiveSection('orders')}
-                >
-                  Order & Returns
-                </button>
-              </div>
+              <p className="text-[11px] text-gray-400 font-medium tracking-wide uppercase mb-4">
+                ORDERS
+              </p>
+              <button
+                className={`w-full text-left py-1 text-[13px] ${
+                  activeSection === "orders"
+                    ? "text-pink-500 font-medium"
+                    : "text-gray-700"
+                }`}
+                onClick={() => setActiveSection("orders")}
+              >
+                Order & Returns
+              </button>
             </div>
             <hr className="border-gray-200" />
             <div>
-              <p className="text-[11px] text-gray-400 font-medium tracking-wide uppercase mb-4">CREDITS</p>
-              <div>
-                <button 
-                  className={`w-full text-left py-1 text-[13px] ${
-                    activeSection === 'coupons' ? 'text-pink-500 font-medium' : 'text-gray-700'
-                  }`}
-                  onClick={() => setActiveSection('coupons')}
-                >
-                  Coupons
-                </button>
-              </div>
+              <p className="text-[11px] text-gray-400 font-medium tracking-wide uppercase mb-4">
+                CREDITS
+              </p>
+              <button
+                className={`w-full text-left py-1 text-[13px] ${
+                  activeSection === "coupons"
+                    ? "text-pink-500 font-medium"
+                    : "text-gray-700"
+                }`}
+                onClick={() => setActiveSection("coupons")}
+              >
+                Coupons
+              </button>
             </div>
             <hr className="border-gray-200" />
             <div>
-              <p className="text-[11px] text-gray-400 font-medium tracking-wide uppercase mb-4">ACCOUNTS</p>
+              <p className="text-[11px] text-gray-400 font-medium tracking-wide uppercase mb-4">
+                ACCOUNTS
+              </p>
               <div className="space-y-2">
-                <button 
+                <button
                   className={`w-full text-left py-1 text-[13px] ${
-                    activeSection === 'profile' ? 'text-pink-500 font-medium' : 'text-gray-700'
+                    activeSection === "profile"
+                      ? "text-pink-500 font-medium"
+                      : "text-gray-700"
                   }`}
-                  onClick={() => setActiveSection('profile')}
+                  onClick={() => setActiveSection("profile")}
                 >
                   Profile
                 </button>
-                <button 
+                <button
                   className={`w-full text-left py-1 text-[13px] ${
-                    activeSection === 'addresses' ? 'text-pink-500 font-medium' : 'text-gray-700'
+                    activeSection === "addresses"
+                      ? "text-pink-500 font-medium"
+                      : "text-gray-700"
                   }`}
-                  onClick={() => setActiveSection('addresses')}
+                  onClick={() => setActiveSection("addresses")}
                 >
                   Addresses
                 </button>
@@ -98,11 +301,10 @@ const OrdersPage = () => {
         </div>
       </div>
 
-      {/* Main Content */}
       <div className="flex-1 md:ml-16 mt-[70px]">
         <div className="space-y-4">
           {orders.map((order) => (
-            <div key={order.id} className="bg-white rounded-lg p-6 shadow-sm">
+            <div key={order._id} className="bg-white rounded-lg p-6 shadow-sm">
               <div className="flex items-center gap-2 mb-6 border-b border-gray-100 pb-4">
                 <Image
                   src="/delivery_icon.png"
@@ -112,56 +314,87 @@ const OrdersPage = () => {
                   className="w-8 h-8"
                 />
                 <div>
-                  <span className="text-pink-500 font-medium">Delivered</span>
-                  <span className="text-gray-400 text-sm ml-2">{order.deliveryDate}</span>
+                  <span className="text-pink-500 font-medium">
+                    {order.orderStatus}
+                  </span>
+                  <span className="text-gray-400 text-sm ml-2">
+                    {new Date(order.paidAt).toLocaleDateString()}
+                  </span>
                 </div>
               </div>
 
-              <div className="flex gap-8">
-                <div className="w-[120px] h-[120px] flex-shrink-0">
-                  <Image
-                    src={order.image}
-                    alt={order.productName}
-                    width={120}
-                    height={120}
-                    className="w-full h-full object-cover rounded-md"
-                  />
-                </div>
-
-                <div className="flex-1">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <h3 className="font-karla font-semibold text-gray-900 mb-1">{order.productName}</h3>
-                      <p className="text-sm text-gray-500">{order.description}</p>
-                    </div>
-                    <div className="text-right">
-                      <p className="font-medium text-[15px] font-semibold">AED{order.price.toFixed(2)}</p>
-                      <p className="text-sm text-gray-400 line-through">MRP AED{order.mrp}</p>
-                      <span className="text-green-500 text-sm">({order.discount})</span>
-                    </div>
-                  </div>
-
-                  <div className="flex gap-8 mt-6 mb-6">
-                    <div className="flex items-center gap-2">
-                      <span className="text-gray-500 text-sm">SIZE</span>
-                      <span className="px-2 py-0.5 border border-[#E4086F] text-[#E4086F] rounded text-sm bg-white">
-                        {order.size}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span className="font-karla text-sm font-semibold">CONDITION:</span>
-                      <span className="text-sm text-gray-500 font-semibold">{order.condition}</span>
-                    </div>
-                  </div>
-                  <Link href="/returnorder">
-                    <button 
-                      className="text-pink-500 font-medium text-sm border-b border-pink-500"
-                    >
-                      RETURN ORDER
-                    </button>
-                  </Link>
-                </div>
+              <div className="text-right">
+                <p className="font-medium text-[15px] font-semibold">
+                  AED{order.finalAmount.toFixed(2)}
+                </p>
+                <p className="text-sm text-gray-400 line-through">
+                  MRP AED{order.totalAmount.toFixed(2)}
+                </p>
+                <span className="text-green-500 text-sm">
+                  {order.discount > 0
+                    ? `${((order.discount / order.totalAmount) * 100).toFixed(
+                        0
+                      )}%OFF`
+                    : "No Discount"}
+                </span>
               </div>
+
+              {order.products.map((product, index) => (
+                <div key={product._id} className="flex gap-8 mb-6">
+                  <div className="w-[120px] h-[120px] flex-shrink-0">
+                    <Image
+                      src={product.product.images[0] || "/product-image.png"}
+                      alt={product.productName}
+                      width={120}
+                      height={120}
+                      className="w-full h-full object-cover rounded-md"
+                    />
+                  </div>
+
+                  <div className="flex-1">
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <h3 className="font-karla font-semibold text-gray-900 mb-1">
+                          {product.productName}
+                        </h3>
+                        <p className="text-sm text-gray-500">
+                          {product.product.description || "No description"}
+                        </p>
+                        <p className="text-sm text-gray-600">
+                          Brand:{" "}
+                          {product.product.brand?.brandName || "Unknown Brand"}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex gap-8 mt-6 mb-6">
+                      <div className="flex items-center gap-2">
+                        <span className="text-gray-500 text-sm">SIZE</span>
+                        <span className="px-2 py-0.5 border border-[#E4086F] text-[#E4086F] rounded text-sm bg-white">
+                          {product.size || "N/A"}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="font-karla text-sm font-semibold">
+                          CONDITION:
+                        </span>
+                        <span className="text-sm text-gray-500 font-semibold">
+                          {product.product.condition?.conditionName ||
+                            "Unknown Condition"}
+                        </span>
+                      </div>
+                    </div>
+                    {index === 0 && (
+                      <Link href={`/returnorder?orderId=${order._id}`}>
+                        <button className="text-pink-500 font-medium text-sm border-b border-pink-500">
+                          RETURN ORDER
+                        </button>
+                      </Link>
+                    )}
+                  </div>
+                </div>
+              ))}
+              
             </div>
           ))}
         </div>
