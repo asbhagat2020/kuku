@@ -1031,7 +1031,7 @@ const renderProductDetails = (product) => (
                 </p>
                 <div className="space-y-8">
                   <div>
-                    <h4 className="text-sm font-medium mb-4">What is the product's current condition?</h4>
+                    <h4 className="text-sm font-medium mb-4">What is the product&apos;s current condition?</h4>
                     <div className="space-y-3">
                       {[
                         "Sealed product",
