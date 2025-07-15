@@ -343,7 +343,7 @@ const OrdersPage = () => {
                 <div key={product._id} className="flex gap-8 mb-6">
                   <div className="w-[120px] h-[120px] flex-shrink-0">
                     <Image
-                      src={product.product.images[0] || "/product-image.png"}
+                      src={product.product?.images?.[0] || "/product-image.png"}
                       alt={product.productName}
                       width={120}
                       height={120}
@@ -358,11 +358,11 @@ const OrdersPage = () => {
                           {product.productName}
                         </h3>
                         <p className="text-sm text-gray-500">
-                          {product.product.description || "No description"}
+                          {product.product?.description || "No description"}
                         </p>
                         <p className="text-sm text-gray-600">
                           Brand:{" "}
-                          {product.product.brand?.brandName || "Unknown Brand"}
+                          {product.product?.brand?.brandName || "Unknown Brand"}
                         </p>
                       </div>
                     </div>
@@ -379,7 +379,7 @@ const OrdersPage = () => {
                           CONDITION:
                         </span>
                         <span className="text-sm text-gray-500 font-semibold">
-                          {product.product.condition?.conditionName ||
+                          {product.product?.condition?.conditionName ||
                             "Unknown Condition"}
                         </span>
                       </div>
@@ -394,7 +394,6 @@ const OrdersPage = () => {
                   </div>
                 </div>
               ))}
-              
             </div>
           ))}
         </div>

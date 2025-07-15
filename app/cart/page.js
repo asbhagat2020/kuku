@@ -3850,7 +3850,7 @@ export default function Cart() {
       console.log("Order data prepared:", orderData);
 
       const orderResponse = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/order/buycreate`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/order/create`,
         orderData,
         {
           headers: {
@@ -3881,7 +3881,7 @@ export default function Cart() {
         }
 
         const stripeResponse = await axios.post(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/makePayment`,
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/buyMakePayment`,
           {
             products: stripeItems,
             orderId: orderResponse.data.order._id,
