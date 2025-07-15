@@ -3850,7 +3850,7 @@ export default function Cart() {
       console.log("Order data prepared:", orderData);
 
       const orderResponse = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/order/create`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/order/buycreate`,
         orderData,
         {
           headers: {
