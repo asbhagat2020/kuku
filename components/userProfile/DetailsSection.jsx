@@ -1238,12 +1238,12 @@ export const DetailsSection = ({ data }) => {
       data: statsData, 
       count: statsData?.length || 0 
     },
-    { 
-      label: "Orders", 
-      component: Orders, 
-      data: orderData, 
-      count: orderData?.length || 0 
-    },
+    // { 
+    //   label: "Orders", 
+    //   component: Orders, 
+    //   data: orderData, 
+    //   count: orderData?.length || 0 
+    // },
   ];
 
   const tabs = isOwnProfile 

@@ -1362,15 +1362,15 @@ const ProductCard = (productDetails) => {
 
           <div className="text-2xl font-bold">
             AED {product?.price}{" "}
-            <span style={{ color: "#30BD75", fontSize: "1.50rem" }}>
+            {/* <span style={{ color: "#30BD75", fontSize: "1.50rem" }}>
               {product.discountPercentage}% OFF
-            </span>
-            <p
+            </span> */}
+            {/* <p
               className="text-gray-400 line-through"
               style={{ fontSize: "0.985rem", margin: 0, fontWeight: "normal" }}
             >
               MRP AED{product?.price}
-            </p>
+            </p> */}
           </div>
 
           <div className="flex items-center text-gray-600 space-x-4 font-medium">
