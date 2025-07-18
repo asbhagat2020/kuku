@@ -639,11 +639,11 @@ const handleSearch = async (subcategory) => {
                           Your Profile
                         </div>
                       </Link>
-                      <Link href="/orderdetails">
+                      {/* <Link href="/orderdetails">
                         <div className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold">
                           Purchases
                         </div>
-                      </Link>
+                      </Link> */}
                       <Link href="/wishlist">
                         <div className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold">
                           Wishlist

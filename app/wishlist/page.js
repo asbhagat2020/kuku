@@ -194,9 +194,9 @@ export default function Wishlist() {
                       {item?.discount}
                     </div>
                   </div>
-                  <div className="text-[#b4b4b4] text-sm md:text-xl font-normal font-karla line-through leading-snug">
+                  {/* <div className="text-[#b4b4b4] text-sm md:text-xl font-normal font-karla line-through leading-snug">
                     MRP {item?.mrp}
-                  </div>
+                  </div> */}
                 </div>
               </div>
             ))
