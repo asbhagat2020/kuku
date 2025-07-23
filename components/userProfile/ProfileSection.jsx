@@ -372,7 +372,7 @@ const ProfileSection = (userDetails) => {
               <div className="flex flex-col text-center sm:text-left">
                 <div className="flex items-center justify-center sm:justify-start gap-2 sm:gap-3 md:gap-4">
                   <p className="text-black text-lg sm:text-xl md:text-2xl lg:text-2xl xl:text-[28px] font-bold font-karla">
-                    {user?.user?.rating}
+                    {user?.user?.averageSellerRating?.toFixed(1) || "0"}
                   </p>
                   <Image
                     width={18}
