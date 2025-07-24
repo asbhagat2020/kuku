@@ -1,13 +1,22 @@
-
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import Image from "next/image";
+import { IoPencil } from "react-icons/io5";
 import axios from "axios";
 import Cookies from "js-cookie";
 
-const ReviewAddModal = ({ isOpen, onClose, title, productId, orderId, onReviewAdded }) => {
-  const [rating, setRating] = useState(0);
-  const [description, setDescription] = useState("");
+
+const ReviewEditModal = ({ isOpen, onClose, title, productId, orderId, initialRating, initialDescription, onReviewUpdated }) => {
+  const [rating, setRating] = useState(initialRating || 0);
+  const [description, setDescription] = useState(initialDescription || "");
+  const [sellerRating, setSellerRating] = useState(0);
+  const [sellerReview, setSellerReview] = useState("");
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    setRating(initialRating || 0);
+    setDescription(initialDescription || "");
+  }, [initialRating, initialDescription]);
 
   if (!isOpen) return null;
 
@@ -19,22 +28,22 @@ const ReviewAddModal = ({ isOpen, onClose, title, productId, orderId, onReviewAd
     }
     try {
       const token = JSON.parse(Cookies.get("auth"));
-      await axios.post(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/reviews/submit-review`,
+      await axios.patch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/reviews/edit-review`,
         {
           orderId,
           productId,
           productRating: Number(rating),
           productDescription: description,
-          sellerRating: 0,
-          sellerReview: "",
+          // sellerRating: Number(sellerRating) || undefined,
+          // sellerReview: sellerReview || undefined,
         },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      onReviewAdded();
+      onReviewUpdated();
       onClose();
     } catch (err) {
-      setError("Failed to submit review. Try again.");
+      setError(err.response?.data?.message || "Failed to update review. Try again.");
     }
   };
 
@@ -45,7 +54,7 @@ const ReviewAddModal = ({ isOpen, onClose, title, productId, orderId, onReviewAd
         {error && <p className="text-red-500 mb-4">{error}</p>}
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label className="block mb-2">Rating (1-5)</label>
+            <label className="block mb-2">Product Rating (1-5)</label>
             <input
               type="number"
               min="1"
@@ -53,18 +62,35 @@ const ReviewAddModal = ({ isOpen, onClose, title, productId, orderId, onReviewAd
               value={rating}
               onChange={(e) => setRating(e.target.value)}
               className="w-full p-2 border rounded"
-              required
             />
           </div>
           <div className="mb-4">
-            <label className="block mb-2">Description</label>
+            <label className="block mb-2">Product Description</label>
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               className="w-full p-2 border rounded"
-              required
             />
           </div>
+          {/* <div className="mb-4">
+            <label className="block mb-2">Seller Rating (1-5, optional)</label>
+            <input
+              type="number"
+              min="1"
+              max="5"
+              value={sellerRating}
+              onChange={(e) => setSellerRating(e.target.value)}
+              className="w-full p-2 border rounded"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block mb-2">Seller Review (optional)</label>
+            <textarea
+              value={sellerReview}
+              onChange={(e) => setSellerReview(e.target.value)}
+              className="w-full p-2 border rounded"
+            />
+          </div> */}
           <div className="flex justify-end gap-4">
             <button
               type="button"
@@ -78,7 +104,7 @@ const ReviewAddModal = ({ isOpen, onClose, title, productId, orderId, onReviewAd
               className="px-4 py-2 bg-blue-500 text-white rounded"
               disabled={!orderId || !rating || !description}
             >
-              Submit
+              Update
             </button>
           </div>
         </form>
@@ -87,4 +113,4 @@ const ReviewAddModal = ({ isOpen, onClose, title, productId, orderId, onReviewAd
   );
 };
 
-export default ReviewAddModal;
+export default ReviewEditModal;

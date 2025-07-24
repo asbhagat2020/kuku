@@ -1,3 +1,6 @@
+
+
+
 // "use client";
 // import { useState, useEffect } from "react";
 // import Image from "next/image";
@@ -17,31 +20,21 @@
 //   const [error, setError] = useState(null);
 //   const [selectedProductForReview, setSelectedProductForReview] = useState(null);
 
-
-
 //   useEffect(() => {
-//   try {
-//     const userCookie = Cookies.get("user");
-//     console.log("Raw user cookie:", userCookie);
-    
-//     if (userCookie) {
-//       const user = JSON.parse(userCookie);
-//       console.log("Parsed user:", user);
+//     try {
+//       const userCookie = Cookies.get("user");
       
-//       if (user && user._id) {
-//         console.log("Current User ID from user cookie:", user._id);
-//         setCurrentUserId(user._id);
-//       } else {
-//         console.log("User object is invalid - missing _id");
+//       if (userCookie) {
+//         const user = JSON.parse(userCookie);
+        
+//         if (user && user._id) {
+//           setCurrentUserId(user._id);
+//         }
 //       }
-//     } else {
-//       console.log("No user cookie found");
+//     } catch (error) {
+//       console.error("Error parsing user cookie:", error);
 //     }
-//   } catch (error) {
-//     console.error("Error parsing user cookie:", error);
-//     console.log("Cookie value that failed to parse:", Cookies.get("user"));
-//   }
-// }, []);
+//   }, []);
 
 //   const fetchUserReviews = async () => {
 //     setLoading(true);
@@ -53,7 +46,6 @@
 //         headers: { Authorization: `Bearer ${token}` },
 //       });
 //       if (res.status === 200) {
-//         console.log("API Response (userReviews):", res.data); // Debug log
 //         setUserReviews(res.data || []);
 //       }
 //     } catch (error) {
@@ -75,29 +67,27 @@
 
 //   const getDisplayItems = () => {
 //     const items = [];
-//     console.log("Current User ID in getDisplayItems:", currentUserId); // Debug log
-//     console.log("Processing userReviews:", userReviews); // Debug log
 
 //     userReviews.forEach(product => {
-//       console.log("Processing product:", product); // Debug log
-//       // Add reviewed products
+//       // Always add reviewed products (for both buyers and sellers)
 //       if (product.hasReviewed && product.reviews?.length > 0) {
 //         product.reviews.forEach(review => {
-//           console.log("Adding review for product:", product.productName); // Debug log
 //           items.push({
 //             ...review,
 //             productId: product.productId,
 //             productImage: product.productImage,
 //             productName: product.productName,
 //             orderId: product.orderId,
+//             sellerId: product.sellerId, // Include sellerId
 //             hasReviewed: true,
 //             type: 'review'
 //           });
 //         });
 //       }
-//       // Add non-reviewed products if buyerId matches
+      
+//       // Add non-reviewed products only if current user is the buyer
+//       // (sellers shouldn't see "Add Review" for products they sold)
 //       if (!product.hasReviewed && product.buyerId === currentUserId) {
-//         console.log("Adding placeholder for product:", product.productName); // Debug log
 //         items.push({
 //           productId: product.productId,
 //           productImage: product.productImage,
@@ -105,6 +95,7 @@
 //           hasReviewed: false,
 //           orderId: product.orderId,
 //           buyerId: product.buyerId,
+//           sellerId: product.sellerId,
 //           rating: 0,
 //           comment: "You haven't reviewed this product yet",
 //           description: "Click 'Add Review' to share your experience with this product",
@@ -115,7 +106,7 @@
 //         });
 //       }
 //     });
-//     console.log("Final Display Items:", items); // Debug log
+    
 //     return items;
 //   };
 
@@ -134,6 +125,13 @@
 //   const averageRating = actualReviews.length > 0 
 //     ? (actualReviews.reduce((total, item) => total + (item.rating || 0), 0) / actualReviews.length).toFixed(1)
 //     : 0;
+
+//   // Function to determine if current user can see the "Add Review" button
+//   const canAddReview = (item) => {
+//     return item.type === 'placeholder' && 
+//            item.buyerId === currentUserId && 
+//            currentUserId !== item.sellerId; // Buyers can't review their own products
+//   };
 
 //   return (
 //     <div className="px-[20px] lg:px-[71px]">
@@ -194,19 +192,18 @@
 //         ) : sortedItems.length > 0 ? (
 //           sortedItems.map((item, index) => (
 //             <div key={`${item.productId}-${index}`} className="relative">
-//               <div className="flex justify-between items-start mb-4">
+//               <div className="flex flex-col">
 //                 <div className="flex-1">
 //                   <ReviewItem 
 //                     data={item} 
 //                     canEdit={currentUserId === item.buyerId && item.type === 'review'} 
 //                   />
 //                 </div>
-//                 {item.type === 'placeholder' && item.buyerId === currentUserId && (
-//                   <div className="ml-4 flex items-center">
+//                 {canAddReview(item) && (
+//                   <div className="mt-4 flex justify-start">
 //                     <div
 //                       className="flex items-center gap-2 cursor-pointer bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors"
 //                       onClick={() => {
-//                         console.log("Add Review clicked for:", item); // Debug log
 //                         setSelectedProductForReview(item);
 //                         setIsOpen(true);
 //                       }}
@@ -246,20 +243,23 @@
 
 
 
-
-
-
 "use client";
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { IoPencil } from "react-icons/io5";
-import ReviewAddModal from "./ReviewAddModal";
-import ReviewItem from "./ReviewItem";
 import axios from "axios";
 import Cookies from "js-cookie";
+import ReviewAddModal from "./ReviewAddModal";
+import ReviewEditModal from "./ReviewEditModal";
+import ReviewItem from "./ReviewItem";
+
+
+
+
 
 export const ReviewCards = ({ data }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [sortOrder, setSortOrder] = useState(null);
   const [userReviews, setUserReviews] = useState([]);
@@ -267,14 +267,13 @@ export const ReviewCards = ({ data }) => {
   const [currentUserId, setCurrentUserId] = useState(null);
   const [error, setError] = useState(null);
   const [selectedProductForReview, setSelectedProductForReview] = useState(null);
+  const [selectedReviewForEdit, setSelectedReviewForEdit] = useState(null);
 
   useEffect(() => {
     try {
       const userCookie = Cookies.get("user");
-      
       if (userCookie) {
         const user = JSON.parse(userCookie);
-        
         if (user && user._id) {
           setCurrentUserId(user._id);
         }
@@ -315,9 +314,7 @@ export const ReviewCards = ({ data }) => {
 
   const getDisplayItems = () => {
     const items = [];
-
     userReviews.forEach(product => {
-      // Add reviewed products
       if (product.hasReviewed && product.reviews?.length > 0) {
         product.reviews.forEach(review => {
           items.push({
@@ -326,12 +323,12 @@ export const ReviewCards = ({ data }) => {
             productImage: product.productImage,
             productName: product.productName,
             orderId: product.orderId,
+            sellerId: product.sellerId,
             hasReviewed: true,
             type: 'review'
           });
         });
       }
-      // Add non-reviewed products if buyerId matches
       if (!product.hasReviewed && product.buyerId === currentUserId) {
         items.push({
           productId: product.productId,
@@ -340,6 +337,7 @@ export const ReviewCards = ({ data }) => {
           hasReviewed: false,
           orderId: product.orderId,
           buyerId: product.buyerId,
+          sellerId: product.sellerId,
           rating: 0,
           comment: "You haven't reviewed this product yet",
           description: "Click 'Add Review' to share your experience with this product",
@@ -368,6 +366,12 @@ export const ReviewCards = ({ data }) => {
   const averageRating = actualReviews.length > 0 
     ? (actualReviews.reduce((total, item) => total + (item.rating || 0), 0) / actualReviews.length).toFixed(1)
     : 0;
+
+  const canAddReview = (item) => {
+    return item.type === 'placeholder' && 
+           item.buyerId === currentUserId && 
+           currentUserId !== item.sellerId;
+  };
 
   return (
     <div className="px-[20px] lg:px-[71px]">
@@ -428,15 +432,19 @@ export const ReviewCards = ({ data }) => {
         ) : sortedItems.length > 0 ? (
           sortedItems.map((item, index) => (
             <div key={`${item.productId}-${index}`} className="relative">
-              <div className="flex justify-between items-start mb-4">
+              <div className="flex flex-col">
                 <div className="flex-1">
-                  <ReviewItem 
+                  <ReviewItem
                     data={item} 
-                    canEdit={currentUserId === item.buyerId && item.type === 'review'} 
+                    canEdit={currentUserId === item.buyerId && item.type === 'review'}
+                    onEdit={() => {
+                      setSelectedReviewForEdit(item);
+                      setIsEditOpen(true);
+                    }}
                   />
                 </div>
-                {item.type === 'placeholder' && item.buyerId === currentUserId && (
-                  <div className="ml-4 flex items-center">
+                {canAddReview(item) && (
+                  <div className="mt-4 flex justify-start">
                     <div
                       className="flex items-center gap-2 cursor-pointer bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors"
                       onClick={() => {
@@ -470,6 +478,20 @@ export const ReviewCards = ({ data }) => {
           productId={selectedProductForReview?.productId}
           orderId={selectedProductForReview?.orderId}
           onReviewAdded={fetchUserReviews}
+        />
+
+        <ReviewEditModal
+          isOpen={isEditOpen}
+          onClose={() => {
+            setIsEditOpen(false);
+            setSelectedReviewForEdit(null);
+          }}
+          title="Edit Review"
+          productId={selectedReviewForEdit?.productId}
+          orderId={selectedReviewForEdit?.orderId}
+          initialRating={selectedReviewForEdit?.rating}
+          initialDescription={selectedReviewForEdit?.description}
+          onReviewUpdated={fetchUserReviews}
         />
       </div>
     </div>

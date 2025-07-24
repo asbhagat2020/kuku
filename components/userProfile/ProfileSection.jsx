@@ -47,7 +47,7 @@ const ProfileSection = (userDetails) => {
     setFormData({
       ...user.user,
       // Make sure to include the description field
-      description: user.user?.Discription || "",
+      description: user.user?.description || "",
     });
     setHasSelectedNewImage(false);
   };
@@ -173,11 +173,11 @@ const ProfileSection = (userDetails) => {
 
         let data = { ...formData };
 
-        // Map description to Discription for API consistency
-        if (data.description !== undefined) {
-          data.Discription = data.description;
-          delete data.description;
-        }
+        // // Map description to Discription for API consistency
+        // if (data.description !== undefined) {
+        //   data.description = data.description;
+        //   delete data.description;
+        // }
 
         if (uploadedImage) {
           data.avatar = uploadedImage;
@@ -444,7 +444,7 @@ const ProfileSection = (userDetails) => {
                   Description
                 </p>
                 <p className="text-[#515151] text-sm sm:text-base font-medium font-karla leading-normal">
-                  {user?.user?.Discription || "No description provided"}
+                  {user?.user?.description || "No description provided"}
                 </p>
               </div>
               <div>
