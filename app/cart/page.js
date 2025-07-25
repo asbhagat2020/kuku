@@ -1802,7 +1802,7 @@ export default function Cart() {
                           </div>
                           {applicabilityCheck.applicable && (
                             <div className="text-xs text-green-600 font-medium">
-                              You'll save: AED {potentialDiscount.toFixed(2)}
+                              You&apos;ll save: AED {potentialDiscount.toFixed(2)}
                             </div>
                           )}
                           {!applicabilityCheck.applicable && (
