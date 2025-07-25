@@ -14,9 +14,7 @@
 // import Image from "next/image";
 // import { loadStripe } from "@stripe/stripe-js";
 
-// const stripePromise = loadStripe(
-//   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
-// );
+// const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
 
 // export default function Cart() {
 //   const [isCouponPopupVisible, setIsCouponPopupVisible] = useState(false);
@@ -31,7 +29,7 @@
 //   const [selectAll, setSelectAll] = useState(false);
 //   const [errorPopupOpen, setErrorPopupOpen] = useState(false);
 //   const [errorMessage, setErrorMessage] = useState("");
-//   const [showAddress, setShowAddress] = useState(true);
+//   const [showAddress, setShowAddress] = useState(false); // Controlled by a button
 //   const [processingPayment, setProcessingPayment] = useState(false);
 //   const [coupons, setCoupons] = useState([]);
 //   const [couponCode, setCouponCode] = useState("");
@@ -239,7 +237,7 @@
 
 //       if (!selectedAddress?._id) {
 //         console.log("No shipping address selected");
-//         setErrorMessage("Please select a。一般来说，任何一家网站的客服都会要求您提供更多信息以继续访问我们的网站。");
+//         setErrorMessage("Please select a shipping address before proceeding.");
 //         setErrorPopupOpen(true);
 //         return;
 //       }
@@ -481,10 +479,10 @@
 //       setCart(response.data.products || []);
 //       const initialSelected = {};
 //       (response.data.products || []).forEach((item) => {
-//         initialSelected[item._id] = true;
+//         initialSelected[item._id] = false; // Default to unselected
 //       });
 //       setSelectedItems(initialSelected);
-//       setSelectAll(true);
+//       setSelectAll(false);
 //     } catch (err) {
 //       console.error("Failed to fetch cart details:", err);
 //       setErrorMessage("Failed to fetch cart details. Please try again.");
@@ -544,11 +542,15 @@
 //   }, [token]);
 
 //   useEffect(() => {
-//   calculateTotals(selectedItems);
-// }, [cart, selectedItems]);
+//     calculateTotals(selectedItems);
+//   }, [cart, selectedItems]);
 
 //   const selectedCount = Object.values(selectedItems).filter(Boolean).length;
 //   const totalItems = cart.length;
+
+//   const handleShowAddress = () => {
+//     setShowAddress(true);
+//   };
 
 //   return (
 //     <>
@@ -714,9 +716,7 @@
 //                         type="text"
 //                         placeholder="Add coupon"
 //                         value={couponCode}
-//                         onChange={(e) =>
-//                           setCouponCode(e.target.value.toUpperCase())
-//                         }
+//                         onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
 //                         className="w-[150px] md:w-[200px] h-[36px] p-2 border border-[#b4b4b4] rounded-lg text-sm font-karla outline-[#e4086f] outline-4"
 //                       />
 //                       <button
@@ -761,7 +761,10 @@
 //                   <button
 //                     onClick={handleCheckout}
 //                     disabled={
-//                       loading || processingPayment || selectedCount === 0
+//                       loading ||
+//                       processingPayment ||
+//                       selectedCount === 0 ||
+//                       !selectedAddress
 //                     }
 //                     className="w-full h-[40px] p-2 bg-[#fde504] rounded-lg md:rounded-[16px] mt-2 disabled:opacity-50 disabled:cursor-not-allowed"
 //                   >
@@ -793,6 +796,18 @@
 //                 </div>
 //               </div>
 //             </div>
+
+//             {/* Add button to show address selection */}
+//             {selectedCount > 0 && !showAddress && (
+//               <div className="mt-4 text-center">
+//                 <button
+//                   onClick={handleShowAddress}
+//                   className="px-6 py-2 bg-[#e4086f] text-white rounded-lg hover:bg-[#c5076b]"
+//                 >
+//                   Select Shipping Address
+//                 </button>
+//               </div>
+//             )}
 //           </>
 //         ) : (
 //           <div className="w-full h-[50vh] flex justify-center items-center">
@@ -808,6 +823,10 @@
 //           </div>
 //         )}
 //       </div>
+
+//       {showAddress && (
+//         <CartAddress onAddressSelect={setSelectedAddress} />
+//       )}
 
 //       {isCouponPopupVisible && (
 //         <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-50">
@@ -850,8 +869,7 @@
 //                           </div>
 //                           {applicabilityCheck.applicable && (
 //                             <div className="text-xs text-green-600 font-medium">
-//                               {/* You'll save: AED {potentialDiscount.toFixed(2)} */}
-//                               You&apos;ll save: AED {potentialDiscount.toFixed(2)}
+//                               You&apos;ll  save: AED {potentialDiscount.toFixed(2)}
 //                             </div>
 //                           )}
 //                           {!applicabilityCheck.applicable && (
@@ -907,15 +925,11 @@
 //         </div>
 //       )}
 
-//       {cart.length > 0 && showAddress && (
-//         <CartAddress onAddressSelect={setSelectedAddress} />
-//       )}
 //       <DownloadKuku />
 //       <Footer />
 //     </>
 //   );
 // }
-
 
 
 
@@ -954,7 +968,7 @@ export default function Cart() {
   const [selectAll, setSelectAll] = useState(false);
   const [errorPopupOpen, setErrorPopupOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const [showAddress, setShowAddress] = useState(false); // Controlled by a button
+  const [showAddress, setShowAddress] = useState(false);
   const [processingPayment, setProcessingPayment] = useState(false);
   const [coupons, setCoupons] = useState([]);
   const [couponCode, setCouponCode] = useState("");
@@ -1685,12 +1699,7 @@ export default function Cart() {
 
                   <button
                     onClick={handleCheckout}
-                    disabled={
-                      loading ||
-                      processingPayment ||
-                      selectedCount === 0 ||
-                      !selectedAddress
-                    }
+                    disabled={loading || processingPayment || selectedCount === 0 || !selectedAddress}
                     className="w-full h-[40px] p-2 bg-[#fde504] rounded-lg md:rounded-[16px] mt-2 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <div className="text-center text-[#070707] text-sm md:text-[14px] font-medium">
@@ -1722,7 +1731,6 @@ export default function Cart() {
               </div>
             </div>
 
-            {/* Add button to show address selection */}
             {selectedCount > 0 && !showAddress && (
               <div className="mt-4 text-center">
                 <button
@@ -1794,7 +1802,7 @@ export default function Cart() {
                           </div>
                           {applicabilityCheck.applicable && (
                             <div className="text-xs text-green-600 font-medium">
-                              You&apos;ll  save: AED {potentialDiscount.toFixed(2)}
+                              You'll save: AED {potentialDiscount.toFixed(2)}
                             </div>
                           )}
                           {!applicabilityCheck.applicable && (
