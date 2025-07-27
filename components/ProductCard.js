@@ -2,11 +2,8 @@
 
 // import Link from "next/link";
 // import Image from "next/image";
-// // import amiriImg from "../public/product-image.png";
-// // import kukuLogo from "../public/emojiKuku.png";
 // import CustomCalendar from "./CustomCalendar";
 // import { useState, useEffect, useRef } from "react";
-// // import calendarImg from "../public/Calendar.png";
 // import {
 //   FaStar,
 //   FaRegHeart,
@@ -20,7 +17,6 @@
 // import { addToCart } from "@/store/cart/cartSlice";
 // import axios from "axios";
 // import Cookies from "js-cookie";
-// // import { showSuccessNotification } from "@/utils/Notification/notif";
 // import toast from "react-hot-toast";
 
 // const ProductCard = (productDetails) => {
@@ -35,12 +31,15 @@
 //   const [isModalOpen, setIsModalOpen] = useState(false);
 //   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 //   const [isDateSelected, setIsDateSelected] = useState(false);
+//   const [selectedStartDate, setSelectedStartDate] = useState(null);
+//   const [selectedEndDate, setSelectedEndDate] = useState(null);
 //   const [isStartFormatted, setIsStartFormatted] = useState("");
 //   const [isEndFormatted, setIsEndFormatted] = useState("");
 //   const [showCalendar, setShowCalendar] = useState(false);
-//   const [showEndCalendar, setShowEndCalendar] = useState(false);
 //   const [isFollowing, setIsFollowing] = useState(false);
 //   const [loading, setLoading] = useState(false);
+//   // New state for progressive popup
+//   const [showExpandedDateSelection, setShowExpandedDateSelection] = useState(false);
 //   const modalRef = useRef(null);
 //   const dispatch = useDispatch();
 //   const [errorPopupOpen, setErrorPopupOpen] = useState(false);
@@ -48,6 +47,7 @@
 //   const details = useSelector((state) => state.auth.user);
 //   const userID = details?._id;
 //   console.log("product details......", productDetails.product);
+  
 //   // Define the images array
 //   const images = product?.images;
 
@@ -62,7 +62,6 @@
 //       }
 
 //       const response = await axios.post(
-//         // `${process.env.NEXT_PUBLIC_API_BASE_URL}/product/add/cart/${product._id}`,
 //         `${process.env.NEXT_PUBLIC_API_BASE_URL}/cart/add`,
 //         { productId: product._id },
 //         {
@@ -164,39 +163,49 @@
 //     }
 //   };
 
-//   const openCalendar = () => {
+//   const toggleCalendar = () => {
 //     setShowCalendar(!showCalendar);
-//   };
-//   const openEndCalendar = () => {
-//     setShowEndCalendar(!showEndCalendar);
+//     // If this is the first time opening calendar and we haven't expanded yet
+//     if (!showCalendar && !showExpandedDateSelection) {
+//       setShowExpandedDateSelection(true);
+//     }
 //   };
 
 //   const closeCalendar = () => {
 //     setShowCalendar(false);
 //   };
-//   const closeEndCalendar = () => {
-//     setShowEndCalendar(false);
-//   };
 
-//   const handleStartDateSelect = (date) => {
-//     const formattedDate = new Date(date).toLocaleDateString("en-GB", {
-//       day: "2-digit",
-//       month: "2-digit",
-//       year: "numeric",
-//     });
-//     setIsDateSelected(true);
-//     setIsStartFormatted(formattedDate);
-//     closeCalendar();
-//   };
-//   const handleEndDateSelect = (date) => {
-//     const formattedDate = new Date(date).toLocaleDateString("en-GB", {
-//       day: "2-digit",
-//       month: "2-digit",
-//       year: "numeric",
-//     });
-//     setIsDateSelected(true);
-//     setIsEndFormatted(formattedDate);
-//     closeEndCalendar();
+//   // Updated handler for date range selection from CustomCalendar
+//   const handleDateRangeSelect = (startDate, endDate) => {
+//     if (startDate) {
+//       setSelectedStartDate(startDate);
+//       const formattedStart = new Date(startDate).toLocaleDateString("en-GB", {
+//         day: "2-digit",
+//         month: "2-digit",
+//         year: "numeric",
+//       });
+//       setIsStartFormatted(formattedStart);
+//       setIsDateSelected(true);
+//       // Expand to show separate date fields after first selection
+//       setShowExpandedDateSelection(true);
+//     } else {
+//       setSelectedStartDate(null);
+//       setIsStartFormatted("");
+//       setIsDateSelected(false);
+//     }
+
+//     if (endDate) {
+//       setSelectedEndDate(endDate);
+//       const formattedEnd = new Date(endDate).toLocaleDateString("en-GB", {
+//         day: "2-digit",
+//         month: "2-digit",
+//         year: "numeric",
+//       });
+//       setIsEndFormatted(formattedEnd);
+//     } else {
+//       setSelectedEndDate(null);
+//       setIsEndFormatted("");
+//     }
 //   };
 
 //   useEffect(() => {
@@ -245,6 +254,7 @@
 //   const handleCloseModal = () => {
 //     setIsModalOpen(false);
 //   };
+
 //   const handleOpenRentPopup = () => {
 //     setRentPopupOpen(true);
 //   };
@@ -252,13 +262,23 @@
 //   const handleCloseRentPopup = () => {
 //     setRentPopupOpen(false);
 //     setRentalDate("");
-//     openCalendar(false);
-//     openEndCalendar(false);
+//     setSelectedStartDate(null);
+//     setSelectedEndDate(null);
+//     setIsStartFormatted("");
+//     setIsEndFormatted("");
+//     setShowCalendar(false);
+//     setShowExpandedDateSelection(false); // Reset the expanded state
 //   };
 
 //   const handleProceed = () => {
+//     if (!selectedStartDate || !selectedEndDate) {
+//       setErrorMessage("Please select both start and end dates");
+//       setErrorPopupOpen(true);
+//       return;
+//     }
+
 //     router.push(
-//       `/renting?startDate=${isStartFormatted}&endDate=${isEndFormatted}`
+//       `/renting?startDate=${isStartFormatted}&endDate=${isEndFormatted}&productId=${product._id}`
 //     );
 //     handleCloseRentPopup();
 //   };
@@ -423,15 +443,15 @@
 
 //           <div className="text-2xl font-bold">
 //             AED {product?.price}{" "}
-//             <span style={{ color: "#30BD75", fontSize: "1.50rem" }}>
+//             {/* <span style={{ color: "#30BD75", fontSize: "1.50rem" }}>
 //               {product.discountPercentage}% OFF
-//             </span>
-//             <p
+//             </span> */}
+//             {/* <p
 //               className="text-gray-400 line-through"
 //               style={{ fontSize: "0.985rem", margin: 0, fontWeight: "normal" }}
 //             >
 //               MRP AED{product?.price}
-//             </p>
+//             </p> */}
 //           </div>
 
 //           <div className="flex items-center text-gray-600 space-x-4 font-medium">
@@ -497,6 +517,7 @@
 //             <FaShoppingBag className="mr-2" />
 //             ADD TO BAG
 //           </button>
+          
 //           {product.openToRent === "Yes" && (
 //             <div className="flex flex-col mt-2">
 //               <div className="text-center font-bold text-black">
@@ -605,104 +626,128 @@
 //             </div>
 //           </div>
 
+//           {/* Updated Rental Popup with Progressive Display */}
 //           {isRentPopupOpen && (
 //             <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
 //               <div
 //                 ref={modalRef}
-//                 className="bg-white p-6 rounded-lg shadow-lg w-[400px] text-start"
+//                 className="bg-white p-6 rounded-lg shadow-lg w-[500px] text-start max-h-[90vh] overflow-y-auto"
 //               >
 //                 <div>
 //                   <span className="text-[#E4086F] text-[14px] font-karla font-bold capitalize tracking-[1.12px] break-words">
-//                     Rental Price:
+//                     Rental Price: 
 //                   </span>
 //                   <span className="text-[#070707] text-[14px] font-karla font-bold capitalize tracking-[1.12px] break-words">
 //                     AED {product.pricePerDay}
 //                   </span>
 //                 </div>
 
-//                 <label
-//                   htmlFor="rentalDate"
-//                   className="block text-left mb-[20px] mt-[20px] cursor-pointer text-[#070707] text-[15px] font-karla font-bold break-words"
-//                   onClick={openCalendar}
-//                 >
-//                   Choose start Date
-//                 </label>
-//                 <div className="flex w-full overflow-hidden items-center justify-between border border-gray-300 rounded-md">
-//                   <input
-//                     type="text"
-//                     id="rentalDate"
-//                     placeholder="Choose your rental dates"
-//                     value={isStartFormatted}
-//                     onClick={openCalendar}
-//                     readOnly
-//                     required
-//                     className="relative p-2 text-[#4C5C6B] text-[16px] font-karla font-normal bg-no-repeat bg-right bg-[length:20px_20px] pr-10 outline-none"
-//                     style={{ width: "calc(100% - 34px)" }}
-//                   />
-//                   <div className="w-[34px] h-[30px] px-[2px] cursor-pointer">
-//                     <Image
-//                       src="/Calendar.png"
-//                       alt="Calendar Icon"
-//                       width={34} // Add the width for the image
-//                       height={30} // Add the height for the image
-//                       className="w-[100%] h-[100%]"
-//                       onClick={() =>
-//                         document.getElementById("rentalDate").click()
-//                       }
-//                     />
-//                   </div>
-//                 </div>
-//                 {showCalendar && (
-//                   <div className="absolute z-50">
-//                     <CustomCalendar
-//                       onSelectDate={handleStartDateSelect}
-//                       closeCalendar={closeCalendar}
-//                     />
-//                   </div>
-//                 )}
-//                 <label
-//                   htmlFor="rentalEndDate"
-//                   className="block text-left mb-[20px] mt-[20px] cursor-pointer text-[#070707] text-[15px] font-karla font-bold break-words"
-//                   onClick={openEndCalendar}
-//                 >
-//                   Choose end Date
-//                 </label>
-//                 <div className="flex w-full overflow-hidden items-center justify-between border border-gray-300 rounded-md">
-//                   <input
-//                     type="text"
-//                     id="rentalEndDate"
-//                     placeholder="Choose your rental dates"
-//                     value={isEndFormatted}
-//                     onClick={openEndCalendar}
-//                     readOnly
-//                     required
-//                     className="relative p-2 text-[#4C5C6B] text-[16px] font-karla font-normal bg-no-repeat bg-right bg-[length:20px_20px] pr-10 outline-none"
-//                     style={{ width: "calc(100% - 34px)" }}
-//                   />
-//                   <div className="w-[34px] h-[30px] px-[2px] cursor-pointer">
-//                     <Image
-//                       src="/Calendar.png"
-//                       alt="Calendar Icon"
-//                       width={34} // Specify the width
-//                       height={30} // Specify the height
-//                       className="w-[100%] h-[100%]"
-//                       onClick={() =>
-//                         document.getElementById("rentalEndDate").click()
-//                       }
-//                     />
-//                   </div>
+//                 <div className="mt-6 mb-4">
+//                   {!showExpandedDateSelection ? (
+//                     // Initial single field view (like second image)
+//                     <div>
+//                       <div className="text-[#070707] text-[15px] font-bold font-karla mb-3">
+//                         Choose Date
+//                       </div>
+                      
+//                       <div className="mb-4">
+//                         <div className="flex w-full overflow-hidden items-center justify-between border border-gray-300 rounded-md">
+//                           <input
+//                             type="text"
+//                             placeholder="Choose your rental dates"
+//                             value={isStartFormatted && isEndFormatted ? `${isStartFormatted} - ${isEndFormatted}` : ""}
+//                             onClick={toggleCalendar}
+//                             readOnly
+//                             className="p-2 text-[#4C5C6B] text-[16px] font-karla font-normal outline-none cursor-pointer flex-1"
+//                           />
+//                           <div className="w-[34px] h-[30px] px-[2px] cursor-pointer" onClick={toggleCalendar}>
+//                             <Image
+//                               src="/Calendar.png"
+//                               alt="Calendar Icon"
+//                               width={34}
+//                               height={30}
+//                               className="w-[100%] h-[100%]"
+//                             />
+//                           </div>
+//                         </div>
+//                       </div>
+//                     </div>
+//                   ) : (
+//                     // Expanded view with separate fields (like first image)
+//                     <div>
+//                       <div className="text-[#070707] text-[15px] font-bold font-karla mb-3">
+//                         Select Rental Period
+//                       </div>
+                      
+//                       {/* Separate Date Fields */}
+//                       <div className="grid grid-cols-2 gap-4 mb-4">
+//                         <div>
+//                           <label className="block text-sm font-medium text-gray-700 mb-1">
+//                             Start Date
+//                           </label>
+//                           <div className="flex w-full overflow-hidden items-center justify-between border border-gray-300 rounded-md">
+//                             <input
+//                               type="text"
+//                               placeholder="Select start date"
+//                               value={isStartFormatted}
+//                               onClick={toggleCalendar}
+//                               readOnly
+//                               className="p-2 text-[#4C5C6B] text-[16px] font-karla font-normal outline-none cursor-pointer"
+//                               style={{ width: "calc(100% - 34px)" }}
+//                             />
+//                             <div className="w-[34px] h-[30px] px-[2px] cursor-pointer" onClick={toggleCalendar}>
+//                               <Image
+//                                 src="/Calendar.png"
+//                                 alt="Calendar Icon"
+//                                 width={34}
+//                                 height={30}
+//                                 className="w-[100%] h-[100%]"
+//                               />
+//                             </div>
+//                           </div>
+//                         </div>
+                        
+//                         <div>
+//                           <label className="block text-sm font-medium text-gray-700 mb-1">
+//                             End Date
+//                           </label>
+//                           <div className="flex w-full overflow-hidden items-center justify-between border border-gray-300 rounded-md">
+//                             <input
+//                               type="text"
+//                               placeholder="Select end date"
+//                               value={isEndFormatted}
+//                               onClick={toggleCalendar}
+//                               readOnly
+//                               className="p-2 text-[#4C5C6B] text-[16px] font-karla font-normal outline-none cursor-pointer"
+//                               style={{ width: "calc(100% - 34px)" }}
+//                             />
+//                             <div className="w-[34px] h-[30px] px-[2px] cursor-pointer" onClick={toggleCalendar}>
+//                               <Image
+//                                 src="/Calendar.png"
+//                                 alt="Calendar Icon"
+//                                 width={34}
+//                                 height={30}
+//                                 className="w-[100%] h-[100%]"
+//                               />
+//                             </div>
+//                           </div>
+//                         </div>
+//                       </div>
+//                     </div>
+//                   )}
+
+//                   {/* Calendar (shown when toggled) */}
+//                   {showCalendar && (
+//                     <div className="mb-4">
+//                       <CustomCalendar
+//                         onSelectDateRange={handleDateRangeSelect}
+//                         productData={productDetails}
+//                       />
+//                     </div>
+//                   )}
 //                 </div>
 
-//                 {showEndCalendar && (
-//                   <div className="absolute z-50">
-//                     <CustomCalendar
-//                       onSelectDate={handleEndDateSelect}
-//                       closeCalendar={closeEndCalendar}
-//                     />
-//                   </div>
-//                 )}
-
-//                 <div className="w-full text-[#525252] text-[15px] font-karla font-bold break-words mb-[15px]">
+//                 <div className="w-full text-[#525252] text-[15px] font-karla font-bold break-words mb-[15px] mt-[20px]">
 //                   You need to make a one-time deposit for renting the item. The
 //                   deposit will be refunded post the return of the item.
 //                 </div>
@@ -760,7 +805,7 @@
 //               <span
 //                 style={{ color: "#070707", fontSize: "14px", fontWeight: 700 }}
 //               >
-//                 AED 250
+//                 AED {product?.price}
 //               </span>
 //             </div>
 //             <div>
@@ -917,6 +962,17 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 "use client";
 
 import Link from "next/link";
@@ -937,6 +993,7 @@ import { addToCart } from "@/store/cart/cartSlice";
 import axios from "axios";
 import Cookies from "js-cookie";
 import toast from "react-hot-toast";
+import OfferPopup from "./OfferPopup";
 
 const ProductCard = (productDetails) => {
   const [product, setProduct] = useState(productDetails?.product);
@@ -957,7 +1014,6 @@ const ProductCard = (productDetails) => {
   const [showCalendar, setShowCalendar] = useState(false);
   const [isFollowing, setIsFollowing] = useState(false);
   const [loading, setLoading] = useState(false);
-  // New state for progressive popup
   const [showExpandedDateSelection, setShowExpandedDateSelection] = useState(false);
   const modalRef = useRef(null);
   const dispatch = useDispatch();
@@ -966,8 +1022,7 @@ const ProductCard = (productDetails) => {
   const details = useSelector((state) => state.auth.user);
   const userID = details?._id;
   console.log("product details......", productDetails.product);
-  
-  // Define the images array
+
   const images = product?.images;
 
   const handleBuy = async () => {
@@ -1084,7 +1139,6 @@ const ProductCard = (productDetails) => {
 
   const toggleCalendar = () => {
     setShowCalendar(!showCalendar);
-    // If this is the first time opening calendar and we haven't expanded yet
     if (!showCalendar && !showExpandedDateSelection) {
       setShowExpandedDateSelection(true);
     }
@@ -1094,7 +1148,6 @@ const ProductCard = (productDetails) => {
     setShowCalendar(false);
   };
 
-  // Updated handler for date range selection from CustomCalendar
   const handleDateRangeSelect = (startDate, endDate) => {
     if (startDate) {
       setSelectedStartDate(startDate);
@@ -1105,7 +1158,6 @@ const ProductCard = (productDetails) => {
       });
       setIsStartFormatted(formattedStart);
       setIsDateSelected(true);
-      // Expand to show separate date fields after first selection
       setShowExpandedDateSelection(true);
     } else {
       setSelectedStartDate(null);
@@ -1186,7 +1238,7 @@ const ProductCard = (productDetails) => {
     setIsStartFormatted("");
     setIsEndFormatted("");
     setShowCalendar(false);
-    setShowExpandedDateSelection(false); // Reset the expanded state
+    setShowExpandedDateSelection(false);
   };
 
   const handleProceed = () => {
@@ -1222,10 +1274,6 @@ const ProductCard = (productDetails) => {
     } else {
       setIsSubmitDisabled(true);
     }
-  };
-
-  const handleSubmitOffer = () => {
-    handleCloseOfferPopup();
   };
 
   const handleNextImage = () => {
@@ -1362,15 +1410,6 @@ const ProductCard = (productDetails) => {
 
           <div className="text-2xl font-bold">
             AED {product?.price}{" "}
-            {/* <span style={{ color: "#30BD75", fontSize: "1.50rem" }}>
-              {product.discountPercentage}% OFF
-            </span> */}
-            {/* <p
-              className="text-gray-400 line-through"
-              style={{ fontSize: "0.985rem", margin: 0, fontWeight: "normal" }}
-            >
-              MRP AED{product?.price}
-            </p> */}
           </div>
 
           <div className="flex items-center text-gray-600 space-x-4 font-medium">
@@ -1436,7 +1475,7 @@ const ProductCard = (productDetails) => {
             <FaShoppingBag className="mr-2" />
             ADD TO BAG
           </button>
-          
+
           {product.openToRent === "Yes" && (
             <div className="flex flex-col mt-2">
               <div className="text-center font-bold text-black">
@@ -1479,22 +1518,23 @@ const ProductCard = (productDetails) => {
               </div>
 
               <button
-                className={`mt-2 px-4 sm:px-6 py-1 ${product?.seller?.followers?.includes(userID)
+                className={`mt-2 px-4 sm:px-6 py-1 ${
+                  product?.seller?.followers?.includes(userID)
                     ? "bg-gray-500"
                     : "bg-custom-green"
-                  } text-white rounded-full`}
+                } text-white rounded-full`}
                 onClick={() =>
                   product?.seller?.followers?.includes(userID)
                     ? handleFollow(
-                      product.seller._id,
-                      "unfollow",
-                      product?.seller?._id
-                    )
+                        product.seller._id,
+                        "unfollow",
+                        product?.seller?._id
+                      )
                     : handleFollow(
-                      product.seller._id,
-                      "follow",
-                      product?.seller?._id
-                    )
+                        product.seller._id,
+                        "follow",
+                        product?.seller?._id
+                      )
                 }
                 disabled={loading}
               >
@@ -1545,7 +1585,6 @@ const ProductCard = (productDetails) => {
             </div>
           </div>
 
-          {/* Updated Rental Popup with Progressive Display */}
           {isRentPopupOpen && (
             <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
               <div
@@ -1554,7 +1593,7 @@ const ProductCard = (productDetails) => {
               >
                 <div>
                   <span className="text-[#E4086F] text-[14px] font-karla font-bold capitalize tracking-[1.12px] break-words">
-                    Rental Price: 
+                    Rental Price:
                   </span>
                   <span className="text-[#070707] text-[14px] font-karla font-bold capitalize tracking-[1.12px] break-words">
                     AED {product.pricePerDay}
@@ -1563,23 +1602,29 @@ const ProductCard = (productDetails) => {
 
                 <div className="mt-6 mb-4">
                   {!showExpandedDateSelection ? (
-                    // Initial single field view (like second image)
                     <div>
                       <div className="text-[#070707] text-[15px] font-bold font-karla mb-3">
                         Choose Date
                       </div>
-                      
+
                       <div className="mb-4">
                         <div className="flex w-full overflow-hidden items-center justify-between border border-gray-300 rounded-md">
                           <input
                             type="text"
                             placeholder="Choose your rental dates"
-                            value={isStartFormatted && isEndFormatted ? `${isStartFormatted} - ${isEndFormatted}` : ""}
+                            value={
+                              isStartFormatted && isEndFormatted
+                                ? `${isStartFormatted} - ${isEndFormatted}`
+                                : ""
+                            }
                             onClick={toggleCalendar}
                             readOnly
                             className="p-2 text-[#4C5C6B] text-[16px] font-karla font-normal outline-none cursor-pointer flex-1"
                           />
-                          <div className="w-[34px] h-[30px] px-[2px] cursor-pointer" onClick={toggleCalendar}>
+                          <div
+                            className="w-[34px] h-[30px] px-[2px] cursor-pointer"
+                            onClick={toggleCalendar}
+                          >
                             <Image
                               src="/Calendar.png"
                               alt="Calendar Icon"
@@ -1592,13 +1637,11 @@ const ProductCard = (productDetails) => {
                       </div>
                     </div>
                   ) : (
-                    // Expanded view with separate fields (like first image)
                     <div>
                       <div className="text-[#070707] text-[15px] font-bold font-karla mb-3">
                         Select Rental Period
                       </div>
-                      
-                      {/* Separate Date Fields */}
+
                       <div className="grid grid-cols-2 gap-4 mb-4">
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -1614,7 +1657,10 @@ const ProductCard = (productDetails) => {
                               className="p-2 text-[#4C5C6B] text-[16px] font-karla font-normal outline-none cursor-pointer"
                               style={{ width: "calc(100% - 34px)" }}
                             />
-                            <div className="w-[34px] h-[30px] px-[2px] cursor-pointer" onClick={toggleCalendar}>
+                            <div
+                              className="w-[34px] h-[30px] px-[2px] cursor-pointer"
+                              onClick={toggleCalendar}
+                            >
                               <Image
                                 src="/Calendar.png"
                                 alt="Calendar Icon"
@@ -1625,7 +1671,7 @@ const ProductCard = (productDetails) => {
                             </div>
                           </div>
                         </div>
-                        
+
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-1">
                             End Date
@@ -1640,7 +1686,10 @@ const ProductCard = (productDetails) => {
                               className="p-2 text-[#4C5C6B] text-[16px] font-karla font-normal outline-none cursor-pointer"
                               style={{ width: "calc(100% - 34px)" }}
                             />
-                            <div className="w-[34px] h-[30px] px-[2px] cursor-pointer" onClick={toggleCalendar}>
+                            <div
+                              className="w-[34px] h-[30px] px-[2px] cursor-pointer"
+                              onClick={toggleCalendar}
+                            >
                               <Image
                                 src="/Calendar.png"
                                 alt="Calendar Icon"
@@ -1655,7 +1704,6 @@ const ProductCard = (productDetails) => {
                     </div>
                   )}
 
-                  {/* Calendar (shown when toggled) */}
                   {showCalendar && (
                     <div className="mb-4">
                       <CustomCalendar
@@ -1675,10 +1723,11 @@ const ProductCard = (productDetails) => {
                 </div>
                 <button
                   onClick={handleProceed}
-                  className={`px-4 py-2 w-full mb-2 text-[#E4086F] text-[20px] font-karla font-bold leading-[24px] break-words flex-1 h-[60px] bg-[#FDE504] rounded-[20px] flex justify-center items-center gap-[10px] ${isEndFormatted === "" || isStartFormatted === ""
+                  className={`px-4 py-2 w-full mb-2 text-[#E4086F] text-[20px] font-karla font-bold leading-[24px] break-words flex-1 h-[60px] bg-[#FDE504] rounded-[20px] flex justify-center items-center gap-[10px] ${
+                    isEndFormatted === "" || isStartFormatted === ""
                       ? "opacity-50 cursor-not-allowed"
                       : ""
-                    }`}
+                  }`}
                   disabled={isEndFormatted === "" || isStartFormatted === ""}
                 >
                   PROCEED
@@ -1693,179 +1742,74 @@ const ProductCard = (productDetails) => {
               </div>
             </div>
           )}
+
+          <OfferPopup
+            isOfferPopupOpen={isOfferPopupOpen}
+            product={product}
+            handlePriceSelection={handlePriceSelection}
+            handleOpenModal={handleOpenModal}
+            handleCloseOfferPopup={handleCloseOfferPopup}
+            selectedPrice={selectedPrice}
+            isSubmitDisabled={isSubmitDisabled}
+          />
+
+          {isModalOpen && (
+            <div
+              className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
+              onClick={handleCloseModal}
+            >
+              <div
+                className="bg-white p-6 rounded-lg shadow-lg w-[380px] h-[230px] text-center"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div className="flex justify-center items-center mb-5">
+                  <div className="flex justify-center items-center w-[50px] h-[50px] bg-[#30BD75] border-4 border-[#9ae6b4] rounded-full">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-6 w-6 text-white"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
+                  </div>
+                </div>
+
+                <div className="text-[rgb(11,12,30)] text-[20px] font-bold text-center font-karla leading-tight">
+                  <div>Your offer has been </div>
+                  <div> sent to the seller</div>
+                </div>
+
+                <div className="text-[#7F808C] text-[16px] font-normal font-karla leading-tight mt-1">
+                  <div> Now sit back and relax while the seller</div>
+                  <div> takes some time to review your offer</div>
+                </div>
+              </div>
+            </div>
+          )}
+          {errorPopupOpen && (
+            <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+              <div className="bg-white rounded-lg shadow-lg p-6 w-11/12 max-w-md">
+                <p className="text-red-600 font-semibold text-center">
+                  {errorMessage}
+                </p>
+                <button
+                  onClick={() => setErrorPopupOpen(false)}
+                  className="mt-4 w-full bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded transition"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </div>
-
-      {/* Offer Popup */}
-      {isOfferPopupOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-          <div
-            className="bg-white p-9 rounded-lg shadow-lg w-[500px] text-start"
-            style={{
-              width: "500px",
-              ...(window.innerWidth <= 768 && {
-                width: "90%",
-                padding: "1.5rem",
-              }),
-            }}
-          >
-            <div>
-              <span
-                style={{
-                  color: "#E4086F",
-                  fontSize: "14px",
-                  fontWeight: 700,
-                  marginTop: 70,
-                  font: "karla",
-                }}
-              >
-                Listed Price:{" "}
-              </span>
-              <span
-                style={{ color: "#070707", fontSize: "14px", fontWeight: 700 }}
-              >
-                AED {product?.price}
-              </span>
-            </div>
-            <div>
-              <div className="text-[#070707] text-[15px] font-bold font-karla mt-3 mb-3">
-                Quote your price
-              </div>
-            </div>
-            <div
-              className="flex gap-[8px]"
-              style={{
-                flexDirection: window.innerWidth <= 768 ? "column" : "row",
-              }}
-            >
-              <button
-                className={`w-[89px] h-[41px] py-[8.66px] px-[10.93px] bg-white rounded-[6.93px] border ${selectedPrice === 200 ? "border-pink-500" : "border-[#878787]"
-                  } inline-flex items-center justify-center gap-[8.66px]`}
-                onClick={() => handlePriceSelection(200)}
-                style={{
-                  width: window.innerWidth <= 768 ? "100%" : "89px",
-                }}
-              >
-                <div className="text-[#4C5C6B] text-[14px] font-karla font-normal break-words">
-                  AED 200
-                </div>
-              </button>
-              <button
-                className={`w-[89px] h-[41px] py-[8.66px] px-[10.93px] bg-white rounded-[6.93px] border ${selectedPrice === 195 ? "border-pink-500" : "border-[#878787]"
-                  } inline-flex items-center justify-center gap-[8.66px]`}
-                onClick={() => handlePriceSelection(195)}
-                style={{
-                  width: window.innerWidth <= 768 ? "100%" : "89px",
-                }}
-              >
-                <div className="text-[#4C5C6B] text-[14px] font-karla font-normal break-words">
-                  AED 195
-                </div>
-              </button>
-              <div>
-                <input
-                  type="text"
-                  placeholder="Enter the custom amount"
-                  className="w-[245px] h-[41px] py-[8.66px] px-[19.93px] bg-white rounded-[6.93px] border border-[#878787] text-[#4C5C6B] text-[14px] font-karla font-normal placeholder:text-[#B0B0B0] break-words outline-none"
-                  onChange={(e) => handlePriceSelection(e.target.value)}
-                  style={{
-                    width: window.innerWidth <= 768 ? "100%" : "245px",
-                  }}
-                />
-              </div>
-            </div>
-            <div className="text-[#E4086F] text-[12px] font-karla font-bold capitalize tracking-[0.96px] break-words mt-1 mb-[30px]">
-              Suggested
-            </div>
-
-            <p className="text-sm font-bold text-[#525252] mb-4 font-karla">
-              You can only make one offer per item. If the seller accepts your
-              offer, you’ll be notified to place the order. Other users can
-              still buy the item before you.
-            </p>
-
-            <div className="justify-center flex-col">
-              <button
-                onClick={handleOpenModal}
-                className={`bg-[#FDE504] text-[#E4086F] text-[20px] font-bold font-karla rounded-lg w-[440px] h-[65px] ${isSubmitDisabled ? "opacity-50 cursor-not-allowed" : ""
-                  }`}
-                disabled={isSubmitDisabled}
-                style={{
-                  width: window.innerWidth <= 768 ? "100%" : "440px",
-                }}
-              >
-                SUBMIT
-              </button>
-              <button
-                onClick={handleCloseOfferPopup}
-                className="border-[#F7B5D4] text-[#E4086F] text-[20px] font-bold font-karla rounded-lg px-4 py-2 border w-[455px] h-[65px] mt-3"
-                style={{
-                  width: window.innerWidth <= 768 ? "100%" : "440px",
-                }}
-              >
-                CANCEL
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Modal Section */}
-      {isModalOpen && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
-          onClick={handleCloseModal}
-        >
-          <div
-            className="bg-white p-6 rounded-lg shadow-lg w-[380px] h-[230px] text-center"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex justify-center items-center mb-5">
-              <div className="flex justify-center items-center w-[50px] h-[50px] bg-[#30BD75] border-4 border-[#9ae6b4] rounded-full">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6 text-white"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M5 13l4 4L19 7"
-                  />
-                </svg>
-              </div>
-            </div>
-
-            <div className="text-[rgb(11,12,30)] text-[20px] font-bold text-center font-karla leading-tight">
-              <div>Your offer has been </div>
-              <div> sent to the seller</div>
-            </div>
-
-            <div className="text-[#7F808C] text-[16px] font-normal font-karla leading-tight mt-1">
-              <div> Now sit back and relax while the seller</div>
-              <div> takes some time to review your offer</div>
-            </div>
-          </div>
-        </div>
-      )}
-      {errorPopupOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="bg-white rounded-lg shadow-lg p-6 w-11/12 max-w-md">
-            <p className="text-red-600 font-semibold text-center">
-              {errorMessage}
-            </p>
-            <button
-              onClick={() => setErrorPopupOpen(false)}
-              className="mt-4 w-full bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded transition"
-            >
-              Close
-            </button>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

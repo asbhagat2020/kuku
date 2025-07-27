@@ -1,4 +1,4 @@
-//  "use client";
+// "use client";
 
 // import { useEffect, useState } from "react";
 // import { Pagination } from "./Pagination";
@@ -315,24 +315,23 @@
 //   }
 
 //   return (
-//     <div className="p-6 ml-8 h-auto w-auto font-karla z-10">
+//     <div className="p-3 sm:p-4 md:p-6 ml-0 sm:ml-4 md:ml-6 lg:ml-8 h-auto w-auto font-karla z-10">
 //         {searchTerm && (
-//         <div className="mb-4 flex items-center justify-between bg-gray-100 p-4 rounded-lg">
-//           <p className="text-gray-600">
-//             Showing results for "{searchTerm}"
+//         <div className="mb-4 flex flex-col sm:flex-row items-start sm:items-center justify-between bg-gray-100 p-3 sm:p-4 rounded-lg gap-2">
+//           <p className="text-gray-600 text-sm sm:text-base">
+//             Showing results for &quot;{searchTerm}&quot;
 //           </p>
 //           <button 
 //             onClick={handleClearSearch}
-//             className="text-blue-500 hover:text-blue-700 font-medium"
+//             className="text-blue-500 hover:text-blue-700 font-medium text-sm sm:text-base whitespace-nowrap"
 //           >
 //             Clear search
 //           </button>
 //         </div>
 //       )}
 //       {filteredProducts.length === 0 ? (
-//         <div className="flex flex-col items-center justify-center h-64">
-//           {/* <p className="text-xl text-gray-500 mb-4">No products found matching your filters</p> */}
-//            <p className="text-xl text-gray-500 mb-4">
+//         <div className="flex flex-col items-center justify-center h-64 px-4">
+//           <p className="text-lg sm:text-xl text-gray-500 mb-4 text-center">
 //             {searchTerm 
 //               ? `No products found matching "${searchTerm}"` 
 //               : "No products found matching your filters"}
@@ -342,31 +341,35 @@
 //             alt="No results"
 //             width={150}
 //             height={150}
-//             className="opacity-50"
+//             className="opacity-50 w-24 h-24 sm:w-36 sm:h-36 md:w-[150px] md:h-[150px]"
 //           />
 //         </div>
 //       ) : (
-//         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+//         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-3 gap-4 sm:gap-6">
 //           {currentCards.map((card) => (
-//             <div key={card._id} className="flex flex-col">
-//               <div className="flex justify-between items-center space-x-4">
-//                 <div className="flex space-x-4 items-center">
+//             <div key={card._id} className="flex flex-col max-w-sm mx-auto w-full">
+//               <div className="flex justify-between items-center space-x-2 sm:space-x-4">
+//                 <div className="flex space-x-2 sm:space-x-4 items-center min-w-0 flex-1">
 //                   {!isAdminProduct(card) ? (
 //                     <Link href={`/user_profile/${card?.seller?._id}`}>
-//                       <img
+//                       <Image
 //                         src={card?.seller?.avatar || "/profile_icon.svg"}
 //                         alt="User avatar"
-//                         className="object-contain h-12 w-12"
+//                         width={48}
+//                         height={48}
+//                         className="object-contain h-8 w-8 sm:h-10 sm:w-10 md:h-12 md:w-12 flex-shrink-0"
 //                       />
 //                     </Link>
 //                   ) : (
-//                     <img
-//                       src={"/profile_icon.svg"}
+//                     <Image
+//                       src="/profile_icon.svg"
 //                       alt="Admin avatar"
-//                       className="object-contain h-12 w-12"
+//                       width={48}
+//                       height={48}
+//                       className="object-contain h-8 w-8 sm:h-10 sm:w-10 md:h-12 md:w-12 flex-shrink-0"
 //                     />
 //                   )}
-//                   <p className="font-bold text-sm">
+//                   <p className="font-bold text-xs sm:text-sm truncate">
 //                     {isAdminProduct(card)
 //                       ? card.admin?.name || "Admin"
 //                       : card?.seller?.username}
@@ -374,11 +377,11 @@
 //                 </div>
 //                 {!isAdminProduct(card) && card?.seller?._id && (
 //                   <button
-//                     className={`mt-2 px-4 sm:px-6 py-1 ${
+//                     className={`px-3 sm:px-4 md:px-6 py-1 text-xs sm:text-sm ${
 //                       isFollowingSeller(card?.seller?._id)
 //                         ? "bg-gray-500"
 //                         : "bg-custom-green"
-//                     } text-white rounded-full transition-colors duration-300`}
+//                     } text-white rounded-full transition-colors duration-300 flex-shrink-0`}
 //                     onClick={() => handleToggleFollow(card?.seller?._id)}
 //                     disabled={loading}
 //                   >
@@ -389,15 +392,13 @@
 //                 )}
 //               </div>
 
-//               <div className="relative mt-4">
+//               <div className="relative mt-3 sm:mt-4">
 //                 {/* Heart icon for like functionality */}
-//                 <div
-//                   className="absolute top-4 right-4 w-12 h-12 flex items-center justify-center rounded-full bg-custom-gray cursor-pointer z-10 hover:bg-gray-300 transition-colors duration-300"
-//                 >
+//                 <div className="absolute top-2 sm:top-4 right-2 sm:right-4 w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 flex items-center justify-center rounded-full bg-custom-gray cursor-pointer z-10 hover:bg-gray-300 transition-colors duration-300">
 //                   {isProductInWishlist(card._id) ? (
-//                     <FcLike className="text-2xl text-red-500" onClick={() => handleLikeClick(card._id)} />
+//                     <FcLike className="text-lg sm:text-xl md:text-2xl text-red-500" onClick={() => handleLikeClick(card._id)} />
 //                   ) : (
-//                     <GoHeart className="text-2xl text-gray-300" onClick={() => handleLoginNotification(card._id)} />
+//                     <GoHeart className="text-lg sm:text-xl md:text-2xl text-gray-300" onClick={() => handleLoginNotification(card._id)} />
 //                   )}
 //                 </div>
 
@@ -406,13 +407,12 @@
 //                   {card.images.map((imgSrc, imgIndex) => (
 //                     <div
 //                       key={imgIndex}
-//                       className="w-[307px] h-[390px] flex items-center justify-center overflow-hidden rounded-md"
+//                       className="w-full aspect-[4/5] flex items-center justify-center overflow-hidden rounded-md"
 //                     >
 //                       <Image
 //                         src={imgSrc}
 //                         width={307}
 //                         height={390}
-//                         layout="fixed"
 //                         alt={`${card.name} - image ${imgIndex + 1}`}
 //                         className="w-full h-full object-cover rounded-xl"
 //                       />
@@ -421,30 +421,30 @@
 //                 </Slider>
 
 //                 {/* Buy Now button and handshake icon */}
-//                 <div className="absolute w-full bottom-4 flex justify-evenly items-center px-4">
+//                 <div className="absolute w-full bottom-4 sm:bottom-4 flex justify-evenly items-center px-2 sm:px-4 gap-2">
 //                   {token ? (
 //                     <Link href={`/selling-page/${card._id}`} className="w-[70%]">
-//                       <button className="w-full p-2 py-[15px] sm:px-10 bg-custom-yellow text-black rounded-2xl font-bold mr-1 hover:bg-yellow-400 transition-colors duration-300">
+//                       <button className="w-full p-2 py-2 sm:py-3 md:py-[15px] text-xs sm:text-sm md:text-base bg-custom-yellow text-black rounded-xl sm:rounded-2xl font-bold mr-1 hover:bg-yellow-400 transition-colors duration-300">
 //                         Buy Now
 //                       </button>
 //                     </Link>
 //                   ) : (
 //                     <button
-//                       className="w-[70%] p-2 py-[15px] sm:px-10 bg-custom-yellow text-black rounded-2xl font-bold mr-1 hover:bg-yellow-400 transition-colors duration-300"
+//                       className="w-[70%] p-2 py-2 sm:py-3 md:py-[15px] text-xs sm:text-sm md:text-base bg-custom-yellow text-black rounded-xl sm:rounded-2xl font-bold mr-1 hover:bg-yellow-400 transition-colors duration-300"
 //                       onClick={handleCartNavigation}
 //                     >
 //                       Buy Now
 //                     </button>
 //                   )}
 
-//                   <div className="h-12 w-12 flex items-center justify-center bg-white rounded-full hover:bg-gray-100 transition-colors duration-300">
+//                   <div className="h-8 w-8 sm:h-10 sm:w-10 md:h-12 md:w-12 flex items-center justify-center bg-white rounded-full hover:bg-gray-100 transition-colors duration-300">
 //                     <Image
 //                       unoptimized
 //                       width={30}
 //                       height={30}
-//                       src="handshake_img.png"
+//                       src="/handshake_img.png"
 //                       alt="Open Offer Popup"
-//                       className="cursor-pointer"
+//                       className="cursor-pointer w-5 h-5 sm:w-6 sm:h-6 md:w-[30px] md:h-[30px]"
 //                       onClick={() =>
 //                         handleOpenOfferPopup(
 //                           card._id,
@@ -456,15 +456,15 @@
 //                 </div>
 //               </div>
 
-//               <h5 className="text-sm font-medium text-gray-700 mt-4">
+//               <h5 className="text-xs sm:text-sm font-medium text-gray-700 mt-3 sm:mt-4 line-clamp-2">
 //                 {card.name}
 //               </h5>
-//               <h2 className="text-lg sm:text-2xl font-bold text-gray-800">
+//               <h2 className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold text-gray-800">
 //                 AED {card.price}
 //               </h2>
 
 //               {/* Display additional product details */}
-//               <div className="mt-2 flex flex-wrap gap-2">
+//               <div className="mt-2 flex flex-wrap gap-1 sm:gap-2">
 //                 {card.category?.parentCategory && (
 //                   <span className="text-xs bg-gray-200 rounded-full px-2 py-1">
 //                     {card.category.parentCategory}
@@ -499,14 +499,14 @@
 
 //       {/* Error Popup */}
 //       {errorPopupOpen && (
-//         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-//           <div className="bg-white rounded-lg shadow-lg p-6 w-11/12 max-w-md">
-//             <p className="text-red-600 font-semibold text-center">
+//         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 p-4">
+//           <div className="bg-white rounded-lg shadow-lg p-4 sm:p-6 w-full max-w-sm sm:max-w-md">
+//             <p className="text-red-600 font-semibold text-center text-sm sm:text-base">
 //               {errorMessage}
 //             </p>
 //             <button
 //               onClick={() => setErrorPopupOpen(false)}
-//               className="mt-4 w-full bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded transition-colors duration-300"
+//               className="mt-4 w-full bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded transition-colors duration-300 text-sm sm:text-base"
 //             >
 //               Close
 //             </button>
@@ -528,6 +528,9 @@
 
 
 
+
+
+
 "use client";
 
 import { useEffect, useState } from "react";
@@ -536,7 +539,6 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Image from "next/image";
-import { OfferPopup } from "./OfferPopup";
 import { FcLike } from "react-icons/fc";
 import { GoHeart } from "react-icons/go";
 import Link from "next/link";
@@ -546,6 +548,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 import { useFilter } from "../context/FilterContext";
+import OfferPopup from "./OfferPopup";
 
 export const ImagesComponent = () => {
   const router = useRouter();
@@ -553,18 +556,17 @@ export const ImagesComponent = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [isOfferPopupOpen, setIsOfferPopupOpen] = useState(false);
   const [offerSubmitted, setOfferSubmitted] = useState(false);
-  const [selectedProductId, setSelectedProductId] = useState([]);
-  const [selectedSellerId, setSelectedSellerId] = useState([]);
+  const [selectedPrice, setSelectedPrice] = useState(null);
+  const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
+  const [currentProduct, setCurrentProduct] = useState(null);
   const [loading, setLoading] = useState(false);
   const [errorPopupOpen, setErrorPopupOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const cardsPerPage = 9;
 
-  // Access the filtered products from context
-const { filteredProducts, searchTerm, clearSearch } = useFilter();
+  const { filteredProducts, searchTerm, clearSearch } = useFilter();
   const [followingIds, setFollowingIds] = useState([]);
 
-  // Calculate pagination
   const indexOfLastCard = currentPage * cardsPerPage;
   const indexOfFirstCard = indexOfLastCard - cardsPerPage;
   const currentCards = filteredProducts.slice(indexOfFirstCard, indexOfLastCard);
@@ -576,44 +578,48 @@ const { filteredProducts, searchTerm, clearSearch } = useFilter();
 
   const [AllWishlist, setAllWishlist] = useState([]);
 
-   const handleClearSearch = () => {
+  const handleClearSearch = () => {
     const params = new URLSearchParams(useSearchParams.toString());
-    params.delete('search');
-    
+    params.delete("search");
+
     router.push(`/selling-page?${params.toString()}`);
     clearSearch();
   };
 
-
   const getUserWishlistdata = async () => {
     try {
       const token = JSON.parse(Cookies.get("auth"));
-      const res = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/wishlist`,
+      const res = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/wishlist`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        })
+        }
+      );
       setAllWishlist(res.data.wishlist.products);
     } catch (error) {
       console.log("Error", error);
     }
-  }
+  };
 
   const getUserFollowingList = async () => {
     try {
       const token = JSON.parse(Cookies.get("auth"));
-      const res = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/profile/following-ids`, {
-        headers: {
-          Authorization: `Bearer ${token}`
+      const res = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/profile/following-ids`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
-      })
+      );
       setFollowingIds(res.data?.following);
     } catch (error) {
       console.log("Error", error);
     }
-  }
-  
+  };
+
   useEffect(() => {
     if (token) {
       getUserWishlistdata();
@@ -621,19 +627,16 @@ const { filteredProducts, searchTerm, clearSearch } = useFilter();
     }
   }, [token]);
 
-  // Reset to first page when filters change
   useEffect(() => {
     setCurrentPage(1);
   }, [filteredProducts.length]);
 
-  // Check if a product is in the wishlist
   const isProductInWishlist = (productId) => {
-    return AllWishlist.some(wishlistItem => wishlistItem.productId === productId);
+    return AllWishlist.some((wishlistItem) => wishlistItem.productId === productId);
   };
 
-  // Check if the user is following a seller
   const isFollowingSeller = (sellerId) => {
-    return followingIds.some(id => id === sellerId);
+    return followingIds.some((id) => id === sellerId);
   };
 
   const handleNextPage = () => {
@@ -648,31 +651,44 @@ const { filteredProducts, searchTerm, clearSearch } = useFilter();
     setCurrentPage(selectedPage);
   };
 
-  const handleOpenOfferPopup = (id, sellerid) => {
+  const handleOpenOfferPopup = (card) => {
     if (!token) {
-      toast.success('please login');
+      toast.success("Please login");
       setTimeout(() => {
         router.push("/login");
-      }, [500])
-    }
-    else {
-      setSelectedProductId(id);
-      setSelectedSellerId(sellerid || "admin");
+      }, 500);
+    } else {
+      setCurrentProduct(card);
       setIsOfferPopupOpen(true);
     }
   };
 
   const handleCloseOfferPopup = () => {
     setIsOfferPopupOpen(false);
+    setSelectedPrice(null);
+    setIsSubmitDisabled(true);
+    setCurrentProduct(null);
   };
 
-  const handleOfferSubmit = async (price) => {
+  const handlePriceSelection = (price) => {
+    setSelectedPrice(price);
+    if (price && !isNaN(price)) {
+      setIsSubmitDisabled(false);
+    } else {
+      setIsSubmitDisabled(true);
+    }
+  };
+
+  const handleOfferSubmit = async () => {
     try {
       const token = JSON.parse(Cookies.get("auth"));
-      const data = { offerPrice: price, seller: selectedSellerId };
+      const data = {
+        offerPrice: selectedPrice,
+        seller: currentProduct.seller?._id || (currentProduct.admin?._id || "admin"),
+      };
 
       const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/offer/add/${selectedProductId}`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/offer/add/${currentProduct._id}`,
         data,
         {
           headers: {
@@ -684,6 +700,7 @@ const { filteredProducts, searchTerm, clearSearch } = useFilter();
       if (response.status === 200) {
         setOfferSubmitted(true);
         handleCloseOfferPopup();
+        toast.success("Offer submitted successfully!");
       } else {
         setErrorMessage(`Failed to submit offer: ${response.data.message}`);
         setErrorPopupOpen(true);
@@ -708,9 +725,8 @@ const { filteredProducts, searchTerm, clearSearch } = useFilter();
       );
 
       if (response.status === 200) {
-        // Update local wishlist state after successful API call
-        setAllWishlist(prevWishlist =>
-          prevWishlist.filter(item => item.productId !== id)
+        setAllWishlist((prevWishlist) =>
+          prevWishlist.filter((item) => item.productId !== id)
         );
       } else {
         setErrorMessage(`Failed to remove from wishlist: ${response.data.message}`);
@@ -724,12 +740,11 @@ const { filteredProducts, searchTerm, clearSearch } = useFilter();
 
   const handleLoginNotification = async (id) => {
     if (!token) {
-      toast.success('please Login First.');
+      toast.success("Please Login First.");
       setTimeout(() => {
         router.push("/login");
-      }, [500])
-    }
-    else {
+      }, 500);
+    } else {
       try {
         const token = JSON.parse(Cookies.get("auth"));
         const response = await axios.post(
@@ -743,7 +758,6 @@ const { filteredProducts, searchTerm, clearSearch } = useFilter();
         );
 
         if (response.status === 200) {
-          // Update local wishlist state after successful API call
           getUserWishlistdata();
         } else {
           setErrorMessage(`Failed to add to wishlist: ${response.data.message}`);
@@ -754,17 +768,17 @@ const { filteredProducts, searchTerm, clearSearch } = useFilter();
         setErrorPopupOpen(true);
       }
     }
-  }
+  };
 
   const handleToggleFollow = async (sellerId) => {
     if (!token) {
-      toast.success('please Login First.');
+      toast.success("Please Login First.");
       setTimeout(() => {
         router.push("/login");
-      }, [500]);
+      }, 500);
       return;
     }
-    
+
     setLoading(true);
     try {
       const token = JSON.parse(Cookies.get("auth"));
@@ -777,16 +791,13 @@ const { filteredProducts, searchTerm, clearSearch } = useFilter();
           },
         }
       );
-      
+
       if (response.status === 200) {
-        // Update the followingIds state based on the response
         if (response.data.isFollowing) {
-          setFollowingIds(prev => [...prev, sellerId]);
+          setFollowingIds((prev) => [...prev, sellerId]);
         } else {
-          setFollowingIds(prev => prev.filter(id => id !== sellerId));
+          setFollowingIds((prev) => prev.filter((id) => id !== sellerId));
         }
-        
-        // Show success toast
         toast.success(response.data.message);
       }
     } catch (error) {
@@ -797,9 +808,15 @@ const { filteredProducts, searchTerm, clearSearch } = useFilter();
     }
   };
 
-  // Check if a product is admin-created
   const isAdminProduct = (product) => {
     return !product.seller && product.admin;
+  };
+
+  const handleCartNavigation = () => {
+    toast.success("Please Login");
+    setTimeout(() => {
+      router.push("/login");
+    }, 500);
   };
 
   const innerSliderSettings = {
@@ -837,21 +854,14 @@ const { filteredProducts, searchTerm, clearSearch } = useFilter();
     ),
   };
 
-  const handleCartNavigation = () => {
-    toast.success("please Login");
-    setTimeout(() => {
-      router.push("/login");
-    }, [500])
-  }
-
   return (
     <div className="p-3 sm:p-4 md:p-6 ml-0 sm:ml-4 md:ml-6 lg:ml-8 h-auto w-auto font-karla z-10">
-        {searchTerm && (
+      {searchTerm && (
         <div className="mb-4 flex flex-col sm:flex-row items-start sm:items-center justify-between bg-gray-100 p-3 sm:p-4 rounded-lg gap-2">
           <p className="text-gray-600 text-sm sm:text-base">
-            Showing results for &quot;{searchTerm}&quot;
+            Showing results for "{searchTerm}"
           </p>
-          <button 
+          <button
             onClick={handleClearSearch}
             className="text-blue-500 hover:text-blue-700 font-medium text-sm sm:text-base whitespace-nowrap"
           >
@@ -862,8 +872,8 @@ const { filteredProducts, searchTerm, clearSearch } = useFilter();
       {filteredProducts.length === 0 ? (
         <div className="flex flex-col items-center justify-center h-64 px-4">
           <p className="text-lg sm:text-xl text-gray-500 mb-4 text-center">
-            {searchTerm 
-              ? `No products found matching "${searchTerm}"` 
+            {searchTerm
+              ? `No products found matching "${searchTerm}"`
               : "No products found matching your filters"}
           </p>
           <Image
@@ -923,16 +933,20 @@ const { filteredProducts, searchTerm, clearSearch } = useFilter();
               </div>
 
               <div className="relative mt-3 sm:mt-4">
-                {/* Heart icon for like functionality */}
                 <div className="absolute top-2 sm:top-4 right-2 sm:right-4 w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 flex items-center justify-center rounded-full bg-custom-gray cursor-pointer z-10 hover:bg-gray-300 transition-colors duration-300">
                   {isProductInWishlist(card._id) ? (
-                    <FcLike className="text-lg sm:text-xl md:text-2xl text-red-500" onClick={() => handleLikeClick(card._id)} />
+                    <FcLike
+                      className="text-lg sm:text-xl md:text-2xl text-red-500"
+                      onClick={() => handleLikeClick(card._id)}
+                    />
                   ) : (
-                    <GoHeart className="text-lg sm:text-xl md:text-2xl text-gray-300" onClick={() => handleLoginNotification(card._id)} />
+                    <GoHeart
+                      className="text-lg sm:text-xl md:text-2xl text-gray-300"
+                      onClick={() => handleLoginNotification(card._id)}
+                    />
                   )}
                 </div>
 
-                {/* Slider for product images */}
                 <Slider {...innerSliderSettings}>
                   {card.images.map((imgSrc, imgIndex) => (
                     <div
@@ -950,7 +964,6 @@ const { filteredProducts, searchTerm, clearSearch } = useFilter();
                   ))}
                 </Slider>
 
-                {/* Buy Now button and handshake icon */}
                 <div className="absolute w-full bottom-4 sm:bottom-4 flex justify-evenly items-center px-2 sm:px-4 gap-2">
                   {token ? (
                     <Link href={`/selling-page/${card._id}`} className="w-[70%]">
@@ -975,12 +988,7 @@ const { filteredProducts, searchTerm, clearSearch } = useFilter();
                       src="/handshake_img.png"
                       alt="Open Offer Popup"
                       className="cursor-pointer w-5 h-5 sm:w-6 sm:h-6 md:w-[30px] md:h-[30px]"
-                      onClick={() =>
-                        handleOpenOfferPopup(
-                          card._id,
-                          card.seller?._id || (card.admin?._id || "admin")
-                        )
-                      }
+                      onClick={() => handleOpenOfferPopup(card)}
                     />
                   </div>
                 </div>
@@ -993,7 +1001,6 @@ const { filteredProducts, searchTerm, clearSearch } = useFilter();
                 AED {card.price}
               </h2>
 
-              {/* Display additional product details */}
               <div className="mt-2 flex flex-wrap gap-1 sm:gap-2">
                 {card.category?.parentCategory && (
                   <span className="text-xs bg-gray-200 rounded-full px-2 py-1">
@@ -1016,7 +1023,6 @@ const { filteredProducts, searchTerm, clearSearch } = useFilter();
         </div>
       )}
 
-      {/* Pagination Component */}
       {filteredProducts.length > 0 && (
         <Pagination
           currentPage={currentPage}
@@ -1027,7 +1033,16 @@ const { filteredProducts, searchTerm, clearSearch } = useFilter();
         />
       )}
 
-      {/* Error Popup */}
+      <OfferPopup
+        isOfferPopupOpen={isOfferPopupOpen}
+        product={currentProduct}
+        handlePriceSelection={handlePriceSelection}
+        handleOpenModal={handleOfferSubmit}
+        handleCloseOfferPopup={handleCloseOfferPopup}
+        selectedPrice={selectedPrice}
+        isSubmitDisabled={isSubmitDisabled}
+      />
+
       {errorPopupOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 p-4">
           <div className="bg-white rounded-lg shadow-lg p-4 sm:p-6 w-full max-w-sm sm:max-w-md">
@@ -1043,13 +1058,6 @@ const { filteredProducts, searchTerm, clearSearch } = useFilter();
           </div>
         </div>
       )}
-
-      {/* Offer Popup */}
-      <OfferPopup
-        isOpen={isOfferPopupOpen}
-        onClose={handleCloseOfferPopup}
-        onSubmit={handleOfferSubmit}
-      />
     </div>
   );
 };
