@@ -2,6 +2,10 @@
 
 
 
+
+
+
+
 // "use client";
 
 // import { useEffect, useState } from "react";
@@ -10,7 +14,6 @@
 // import "slick-carousel/slick/slick.css";
 // import "slick-carousel/slick/slick-theme.css";
 // import Image from "next/image";
-// import { OfferPopup } from "./OfferPopup";
 // import { FcLike } from "react-icons/fc";
 // import { GoHeart } from "react-icons/go";
 // import Link from "next/link";
@@ -20,6 +23,7 @@
 // import toast from "react-hot-toast";
 // import { useSelector } from "react-redux";
 // import { useFilter } from "../context/FilterContext";
+// import OfferPopup from "./OfferPopup";
 
 // export const FilterBySubcategory = () => {
 //   const router = useRouter();
@@ -28,17 +32,15 @@
 //   const [currentPage, setCurrentPage] = useState(1);
 //   const [isOfferPopupOpen, setIsOfferPopupOpen] = useState(false);
 //   const [offerSubmitted, setOfferSubmitted] = useState(false);
-//   const [selectedProductId, setSelectedProductId] = useState([]);
-//   const [selectedSellerId, setSelectedSellerId] = useState([]);
+//   const [selectedPrice, setSelectedPrice] = useState(null);
+//   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
+//   const [currentProduct, setCurrentProduct] = useState(null);
 //   const [loading, setLoading] = useState(false);
 //   const [errorPopupOpen, setErrorPopupOpen] = useState(false);
 //   const [errorMessage, setErrorMessage] = useState("");
 //   const cardsPerPage = 9;
 
-//   // Access the filter context
 //   const filterContext = useFilter();
-
-//   // Get context values with error handling
 //   const contextFilteredProducts = filterContext?.filteredProducts || [];
 //   const apiFilteredProducts = filterContext?.apiFilteredProducts || [];
 //   const apiLoading = filterContext?.apiLoading || false;
@@ -47,13 +49,10 @@
 //   const clearApiFilters = filterContext?.clearApiFilters;
 
 //   const [followingIds, setFollowingIds] = useState([]);
-
-//   // Get URL parameters
 //   const parentCategory = searchParams.get("parentCategory");
 //   const categoryName = searchParams.get("categoryName");
 //   const subCategoryName = searchParams.get("subCategoryName");
 
-//   // Determine which products to use - prioritize API filtered products if we have filter params
 //   const hasFilterParams = Boolean(
 //     parentCategory || categoryName || subCategoryName
 //   );
@@ -61,7 +60,6 @@
 //     ? apiFilteredProducts
 //     : contextFilteredProducts;
 
-//   // Calculate pagination
 //   const indexOfLastCard = currentPage * cardsPerPage;
 //   const indexOfFirstCard = indexOfLastCard - cardsPerPage;
 //   const currentCards = productsToDisplay.slice(
@@ -76,14 +74,12 @@
 
 //   const [AllWishlist, setAllWishlist] = useState([]);
 
-//   // Use the context function to fetch products when URL params change
 //   useEffect(() => {
 //     if (fetchProductsWithFilters) {
 //       fetchProductsWithFilters(parentCategory, categoryName, subCategoryName);
 //     }
 //   }, [parentCategory, categoryName, subCategoryName, fetchProductsWithFilters]);
 
-//   // Clean up API filters when component unmounts or params change
 //   useEffect(() => {
 //     return () => {
 //       if (!hasFilterParams && clearApiFilters) {
@@ -133,19 +129,14 @@
 //     }
 //   }, [token]);
 
-//   // Reset to first page when products change
 //   useEffect(() => {
 //     setCurrentPage(1);
 //   }, [productsToDisplay.length]);
 
-//   // Check if a product is in the wishlist
 //   const isProductInWishlist = (productId) => {
-//     return AllWishlist.some(
-//       (wishlistItem) => wishlistItem.productId === productId
-//     );
+//     return AllWishlist.some((wishlistItem) => wishlistItem.productId === productId);
 //   };
 
-//   // Check if the user is following a seller
 //   const isFollowingSeller = (sellerId) => {
 //     return followingIds.some((id) => id === sellerId);
 //   };
@@ -162,30 +153,44 @@
 //     setCurrentPage(selectedPage);
 //   };
 
-//   const handleOpenOfferPopup = (id, sellerid) => {
+//   const handleOpenOfferPopup = (card) => {
 //     if (!token) {
-//       toast.success("please login");
+//       toast.success("Please login");
 //       setTimeout(() => {
 //         router.push("/login");
-//       }, [500]);
+//       }, 500);
 //     } else {
-//       setSelectedProductId(id);
-//       setSelectedSellerId(sellerid || "admin");
+//       setCurrentProduct(card);
 //       setIsOfferPopupOpen(true);
 //     }
 //   };
 
 //   const handleCloseOfferPopup = () => {
 //     setIsOfferPopupOpen(false);
+//     setSelectedPrice(null);
+//     setIsSubmitDisabled(true);
+//     setCurrentProduct(null);
 //   };
 
-//   const handleOfferSubmit = async (price) => {
+//   const handlePriceSelection = (price) => {
+//     setSelectedPrice(price);
+//     if (price && !isNaN(price)) {
+//       setIsSubmitDisabled(false);
+//     } else {
+//       setIsSubmitDisabled(true);
+//     }
+//   };
+
+//   const handleOfferSubmit = async () => {
 //     try {
 //       const token = JSON.parse(Cookies.get("auth"));
-//       const data = { offerPrice: price, seller: selectedSellerId };
+//       const data = {
+//         offerPrice: selectedPrice,
+//         seller: currentProduct.seller?._id || (currentProduct.admin?._id || "admin"),
+//       };
 
 //       const response = await axios.post(
-//         `${process.env.NEXT_PUBLIC_API_BASE_URL}/offer/add/${selectedProductId}`,
+//         `${process.env.NEXT_PUBLIC_API_BASE_URL}/offer/add/${currentProduct._id}`,
 //         data,
 //         {
 //           headers: {
@@ -197,6 +202,7 @@
 //       if (response.status === 200) {
 //         setOfferSubmitted(true);
 //         handleCloseOfferPopup();
+//         toast.success("Offer submitted successfully!");
 //       } else {
 //         setErrorMessage(`Failed to submit offer: ${response.data.message}`);
 //         setErrorPopupOpen(true);
@@ -221,14 +227,11 @@
 //       );
 
 //       if (response.status === 200) {
-//         // Update local wishlist state after successful API call
 //         setAllWishlist((prevWishlist) =>
 //           prevWishlist.filter((item) => item.productId !== id)
 //         );
 //       } else {
-//         setErrorMessage(
-//           `Failed to remove from wishlist: ${response.data.message}`
-//         );
+//         setErrorMessage(`Failed to remove from wishlist: ${response.data.message}`);
 //         setErrorPopupOpen(true);
 //       }
 //     } catch (error) {
@@ -239,10 +242,10 @@
 
 //   const handleLoginNotification = async (id) => {
 //     if (!token) {
-//       toast.success("please Login First.");
+//       toast.success("Please Login First.");
 //       setTimeout(() => {
 //         router.push("/login");
-//       }, [500]);
+//       }, 500);
 //     } else {
 //       try {
 //         const token = JSON.parse(Cookies.get("auth"));
@@ -257,12 +260,9 @@
 //         );
 
 //         if (response.status === 200) {
-//           // Update local wishlist state after successful API call
 //           getUserWishlistdata();
 //         } else {
-//           setErrorMessage(
-//             `Failed to add to wishlist: ${response.data.message}`
-//           );
+//           setErrorMessage(`Failed to add to wishlist: ${response.data.message}`);
 //           setErrorPopupOpen(true);
 //         }
 //       } catch (error) {
@@ -274,10 +274,10 @@
 
 //   const handleToggleFollow = async (sellerId) => {
 //     if (!token) {
-//       toast.success("please Login First.");
+//       toast.success("Please Login First.");
 //       setTimeout(() => {
 //         router.push("/login");
-//       }, [500]);
+//       }, 500);
 //       return;
 //     }
 
@@ -295,14 +295,11 @@
 //       );
 
 //       if (response.status === 200) {
-//         // Update the followingIds state based on the response
 //         if (response.data.isFollowing) {
 //           setFollowingIds((prev) => [...prev, sellerId]);
 //         } else {
 //           setFollowingIds((prev) => prev.filter((id) => id !== sellerId));
 //         }
-
-//         // Show success toast
 //         toast.success(response.data.message);
 //       }
 //     } catch (error) {
@@ -313,9 +310,22 @@
 //     }
 //   };
 
-//   // Check if a product is admin-created
 //   const isAdminProduct = (product) => {
 //     return !product.seller && product.admin;
+//   };
+
+//   const handleCartNavigation = () => {
+//     toast.success("Please Login");
+//     setTimeout(() => {
+//       router.push("/login");
+//     }, 500);
+//   };
+
+//   const handleClearFilters = () => {
+//     if (clearApiFilters) {
+//       clearApiFilters();
+//     }
+//     router.push("/selling-page");
 //   };
 
 //   const innerSliderSettings = {
@@ -353,22 +363,6 @@
 //     ),
 //   };
 
-//   const handleCartNavigation = () => {
-//     toast.success("please Login");
-//     setTimeout(() => {
-//       router.push("/login");
-//     }, [500]);
-//   };
-
-//   const handleClearFilters = () => {
-//     if (clearApiFilters) {
-//       clearApiFilters();
-//     }
-//     // Clear URL parameters and navigate to base page
-//     router.push("/selling-page");
-//   };
-
-//   // Show loading state while fetching filtered products
 //   if (apiLoading) {
 //     return (
 //       <div className="p-3 sm:p-4 md:p-6 ml-0 sm:ml-4 md:ml-6 lg:ml-8 h-auto w-auto font-karla z-10">
@@ -382,7 +376,6 @@
 //     );
 //   }
 
-//   // Show error state if there's an error
 //   if (apiError) {
 //     return (
 //       <div className="p-3 sm:p-4 md:p-6 ml-0 sm:ml-4 md:ml-6 lg:ml-8 h-auto w-auto font-karla z-10">
@@ -417,7 +410,6 @@
 
 //   return (
 //     <div className="p-3 sm:p-4 md:p-6 ml-0 sm:ml-4 md:ml-6 lg:ml-8 h-auto w-auto font-karla z-10">
-//       {/* Display current filter info */}
 //       {hasFilterParams && (
 //         <div className="mb-4 sm:mb-6 p-3 sm:p-4 bg-gray-100 rounded-lg">
 //           <div className="flex flex-col sm:flex-row justify-between items-start gap-3 sm:gap-0">
@@ -527,7 +519,6 @@
 //               </div>
 
 //               <div className="relative mt-3 sm:mt-4">
-//                 {/* Heart icon for like functionality */}
 //                 <div className="absolute top-2 sm:top-4 right-2 sm:right-4 w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 flex items-center justify-center rounded-full bg-custom-gray cursor-pointer z-10 hover:bg-gray-300 transition-colors duration-300">
 //                   {isProductInWishlist(card._id) ? (
 //                     <FcLike
@@ -542,7 +533,6 @@
 //                   )}
 //                 </div>
 
-//                 {/* Slider for product images */}
 //                 <Slider {...innerSliderSettings}>
 //                   {card.images.map((imgSrc, imgIndex) => (
 //                     <div
@@ -560,7 +550,6 @@
 //                   ))}
 //                 </Slider>
 
-//                 {/* Buy Now button and handshake icon */}
 //                 <div className="absolute w-full bottom-4 sm:bottom-4 flex justify-evenly items-center px-2 sm:px-4 gap-2">
 //                   {token ? (
 //                     <Link
@@ -588,12 +577,7 @@
 //                       src="/handshake_img.png"
 //                       alt="Open Offer Popup"
 //                       className="cursor-pointer w-5 h-5 sm:w-6 sm:h-6 md:w-[30px] md:h-[30px]"
-//                       onClick={() =>
-//                         handleOpenOfferPopup(
-//                           card._id,
-//                           card.seller?._id || (card.admin?._id || "admin")
-//                         )
-//                       }
+//                       onClick={() => handleOpenOfferPopup(card)}
 //                     />
 //                   </div>
 //                 </div>
@@ -606,7 +590,6 @@
 //                 AED {card.price}
 //               </h2>
 
-//               {/* Display additional product details */}
 //               <div className="mt-2 flex flex-wrap gap-1 sm:gap-2">
 //                 {card.category?.parentCategory && (
 //                   <span className="text-xs bg-gray-200 rounded-full px-2 py-1">
@@ -629,7 +612,6 @@
 //         </div>
 //       )}
 
-//       {/* Pagination Component */}
 //       {productsToDisplay.length > 0 && (
 //         <Pagination
 //           currentPage={currentPage}
@@ -640,7 +622,16 @@
 //         />
 //       )}
 
-//       {/* Error Popup */}
+//       <OfferPopup
+//         isOfferPopupOpen={isOfferPopupOpen}
+//         product={currentProduct}
+//         handlePriceSelection={handlePriceSelection}
+//         handleOpenModal={handleOfferSubmit}
+//         handleCloseOfferPopup={handleCloseOfferPopup}
+//         selectedPrice={selectedPrice}
+//         isSubmitDisabled={isSubmitDisabled}
+//       />
+
 //       {errorPopupOpen && (
 //         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 p-4">
 //           <div className="bg-white rounded-lg shadow-lg p-4 sm:p-6 w-full max-w-sm sm:max-w-md">
@@ -656,20 +647,9 @@
 //           </div>
 //         </div>
 //       )}
-
-//       {/* Offer Popup */}
-//       <OfferPopup
-//         isOpen={isOfferPopupOpen}
-//         onClose={handleCloseOfferPopup}
-//         onSubmit={handleOfferSubmit}
-//       />
 //     </div>
 //   );
 // };
-
-
-
-
 
 
 
@@ -708,6 +688,8 @@ export const FilterBySubcategory = () => {
   const [loading, setLoading] = useState(false);
   const [errorPopupOpen, setErrorPopupOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [offerLimitPopupOpen, setOfferLimitPopupOpen] = useState(false);
+  const [remainingOffers, setRemainingOffers] = useState({});
   const cardsPerPage = 9;
 
   const filterContext = useFilter();
@@ -744,6 +726,27 @@ export const FilterBySubcategory = () => {
 
   const [AllWishlist, setAllWishlist] = useState([]);
 
+  const fetchRemainingOfferCount = async (productId) => {
+    try {
+      const token = JSON.parse(Cookies.get("auth"));
+      const res = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/offer/remaining/${productId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log("Remaining offers for product", productId, ":", res.data.remainingOffers);
+      setRemainingOffers((prev) => ({
+        ...prev,
+        [productId]: res.data.remainingOffers,
+      }));
+    } catch (error) {
+      console.log("Error fetching remaining offer count", error);
+    }
+  };
+
   useEffect(() => {
     if (fetchProductsWithFilters) {
       fetchProductsWithFilters(parentCategory, categoryName, subCategoryName);
@@ -751,12 +754,19 @@ export const FilterBySubcategory = () => {
   }, [parentCategory, categoryName, subCategoryName, fetchProductsWithFilters]);
 
   useEffect(() => {
-    return () => {
-      if (!hasFilterParams && clearApiFilters) {
-        clearApiFilters();
-      }
-    };
-  }, [hasFilterParams, clearApiFilters]);
+    if (token) {
+      getUserWishlistdata();
+      getUserFollowingList();
+      // Fetch remaining offer count for each product
+      productsToDisplay.forEach((product) => {
+        fetchRemainingOfferCount(product._id);
+      });
+    }
+  }, [token, productsToDisplay]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [productsToDisplay.length]);
 
   const getUserWishlistdata = async () => {
     try {
@@ -792,17 +802,6 @@ export const FilterBySubcategory = () => {
     }
   };
 
-  useEffect(() => {
-    if (token) {
-      getUserWishlistdata();
-      getUserFollowingList();
-    }
-  }, [token]);
-
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [productsToDisplay.length]);
-
   const isProductInWishlist = (productId) => {
     return AllWishlist.some((wishlistItem) => wishlistItem.productId === productId);
   };
@@ -823,16 +822,25 @@ export const FilterBySubcategory = () => {
     setCurrentPage(selectedPage);
   };
 
-  const handleOpenOfferPopup = (card) => {
+  const handleOpenOfferPopup = async (card) => {
     if (!token) {
       toast.success("Please login");
       setTimeout(() => {
         router.push("/login");
       }, 500);
-    } else {
-      setCurrentProduct(card);
-      setIsOfferPopupOpen(true);
+      return;
     }
+
+    // Check remaining offers
+    const remaining = remainingOffers[card._id] || 0;
+    if (remaining <= 0) {
+      setErrorMessage("You have reached the maximum limit of 3 offers for this product.");
+      setOfferLimitPopupOpen(true);
+      return;
+    }
+
+    setCurrentProduct(card);
+    setIsOfferPopupOpen(true);
   };
 
   const handleCloseOfferPopup = () => {
@@ -843,8 +851,9 @@ export const FilterBySubcategory = () => {
   };
 
   const handlePriceSelection = (price) => {
-    setSelectedPrice(price);
-    if (price && !isNaN(price)) {
+    const parsedPrice = parseFloat(price);
+    setSelectedPrice(parsedPrice);
+    if (parsedPrice && !isNaN(parsedPrice) && parsedPrice >= (currentProduct?.price * 0.7)) {
       setIsSubmitDisabled(false);
     } else {
       setIsSubmitDisabled(true);
@@ -855,12 +864,12 @@ export const FilterBySubcategory = () => {
     try {
       const token = JSON.parse(Cookies.get("auth"));
       const data = {
+        productId: currentProduct._id,
         offerPrice: selectedPrice,
-        seller: currentProduct.seller?._id || (currentProduct.admin?._id || "admin"),
       };
 
       const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/offer/add/${currentProduct._id}`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/offer/create`,
         data,
         {
           headers: {
@@ -869,16 +878,15 @@ export const FilterBySubcategory = () => {
         }
       );
 
-      if (response.status === 200) {
+      if (response.status === 201) {
         setOfferSubmitted(true);
         handleCloseOfferPopup();
         toast.success("Offer submitted successfully!");
-      } else {
-        setErrorMessage(`Failed to submit offer: ${response.data.message}`);
-        setErrorPopupOpen(true);
+        // Refresh remaining offer count
+        fetchRemainingOfferCount(currentProduct._id);
       }
     } catch (error) {
-      setErrorMessage(`${error.response?.data?.message || error.message}`);
+      setErrorMessage(error.response?.data?.message || "Failed to submit offer");
       setErrorPopupOpen(true);
     }
   };
@@ -1259,7 +1267,9 @@ export const FilterBySubcategory = () => {
               <h2 className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold text-gray-800">
                 AED {card.price}
               </h2>
-
+              <p className="text-sm text-gray-600">
+                Offers Remaining: {remainingOffers[card._id] !== undefined ? remainingOffers[card._id] : "Loading..."}
+              </p>
               <div className="mt-2 flex flex-wrap gap-1 sm:gap-2">
                 {card.category?.parentCategory && (
                   <span className="text-xs bg-gray-200 rounded-full px-2 py-1">
@@ -1296,10 +1306,11 @@ export const FilterBySubcategory = () => {
         isOfferPopupOpen={isOfferPopupOpen}
         product={currentProduct}
         handlePriceSelection={handlePriceSelection}
-        handleOpenModal={handleOfferSubmit}
+        handleOfferSubmit={handleOfferSubmit}
         handleCloseOfferPopup={handleCloseOfferPopup}
         selectedPrice={selectedPrice}
         isSubmitDisabled={isSubmitDisabled}
+        remainingOffers={remainingOffers[currentProduct?._id] || 0}
       />
 
       {errorPopupOpen && (
@@ -1310,6 +1321,22 @@ export const FilterBySubcategory = () => {
             </p>
             <button
               onClick={() => setErrorPopupOpen(false)}
+              className="mt-4 w-full bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded transition-colors duration-300 text-sm sm:text-base"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
+
+      {offerLimitPopupOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 p-4">
+          <div className="bg-white rounded-lg shadow-lg p-4 sm:p-6 w-full max-w-sm sm:max-w-md">
+            <p className="text-red-600 font-semibold text-center text-sm sm:text-base">
+              You have reached the maximum limit of 3 offers for this product.
+            </p>
+            <button
+              onClick={() => setOfferLimitPopupOpen(false)}
               className="mt-4 w-full bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded transition-colors duration-300 text-sm sm:text-base"
             >
               Close
