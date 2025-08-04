@@ -6,7 +6,6 @@
 // import "slick-carousel/slick/slick.css";
 // import "slick-carousel/slick/slick-theme.css";
 // import Link from "next/link";
-// import { OfferPopup } from "@/components/OfferPopup";
 // import { FcLike } from "react-icons/fc";
 // import { GoHeart } from "react-icons/go";
 // import { useDispatch, useSelector } from "react-redux";
@@ -15,12 +14,16 @@
 // import toast from "react-hot-toast";
 // import Cookies from "js-cookie";
 // import { useRouter } from "next/navigation";
+// import OfferPopup from "../OfferPopup";
 
 // const Carousels = () => {
 //   const router = useRouter();
 //   const [isOfferPopupOpen, setIsOfferPopupOpen] = useState(false);
 //   const [offerSubmitted, setOfferSubmitted] = useState(false);
 //   const [isCardHovered, setIsCardHovered] = useState(false);
+//   const [selectedPrice, setSelectedPrice] = useState(null);
+//   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
+//   const [currentProduct, setCurrentProduct] = useState(null);
 //   const sliderRef = useRef(null);
 //   const [progress, setProgress] = useState(0);
 //   const [product, setProduct] = useState([]);
@@ -32,19 +35,21 @@
 //   const userID = details?._id;
 
 //   const [userFollowingIds, setUserFollowingIds] = useState([]);
-
 //   const token = Cookies.get("auth") ? JSON.parse(Cookies.get("auth")) : null;
 //   const [AllWishlist, setAllWishlist] = useState([]);
 
 //   const getUserFollowingList = async () => {
 //     try {
 //       if (!token) return;
-      
-//       const res = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/profile/following-ids`, {
-//         headers: {
-//           Authorization: `Bearer ${token}`
+
+//       const res = await axios.get(
+//         `${process.env.NEXT_PUBLIC_API_BASE_URL}/profile/following-ids`,
+//         {
+//           headers: {
+//             Authorization: `Bearer ${token}`,
+//           },
 //         }
-//       });
+//       );
 //       setUserFollowingIds(res.data?.following || []);
 //     } catch (error) {
 //       console.log("Error fetching following list:", error);
@@ -61,7 +66,7 @@
 //   const getUserWishlistdata = async () => {
 //     try {
 //       if (!token) return;
-      
+
 //       const res = await axios.get(
 //         `${process.env.NEXT_PUBLIC_API_BASE_URL}/wishlist`,
 //         {
@@ -85,9 +90,7 @@
 
 //       let id = item._id;
 
-//       // Check if product is already in wishlist
 //       if (isProductInWishlist(id)) {
-//         // Remove from wishlist
 //         const response = await axios.put(
 //           `${process.env.NEXT_PUBLIC_API_BASE_URL}/wishlist/remove/${id}`,
 //           {},
@@ -99,13 +102,11 @@
 //         );
 
 //         if (response.status === 200) {
-//           // Update local wishlist state
-//           setAllWishlist(prevWishlist =>
-//             prevWishlist.filter(item => item.productId !== id)
+//           setAllWishlist((prevWishlist) =>
+//             prevWishlist.filter((item) => item.productId !== id)
 //           );
 //         }
 //       } else {
-//         // Add to wishlist
 //         const response = await axios.post(
 //           `${process.env.NEXT_PUBLIC_API_BASE_URL}/wishlist/add`,
 //           { productId: id },
@@ -126,31 +127,67 @@
 //     }
 //   };
 
-//   const handleOpenOfferPopup = () => {
+//   const handleOpenOfferPopup = (item) => {
 //     if (!token) {
 //       handleLoginNotification();
 //     } else {
+//       setCurrentProduct(item);
 //       setIsOfferPopupOpen(true);
 //     }
 //   };
 
 //   const handleCloseOfferPopup = () => {
 //     setIsOfferPopupOpen(false);
+//     setSelectedPrice(null);
+//     setIsSubmitDisabled(true);
+//     setCurrentProduct(null);
 //   };
 
-//   const handleOfferSubmit = (price) => {
-//     console.log("Offer submitted:", price);
-//     setOfferSubmitted(true);
-//     handleCloseOfferPopup();
+//   const handlePriceSelection = (price) => {
+//     setSelectedPrice(price);
+//     if (price && !isNaN(price)) {
+//       setIsSubmitDisabled(false);
+//     } else {
+//       setIsSubmitDisabled(true);
+//     }
 //   };
 
-//   // Updated toggle follow function to use the backend's single endpoint
+//   const handleOfferSubmit = async () => {
+//     try {
+//       const token = JSON.parse(Cookies.get("auth"));
+//       const data = { offerPrice: selectedPrice, seller: currentProduct.seller };
+
+//       const response = await axios.post(
+//         `${process.env.NEXT_PUBLIC_API_BASE_URL}/offer/add/${currentProduct._id}`,
+//         data,
+//         {
+//           headers: {
+//             Authorization: `Bearer ${token}`,
+//           },
+//         }
+//       );
+
+//       if (response.status === 200) {
+//         setOfferSubmitted(true);
+//         handleCloseOfferPopup();
+//         toast.success("Offer submitted successfully!");
+//       } else {
+//         setErrorMessage(`Failed to submit offer: ${response.data.message}`);
+//         setErrorPopupOpen(true);
+//       }
+//     } catch (error) {
+//       console.error("An error occurred:", error.message);
+//       setErrorMessage(` ${error.response?.data?.message || error.message}`);
+//       setErrorPopupOpen(true);
+//     }
+//   };
+
 //   const handleToggleFollow = async (sellerId) => {
 //     if (!token) {
 //       handleLoginNotification();
 //       return;
 //     }
-    
+
 //     setLoading(true);
 //     try {
 //       const response = await axios.post(
@@ -162,15 +199,12 @@
 //           },
 //         }
 //       );
-      
-//       // Update local state to reflect the change immediately
+
 //       if (response.status === 200) {
-//         // If the user was following the seller, remove the sellerId from following list
-//         // If the user was not following the seller, add the sellerId to following list
-//         setUserFollowingIds(prevFollowingIds => {
+//         setUserFollowingIds((prevFollowingIds) => {
 //           const isCurrentlyFollowing = prevFollowingIds.includes(sellerId);
 //           if (isCurrentlyFollowing) {
-//             return prevFollowingIds.filter(id => id !== sellerId);
+//             return prevFollowingIds.filter((id) => id !== sellerId);
 //           } else {
 //             return [...prevFollowingIds, sellerId];
 //           }
@@ -201,15 +235,20 @@
 //   }, []);
 
 //   const isProductInWishlist = (productId) => {
-//     return AllWishlist.some(wishlistItem => wishlistItem.productId === productId);
+//     return AllWishlist.some((wishlistItem) => wishlistItem.productId === productId);
 //   };
 
-//   // Check if the user is following a seller
 //   const isFollowingSeller = (sellerId) => {
 //     return userFollowingIds.includes(sellerId);
 //   };
 
-//   // Main slider settings
+//   const handleLoginNotification = () => {
+//     toast.success("Please Login!");
+//     setTimeout(() => {
+//       router.push("/login");
+//     }, 1000);
+//   };
+
 //   const settings = {
 //     dots: false,
 //     infinite: false,
@@ -257,12 +296,11 @@
 //           slidesToShow: 1,
 //           slidesToScroll: 1,
 //           centerMode: true,
-//           centerPadding: '0px',
+//           centerPadding: "0px",
 //         },
 //       },
 //     ],
 //     afterChange: (current) => {
-//       // Calculate progress based on visible slides
 //       const totalSlides = product.length;
 //       const visibleSlides = getVisibleSlides();
 //       const maxProgress = Math.max(0, totalSlides - visibleSlides);
@@ -271,16 +309,6 @@
 //     },
 //   };
 
-//   // Function to determine number of visible slides based on screen width
-//   const getVisibleSlides = () => {
-//     const width = typeof window !== "undefined" ? window.innerWidth : 1280;
-//     if (width >= 1280) return 4;
-//     if (width >= 1024) return 3;
-//     if (width >= 768) return 2;
-//     return 1;
-//   };
-
-//   // Inner slider settings
 //   const innerSliderSettings = {
 //     dots: true,
 //     infinite: true,
@@ -319,11 +347,12 @@
 //     ),
 //   };
 
-//   const handleLoginNotification = () => {
-//     toast.success("Please Login!");
-//     setTimeout(() => {
-//       router.push("/login");
-//     }, 1000);
+//   const getVisibleSlides = () => {
+//     const width = typeof window !== "undefined" ? window.innerWidth : 1280;
+//     if (width >= 1280) return 4;
+//     if (width >= 1024) return 3;
+//     if (width >= 768) return 2;
+//     return 1;
 //   };
 
 //   return (
@@ -376,7 +405,7 @@
 //                       )}
 //                     </div>
 //                   </div>
-//                   <div 
+//                   <div
 //                     className="absolute min-w-[204px] bottom-4 left-4 text-center z-10 bg-[#fde504] px-[50px] py-[20px] rounded-[20px]"
 //                     onClick={token ? undefined : handleLoginNotification}
 //                   >
@@ -392,11 +421,11 @@
 //                       </button>
 //                     )}
 //                   </div>
-//                   <div className="absolute bottom-6 right-5 z-10">
-//                     <div
-//                       className="h-[54px] p-[15px] bg-white rounded-[100px] cursor-pointer"
-//                       onClick={handleOpenOfferPopup}
-//                     >
+//                   <div
+//                     className="absolute bottom-6 right-5 z-10"
+//                     onClick={() => handleOpenOfferPopup(item)}
+//                   >
+//                     <div className="h-[54px] p-[15px] bg-white rounded-[100px] cursor-pointer">
 //                       <Image
 //                         alt=""
 //                         width={24}
@@ -431,7 +460,7 @@
 //                 <div className="mt-2 w-full">
 //                   <h3 className="font-karla font-bold text-base">{item.name}</h3>
 //                   <p className="text-black text-[25px] font-bold font-karla leading-[30px]">
-//                     {item.price}
+//                    AED {item.price}
 //                   </p>
 //                 </div>
 //               </div>
@@ -462,9 +491,13 @@
 //         </div>
 //       </div>
 //       <OfferPopup
-//         isOpen={isOfferPopupOpen}
-//         onClose={handleCloseOfferPopup}
-//         onSubmit={handleOfferSubmit}
+//         isOfferPopupOpen={isOfferPopupOpen}
+//         product={currentProduct}
+//         handlePriceSelection={handlePriceSelection}
+//         handleOpenModal={handleOfferSubmit}
+//         handleCloseOfferPopup={handleCloseOfferPopup}
+//         selectedPrice={selectedPrice}
+//         isSubmitDisabled={isSubmitDisabled}
 //       />
 //       {errorPopupOpen && (
 //         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
@@ -486,8 +519,6 @@
 // };
 
 // export default Carousels;
-
-
 
 
 
@@ -532,6 +563,8 @@ const Carousels = () => {
   const details = useSelector((state) => state.auth.user);
   const [errorPopupOpen, setErrorPopupOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [offerLimitPopupOpen, setOfferLimitPopupOpen] = useState(false);
+  const [remainingOffers, setRemainingOffers] = useState({});
   const userID = details?._id;
 
   const [userFollowingIds, setUserFollowingIds] = useState([]);
@@ -556,12 +589,37 @@ const Carousels = () => {
     }
   };
 
+  const fetchRemainingOfferCount = async (productId) => {
+    try {
+      const token = JSON.parse(Cookies.get("auth"));
+      const res = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/offer/remaining/${productId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log("Remaining offers for product", productId, ":", res.data.remainingOffers);
+      setRemainingOffers((prev) => ({
+        ...prev,
+        [productId]: res.data.remainingOffers,
+      }));
+    } catch (error) {
+      console.log("Error fetching remaining offer count", error);
+    }
+  };
+
   useEffect(() => {
     if (token) {
       getUserFollowingList();
       getUserWishlistdata();
+      // Fetch remaining offer count for each product
+      product.forEach((item) => {
+        fetchRemainingOfferCount(item._id);
+      });
     }
-  }, [token]);
+  }, [token, product]);
 
   const getUserWishlistdata = async () => {
     try {
@@ -605,6 +663,7 @@ const Carousels = () => {
           setAllWishlist((prevWishlist) =>
             prevWishlist.filter((item) => item.productId !== id)
           );
+          toast.success("Removed from wishlist");
         }
       } else {
         const response = await axios.post(
@@ -619,10 +678,11 @@ const Carousels = () => {
 
         if (response.status === 200) {
           getUserWishlistdata();
+          toast.success("Added to wishlist");
         }
       }
     } catch (error) {
-      setErrorMessage(error.response?.data?.message || error.message);
+      setErrorMessage(error.response?.data?.message || "Failed to update wishlist");
       setErrorPopupOpen(true);
     }
   };
@@ -630,10 +690,19 @@ const Carousels = () => {
   const handleOpenOfferPopup = (item) => {
     if (!token) {
       handleLoginNotification();
-    } else {
-      setCurrentProduct(item);
-      setIsOfferPopupOpen(true);
+      return;
     }
+
+    // Check remaining offers
+    const remaining = remainingOffers[item._id] || 0;
+    if (remaining <= 0) {
+      setErrorMessage("You have reached the maximum limit of 3 offers for this product.");
+      setOfferLimitPopupOpen(true);
+      return;
+    }
+
+    setCurrentProduct(item);
+    setIsOfferPopupOpen(true);
   };
 
   const handleCloseOfferPopup = () => {
@@ -644,8 +713,9 @@ const Carousels = () => {
   };
 
   const handlePriceSelection = (price) => {
-    setSelectedPrice(price);
-    if (price && !isNaN(price)) {
+    const parsedPrice = parseFloat(price);
+    setSelectedPrice(parsedPrice);
+    if (parsedPrice && !isNaN(parsedPrice) && parsedPrice >= (currentProduct?.price * 0.7)) {
       setIsSubmitDisabled(false);
     } else {
       setIsSubmitDisabled(true);
@@ -655,10 +725,13 @@ const Carousels = () => {
   const handleOfferSubmit = async () => {
     try {
       const token = JSON.parse(Cookies.get("auth"));
-      const data = { offerPrice: selectedPrice, seller: currentProduct.seller };
+      const data = {
+        productId: currentProduct._id,
+        offerPrice: selectedPrice,
+      };
 
       const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/offer/add/${currentProduct._id}`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/offer/create`,
         data,
         {
           headers: {
@@ -667,17 +740,17 @@ const Carousels = () => {
         }
       );
 
-      if (response.status === 200) {
+      if (response.status === 201) {
         setOfferSubmitted(true);
         handleCloseOfferPopup();
         toast.success("Offer submitted successfully!");
+        fetchRemainingOfferCount(currentProduct._id);
       } else {
         setErrorMessage(`Failed to submit offer: ${response.data.message}`);
         setErrorPopupOpen(true);
       }
     } catch (error) {
-      console.error("An error occurred:", error.message);
-      setErrorMessage(` ${error.response?.data?.message || error.message}`);
+      setErrorMessage(error.response?.data?.message || "Failed to submit offer");
       setErrorPopupOpen(true);
     }
   };
@@ -709,6 +782,7 @@ const Carousels = () => {
             return [...prevFollowingIds, sellerId];
           }
         });
+        toast.success(response.data.message);
       }
     } catch (error) {
       console.error("Error toggling follow status:", error);
@@ -804,7 +878,7 @@ const Carousels = () => {
       const totalSlides = product.length;
       const visibleSlides = getVisibleSlides();
       const maxProgress = Math.max(0, totalSlides - visibleSlides);
-      const newProgress = (current / maxProgress) * 100;
+      const newProgress = maxProgress > 0 ? (current / maxProgress) * 100 : 0;
       setProgress(Math.min(newProgress, 100));
     },
   };
@@ -927,7 +1001,7 @@ const Carousels = () => {
                   >
                     <div className="h-[54px] p-[15px] bg-white rounded-[100px] cursor-pointer">
                       <Image
-                        alt=""
+                        alt="Handshake"
                         width={24}
                         height={24}
                         src="/hand_shake.svg"
@@ -960,7 +1034,10 @@ const Carousels = () => {
                 <div className="mt-2 w-full">
                   <h3 className="font-karla font-bold text-base">{item.name}</h3>
                   <p className="text-black text-[25px] font-bold font-karla leading-[30px]">
-                   AED {item.price}
+                    AED {item.price}
+                  </p>
+                  <p className="text-sm text-gray-600">
+                    Offers Remaining: {remainingOffers[item._id] !== undefined ? remainingOffers[item._id] : "Loading..."}
                   </p>
                 </div>
               </div>
@@ -994,10 +1071,11 @@ const Carousels = () => {
         isOfferPopupOpen={isOfferPopupOpen}
         product={currentProduct}
         handlePriceSelection={handlePriceSelection}
-        handleOpenModal={handleOfferSubmit}
+        handleOfferSubmit={handleOfferSubmit}
         handleCloseOfferPopup={handleCloseOfferPopup}
         selectedPrice={selectedPrice}
         isSubmitDisabled={isSubmitDisabled}
+        remainingOffers={remainingOffers[currentProduct?._id] || 0}
       />
       {errorPopupOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
@@ -1008,6 +1086,21 @@ const Carousels = () => {
             <button
               onClick={() => setErrorPopupOpen(false)}
               className="mt-4 w-full bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded transition"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
+      {offerLimitPopupOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 p-4">
+          <div className="bg-white rounded-lg shadow-lg p-4 sm:p-6 w-full max-w-sm sm:max-w-md">
+            <p className="text-red-600 font-semibold text-center text-sm sm:text-base">
+              You have reached the maximum limit of 3 offers for this product.
+            </p>
+            <button
+              onClick={() => setOfferLimitPopupOpen(false)}
+              className="mt-4 w-full bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded transition-colors duration-300 text-sm sm:text-base"
             >
               Close
             </button>

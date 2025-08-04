@@ -1,5 +1,9 @@
 
 
+
+
+
+
 // "use client";
 
 // import Link from "next/link";
@@ -28,10 +32,9 @@
 //   const [isRentPopupOpen, setRentPopupOpen] = useState(false);
 //   const [rentalDate, setRentalDate] = useState("");
 //   const [isOfferPopupOpen, setOfferPopupOpen] = useState(false);
-//   const [offerAmount, setOfferAmount] = useState("");
+//   const [offerSubmitted, setOfferSubmitted] = useState(false);
 //   const [selectedPrice, setSelectedPrice] = useState(null);
 //   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
-//   const [isModalOpen, setIsModalOpen] = useState(false);
 //   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 //   const [isDateSelected, setIsDateSelected] = useState(false);
 //   const [selectedStartDate, setSelectedStartDate] = useState(null);
@@ -42,15 +45,45 @@
 //   const [isFollowing, setIsFollowing] = useState(false);
 //   const [loading, setLoading] = useState(false);
 //   const [showExpandedDateSelection, setShowExpandedDateSelection] = useState(false);
-//   const modalRef = useRef(null);
-//   const dispatch = useDispatch();
 //   const [errorPopupOpen, setErrorPopupOpen] = useState(false);
 //   const [errorMessage, setErrorMessage] = useState("");
+//   const [offerLimitPopupOpen, setOfferLimitPopupOpen] = useState(false);
+//   const [remainingOffers, setRemainingOffers] = useState(0);
+//   const modalRef = useRef(null);
+//   const dispatch = useDispatch();
 //   const details = useSelector((state) => state.auth.user);
 //   const userID = details?._id;
 //   console.log("product details......", productDetails.product);
 
 //   const images = product?.images;
+
+//   const fetchRemainingOfferCount = async (productId) => {
+//     try {
+//       const token = JSON.parse(Cookies.get("auth"));
+//       const res = await axios.get(
+//         `${process.env.NEXT_PUBLIC_API_BASE_URL}/offer/remaining/${productId}`,
+//         {
+//           headers: {
+//             Authorization: `Bearer ${token}`,
+//           },
+//         }
+//       );
+//       console.log("Remaining offers for product", productId, ":", res.data.remainingOffers);
+//       setRemainingOffers(res.data.remainingOffers);
+//     } catch (error) {
+//       console.log("Error fetching remaining offer count", error);
+//     }
+//   };
+
+//   useEffect(() => {
+//     if (product?._id) {
+//       const rawToken = Cookies.get("auth");
+//       const token = rawToken ? JSON.parse(rawToken) : null;
+//       if (token) {
+//         fetchRemainingOfferCount(product._id);
+//       }
+//     }
+//   }, [product?._id]);
 
 //   const handleBuy = async () => {
 //     try {
@@ -59,6 +92,9 @@
 
 //       if (!token) {
 //         toast.success("Please Login!");
+//         setTimeout(() => {
+//           router.push("/login");
+//         }, 500);
 //         return;
 //       }
 
@@ -77,12 +113,12 @@
 //         router.push("/cart");
 //       } else {
 //         console.error("Failed to add product to cart:", response.statusText);
-//         setErrorMessage(`Failed to submit offer: ${response.data.message}`);
+//         setErrorMessage(`Failed to add to cart: ${response.data.message}`);
 //         setErrorPopupOpen(true);
 //       }
 //     } catch (error) {
 //       console.error("An error occurred while adding product to cart:", error);
-//       setErrorMessage(` ${error.response?.data?.message || error.message}`);
+//       setErrorMessage(error.response?.data?.message || "Failed to add to cart");
 //       setErrorPopupOpen(true);
 //     }
 //   };
@@ -94,6 +130,9 @@
 
 //       if (!token) {
 //         toast.success("Please Login!");
+//         setTimeout(() => {
+//           router.push("/login");
+//         }, 500);
 //         return;
 //       }
 
@@ -110,19 +149,13 @@
 //       if (response.status === 200) {
 //         router.push("/wishlist");
 //       } else {
-//         console.error(
-//           "Failed to add product to wishlist:",
-//           response.statusText
-//         );
-//         setErrorMessage(`Failed to submit offer: ${response.data.message}`);
+//         console.error("Failed to add product to wishlist:", response.statusText);
+//         setErrorMessage(`Failed to add to wishlist: ${response.data.message}`);
 //         setErrorPopupOpen(true);
 //       }
 //     } catch (error) {
-//       console.error(
-//         "An error occurred while adding product to wishlist:",
-//         error
-//       );
-//       setErrorMessage(` ${error.response?.data?.message || error.message}`);
+//       console.error("An error occurred while adding product to wishlist:", error);
+//       setErrorMessage(error.response?.data?.message || "Failed to add to wishlist");
 //       setErrorPopupOpen(true);
 //     }
 //   };
@@ -157,8 +190,10 @@
 //         }
 //         return prevProduct;
 //       });
+//       toast.success(res.data.message);
 //     } catch (error) {
 //       console.error("Error while following/unfollowing", error);
+//       toast.error("Failed to update follow status");
 //     } finally {
 //       setLoading(false);
 //     }
@@ -219,13 +254,57 @@
 //     };
 //   }, []);
 
-//   const handleOpenModal = async () => {
+//   const handleOpenOfferPopup = () => {
+//     const rawToken = Cookies.get("auth");
+//     const token = rawToken ? JSON.parse(rawToken) : null;
+
+//     if (!token) {
+//       toast.success("Please login");
+//       setTimeout(() => {
+//         router.push("/login");
+//       }, 500);
+//       return;
+//     }
+
+//     // Check remaining offers
+//     if (remainingOffers <= 0) {
+//       setErrorMessage("You have reached the maximum limit of 3 offers for this product.");
+//       setOfferLimitPopupOpen(true);
+//       return;
+//     }
+
+//     setOfferPopupOpen(true);
+//   };
+
+//   const handleCloseOfferPopup = () => {
+//     setOfferPopupOpen(false);
+//     setOfferAmount("");
+//     setSelectedPrice(null);
+//     setIsSubmitDisabled(true);
+//   };
+
+//   const handlePriceSelection = (price) => {
+//     const parsedPrice = parseFloat(price);
+//     setSelectedPrice(parsedPrice);
+//     setOfferAmount(parsedPrice);
+
+//     if (parsedPrice && !isNaN(parsedPrice) && parsedPrice >= (product?.price * 0.7)) {
+//       setIsSubmitDisabled(false);
+//     } else {
+//       setIsSubmitDisabled(true);
+//     }
+//   };
+
+//   const handleOfferSubmit = async () => {
 //     try {
 //       const token = JSON.parse(Cookies.get("auth"));
-//       const data = { offerPrice: selectedPrice, seller: product.seller };
+//       const data = {
+//         productId: product._id,
+//         offerPrice: selectedPrice,
+//       };
 
 //       const response = await axios.post(
-//         `${process.env.NEXT_PUBLIC_API_BASE_URL}/offer/add/${product._id}`,
+//         `${process.env.NEXT_PUBLIC_API_BASE_URL}/offer/create`,
 //         data,
 //         {
 //           headers: {
@@ -234,23 +313,16 @@
 //         }
 //       );
 
-//       if (response.status === 200) {
-//         setIsModalOpen(true);
-//         setOfferPopupOpen(false);
-//       } else {
-//         console.error("Failed to submit offer:", response);
-//         setErrorMessage(`Failed to submit offer: ${response.data.message}`);
-//         setErrorPopupOpen(true);
+//       if (response.status === 201) {
+//         setOfferSubmitted(true);
+//         handleCloseOfferPopup();
+//         toast.success("Offer submitted successfully!");
+//         fetchRemainingOfferCount(product._id);
 //       }
 //     } catch (error) {
-//       console.error("An error occurred:", error.message);
-//       setErrorMessage(` ${error.response?.data?.message || error.message}`);
+//       setErrorMessage(error.response?.data?.message || "Failed to submit offer");
 //       setErrorPopupOpen(true);
 //     }
-//   };
-
-//   const handleCloseModal = () => {
-//     setIsModalOpen(false);
 //   };
 
 //   const handleOpenRentPopup = () => {
@@ -279,28 +351,6 @@
 //       `/renting?startDate=${isStartFormatted}&endDate=${isEndFormatted}&productId=${product._id}`
 //     );
 //     handleCloseRentPopup();
-//   };
-
-//   const handleOpenOfferPopup = () => {
-//     setOfferPopupOpen(true);
-//   };
-
-//   const handleCloseOfferPopup = () => {
-//     setOfferPopupOpen(false);
-//     setOfferAmount("");
-//     setSelectedPrice(null);
-//     setIsSubmitDisabled(true);
-//   };
-
-//   const handlePriceSelection = (price) => {
-//     setSelectedPrice(price);
-//     setOfferAmount(price);
-
-//     if (price && !isNaN(price)) {
-//       setIsSubmitDisabled(false);
-//     } else {
-//       setIsSubmitDisabled(true);
-//     }
 //   };
 
 //   const handleNextImage = () => {
@@ -339,7 +389,7 @@
 //             width={650}
 //             height={500}
 //             src={images[currentImageIndex]}
-//             alt="AMIRI Men Oversize T-shirt"
+//             alt="Product Image"
 //             className="object-cover rounded-md"
 //             style={{
 //               width: "100%",
@@ -355,7 +405,7 @@
 //             width={650}
 //             height={500}
 //             src={images[(currentImageIndex + 1) % images.length]}
-//             alt="AMIRI Men Oversize T-shirt"
+//             alt="Product Image"
 //             className="object-cover rounded-md absolute top-0 left-0"
 //             style={{
 //               width: "100%",
@@ -377,10 +427,10 @@
 //             onClick={() => {
 //               handlePrevImage();
 //               document.querySelector(
-//                 `img[alt="AMIRI Men Oversize T-shirt"]:nth-child(1)`
+//                 `img[alt="Product Image"]:nth-child(1)`
 //               ).style.opacity = 0;
 //               document.querySelector(
-//                 `img[alt="AMIRI Men Oversize T-shirt"]:nth-child(2)`
+//                 `img[alt="Product Image"]:nth-child(2)`
 //               ).style.opacity = 1;
 //             }}
 //           >
@@ -396,10 +446,10 @@
 //             onClick={() => {
 //               handleNextImage();
 //               document.querySelector(
-//                 `img[alt="AMIRI Men Oversize T-shirt"]:nth-child(1)`
+//                 `img[alt="Product Image"]:nth-child(1)`
 //               ).style.opacity = 1;
 //               document.querySelector(
-//                 `img[alt="AMIRI Men Oversize T-shirt"]:nth-child(2)`
+//                 `img[alt="Product Image"]:nth-child(2)`
 //               ).style.opacity = 0;
 //             }}
 //           >
@@ -420,13 +470,13 @@
 //         <div className="w-full md:w-1/2 space-y-4">
 //           <div className="flex space-x-2">
 //             <span
-//               className="inline-block px-4 py-2 text-black rounded-full text-xs font-semibold border  shadow-sm"
+//               className="inline-block px-4 py-2 text-black rounded-full text-xs font-semibold border shadow-sm"
 //               style={{ backgroundColor: "#E6E6E6" }}
 //             >
 //               {product?.category?.categoryName || "N/A"}
 //             </span>
 //             <span
-//               className="inline-block px-4 py-2 text-black rounded-full text-xs font-semibold border  shadow-sm"
+//               className="inline-block px-4 py-2 text-black rounded-full text-xs font-semibold border shadow-sm"
 //               style={{ backgroundColor: "#E6E6E6" }}
 //             >
 //               UNISEX
@@ -438,6 +488,9 @@
 //           <div className="text-2xl font-bold">
 //             AED {product?.price}{" "}
 //           </div>
+//           <p className="text-sm text-gray-600">
+//             Offers Remaining: {remainingOffers !== undefined ? remainingOffers : "Loading..."}
+//           </p>
 
 //           <div className="flex items-center text-gray-600 space-x-4 font-medium">
 //             <div>
@@ -532,7 +585,7 @@
 //                 <Link href={`/user_profile/${product?.seller?._id}`}>
 //                   <Image
 //                     src={product?.seller?.avatar || "/emojiKuku.png"}
-//                     alt="Kuku Logo"
+//                     alt="Seller Avatar"
 //                     className="object-contain w-12 h-12"
 //                     width={48}
 //                     height={48}
@@ -774,52 +827,13 @@
 //             isOfferPopupOpen={isOfferPopupOpen}
 //             product={product}
 //             handlePriceSelection={handlePriceSelection}
-//             handleOpenModal={handleOpenModal}
+//             handleOfferSubmit={handleOfferSubmit}
 //             handleCloseOfferPopup={handleCloseOfferPopup}
 //             selectedPrice={selectedPrice}
 //             isSubmitDisabled={isSubmitDisabled}
+//             remainingOffers={remainingOffers}
 //           />
 
-//           {isModalOpen && (
-//             <div
-//               className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
-//               onClick={handleCloseModal}
-//             >
-//               <div
-//                 className="bg-white p-6 rounded-lg shadow-lg w-[380px] h-[230px] text-center"
-//                 onClick={(e) => e.stopPropagation()}
-//               >
-//                 <div className="flex justify-center items-center mb-5">
-//                   <div className="flex justify-center items-center w-[50px] h-[50px] bg-[#30BD75] border-4 border-[#9ae6b4] rounded-full">
-//                     <svg
-//                       xmlns="http://www.w3.org/2000/svg"
-//                       className="h-6 w-6 text-white"
-//                       fill="none"
-//                       viewBox="0 0 24 24"
-//                       stroke="currentColor"
-//                     >
-//                       <path
-//                         strokeLinecap="round"
-//                         strokeLinejoin="round"
-//                         strokeWidth="2"
-//                         d="M5 13l4 4L19 7"
-//                       />
-//                     </svg>
-//                   </div>
-//                 </div>
-
-//                 <div className="text-[rgb(11,12,30)] text-[20px] font-bold text-center font-karla leading-tight">
-//                   <div>Your offer has been </div>
-//                   <div> sent to the seller</div>
-//                 </div>
-
-//                 <div className="text-[#7F808C] text-[16px] font-normal font-karla leading-tight mt-1">
-//                   <div> Now sit back and relax while the seller</div>
-//                   <div> takes some time to review your offer</div>
-//                 </div>
-//               </div>
-//             </div>
-//           )}
 //           {errorPopupOpen && (
 //             <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
 //               <div className="bg-white rounded-lg shadow-lg p-6 w-11/12 max-w-md">
@@ -835,6 +849,22 @@
 //               </div>
 //             </div>
 //           )}
+
+//           {offerLimitPopupOpen && (
+//             <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 p-4">
+//               <div className="bg-white rounded-lg shadow-lg p-4 sm:p-6 w-full max-w-sm sm:max-w-md">
+//                 <p className="text-red-600 font-semibold text-center text-sm sm:text-base">
+//                   You have reached the maximum limit of 3 offers for this product.
+//                 </p>
+//                 <button
+//                   onClick={() => setOfferLimitPopupOpen(false)}
+//                   className="mt-4 w-full bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded transition-colors duration-300 text-sm sm:text-base"
+//                 >
+//                   Close
+//                 </button>
+//               </div>
+//             </div>
+//           )}
 //         </div>
 //       </div>
 //     </div>
@@ -842,6 +872,8 @@
 // };
 
 // export default ProductCard;
+
+
 
 
 
@@ -871,8 +903,8 @@ import Cookies from "js-cookie";
 import toast from "react-hot-toast";
 import OfferPopup from "./OfferPopup";
 
-const ProductCard = (productDetails) => {
-  const [product, setProduct] = useState(productDetails?.product);
+const ProductCard = ({ product: productDetails }) => {
+  const [product, setProduct] = useState(productDetails);
   const router = useRouter();
   const [isRentPopupOpen, setRentPopupOpen] = useState(false);
   const [rentalDate, setRentalDate] = useState("");
@@ -898,9 +930,8 @@ const ProductCard = (productDetails) => {
   const dispatch = useDispatch();
   const details = useSelector((state) => state.auth.user);
   const userID = details?._id;
-  console.log("product details......", productDetails.product);
 
-  const images = product?.images;
+  const images = product?.images || [];
 
   const fetchRemainingOfferCount = async (productId) => {
     try {
@@ -1123,7 +1154,6 @@ const ProductCard = (productDetails) => {
 
   const handleCloseOfferPopup = () => {
     setOfferPopupOpen(false);
-    setOfferAmount("");
     setSelectedPrice(null);
     setIsSubmitDisabled(true);
   };
@@ -1131,7 +1161,6 @@ const ProductCard = (productDetails) => {
   const handlePriceSelection = (price) => {
     const parsedPrice = parseFloat(price);
     setSelectedPrice(parsedPrice);
-    setOfferAmount(parsedPrice);
 
     if (parsedPrice && !isNaN(parsedPrice) && parsedPrice >= (product?.price * 0.7)) {
       setIsSubmitDisabled(false);
@@ -1401,7 +1430,7 @@ const ProductCard = (productDetails) => {
             ADD TO BAG
           </button>
 
-          {product.openToRent === "Yes" && (
+          {product?.openToRent === "Yes" && (
             <div className="flex flex-col mt-2">
               <div className="text-center font-bold text-black">
                 Or Rent it for
@@ -1493,7 +1522,7 @@ const ProductCard = (productDetails) => {
                   className="text-black-500 text-sm font-medium"
                   style={{ marginBottom: "10px", marginTop: "10px" }}
                 >
-                  {product?.seller?.products.length} Products Sold
+                  {product?.seller?.products?.length} Products Sold
                 </p>
 
                 <button
@@ -1521,7 +1550,7 @@ const ProductCard = (productDetails) => {
                     Rental Price:
                   </span>
                   <span className="text-[#070707] text-[14px] font-karla font-bold capitalize tracking-[1.12px] break-words">
-                    AED {product.pricePerDay}
+                    AED {product?.pricePerDay}
                   </span>
                 </div>
 

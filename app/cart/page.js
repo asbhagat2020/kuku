@@ -931,12 +931,6 @@
 // //   );
 // // }
 
-
-
-
-
-
-
 // "use client";
 
 // import Link from "next/link";
@@ -1863,13 +1857,6 @@
 //     </>
 //   );
 // }
-
-
-
-
-
-
-
 
 // "use client";
 
@@ -2939,15 +2926,6 @@
 //   );
 // }
 
-
-
-
-
-
-
-
-
-
 "use client";
 
 import Link from "next/link";
@@ -2964,7 +2942,9 @@ import toast from "react-hot-toast";
 import Image from "next/image";
 import { loadStripe } from "@stripe/stripe-js";
 
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
+const stripePromise = loadStripe(
+  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
+);
 
 export default function Cart() {
   const [isCouponPopupVisible, setIsCouponPopupVisible] = useState(false);
@@ -3033,7 +3013,10 @@ export default function Cart() {
     const startDate = new Date(coupon.startDate);
     const endDate = new Date(coupon.endDate);
     if (currentDate < startDate || currentDate > endDate) {
-      return { applicable: false, reason: "Coupon has expired or not yet active" };
+      return {
+        applicable: false,
+        reason: "Coupon has expired or not yet active",
+      };
     }
     return { applicable: true };
   };
@@ -3042,7 +3025,9 @@ export default function Cart() {
     if (coupon.discountType === "Percentage") {
       const discountAmount = (amount * coupon.discountValue) / 100;
       return Number(
-        Math.min(discountAmount, coupon.maxDiscount || discountAmount).toFixed(2)
+        Math.min(discountAmount, coupon.maxDiscount || discountAmount).toFixed(
+          2
+        )
       );
     } else if (coupon.discountType === "Fixed") {
       return Number(Math.min(coupon.discountValue, amount).toFixed(2));
@@ -3097,7 +3082,8 @@ export default function Cart() {
 
   const prepareItemsForStripe = (items) => {
     const totalPrice = items.reduce(
-      (sum, item) => sum + (item.offerPrice || item.price || 0) * (item.qty || 1),
+      (sum, item) =>
+        sum + (item.offerPrice || item.price || 0) * (item.qty || 1),
       0
     );
     const discountProportion =
@@ -3112,7 +3098,9 @@ export default function Cart() {
       const discountedPrice =
         discountProportion > 0
           ? Number(
-              (Math.max(0, price * (1 - discountProportion)) * (item.qty || 1)).toFixed(2)
+              (
+                Math.max(0, price * (1 - discountProportion)) * (item.qty || 1)
+              ).toFixed(2)
             )
           : Number((price * (item.qty || 1)).toFixed(2));
 
@@ -3130,548 +3118,294 @@ export default function Cart() {
     });
   };
 
-  // const reAddOfferToCart = async (offerId) => {
-  //   try {
-  //     let user = JSON.parse(Cookies.get("user") || "{}");
-  //     if (!user?._id) throw new Error("User not found");
-  //     await axios.post(
-  //       `${process.env.NEXT_PUBLIC_API_BASE_URL}/cart/add-offer`,
-  //       { offerId, userId: user._id },
-  //       { headers: { Authorization: `Bearer ${token}` } }
-  //     );
-  //     await fetchCartDetails();
-  //     toast.success("Offer re-added to cart. Try checkout again.");
-  //     return true;
-  //   } catch (error) {
-  //     console.error("Error re-adding offer to cart:", error);
-  //     toast.error("Failed to re-add offer to cart");
-  //     return false;
-  //   }
-  // };
 
-const reAddOfferToCart = async (offerId) => {
-  try {
-    let user = JSON.parse(Cookies.get("user") || "{}");
-    if (!user?._id) throw new Error("User not found");
-    const response = await axios.post(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/cart/add-offer`,
-      { offerId, userId: user._id },
-      { headers: { Authorization: `Bearer ${token}` } }
-    );
-    await fetchCartDetails();
-    toast.success("Offer re-added to cart. Try checkout again.");
-    return true;
-  } catch (error) {
-    console.error("Error re-adding offer to cart:", error);
-    const errorMsg = error.response?.data?.message || "Failed to re-add offer to cart";
-    if (errorMsg.includes("already sold")) {
-      toast.error("This item has been sold. Please remove it from cart.");
-    } else {
-      toast.error(errorMsg + ". Please add the offer item again from the offers page.");
-    }
-    return false;
-  }
-};
-  
-  // const handleCheckout = async () => {
-  //   setShowAddress(false);
-  //   try {
-  //     setLoading(true);
-  //     setProcessingPayment(true);
-  //     console.log("Starting checkout process...");
-  //     console.log("Auth Token:", token);
-  //     console.log("Cart:", cart);
-  //     console.log("Selected Items:", selectedItems);
-
-  //     if (!token) {
-  //       console.error("No auth token found");
-  //       setErrorMessage("Please log in to proceed with checkout");
-  //       setErrorPopupOpen(true);
-  //       return;
-  //     }
-
-  //     const selectedProducts = cart.filter((item) => selectedItems[item._id]);
-  //     if (selectedProducts.length === 0) {
-  //       console.log("No products selected");
-  //       setErrorMessage("Please select at least one item to checkout");
-  //       setErrorPopupOpen(true);
-  //       return;
-  //     }
-
-  //     if (!selectedAddress?._id) {
-  //       console.log("No shipping address selected");
-  //       setErrorMessage("Please select a shipping address before proceeding.");
-  //       setErrorPopupOpen(true);
-  //       return;
-  //     }
-
-  //     // Validate offer-based items
-  //     const invalidOfferItems = selectedProducts.filter(
-  //       (item) => item.offerId && (!item.offerPrice || item.offerPrice <= 0)
-  //     );
-  //     if (invalidOfferItems.length > 0) {
-  //       console.error("Invalid offer items:", invalidOfferItems);
-  //       setErrorMessage(
-  //         "One or more offer items have invalid offer prices. Please remove and add again."
-  //       );
-  //       setErrorPopupOpen(true);
-  //       return;
-  //     }
-
-  //     let user;
-  //     try {
-  //       user = JSON.parse(Cookies.get("user"));
-  //       console.log("User data retrieved:", user ? "Success" : "No user data");
-  //     } catch (cookieError) {
-  //       console.error("Error parsing user cookie:", cookieError);
-  //       throw new Error("Invalid user data");
-  //     }
-
-  //     const total = subtotal - discount;
-
-  //     // Separate offer-based and regular products
-  //     const offerProducts = selectedProducts
-  //       .filter((item) => item.offerId)
-  //       .map((item) => ({
-  //         product: item.productId,
-  //         productName: item.name,
-  //         quantity: item.qty || 1,
-  //         price: item.offerPrice || item.price,
-  //         offerId: item.offerId,
-  //         size: item.size?.sizeName || "",
-  //       }));
-
-  //     const regularProducts = selectedProducts
-  //       .filter((item) => !item.offerId)
-  //       .map((item) => ({
-  //         product: item.productId,
-  //         productName: item.name,
-  //         quantity: item.qty || 1,
-  //         price: item.price,
-  //         size: item.size?.sizeName || "",
-  //       }));
-
-  //     console.log("Offer Products:", offerProducts);
-  //     console.log("Regular Products:", regularProducts);
-
-  //     let offerOrderResponse = null;
-  //     let regularOrderResponse = null;
-
-  //     // Handle offer-based products
-  //     if (offerProducts.length > 0) {
-  //       const offerOrderData = {
-  //         products: offerProducts,
-  //         totalAmount: offerProducts.reduce(
-  //           (sum, item) => sum + item.price * item.quantity,
-  //           0
-  //         ),
-  //         discount: discount,
-  //         couponCode: appliedCoupon || null,
-  //         buyer: user?._id,
-  //         buyerName: user?.name || "",
-  //         finalAmount: total,
-  //         shippingAddress: selectedAddress._id,
-  //         paymentMethod: "Credit Card",
-  //       };
-
-  //       console.log("Offer Order Data:", offerOrderData);
-
-  //       offerOrderResponse = await axios.post(
-  //         `${process.env.NEXT_PUBLIC_API_BASE_URL}/order/create-offer`,
-  //         offerOrderData,
-  //         {
-  //           headers: {
-  //             Authorization: `Bearer ${token}`,
-  //             "Content-Type": "application/json",
-  //           },
-  //         }
-  //       );
-
-  //       console.log("Offer Order API Response:", {
-  //         status: offerOrderResponse.status,
-  //         statusText: offerOrderResponse.statusText,
-  //         data: offerOrderResponse.data,
-  //       });
-
-  //       if (!offerOrderResponse.data.order) {
-  //         throw new Error("Failed to create offer order");
-  //       }
-  //     }
-
-  //     // Handle regular products
-  //     if (regularProducts.length > 0) {
-  //       const regularOrderData = {
-  //         products: regularProducts,
-  //         totalAmount: regularProducts.reduce(
-  //           (sum, item) => sum + item.price * item.quantity,
-  //           0
-  //         ),
-  //         discount: 0,
-  //         couponCode: null,
-  //         buyer: user?._id,
-  //         buyerName: user?.name || "",
-  //         finalAmount: regularProducts.reduce(
-  //           (sum, item) => sum + item.price * item.quantity,
-  //           0
-  //         ),
-  //         shippingAddress: selectedAddress._id,
-  //         paymentMethod: "Credit Card",
-  //       };
-
-  //       console.log("Regular Order Data:", regularOrderData);
-
-  //       regularOrderResponse = await axios.post(
-  //         `${process.env.NEXT_PUBLIC_API_BASE_URL}/order/create`,
-  //         regularOrderData,
-  //         {
-  //           headers: {
-  //             Authorization: `Bearer ${token}`,
-  //             "Content-Type": "application/json",
-  //           },
-  //         }
-  //       );
-
-  //       console.log("Regular Order API Response:", {
-  //         status: regularOrderResponse.status,
-  //         statusText: regularOrderResponse.statusText,
-  //         data: regularOrderResponse.data,
-  //       });
-
-  //       if (!regularOrderResponse.data.order) {
-  //         throw new Error("Failed to create regular order");
-  //       }
-  //     }
-
-  //     // Prepare Stripe items
-  //     const stripeItems = prepareItemsForStripe(selectedProducts);
-  //     console.log("Stripe items prepared:", JSON.stringify(stripeItems, null, 2));
-
-  //     if (stripeItems.length === 0) {
-  //       console.error("No items prepared for Stripe payment");
-  //       throw new Error("No items selected for payment");
-  //     }
-
-  //     // Handle payment for offer-based products
-  //     if (offerOrderResponse) {
-  //       try {
-  //         const stripeResponse = await axios.post(
-  //           `${process.env.NEXT_PUBLIC_API_BASE_URL}/checkout-offer`,
-  //           {
-  //             products: stripeItems.filter((item) => item.offerId),
-  //             orderId: offerOrderResponse.data.order._id,
-  //             discount: discount,
-  //             finalAmount: total,
-  //             shippingAddress: selectedAddress._id,
-  //           },
-  //           {
-  //             headers: {
-  //               "Content-Type": "application/json",
-  //               Authorization: `Bearer ${token}`,
-  //             },
-  //           }
-  //         );
-
-  //         const session = stripeResponse.data;
-  //         console.log("Offer Stripe session:", session);
-
-  //         if (session?.id) {
-  //           const stripe = await stripePromise;
-  //           const { error } = await stripe.redirectToCheckout({
-  //             sessionId: session.id,
-  //           });
-
-  //           if (error) {
-  //             console.error("Error redirecting to offer checkout:", error);
-  //             setErrorMessage("Offer payment processing failed. Please try again.");
-  //             setErrorPopupOpen(true);
-  //             return;
-  //           }
-  //         } else {
-  //           throw new Error("Failed to create offer payment session");
-  //         }
-  //       } catch (error) {
-  //         console.error("Checkout-offer error:", error);
-  //         if (error.response?.data?.message === "Cart is empty" && offerProducts.length > 0) {
-  //           setErrorMessage(
-  //             "Cart is empty. Attempting to re-add offer item to cart..."
-  //           );
-  //           setErrorPopupOpen(true);
-  //           const reAdded = await reAddOfferToCart(offerProducts[0].offerId);
-  //           if (reAdded) {
-  //             setErrorMessage("Offer re-added to cart. Please try checkout again.");
-  //             setErrorPopupOpen(true);
-  //             return;
-  //           } else {
-  //             setErrorMessage(
-  //               "Failed to re-add offer to cart. Please add the offer item again from the offers page."
-  //             );
-  //             setErrorPopupOpen(true);
-  //             return;
-  //           }
-  //         }
-  //         throw error;
-  //       }
-  //     }
-
-  //     // Handle payment for regular products
-  //     if (regularOrderResponse) {
-  //       const stripeResponse = await axios.post(
-  //         `${process.env.NEXT_PUBLIC_API_BASE_URL}/buyMakePayment`,
-  //         {
-  //           products: stripeItems.filter((item) => !item.offerId),
-  //           orderId: regularOrderResponse.data.order._id,
-  //           discount: 0,
-  //           finalAmount: regularProducts.reduce(
-  //             (sum, item) => sum + item.price * item.quantity,
-  //             0
-  //           ),
-  //         },
-  //         {
-  //           headers: {
-  //             "Content-Type": "application/json",
-  //             Authorization: `Bearer ${token}`,
-  //           },
-  //         }
-  //       );
-
-  //       const session = stripeResponse.data;
-  //       console.log("Regular Stripe session:", session);
-
-  //       if (session?.id) {
-  //         const stripe = await stripePromise;
-  //         const { error } = await stripe.redirectToCheckout({
-  //           sessionId: session.id,
-  //         });
-
-  //         if (error) {
-  //           console.error("Error redirecting to regular checkout:", error);
-  //           setErrorMessage("Regular payment processing failed. Please try again.");
-  //           setErrorPopupOpen(true);
-  //           return;
-  //         }
-  //       } else {
-  //         throw new Error("Failed to create regular payment session");
-  //       }
-  //     }
-
-  //     // Update cart after successful order creation
-  //     await fetchCartDetails();
-  //     setSelectedItems({});
-  //     toast.success("Order created successfully, redirecting to payment...");
-  //   } catch (error) {
-  //     console.error("Checkout Error Details:", {
-  //       message: error.message,
-  //       responseData: error.response?.data,
-  //       responseStatus: error.response?.status,
-  //       stack: error.stack,
-  //     });
-
-  //     const errorMsg =
-  //       error.response?.data?.message ||
-  //       error.message ||
-  //       "Failed to process checkout";
-
-  //     if (errorMsg.includes("shippingAddress")) {
-  //       setErrorMessage("Please provide a valid shipping address.");
-  //     } else if (errorMsg.includes("User not authenticated")) {
-  //       setErrorMessage("Please log in to proceed with checkout");
-  //     } else if (errorMsg.includes("already sold")) {
-  //       setErrorMessage("One or more offer items have already been sold.");
-  //       await fetchCartDetails();
-  //     } else if (!errorMsg.includes("Cart is empty")) {
-  //       setErrorMessage(errorMsg);
-  //     }
-  //     setErrorPopupOpen(true);
-  //   } finally {
-  //     setLoading(false);
-  //     setProcessingPayment(false);
-  //   }
-  // };
-
-const handleCheckout = async () => {
-  setShowAddress(false);
-  try {
-    setLoading(true);
-    setProcessingPayment(true);
-    console.log("Starting checkout process...");
-    console.log("Auth Token:", token);
-    console.log("Cart:", cart);
-    console.log("Selected Items:", selectedItems);
-
-    if (!token) {
-      console.error("No auth token found");
-      setErrorMessage("Please log in to proceed with checkout");
-      setErrorPopupOpen(true);
-      return;
-    }
-
-    const selectedProducts = cart.filter((item) => selectedItems[item._id]);
-    if (selectedProducts.length === 0) {
-      console.log("No products selected");
-      setErrorMessage("Please select at least one item to checkout");
-      setErrorPopupOpen(true);
-      return;
-    }
-
-    if (!selectedAddress?._id) {
-      console.log("No shipping address selected");
-      setErrorMessage("Please select a shipping address before proceeding.");
-      setErrorPopupOpen(true);
-      return;
-    }
-
-    // Validate offer-based items
-    const invalidOfferItems = selectedProducts.filter(
-      (item) => item.offerId && (!item.offerPrice || item.offerPrice <= 0)
-    );
-    if (invalidOfferItems.length > 0) {
-      console.error("Invalid offer items:", invalidOfferItems);
-      setErrorMessage(
-        "One or more offer items have invalid offer prices. Please remove and add again from the offers page."
-      );
-      setErrorPopupOpen(true);
-      return;
-    }
-
-    let user;
+  const reAddOfferToCart = async (offerId) => {
     try {
-      user = JSON.parse(Cookies.get("user"));
-      console.log("User data retrieved:", user ? "Success" : "No user data");
-    } catch (cookieError) {
-      console.error("Error parsing user cookie:", cookieError);
-      throw new Error("Invalid user data");
-    }
-
-    const total = subtotal - discount;
-
-    const offerProducts = selectedProducts
-      .filter((item) => item.offerId)
-      .map((item) => ({
-        product: item.productId,
-        productName: item.name,
-        quantity: item.qty || 1,
-        price: item.offerPrice || item.price,
-        offerId: item.offerId,
-        size: item.size?.sizeName || "",
-      }));
-
-    const regularProducts = selectedProducts
-      .filter((item) => !item.offerId)
-      .map((item) => ({
-        product: item.productId,
-        productName: item.name,
-        quantity: item.qty || 1,
-        price: item.price,
-        size: item.size?.sizeName || "",
-      }));
-
-    console.log("Offer Products:", offerProducts);
-    console.log("Regular Products:", regularProducts);
-
-    let offerOrderResponse = null;
-    let regularOrderResponse = null;
-
-    if (offerProducts.length > 0) {
-      const offerOrderData = {
-        products: offerProducts,
-        totalAmount: offerProducts.reduce(
-          (sum, item) => sum + item.price * item.quantity,
-          0
-        ),
-        discount: discount,
-        couponCode: appliedCoupon || null,
-        buyer: user?._id,
-        buyerName: user?.name || "",
-        finalAmount: total,
-        shippingAddress: selectedAddress._id,
-        paymentMethod: "Credit Card",
-      };
-
-      console.log("Offer Order Data:", offerOrderData);
-
-      offerOrderResponse = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/order/create-offer`,
-        offerOrderData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
+      let user = JSON.parse(Cookies.get("user") || "{}");
+      if (!user?._id) throw new Error("User not found");
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/cart/add-offer`,
+        { offerId, userId: user._id },
+        { headers: { Authorization: `Bearer ${token}` } }
       );
-
-      console.log("Offer Order API Response:", {
-        status: offerOrderResponse.status,
-        statusText: offerOrderResponse.statusText,
-        data: offerOrderResponse.data,
-      });
-
-      if (!offerOrderResponse.data.order) {
-        throw new Error("Failed to create offer order");
+      await fetchCartDetails();
+      toast.success("Offer re-added to cart. Try checkout again.");
+      return true;
+    } catch (error) {
+      console.error("Error re-adding offer to cart:", error);
+      const errorMsg =
+        error.response?.data?.message || "Failed to re-add offer to cart";
+      if (errorMsg.includes("already sold")) {
+        toast.error("This item has been sold. Please remove it from cart.");
+      } else {
+        toast.error(
+          errorMsg + ". Please add the offer item again from the offers page."
+        );
       }
+      return false;
     }
+  };
 
-    if (regularProducts.length > 0) {
-      const regularOrderData = {
-        products: regularProducts,
-        totalAmount: regularProducts.reduce(
-          (sum, item) => sum + item.price * item.quantity,
-          0
-        ),
-        discount: 0,
-        couponCode: null,
-        buyer: user?._id,
-        buyerName: user?.name || "",
-        finalAmount: regularProducts.reduce(
-          (sum, item) => sum + item.price * item.quantity,
-          0
-        ),
-        shippingAddress: selectedAddress._id,
-        paymentMethod: "Credit Card",
-      };
 
-      console.log("Regular Order Data:", regularOrderData);
+  const handleCheckout = async () => {
+    setShowAddress(false);
+    try {
+      setLoading(true);
+      setProcessingPayment(true);
+      console.log("Starting checkout process...");
+      console.log("Auth Token:", token);
+      console.log("Cart:", cart);
+      console.log("Selected Items:", selectedItems);
 
-      regularOrderResponse = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/order/create`,
-        regularOrderData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
+      if (!token) {
+        console.error("No auth token found");
+        setErrorMessage("Please log in to proceed with checkout");
+        setErrorPopupOpen(true);
+        return;
+      }
+
+      const selectedProducts = cart.filter((item) => selectedItems[item._id]);
+      if (selectedProducts.length === 0) {
+        console.log("No products selected");
+        setErrorMessage("Please select at least one item to checkout");
+        setErrorPopupOpen(true);
+        return;
+      }
+
+      if (!selectedAddress?._id) {
+        console.log("No shipping address selected");
+        setErrorMessage("Please select a shipping address before proceeding.");
+        setErrorPopupOpen(true);
+        return;
+      }
+
+      // Validate offer-based items
+      const invalidOfferItems = selectedProducts.filter(
+        (item) => item.offerId && (!item.offerPrice || item.offerPrice <= 0)
       );
-
-      console.log("Regular Order API Response:", {
-        status: regularOrderResponse.status,
-        statusText: regularOrderResponse.statusText,
-        data: regularOrderResponse.data,
-      });
-
-      if (!regularOrderResponse.data.order) {
-        throw new Error("Failed to create regular order");
+      if (invalidOfferItems.length > 0) {
+        console.error("Invalid offer items:", invalidOfferItems);
+        setErrorMessage(
+          "One or more offer items have invalid offer prices. Please remove and add again from the offers page."
+        );
+        setErrorPopupOpen(true);
+        return;
       }
-    }
 
-    const stripeItems = prepareItemsForStripe(selectedProducts);
-    console.log("Stripe items prepared:", JSON.stringify(stripeItems, null, 2));
-
-    if (stripeItems.length === 0) {
-      console.error("No items prepared for Stripe payment");
-      throw new Error("No items selected for payment");
-    }
-
-    if (offerOrderResponse) {
+      let user;
       try {
-        const stripeResponse = await axios.post(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/checkout-offer`,
+        user = JSON.parse(Cookies.get("user"));
+        console.log("User data retrieved:", user ? "Success" : "No user data");
+      } catch (cookieError) {
+        console.error("Error parsing user cookie:", cookieError);
+        throw new Error("Invalid user data");
+      }
+
+      const total = subtotal - discount;
+
+      const offerProducts = selectedProducts
+        .filter((item) => item.offerId)
+        .map((item) => ({
+          product: item.productId,
+          productName: item.name,
+          quantity: item.qty || 1,
+          price: item.offerPrice || item.price,
+          offerId: item.offerId,
+          size: item.size?.sizeName || "",
+        }));
+
+      const regularProducts = selectedProducts
+        .filter((item) => !item.offerId)
+        .map((item) => ({
+          product: item.productId,
+          productName: item.name,
+          quantity: item.qty || 1,
+          price: item.price,
+          size: item.size?.sizeName || "",
+        }));
+
+      console.log("Offer Products:", offerProducts);
+      console.log("Regular Products:", regularProducts);
+
+      let offerOrderResponse = null;
+      let regularOrderResponse = null;
+
+      if (offerProducts.length > 0) {
+        const offerOrderData = {
+          products: offerProducts,
+          totalAmount: offerProducts.reduce(
+            (sum, item) => sum + item.price * item.quantity,
+            0
+          ),
+          discount: discount,
+          couponCode: appliedCoupon || null,
+          buyer: user?._id,
+          buyerName: user?.name || "",
+          finalAmount: total,
+          shippingAddress: selectedAddress._id,
+          paymentMethod: "Credit Card",
+        };
+
+        console.log("Offer Order Data:", offerOrderData);
+
+        offerOrderResponse = await axios.post(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/order/create-offer`,
+          offerOrderData,
           {
-            products: stripeItems.filter((item) => item.offerId),
-            orderId: offerOrderResponse.data.order._id,
-            discount: discount,
-            finalAmount: total,
-            shippingAddress: selectedAddress._id,
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        console.log("Offer Order API Response:", {
+          status: offerOrderResponse.status,
+          statusText: offerOrderResponse.statusText,
+          data: offerOrderResponse.data,
+        });
+
+        if (!offerOrderResponse.data.order) {
+          throw new Error("Failed to create offer order");
+        }
+      }
+
+      if (regularProducts.length > 0) {
+        const regularOrderData = {
+          products: regularProducts,
+          totalAmount: regularProducts.reduce(
+            (sum, item) => sum + item.price * item.quantity,
+            0
+          ),
+          discount: appliedCoupon ? discount : 0,
+          couponCode: appliedCoupon || null,
+          buyer: user?._id,
+          buyerName: user?.name || "",
+          finalAmount: regularProducts.reduce(
+            (sum, item) => sum + item.price * item.quantity,
+            0
+          ),
+          shippingAddress: selectedAddress._id,
+          paymentMethod: "Credit Card",
+        };
+
+        console.log("Regular Order Data:", regularOrderData);
+
+        regularOrderResponse = await axios.post(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/order/create`,
+          regularOrderData,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        console.log("Regular Order API Response:", {
+          status: regularOrderResponse.status,
+          statusText: regularOrderResponse.statusText,
+          data: regularOrderResponse.data,
+        });
+
+        if (!regularOrderResponse.data.order) {
+          throw new Error("Failed to create regular order");
+        }
+      }
+
+      const stripeItems = prepareItemsForStripe(selectedProducts);
+      console.log(
+        "Stripe items prepared:",
+        JSON.stringify(stripeItems, null, 2)
+      );
+
+      if (stripeItems.length === 0) {
+        console.error("No items prepared for Stripe payment");
+        throw new Error("No items selected for payment");
+      }
+
+      if (offerOrderResponse) {
+        try {
+          const stripeResponse = await axios.post(
+            `${process.env.NEXT_PUBLIC_API_BASE_URL}/checkout-offer`,
+            {
+              products: stripeItems.filter((item) => item.offerId),
+              orderId: offerOrderResponse.data.order._id,
+              discount: discount,
+              finalAmount: total,
+              shippingAddress: selectedAddress._id,
+            },
+            {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+
+          const session = stripeResponse.data;
+          console.log("Offer Stripe session:", session);
+
+          if (session?.id) {
+            const stripe = await stripePromise;
+            const { error } = await stripe.redirectToCheckout({
+              sessionId: session.id,
+            });
+
+            if (error) {
+              console.error("Error redirecting to offer checkout:", error);
+              setErrorMessage(
+                "Offer payment processing failed. Please try again."
+              );
+              setErrorPopupOpen(true);
+              return;
+            }
+          } else {
+            throw new Error("Failed to create offer payment session");
+          }
+        } catch (error) {
+          console.error("Checkout-offer error:", error);
+          const errorMsg = error.response?.data?.message || error.message;
+          if (
+            errorMsg.includes("not in a valid checkout state") &&
+            offerProducts.length > 0
+          ) {
+            setErrorMessage(
+              "Offer is not in a valid state. Attempting to re-add offer to cart..."
+            );
+            setErrorPopupOpen(true);
+            const reAdded = await reAddOfferToCart(offerProducts[0].offerId);
+            if (reAdded) {
+              setErrorMessage(
+                "Offer re-added to cart. Please try checkout again."
+              );
+              setErrorPopupOpen(true);
+              return;
+            } else {
+              setErrorMessage(
+                errorMsg.includes("already sold")
+                  ? "This item has been sold. Please remove it from cart."
+                  : "Failed to re-add offer to cart. Please add the offer item again from the offers page."
+              );
+              setErrorPopupOpen(true);
+              return;
+            }
+          }
+          throw error;
+        }
+      }
+
+      if (regularOrderResponse) {
+        const stripeResponse = await axios.post(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/buyMakePayment`,
+          {
+            products: stripeItems.filter((item) => !item.offerId),
+            orderId: regularOrderResponse.data.order._id,
+            discount: 0,
+            finalAmount: regularProducts.reduce(
+              (sum, item) => sum + item.price * item.quantity,
+              0
+            ),
           },
           {
             headers: {
@@ -3682,7 +3416,7 @@ const handleCheckout = async () => {
         );
 
         const session = stripeResponse.data;
-        console.log("Offer Stripe session:", session);
+        console.log("Regular Stripe session:", session);
 
         if (session?.id) {
           const stripe = await stripePromise;
@@ -3691,114 +3425,51 @@ const handleCheckout = async () => {
           });
 
           if (error) {
-            console.error("Error redirecting to offer checkout:", error);
-            setErrorMessage("Offer payment processing failed. Please try again.");
-            setErrorPopupOpen(true);
-            return;
-          }
-        } else {
-          throw new Error("Failed to create offer payment session");
-        }
-      } catch (error) {
-        console.error("Checkout-offer error:", error);
-        const errorMsg = error.response?.data?.message || error.message;
-        if (errorMsg.includes("not in a valid checkout state") && offerProducts.length > 0) {
-          setErrorMessage(
-            "Offer is not in a valid state. Attempting to re-add offer to cart..."
-          );
-          setErrorPopupOpen(true);
-          const reAdded = await reAddOfferToCart(offerProducts[0].offerId);
-          if (reAdded) {
-            setErrorMessage("Offer re-added to cart. Please try checkout again.");
-            setErrorPopupOpen(true);
-            return;
-          } else {
+            console.error("Error redirecting to regular checkout:", error);
             setErrorMessage(
-              errorMsg.includes("already sold")
-                ? "This item has been sold. Please remove it from cart."
-                : "Failed to re-add offer to cart. Please add the offer item again from the offers page."
+              "Regular payment processing failed. Please try again."
             );
             setErrorPopupOpen(true);
             return;
           }
+        } else {
+          throw new Error("Failed to create regular payment session");
         }
-        throw error;
       }
-    }
 
-    if (regularOrderResponse) {
-      const stripeResponse = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/buyMakePayment`,
-        {
-          products: stripeItems.filter((item) => !item.offerId),
-          orderId: regularOrderResponse.data.order._id,
-          discount: 0,
-          finalAmount: regularProducts.reduce(
-            (sum, item) => sum + item.price * item.quantity,
-            0
-          ),
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      const session = stripeResponse.data;
-      console.log("Regular Stripe session:", session);
-
-      if (session?.id) {
-        const stripe = await stripePromise;
-        const { error } = await stripe.redirectToCheckout({
-          sessionId: session.id,
-        });
-
-        if (error) {
-          console.error("Error redirecting to regular checkout:", error);
-          setErrorMessage("Regular payment processing failed. Please try again.");
-          setErrorPopupOpen(true);
-          return;
-        }
-      } else {
-        throw new Error("Failed to create regular payment session");
-      }
-    }
-
-    // Update cart after successful order creation
-    await fetchCartDetails();
-    setSelectedItems({});
-    toast.success("Order created successfully, redirecting to payment...");
-  } catch (error) {
-    console.error("Checkout Error Details:", {
-      message: error.message,
-      responseData: error.response?.data,
-      responseStatus: error.response?.status,
-      stack: error.stack,
-    });
-
-    const errorMsg =
-      error.response?.data?.message ||
-      error.message ||
-      "Failed to process checkout";
-
-    if (errorMsg.includes("shippingAddress")) {
-      setErrorMessage("Please provide a valid shipping address.");
-    } else if (errorMsg.includes("User not authenticated")) {
-      setErrorMessage("Please log in to proceed with checkout");
-    } else if (errorMsg.includes("already sold")) {
-      setErrorMessage("One or more offer items have already been sold.");
+      // Update cart after successful order creation
       await fetchCartDetails();
-    } else {
-      setErrorMessage(errorMsg);
+      setSelectedItems({});
+      toast.success("Order created successfully, redirecting to payment...");
+    } catch (error) {
+      console.error("Checkout Error Details:", {
+        message: error.message,
+        responseData: error.response?.data,
+        responseStatus: error.response?.status,
+        stack: error.stack,
+      });
+
+      const errorMsg =
+        error.response?.data?.message ||
+        error.message ||
+        "Failed to process checkout";
+
+      if (errorMsg.includes("shippingAddress")) {
+        setErrorMessage("Please provide a valid shipping address.");
+      } else if (errorMsg.includes("User not authenticated")) {
+        setErrorMessage("Please log in to proceed with checkout");
+      } else if (errorMsg.includes("already sold")) {
+        setErrorMessage("One or more offer items have already been sold.");
+        await fetchCartDetails();
+      } else {
+        setErrorMessage(errorMsg);
+      }
+      setErrorPopupOpen(true);
+    } finally {
+      setLoading(false);
+      setProcessingPayment(false);
     }
-    setErrorPopupOpen(true);
-  } finally {
-    setLoading(false);
-    setProcessingPayment(false);
-  }
-};
+  };
 
   const handleRemoveCoupon = () => {
     setAppliedCoupon("");
@@ -4144,7 +3815,9 @@ const handleCheckout = async () => {
                         type="text"
                         placeholder="Add coupon"
                         value={couponCode}
-                        onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
+                        onChange={(e) =>
+                          setCouponCode(e.target.value.toUpperCase())
+                        }
                         className="w-[150px] md:w-[200px] h-[36px] p-2 border border-[#b4b4b4] rounded-lg text-sm font-karla outline-[#e4086f] outline-4"
                       />
                       <button
@@ -4188,7 +3861,12 @@ const handleCheckout = async () => {
 
                   <button
                     onClick={handleCheckout}
-                    disabled={loading || processingPayment || selectedCount === 0 || !selectedAddress}
+                    disabled={
+                      loading ||
+                      processingPayment ||
+                      selectedCount === 0 ||
+                      !selectedAddress
+                    }
                     className="w-full h-[40px] p-2 bg-[#fde504] rounded-lg md:rounded-[16px] mt-2 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <div className="text-center text-[#070707] text-sm md:text-[14px] font-medium">
@@ -4246,9 +3924,7 @@ const handleCheckout = async () => {
         )}
       </div>
 
-      {showAddress && (
-        <CartAddress onAddressSelect={setSelectedAddress} />
-      )}
+      {showAddress && <CartAddress onAddressSelect={setSelectedAddress} />}
 
       {isCouponPopupVisible && (
         <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-50">
@@ -4290,7 +3966,8 @@ const handleCheckout = async () => {
                           </div>
                           {applicabilityCheck.applicable && (
                             <div className="text-xs text-green-600 font-medium">
-                              You&apos;ll save: AED {potentialDiscount.toFixed(2)}
+                              You&apos;ll save: AED{" "}
+                              {potentialDiscount.toFixed(2)}
                             </div>
                           )}
                           {!applicabilityCheck.applicable && (
@@ -4351,4 +4028,3 @@ const handleCheckout = async () => {
     </>
   );
 }
-
