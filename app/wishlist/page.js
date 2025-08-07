@@ -162,7 +162,7 @@ export default function Wishlist() {
                   </div>
 
                   {/* Action Buttons */}
-                  <div className="flex flex-col md:flex-row justify-start mt-1 items-start gap-4">
+                  <div className="flex md:flex-row justify-start mt-1 items-start gap-4">
                     {/* <Link href="/selling-page"> */}
                     <button
                       onClick={() => handleRemove(item)}

@@ -1,38 +1,24 @@
+// import { GoogleMap, MarkerF, useLoadScript } from "@react-google-maps/api";
+// import { useEffect, useState } from "react";
 // import Image from "next/image";
-// import React, { useEffect, useState } from "react";
-// import DraggableProgressBar from "./DraggableProgressBar";
 // import Link from "next/link";
 // import { useRouter } from "next/navigation";
-// import CustomDateInput from "./CustomDateInput";
-// import Cookies from 'js-cookie';
+// import Cookies from "js-cookie";
 // import axios from "axios";
-// import toast from 'react-hot-toast';
-// // import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from 'react-leaflet';
-// import { useMapEvents } from 'react-leaflet';
-
-// // import L from 'leaflet';
-// import 'leaflet/dist/leaflet.css';
-// import dynamic from 'next/dynamic';
-
-// const MapContainer = dynamic(() => import('react-leaflet').then(mod => mod.MapContainer), { ssr: false });
-// const TileLayer = dynamic(() => import('react-leaflet').then(mod => mod.TileLayer), { ssr: false });
-// const Marker = dynamic(() => import('react-leaflet').then(mod => mod.Marker), { ssr: false });
-// const Popup = dynamic(() => import('react-leaflet').then(mod => mod.Popup), { ssr: false });
-// // const useMapEvents = dynamic(() => import('react-leaflet').then(mod => mod.useMapEvents), { ssr: false });
-// let L;
-// if (typeof window !== "undefined") {
-//   L = require('leaflet');
-// }
-
-
+// import toast from "react-hot-toast";
+// import DraggableProgressBar from "./DraggableProgressBar";
+// import CustomDateInput from "./CustomDateInput";
 
 // const KukuitMain = () => {
-//   const notify = () => toast.success('Please Login');
-//   const [location, setLocation] = useState(null);
-//   const [address, setAddress] = useState('');
-//   const [markerPosition, setMarkerPosition] = useState([51.505, -0.09]);
-//   const [addressType, setAddressType] = useState(false);
+//   const { isLoaded } = useLoadScript({
+//     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
+//   });
 
+//   const notify = () => toast.success("Please Login");
+//   const [location, setLocation] = useState(null);
+//   const [address, setAddress] = useState("");
+//   const [markerPosition, setMarkerPosition] = useState([25.276987, 55.296249]); // Default to Dubai
+//   const [addressType, setAddressType] = useState(false);
 //   const [selectedScale, setSelectedScale] = useState(null);
 //   const [currentStep, setCurrentStep] = useState(1);
 //   const [submit, setSubmit] = useState(false);
@@ -51,27 +37,12 @@
 //     time: "",
 //     agreeTerms: false,
 //   });
-
-
 //   const [errors, setErrors] = useState({});
+//   const router = useRouter();
 
 
-//   const [markerIcon, setMarkerIcon] = useState(null);
-//   useEffect(() => {
-//     if (typeof window !== "undefined" && L) {
-//       const icon = new L.Icon({
-//         iconUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png',
-//         iconSize: [25, 41],
-//         iconAnchor: [12, 41],
-//         popupAnchor: [1, -34],
-//         shadowUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png',
-//         shadowSize: [41, 41],
-//       });
-//       setMarkerIcon(icon); // Set the marker icon in state
-//     }
-//   }, []);
 
-
+//   // Geolocation to get user's current location (optional)
 //   useEffect(() => {
 //     if (navigator.geolocation) {
 //       navigator.geolocation.getCurrentPosition(
@@ -80,62 +51,65 @@
 //           setMarkerPosition([latitude, longitude]);
 //           await fetchAddress(latitude, longitude);
 //         },
-//         (err) => console.error('Geolocation error:', err)
+//         (err) => {
+//           console.error("Geolocation error:", err);
+//           // Fallback to Dubai if geolocation fails
+//           setMarkerPosition([25.276987, 55.296249]);
+//           fetchAddress(25.276987, 55.296249);
+//         }
 //       );
+//     } else {
+//       // Fallback to Dubai if geolocation not supported
+//       setMarkerPosition([25.276987, 55.296249]);
+//       fetchAddress(25.276987, 55.296249);
 //     }
 //   }, []);
 
-//   // Function to reverse geocode coordinates
+//   // Fetch address using Google Maps Geocoding API
 //   const fetchAddress = async (latitude, longitude) => {
 //     try {
 //       const response = await fetch(
-//         `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=AIzaSyCl2ftJURDx6LbMCxcXzpVZ-KFXJNT7DfY`
+//         `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`
 //       );
 //       const data = await response.json();
 //       if (data?.results?.length > 0) {
-//         const formattedAddress = data?.results[0]?.formatted_address;
+//         const formattedAddress = data.results[0].formatted_address;
 //         setAddress(formattedAddress);
 //         setLocation({ latitude, longitude });
 //       } else {
 //         setAddress("Address not found");
 //       }
 //     } catch (error) {
-//       console.error('Error fetching address:', error);
+//       console.error("Error fetching address:", error);
 //     }
 //   };
 
+//   // Update form data when address changes
 //   useEffect(() => {
 //     if (addressType && address) {
-//       const addressarry = address?.split(",")
+//       const addressArray = address?.split(",");
 //       setFormData((prevData) => ({
-//         ...prevData,          // Spread the previous form data
-//         country: addressarry[addressarry?.length - 1],
-//         city: addressarry?.length > 2 ? addressarry[addressarry?.length - 3] + "," + addressarry[addressarry?.length - 2] : addressarry[addressarry?.length - 2],
-//         addressLine1: addressarry?.length > 3 ? addressarry[addressarry?.length - 4] : "",
-//         addressLine2: addressarry?.length > 4 ? addressarry[addressarry?.length - 5] : "",    // Update the country field with the new value
+//         ...prevData,
+//         country: addressArray[addressArray?.length - 1]?.trim() || "",
+//         city:
+//           addressArray?.length > 2
+//             ? addressArray[addressArray?.length - 3]?.trim() +
+//               "," +
+//               addressArray[addressArray?.length - 2]?.trim()
+//             : addressArray[addressArray?.length - 2]?.trim() || "",
+//         addressLine1: addressArray?.length > 3 ? addressArray[addressArray?.length - 4]?.trim() : "",
+//         addressLine2: addressArray?.length > 4 ? addressArray[addressArray?.length - 5]?.trim() : "",
 //       }));
 //     }
-//   }, [addressType, address])
+//   }, [addressType, address]);
 
-
-
-//   function MapClickHandler() {
-//     console.log("function called");
-
-//     const map = useMapEvents({
-//       click: (event) => {
-//         const { lat, lng } = event.latlng;
-//         console.log("Map clicked", lat, lng);
-//         setMarkerPosition([lat, lng]); // Update marker position
-//         fetchAddress(lat, lng); // Fetch address for the clicked coordinates
-//       },
-//     });
-//     console.log("map", map);
-
-//     return null; // This component doesn't render anything itself
-//   }
-//   console.log("address", address);
-
+//   // Handle map click to update marker and address
+//   const handleMapClick = (event) => {
+//     const lat = event.latLng.lat();
+//     const lng = event.latLng.lng();
+//     setMarkerPosition([lat, lng]);
+//     fetchAddress(lat, lng);
+//   };
 
 //   const Modal = ({ onClose }) => {
 //     const handleOutsideClick = (e) => {
@@ -168,7 +142,6 @@
 //     );
 //   };
 
-
 //   const handleInputChange = (e) => {
 //     const { name, value, type, checked } = e.target;
 //     setFormData((prevData) => ({
@@ -179,10 +152,8 @@
 
 //   const handleCustomNumberChange = (e) => {
 //     const value = e.target.value;
-
 //     if (!isNaN(value)) {
 //       setCustomNumber(value);
-
 //       if (value === "") {
 //         setSelectedScale(null);
 //       } else {
@@ -196,67 +167,57 @@
 //     }
 //   };
 
+//   const validateStep1 = () => {
+//     if (!selectedScale || selectedScale < 5) {
+//       setErrors({ numberOfItems: "Please select at least 5 items" });
+//       return false;
+//     }
+//     return true;
+//   };
 
+//   const validateStep2 = () => {
+//     let newErrors = {};
+//     if (!formData.date || isNaN(new Date(formData.date).getTime())) {
+//       newErrors.date = "Valid pickup date is required";
+//     }
+//     if (!formData.time) {
+//       newErrors.time = "Pickup time is required";
+//     }
+//     if (!formData.agreeTerms) {
+//       newErrors.agreeTerms = "You must agree to the terms";
+//     }
+//     setErrors(newErrors);
+//     return Object.keys(newErrors).length === 0;
+//   };
 
-
-
-//   const router = useRouter();
-
-
-// const validateStep2 = () => {
-//   let newErrors = {};
-//   if (!formData.date || isNaN(new Date(formData.date).getTime())) {
-//     newErrors.date = "Valid pickup date is required";
-//   }
-//   if (!formData.time) {
-//     newErrors.time = "Pickup time is required";
-//   }
-//   if (!formData.agreeTerms) {
-//     newErrors.agreeTerms = "You must agree to the terms";
-//   }
-
-//   setErrors(newErrors);
-//   return Object.keys(newErrors).length === 0;
-// };
-
-// const validateForm = () => {
-//   let newErrors = {};
-//   if (!selectedScale || selectedScale < 5) {
-//     newErrors.numberOfItems = "Please select at least 5 items";
-//   }
-//   if (!formData.date || isNaN(new Date(formData.date).getTime())) {
-//     newErrors.date = "Valid pickup date is required";
-//   }
-//   if (!formData.time) {
-//     newErrors.time = "Pickup time is required";
-//   }
-//   if (!formData.country) newErrors.country = "Country is required";
-//   if (!formData.city) newErrors.city = "City is required";
-//   if (!formData.addressLine1) newErrors.addressLine1 = "Address Line 1 is required";
-//   if (!formData.firstName) newErrors.firstName = "First name is required";
-//   if (!formData.lastName) newErrors.lastName = "Last name is required";
-//   if (!formData.email) newErrors.email = "Email is required";
-//   else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-//     newErrors.email = "Email is invalid";
-//   }
-//   if (!formData.phone) newErrors.phone = "Phone number is required";
-//   else if (!/^\d{10}$/.test(formData.phone)) {
-//     newErrors.phone = "Phone number must be 10 digits";
-//   }
-//   if (!formData.agreeTerms) newErrors.agreeTerms = "You must agree to the terms";
-
-//   setErrors(newErrors);
-//   return Object.keys(newErrors).length === 0;
-// };
-
-
-// const validateStep1 = () => {
-//   if (!selectedScale || selectedScale < 5) {
-//     setErrors({ numberOfItems: "Please select at least 5 items" });
-//     return false;
-//   }
-//   return true;
-// };
+//   const validateForm = () => {
+//     let newErrors = {};
+//     if (!selectedScale || selectedScale < 5) {
+//       newErrors.numberOfItems = "Please select at least 5 items";
+//     }
+//     if (!formData.date || isNaN(new Date(formData.date).getTime())) {
+//       newErrors.date = "Valid pickup date is required";
+//     }
+//     if (!formData.time) {
+//       newErrors.time = "Pickup time is required";
+//     }
+//     if (!formData.country) newErrors.country = "Country is required";
+//     if (!formData.city) newErrors.city = "City is required";
+//     if (!formData.addressLine1) newErrors.addressLine1 = "Address Line 1 is required";
+//     if (!formData.firstName) newErrors.firstName = "First name is required";
+//     if (!formData.lastName) newErrors.lastName = "Last name is required";
+//     if (!formData.email) newErrors.email = "Email is required";
+//     else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+//       newErrors.email = "Email is invalid";
+//     }
+//     if (!formData.phone) newErrors.phone = "Phone number is required";
+//     else if (!/^\d{10}$/.test(formData.phone)) {
+//       newErrors.phone = "Phone number must be 10 digits";
+//     }
+//     if (!formData.agreeTerms) newErrors.agreeTerms = "You must agree to the terms";
+//     setErrors(newErrors);
+//     return Object.keys(newErrors).length === 0;
+//   };
 
 //   const handleClick = () => {
 //     if (validateForm()) {
@@ -265,62 +226,52 @@
 //     }
 //   };
 
-
-// const handleConfirmClick = async () => {
-//   if (!validateForm()) return; // Exit if form validation fails
-
-//   try {
-//     // Prepare the data to send
-//     const details = {
-//       numberOfItems: selectedScale, // Ensure this is a number >= 5
-//       pickupDate: formData.date, // Send as ISO string (e.g., "2025-07-13")
-//       pickupTime: formData.time, // Ensure this is a non-empty string
-//       variation: "", // Optional: Add default or dynamic value if needed
-//       Amount: 0, // Default value as per schema
-//     };
-
-//     const pickupLocation = {
-//       country: formData.country,
-//       city: formData.city,
-//       addressLine1: formData.addressLine1,
-//       addressLine2: formData.addressLine2,
-//       firstName: formData.firstName,
-//       lastName: formData.lastName,
-//       email: formData.email,
-//       phone: formData.phone,
-//     };
-
-//     // Log payload for debugging
-//     console.log("Payload:", { ...details, pickupLocation });
-
-//     if (Cookies.get("auth")) {
-//       const token = JSON.parse(Cookies.get("auth"));
-//       const response = await axios.post(
-//         `${process.env.NEXT_PUBLIC_API_BASE_URL}/kukuits/add`,
-//         { ...details, pickupLocation }, // Send as a single object
-//         {
-//           headers: {
-//             Authorization: `Bearer ${token}`,
-//           },
+//   const handleConfirmClick = async () => {
+//     if (!validateForm()) return;
+//     try {
+//       const details = {
+//         numberOfItems: selectedScale,
+//         pickupDate: formData.date,
+//         pickupTime: formData.time,
+//         variation: "",
+//         Amount: 0,
+//       };
+//       const pickupLocation = {
+//         country: formData.country,
+//         city: formData.city,
+//         addressLine1: formData.addressLine1,
+//         addressLine2: formData.addressLine2,
+//         firstName: formData.firstName,
+//         lastName: formData.lastName,
+//         email: formData.email,
+//         phone: formData.phone,
+//       };
+//       if (Cookies.get("auth")) {
+//         const token = JSON.parse(Cookies.get("auth"));
+//         const response = await axios.post(
+//           `${process.env.NEXT_PUBLIC_API_BASE_URL}/kukuits/add`,
+//           { ...details, pickupLocation },
+//           {
+//             headers: {
+//               Authorization: `Bearer ${token}`,
+//             },
+//           }
+//         );
+//         if (response.status === 201 || response.status === 200) {
+//           setModal(true);
+//         } else {
+//           console.error("Failed to add kukuit:", response.statusText);
+//           toast.error("Failed to schedule pickup");
 //         }
-//       );
-
-//       if (response.status === 201 || response.status === 200) {
-//         setModal(true); // Show success modal
 //       } else {
-//         console.error("Failed to add kukuit:", response.statusText);
-//         toast.error("Failed to schedule pickup");
+//         notify();
 //       }
-//     } else {
-//       notify(); // Show login prompt
+//     } catch (error) {
+//       console.error("API Error:", error.response?.data || error.message);
+//       toast.error(error.response?.data?.message || "Failed to schedule pickup");
 //     }
-//   } catch (error) {
-//     console.error("API Error:", error.response?.data || error.message);
-//     toast.error(error.response?.data?.message || "Failed to schedule pickup");
-//   }
-// };
+//   };
 
-  
 //   const handleCloseModal = () => {
 //     setModal(false);
 //     router.push("/");
@@ -340,10 +291,7 @@
 //     }
 //   };
 
-
-
-
-//   const renderStepContent = (markerPosition) => {
+//   const renderStepContent = () => {
 //     switch (currentStep) {
 //       case 1:
 //         return (
@@ -356,7 +304,6 @@
 //                 Step 1 of 3
 //               </p>
 //             </div>
-//             {/* <DraggableProgressBar setSelectedScale={setSelectedScale} /> */}
 //             <DraggableProgressBar
 //               setSelectedScale={setSelectedScale}
 //               customNumber={customNumber}
@@ -377,7 +324,9 @@
 //                 min="0"
 //               />
 //               {(!selectedScale && customNumber === "") && (
-//                 <p className="text-red-500 text-sm mt-1">Please select either from scale or enter the number of items manually</p>
+//                 <p className="text-red-500 text-sm mt-1">
+//                   Please select either from scale or enter the number of items manually
+//                 </p>
 //               )}
 //             </div>
 //             <div className="flex flex-col sm:flex-row sm:justify-end gap-4 my-8 sm:my-[36px]">
@@ -497,33 +446,26 @@
 //               Please enter your pickup details
 //             </p>
 //             <div className="w-full h-[200px] sm:h-[392px] mt-6 sm:mt-[36px] shadow">
-             
-
-//               <MapContainer
-//                 center={markerPosition}
-//                 zoom={13}
-//                 // style={{ width: '100%', height: '450px' }}
-//                 className="w-full h-full"
-
-//               >
-//                 <TileLayer
-//                   url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-//                   attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-//                 />
-
-//                 {/* MapClickHandler listens for map click events */}
-//                 <MapClickHandler />
-
-
-//                 {markerIcon && (  // Ensure the icon is set before rendering the marker
-//                   <Marker position={markerPosition} icon={markerIcon}>
-//                     <Popup>{address}</Popup>
-//                   </Marker>
-//                 )}
-//               </MapContainer>
+//               {isLoaded ? (
+//                 <GoogleMap
+//                   mapContainerStyle={{ width: "100%", height: "100%" }}
+//                   center={{ lat: markerPosition[0], lng: markerPosition[1] }}
+//                   zoom={13}
+//                   onClick={handleMapClick}
+//                 >
+//                   <MarkerF position={{ lat: markerPosition[0], lng: markerPosition[1] }} />
+//                 </GoogleMap>
+//               ) : (
+//                 <div>Loading map...</div>
+//               )}
 //             </div>
 //             <div>
-//               <button style={{ color: "rgb(228 8 111 / var(--tw-bg-opacity))" }} onClick={() => setAddressType(!addressType)}>Select address from Map</button>
+//               <button
+//                 style={{ color: "rgb(228 8 111 / var(--tw-bg-opacity))" }}
+//                 onClick={() => setAddressType(!addressType)}
+//               >
+//                 Select address from Map
+//               </button>
 //             </div>
 //             <div className="flex flex-col lg:flex-row mt-6 sm:mt-[36px] gap-6 lg:gap-[54px]">
 //               <div className="w-full lg:w-1/2 flex flex-col gap-6">
@@ -531,16 +473,18 @@
 //                   <p className="text-[#151515] text-sm sm:text-base font-bold font-karla">
 //                     Country
 //                   </p>
-
-//                   {addressType ?
+//                   {addressType ? (
 //                     <input
 //                       maxLength={25}
-//                       placeholder="Enter your address line 1"
+//                       placeholder="Enter your country"
 //                       type="text"
+//                       name="country"
 //                       value={formData.country}
 //                       onChange={handleInputChange}
 //                       className="w-full h-[50px] border-2 rounded-lg px-5 mt-2 sm:mt-5 font-karla"
-//                     /> : <select
+//                     />
+//                   ) : (
+//                     <select
 //                       name="country"
 //                       value={formData.country}
 //                       onChange={handleInputChange}
@@ -551,29 +495,28 @@
 //                       <option value="saab">Saab</option>
 //                       <option value="fiat">Fiat</option>
 //                       <option value="audi">Audi</option>
-//                     </select>}
-
-
+//                     </select>
+//                   )}
 //                   {errors.country && (
-//                     <p className="text-red-500 text-sm mt-1">
-//                       {errors.country}
-//                     </p>
+//                     <p className="text-red-500 text-sm mt-1">{errors.country}</p>
 //                   )}
 //                 </div>
-
 //                 <div className="flex flex-col">
 //                   <p className="text-[#151515] text-sm sm:text-base font-bold font-karla">
 //                     City
 //                   </p>
-//                   {addressType ?
+//                   {addressType ? (
 //                     <input
 //                       maxLength={25}
-//                       placeholder="Enter your address line 1"
+//                       placeholder="Enter your city"
 //                       type="text"
+//                       name="city"
 //                       value={formData.city}
 //                       onChange={handleInputChange}
 //                       className="w-full h-[50px] border-2 rounded-lg px-5 mt-2 sm:mt-5 font-karla"
-//                     /> : <select
+//                     />
+//                   ) : (
+//                     <select
 //                       name="city"
 //                       value={formData.city}
 //                       onChange={handleInputChange}
@@ -584,12 +527,12 @@
 //                       <option value="abudhabi">Abu Dhabi</option>
 //                       <option value="sharjah">Sharjah</option>
 //                       <option value="ajman">Ajman</option>
-//                     </select>}
+//                     </select>
+//                   )}
 //                   {errors.city && (
 //                     <p className="text-red-500 text-sm mt-1">{errors.city}</p>
 //                   )}
 //                 </div>
-
 //                 <div className="flex flex-col">
 //                   <p className="text-[#151515] text-sm sm:text-base font-bold font-karla">
 //                     Address Line 1
@@ -604,12 +547,9 @@
 //                     className="w-full h-[50px] border-2 rounded-lg px-5 mt-2 sm:mt-5 font-karla"
 //                   />
 //                   {errors.addressLine1 && (
-//                     <p className="text-red-500 text-sm mt-1">
-//                       {errors.addressLine1}
-//                     </p>
+//                     <p className="text-red-500 text-sm mt-1">{errors.addressLine1}</p>
 //                   )}
 //                 </div>
-
 //                 <div className="flex flex-col">
 //                   <p className="text-[#151515] text-sm sm:text-base font-bold font-karla">
 //                     Address Line 2
@@ -625,7 +565,6 @@
 //                   />
 //                 </div>
 //               </div>
-
 //               <div className="w-full lg:w-1/2 flex flex-col gap-6">
 //                 <div className="flex flex-col">
 //                   <p className="text-[#151515] text-sm sm:text-base font-bold font-karla">
@@ -641,12 +580,9 @@
 //                     className="w-full h-[50px] border-2 rounded-lg px-5 mt-2 sm:mt-5 font-karla"
 //                   />
 //                   {errors.firstName && (
-//                     <p className="text-red-500 text-sm mt-1">
-//                       {errors.firstName}
-//                     </p>
+//                     <p className="text-red-500 text-sm mt-1">{errors.firstName}</p>
 //                   )}
 //                 </div>
-
 //                 <div className="flex flex-col">
 //                   <p className="text-[#151515] text-sm sm:text-base font-bold font-karla">
 //                     Last name
@@ -661,12 +597,9 @@
 //                     className="w-full h-[50px] border-2 rounded-lg px-5 mt-2 sm:mt-5 font-karla"
 //                   />
 //                   {errors.lastName && (
-//                     <p className="text-red-500 text-sm mt-1">
-//                       {errors.lastName}
-//                     </p>
+//                     <p className="text-red-500 text-sm mt-1">{errors.lastName}</p>
 //                   )}
 //                 </div>
-
 //                 <div className="flex flex-col">
 //                   <p className="text-[#151515] text-sm sm:text-base font-bold font-karla">
 //                     Email address
@@ -684,7 +617,6 @@
 //                     <p className="text-red-500 text-sm mt-1">{errors.email}</p>
 //                   )}
 //                 </div>
-
 //                 <div className="flex flex-col">
 //                   <p className="text-[#151515] text-sm sm:text-base font-bold font-karla">
 //                     Phone number
@@ -704,7 +636,6 @@
 //                 </div>
 //               </div>
 //             </div>
-
 //             <div className="flex flex-col sm:flex-row sm:justify-end gap-4 my-8 sm:my-[36px]">
 //               <button
 //                 onClick={handleConfirmClick}
@@ -729,8 +660,9 @@
 //   return (
 //     <div className="relative w-full max-w-[1550px] min-h-screen mx-auto py-8 sm:py-16 px-4 sm:px-8">
 //       <div
-//         className={`absolute inset-0 z-0 transition-opacity duration-300 ${modal ? "opacity-50" : "opacity-100"
-//           }`}
+//         className={`absolute inset-0 z-0 transition-opacity duration-300 ${
+//           modal ? "opacity-50" : "opacity-100"
+//         }`}
 //         style={{
 //           backgroundImage: "url('kukuit_bg.png')",
 //           backgroundSize: "cover",
@@ -753,59 +685,43 @@
 //             SCHEDULE PICKUP
 //           </h2>
 //         </div>
-
-//         {/* Step Indicator */}
 //         <div className="flex justify-center gap-4 mt-8">
 //           {[1, 2, 3].map((step) => (
 //             <button
 //               key={step}
 //               onClick={() => handleStepClick(step)}
-//               className={`w-8 h-8 rounded-full flex items-center justify-center cursor-pointer ${step === currentStep
-//                 ? "bg-[#e4086f] text-white"
-//                 : step < currentStep
+//               className={`w-8 h-8 rounded-full flex items-center justify-center cursor-pointer ${
+//                 step === currentStep
+//                   ? "bg-[#e4086f] text-white"
+//                   : step < currentStep
 //                   ? "bg-[#e4086f] text-white opacity-70 hover:opacity-100"
 //                   : "bg-gray-200 text-gray-600"
-//                 }`}
+//               }`}
 //             >
 //               {step}
 //             </button>
 //           ))}
 //         </div>
-
 //         <div className="px-4 sm:px-8 lg:px-[94px] mt-8 sm:mt-[56px]">
-//           {renderStepContent(markerPosition)}
+//           {renderStepContent()}
 //         </div>
 //       </div>
 //       {modal && <Modal onClose={handleCloseModal} />}
-
 //       <style jsx>{`
-//       @media (max-width: 768px) {
-//        .flex-col {
-//         flex-direction: column;
-//        }
-//        .flex-row {
-//         flex-direction: column;
-//        }
-//       }
-//     `}</style>
+//         @media (max-width: 768px) {
+//           .flex-col {
+//             flex-direction: column;
+//           }
+//           .flex-row {
+//             flex-direction: column;
+//           }
+//         }
+//       `}</style>
 //     </div>
 //   );
 // };
 
 // export default KukuitMain;
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -877,41 +793,84 @@ const KukuitMain = () => {
     }
   }, []);
 
-  // Fetch address using Google Maps Geocoding API
-  const fetchAddress = async (latitude, longitude) => {
-    try {
-      const response = await fetch(
-        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`
-      );
-      const data = await response.json();
-      if (data?.results?.length > 0) {
-        const formattedAddress = data.results[0].formatted_address;
-        setAddress(formattedAddress);
-        setLocation({ latitude, longitude });
-      } else {
-        setAddress("Address not found");
-      }
-    } catch (error) {
-      console.error("Error fetching address:", error);
-    }
-  };
 
-  // Update form data when address changes
-  useEffect(() => {
-    if (addressType && address) {
-      const addressArray = address?.split(",");
+// Fetch address using Google Maps Geocoding API
+const fetchAddress = async (latitude, longitude) => {
+  try {
+    const response = await fetch(
+      `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`
+    );
+    const data = await response.json();
+    if (data?.results?.length > 0) {
+      const result = data.results[0];
+      const formattedAddress = result.formatted_address;
+      setAddress(formattedAddress);
+      setLocation({ latitude, longitude });
+
+      // Extract from address_components
+      const addressComponents = result.address_components;
+      let country = "", city = "", addressLine1 = "", addressLine2 = "";
+
+      addressComponents.forEach((component) => {
+        if (component.types.includes("country")) country = component.long_name;
+        if (component.types.includes("locality")) city = component.long_name; // Prioritize locality
+        else if (component.types.includes("sublocality") && !city) city = component.long_name; // Fallback to sublocality
+        if (component.types.includes("street_number") || component.types.includes("route") || component.types.includes("premise")) {
+          addressLine1 = (addressLine1 ? addressLine1 + " " : "") + component.long_name;
+        }
+      });
+
+      // Only set addressLine2 if specific extra details (like apartment or sub-building) are present
+      const extraDetails = addressComponents.find(comp => 
+        comp.types.includes("subpremise") || comp.types.includes("building")
+      );
+      if (extraDetails) {
+        addressLine2 = extraDetails.long_name;
+      }
+
+      // Fallback logic for India-style addresses with detailed breakup
+      if (!addressLine1 && result.address_components.length > 0) {
+        const streetParts = result.address_components
+          .filter(comp => 
+            comp.types.includes("route") || 
+            comp.types.includes("street_number") || 
+            comp.types.includes("premise")
+          )
+          .map(comp => comp.long_name)
+          .join(" ");
+        addressLine1 = streetParts || addressLine1;
+
+        // Use formatted address parts if still incomplete
+        if (!addressLine1 && !addressLine2) {
+          const addressParts = formattedAddress.split(",").map(part => part.trim());
+          if (addressParts.length > 2) {
+            addressLine1 = addressParts.slice(0, addressParts.length - 2).join(", ").trim();
+            city = addressParts[addressParts.length - 2] || city;
+            country = addressParts[addressParts.length - 1] || country;
+          }
+        }
+      }
+
+      // Update form data
       setFormData((prevData) => ({
         ...prevData,
-        country: addressArray[addressArray?.length - 1]?.trim() || "",
-        city:
-          addressArray?.length > 2
-            ? addressArray[addressArray?.length - 3]?.trim() +
-              "," +
-              addressArray[addressArray?.length - 2]?.trim()
-            : addressArray[addressArray?.length - 2]?.trim() || "",
-        addressLine1: addressArray?.length > 3 ? addressArray[addressArray?.length - 4]?.trim() : "",
-        addressLine2: addressArray?.length > 4 ? addressArray[addressArray?.length - 5]?.trim() : "",
+        country,
+        city,
+        addressLine1,
+        addressLine2,
       }));
+    } else {
+      setAddress("Address not found");
+    }
+  } catch (error) {
+    console.error("Error fetching address:", error);
+  }
+};
+
+  // Update form data when address changes (no longer needed with new fetchAddress logic)
+  useEffect(() => {
+    if (addressType && address) {
+      // This will now rely on fetchAddress to set the fields
     }
   }, [addressType, address]);
 
@@ -1534,4 +1493,3 @@ const KukuitMain = () => {
 };
 
 export default KukuitMain;
-

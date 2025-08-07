@@ -1238,7 +1238,7 @@ const ProductCard = ({ product: productDetails }) => {
   };
 
   return (
-    <div className="max-w-screen-xl mx-auto pl-1 pr-6 font-karla">
+    <div className="max-w-screen-xl mx-auto px-2 font-karla">
       <div className="breadcrumb text-gray-500 text-sm mb-3 mt-2">
         <Link href="/" className="hover">
           Home
