@@ -1,3 +1,7 @@
+
+
+
+
 // import { GoogleMap, MarkerF, useLoadScript } from "@react-google-maps/api";
 // import { useEffect, useState } from "react";
 // import Image from "next/image";
@@ -40,8 +44,6 @@
 //   const [errors, setErrors] = useState({});
 //   const router = useRouter();
 
-
-
 //   // Geolocation to get user's current location (optional)
 //   useEffect(() => {
 //     if (navigator.geolocation) {
@@ -65,41 +67,84 @@
 //     }
 //   }, []);
 
-//   // Fetch address using Google Maps Geocoding API
-//   const fetchAddress = async (latitude, longitude) => {
-//     try {
-//       const response = await fetch(
-//         `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`
-//       );
-//       const data = await response.json();
-//       if (data?.results?.length > 0) {
-//         const formattedAddress = data.results[0].formatted_address;
-//         setAddress(formattedAddress);
-//         setLocation({ latitude, longitude });
-//       } else {
-//         setAddress("Address not found");
-//       }
-//     } catch (error) {
-//       console.error("Error fetching address:", error);
-//     }
-//   };
 
-//   // Update form data when address changes
-//   useEffect(() => {
-//     if (addressType && address) {
-//       const addressArray = address?.split(",");
+// // Fetch address using Google Maps Geocoding API
+// const fetchAddress = async (latitude, longitude) => {
+//   try {
+//     const response = await fetch(
+//       `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`
+//     );
+//     const data = await response.json();
+//     if (data?.results?.length > 0) {
+//       const result = data.results[0];
+//       const formattedAddress = result.formatted_address;
+//       setAddress(formattedAddress);
+//       setLocation({ latitude, longitude });
+
+//       // Extract from address_components
+//       const addressComponents = result.address_components;
+//       let country = "", city = "", addressLine1 = "", addressLine2 = "";
+
+//       addressComponents.forEach((component) => {
+//         if (component.types.includes("country")) country = component.long_name;
+//         if (component.types.includes("locality")) city = component.long_name; // Prioritize locality
+//         else if (component.types.includes("sublocality") && !city) city = component.long_name; // Fallback to sublocality
+//         if (component.types.includes("street_number") || component.types.includes("route") || component.types.includes("premise")) {
+//           addressLine1 = (addressLine1 ? addressLine1 + " " : "") + component.long_name;
+//         }
+//       });
+
+//       // Only set addressLine2 if specific extra details (like apartment or sub-building) are present
+//       const extraDetails = addressComponents.find(comp => 
+//         comp.types.includes("subpremise") || comp.types.includes("building")
+//       );
+//       if (extraDetails) {
+//         addressLine2 = extraDetails.long_name;
+//       }
+
+//       // Fallback logic for India-style addresses with detailed breakup
+//       if (!addressLine1 && result.address_components.length > 0) {
+//         const streetParts = result.address_components
+//           .filter(comp => 
+//             comp.types.includes("route") || 
+//             comp.types.includes("street_number") || 
+//             comp.types.includes("premise")
+//           )
+//           .map(comp => comp.long_name)
+//           .join(" ");
+//         addressLine1 = streetParts || addressLine1;
+
+//         // Use formatted address parts if still incomplete
+//         if (!addressLine1 && !addressLine2) {
+//           const addressParts = formattedAddress.split(",").map(part => part.trim());
+//           if (addressParts.length > 2) {
+//             addressLine1 = addressParts.slice(0, addressParts.length - 2).join(", ").trim();
+//             city = addressParts[addressParts.length - 2] || city;
+//             country = addressParts[addressParts.length - 1] || country;
+//           }
+//         }
+//       }
+
+//       // Update form data
 //       setFormData((prevData) => ({
 //         ...prevData,
-//         country: addressArray[addressArray?.length - 1]?.trim() || "",
-//         city:
-//           addressArray?.length > 2
-//             ? addressArray[addressArray?.length - 3]?.trim() +
-//               "," +
-//               addressArray[addressArray?.length - 2]?.trim()
-//             : addressArray[addressArray?.length - 2]?.trim() || "",
-//         addressLine1: addressArray?.length > 3 ? addressArray[addressArray?.length - 4]?.trim() : "",
-//         addressLine2: addressArray?.length > 4 ? addressArray[addressArray?.length - 5]?.trim() : "",
+//         country,
+//         city,
+//         addressLine1,
+//         addressLine2,
 //       }));
+//     } else {
+//       setAddress("Address not found");
+//     }
+//   } catch (error) {
+//     console.error("Error fetching address:", error);
+//   }
+// };
+
+//   // Update form data when address changes (no longer needed with new fetchAddress logic)
+//   useEffect(() => {
+//     if (addressType && address) {
+//       // This will now rely on fetchAddress to set the fields
 //     }
 //   }, [addressType, address]);
 
@@ -728,6 +773,9 @@
 
 
 
+
+// Updated Frontend Code (KukuitMain component)
+
 import { GoogleMap, MarkerF, useLoadScript } from "@react-google-maps/api";
 import { useEffect, useState } from "react";
 import Image from "next/image";
@@ -793,14 +841,19 @@ const KukuitMain = () => {
     }
   }, []);
 
+  // Fetch address via backend API route
+// Updated fetchAddress function in your React component
 
-// Fetch address using Google Maps Geocoding API
 const fetchAddress = async (latitude, longitude) => {
   try {
+    // Use your backend API URL instead of /api/geocode
+    const backendUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
     const response = await fetch(
-      `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`
+      `${backendUrl}/geocode?latitude=${latitude}&longitude=${longitude}`
     );
+    
     const data = await response.json();
+    
     if (data?.results?.length > 0) {
       const result = data.results[0];
       const formattedAddress = result.formatted_address;
@@ -813,14 +866,13 @@ const fetchAddress = async (latitude, longitude) => {
 
       addressComponents.forEach((component) => {
         if (component.types.includes("country")) country = component.long_name;
-        if (component.types.includes("locality")) city = component.long_name; // Prioritize locality
-        else if (component.types.includes("sublocality") && !city) city = component.long_name; // Fallback to sublocality
+        if (component.types.includes("locality")) city = component.long_name;
+        else if (component.types.includes("sublocality") && !city) city = component.long_name;
         if (component.types.includes("street_number") || component.types.includes("route") || component.types.includes("premise")) {
           addressLine1 = (addressLine1 ? addressLine1 + " " : "") + component.long_name;
         }
       });
 
-      // Only set addressLine2 if specific extra details (like apartment or sub-building) are present
       const extraDetails = addressComponents.find(comp => 
         comp.types.includes("subpremise") || comp.types.includes("building")
       );
@@ -828,7 +880,6 @@ const fetchAddress = async (latitude, longitude) => {
         addressLine2 = extraDetails.long_name;
       }
 
-      // Fallback logic for India-style addresses with detailed breakup
       if (!addressLine1 && result.address_components.length > 0) {
         const streetParts = result.address_components
           .filter(comp => 
@@ -840,7 +891,6 @@ const fetchAddress = async (latitude, longitude) => {
           .join(" ");
         addressLine1 = streetParts || addressLine1;
 
-        // Use formatted address parts if still incomplete
         if (!addressLine1 && !addressLine2) {
           const addressParts = formattedAddress.split(",").map(part => part.trim());
           if (addressParts.length > 2) {
@@ -851,7 +901,6 @@ const fetchAddress = async (latitude, longitude) => {
         }
       }
 
-      // Update form data
       setFormData((prevData) => ({
         ...prevData,
         country,
@@ -864,6 +913,7 @@ const fetchAddress = async (latitude, longitude) => {
     }
   } catch (error) {
     console.error("Error fetching address:", error);
+    setAddress("Error fetching address");
   }
 };
 
