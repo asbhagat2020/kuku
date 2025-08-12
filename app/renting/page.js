@@ -75,8 +75,8 @@ export default function Renting() {
           }
 
           setProduct(productData);
-          setDeposit(Math.round(productData.price * 0.2)); // 20% deposit
-          setPricePerHour(13); // Fixed additional hourly rate to match example (312 / 24 = 13)
+          setDeposit(productData.deposit); // 20% deposit
+          setPricePerHour(productData.pricePerHour || 13); // Fixed additional hourly rate to match example (312 / 24 = 13)
 
           if (startDate && endDate) {
             const start = new Date(formatDate(startDate));
