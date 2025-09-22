@@ -1,35 +1,33 @@
 // "use client";
 
 // import React, { useEffect, useState } from "react";
-// import { toast } from 'react-hot-toast';
+// import { toast } from "react-hot-toast";
 // import Link from "next/link";
 // import Cookies from "js-cookie";
 // import axios from "axios";
 // import { useRouter } from "next/navigation";
-// // import {showErrorNotification, showSuccessNotification } from "@/utils/Notification/notif";
 
 // const ItemList = () => {
 //   const [adress, setAdress] = useState([]);
 //   const [loading, setLoading] = useState(false);
 //   const [showAddressForm, setShowAddressForm] = useState(false);
 //   const [selectedAddress, setSelectedAddress] = useState(null);
-
+//   const [conditions, setConditions] = useState([]);
 //   const [brands, setBrands] = useState([]);
+//   const [colors, setColors] = useState([]);
 //   const [categories, setCategories] = useState({});
-//   // const [conditions, setConditions] = useState([]);
 //   const [sizes, setSizes] = useState([]);
 //   const [selectedGender, setSelectedGender] = useState("");
 //   const [selectedCategory, setSelectedCategory] = useState("");
 //   const [selectedSubCategory, setSelectedSubCategory] = useState("");
 
-//   console.log(adress);
-//   const handleSelect = () => { };
+//   const router = useRouter();
+
 //   const fetchAddress = async () => {
 //     try {
 //       const token = getAuthToken();
 //       if (!token) {
-//         //       toast.error("Please login to access addresses");
-//         // router.push("/login");
+//         toast.error("Please login to access addresses");
 //         return;
 //       }
 
@@ -40,38 +38,38 @@
 //         },
 //       });
 //       const fetchedAddresses = response?.data?.addresses;
-//       console.log("Fetched Addresses:", fetchedAddresses);
 //       setAdress(fetchedAddresses);
 //     } catch (err) {
 //       if (err.response && err.response.status === 401) {
-//         // If unauthorized, clear token and redirect to homepage
 //         Cookies.remove("auth");
-//               toast.error("Session expired. Please login again");
+//         toast.error("Session expired. Please login again");
 //         router.push("/login");
 //       } else {
-//         // console.log("error");
-//               toast.error("Error fetching addresses");
+//         toast.error("Error fetching addresses");
 //       }
 //     } finally {
 //       setLoading(false);
 //     }
 //   };
+
 //   useEffect(() => {
 //     fetchAddress();
 //   }, []);
+
 //   const [formData, setFormData] = useState({
 //     itemName: "",
 //     description: "",
 //     category: "",
 //     subCategory: "",
 //     gender: "",
-//     // condition: "",
+//     condition: "",
 //     brand: "",
 //     size: "",
 //     usage: "",
 //     price: "",
 //     damages: "",
 //     rentOption: "No",
+//     rentalPrice: "",
 //     images: [],
 //     country: "",
 //     city: "",
@@ -81,35 +79,33 @@
 //     lastName: "",
 //     email: "",
 //     phone: "",
+//     color: "",
 //   });
 
 //   const [caseState, setCaseState] = useState(1);
 //   const [errors, setErrors] = useState({});
 //   const [successPopup, setSuccessPopup] = useState(false);
-//   // const [successPopups, setSuccessPopups] = useState(false);
-//   const router = useRouter();
 
 //   useEffect(() => {
 //     const fetchData = async () => {
 //       try {
-//         // const [brandsRes, categoriesRes, conditionsRes, sizesRes] =
-//         const [brandsRes, categoriesRes, sizesRes] =
+//         const [brandsRes, categoriesRes, conditionsRes, sizesRes, colorRes] =
 //           await Promise.all([
 //             axios.get(
 //               `${process.env.NEXT_PUBLIC_API_BASE_URL}/brands/getbrand`
 //             ),
 //             axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/category`),
-//             // axios.get(
-//             //   `${process.env.NEXT_PUBLIC_API_BASE_URL}/conditions/getcondition`
-//             // ),
+//             axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/conditions/getcondition` ),
 //             axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/sizes/getSizes`),
+//             axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/colors/getcolor`),
 //           ]);
 
 //         setBrands(brandsRes.data.brands || []);
-//         // setConditions(conditionsRes.data.conditions || []);
+//         setConditions(conditionsRes.data.conditions || []);
 //         setSizes(sizesRes.data.sizes || []);
+//         setColors(colorRes.data || []);
+//         console.log("colors", colorRes.data || []);
 
-//         // Process categories
 //         const categoriesByGender = {};
 //         categoriesRes.data.data.forEach((item) => {
 //           categoriesByGender[item.parentCategory] = item.categories;
@@ -131,18 +127,14 @@
 
 //   const handleFileChange = (e, index) => {
 //     const file = e.target.files[0];
-
 //     if (file) {
 //       const validImageTypes = ["image/jpeg", "image/png", "image/jpg"];
-
-//       // Check if the file type is a valid image type
 //       if (validImageTypes.includes(file.type)) {
 //         const newImages = [...formData.images];
 //         newImages[index] = file;
 //         setFormData({ ...formData, images: newImages });
 //         setErrors({ ...errors, images: "" });
 //       } else {
-//         // If the file is not an image, set an error message
 //         setErrors({
 //           ...errors,
 //           images: "Only image files (JPEG, PNG) are allowed.",
@@ -150,12 +142,13 @@
 //       }
 //     }
 //   };
+
 //   useEffect(() => {
 //     if (Number(formData.price) < 1000 && formData.rentOption === "Yes") {
-//       setFormData(prev => ({
+//       setFormData((prev) => ({
 //         ...prev,
 //         rentOption: "No",
-//         rentalPrice: ""
+//         rentalPrice: "",
 //       }));
 //     }
 //   }, [formData.price]);
@@ -173,30 +166,37 @@
 //     if (!formData.description.trim())
 //       newErrors.description = "Description is required";
 //     if (!formData.category.trim()) newErrors.category = "Category is required";
-//     if (!formData.gender) newErrors.gender = "gender is required";
-//     // if (!formData.condition) newErrors.condition = "condition is required";
+//     if (!formData.gender) newErrors.gender = "Gender is required";
+//     if (!formData.condition) newErrors.condition = "condition is required";
 //     if (!formData.brand) newErrors.brand = "Brand is required";
 //     if (!formData.size) newErrors.size = "Size is required";
-//     if (!formData.usage) newErrors.usage = "Usage is required";
+//     // if (!formData.usage) newErrors.usage = "Usage is required";
 //     if (!formData.price.trim()) newErrors.price = "Price is required";
 //     if (formData.images.length < 2)
-//       newErrors.images = "At least two image is required";
+//       newErrors.images = "At least two images are required";
+//     if (formData.rentOption === "Yes" && !formData.rentalPrice) {
+//       newErrors.rentalPrice = "Rental price is required when open to rent";
+//     }
+//     if (formData.rentOption === "Yes" && Number(formData.price) <= 500) {
+//       newErrors.price = "Price must be above 500 AED for rental products";
+//     }
 
 //     setErrors(newErrors);
 //     return Object.keys(newErrors).length === 0;
 //   };
+
 //   const handleNext = (e) => {
 //     e.preventDefault();
 //     if (validateForm()) {
 //       setCaseState(2);
 //     } else {
-//       // Scroll to the first error
 //       const firstError = document.querySelector(".text-red-500");
 //       if (firstError) {
 //         firstError.scrollIntoView({ behavior: "smooth", block: "center" });
 //       }
 //     }
 //   };
+
 //   const uploadImage = async (imageFile) => {
 //     const imageData = new FormData();
 //     for (let i = 0; i < imageFile?.length; i++) {
@@ -218,13 +218,13 @@
 //           },
 //         }
 //       );
-
 //       return response.data.fileUrls;
 //     } catch (error) {
 //       console.error("Error uploading image:", error);
 //       throw new Error("Failed to upload image");
 //     }
 //   };
+
 //   const getAuthToken = () => {
 //     const token = Cookies.get("auth");
 //     if (!token) return null;
@@ -240,10 +240,8 @@
 //     if (validateForm()) {
 //       try {
 //         const token = getAuthToken();
-
 //         if (!token) {
-//                 toast.error("Please login to post items");
-
+//           toast.error("Please login to post items");
 //           return;
 //         }
 
@@ -252,52 +250,72 @@
 //           imageUrl = await uploadImage(formData.images);
 //         }
 
-//         // Format the product data according to the schema
 //         const productData = {
+//           approval: {
+//             status: "Pending",
+//             reason: "",
+//             updatedAt: Date.now(),
+//           },
+//           productType: "Listing",
+//           condition: formData.condition, // Should be updated if condition field is re-enabled
 //           name: formData.itemName,
-//           images: imageUrl,
-//           price: Number(formData.price),
-//           description: formData.description,
-//           // condition: formData.condition,
-//           brand: formData.brand, // This should be the brand._id
+//           size: formData.size,
+//           openToRent: formData.rentOption,
+//           usage: formData.usage || "",
+//           damages: formData.damages || "",
+//           seller: null, // Will be set by backend based on authenticated user
+//           admin: null,
+//           pickupAddress: selectedAddress
+//             ? selectedAddress._id
+//             : {
+//                 country: formData.country,
+//                 city: formData.city,
+//                 addressLine1: formData.addressLine1,
+//                 addressLine2: formData.addressLine2 || "",
+//                 firstName: formData.firstName,
+//                 lastName: formData.lastName || "",
+//                 email: formData.email,
+//                 phone: Number(formData.phone),
+//                 isDefault: false,
+//               },
+//           pickup: null,
+//           color: formData.color || null,
 //           category: {
-//             parentCategory: selectedGender, // "Men", "Women", or "Kid"
+//             parentCategory: selectedGender,
 //             categoryName: selectedCategory,
 //             subCategoryName: selectedSubCategory,
 //           },
-//           size: formData.size, // This should be the size._id
-//           openToRent: formData.rentOption, // "Yes" or "No"
-//           usage: formData.usage,
-//           damages: formData.damages || "",
-//           productType: "Listing", // Default value
+//           brand: formData.brand,
+//           description: formData.description,
+//           price: Number(formData.price),
+//           images: imageUrl,
 //           pricePerDay:
+//             formData.rentOption === "Yes" ? Number(formData.rentalPrice) : 0,
+//           pricePerHour:
 //             formData.rentOption === "Yes"
-//               ? Number(formData.rentalPrice)
-//               : undefined,
+//               ? Math.round(Number(formData.price) * 0.02)
+//               : 0,
+//           deposit:
+//             formData.rentOption === "Yes"
+//               ? Math.round(Number(formData.price) * 0.2)
+//               : 0,
+//           orders: [],
+//           rent: [],
+//           onSale: false,
+//           discountPercentage: 0,
+//           isTopBrand: false,
+//           coupon: [],
+//           likesCount: 0,
+//           barcode: null,
+//           shippingBarcode: null,
+//           storageLocation: null,
+//           commission: 0.2,
+//           netEarning: null,
 //         };
-
-//         // Handle pickup address
-//         if (selectedAddress) {
-//           // If using existing address, just send the ID
-//           productData.pickupAddress = selectedAddress._id;
-//         } else {
-//           // If creating new address, send the complete address object
-//           productData.pickupAddress = {
-//             country: formData.country,
-//             city: formData.city,
-//             addressLine1: formData.addressLine1,
-//             addressLine2: formData.addressLine2 || "",
-//             firstName: formData.firstName,
-//             lastName: formData.lastName || "",
-//             email: formData.email,
-//             phone: Number(formData.phone),
-//             isDefault: false,
-//           };
-//         }
 
 //         const response = await axios.post(
 //           `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/product/add`,
-//           productData, // Send the product data directly
+//           productData,
 //           {
 //             headers: {
 //               Authorization: `Bearer ${token}`,
@@ -313,7 +331,7 @@
 //         }
 //       } catch (error) {
 //         console.error("Error submitting form:", error);
-//               toast.error(error.response?.data?.message || "Error adding product");
+//         toast.error(error.response?.data?.message || "Error adding product");
 //       }
 //     }
 //   };
@@ -363,10 +381,11 @@
 //             {addresses.map((address) => (
 //               <div
 //                 key={address._id}
-//                 className={`border rounded-lg p-4 cursor-pointer transition-all ${selectedAddress?._id === address._id
-//                   ? "border-2 border-pink-500"
-//                   : "border-gray-200 hover:border-pink-300"
-//                   }`}
+//                 className={`border rounded-lg p-4 cursor-pointer transition-all ${
+//                   selectedAddress?._id === address._id
+//                     ? "border-2 border-pink-500"
+//                     : "border-gray-200 hover:border-pink-300"
+//                 }`}
 //                 onClick={() => onSelect(address)}
 //               >
 //                 <div className="flex justify-between items-start">
@@ -435,7 +454,6 @@
 //               clipPath: "ellipse(90% 100% at 50% 0%)",
 //             }}
 //           >
-//             {/* Back Button */}
 //             <button
 //               className="absolute top-4 left-4 flex items-center space-x-1 px-2 py-1 text-sm text-black bg-white bg-opacity-60 hover:bg-opacity-80 rounded-md transition"
 //               onClick={() => router.push("/")}
@@ -491,7 +509,7 @@
 //                       >
 //                         <input
 //                           type="file"
-//                           accept="image/png, image/jpeg, image/jpg" // Only accept image files
+//                           accept="image/png, image/jpeg, image/jpg"
 //                           onChange={(e) => handleFileChange(e, idx)}
 //                           className="opacity-0 absolute inset-0 cursor-pointer"
 //                         />
@@ -552,8 +570,9 @@
 //                   value={formData.itemName}
 //                   onChange={handleChange}
 //                   placeholder="Enter your product title"
-//                   className={`w-full p-2 border ${errors.itemName ? "border-red-500" : "border-[#868686]"
-//                     } rounded-lg max-w-[500px]`}
+//                   className={`w-full p-2 border ${
+//                     errors.itemName ? "border-red-500" : "border-[#868686]"
+//                   } rounded-lg max-w-[500px]`}
 //                   required
 //                 />
 //                 {errors.itemName && (
@@ -570,8 +589,9 @@
 //                   value={formData.description}
 //                   onChange={handleChange}
 //                   placeholder="Enter your product description"
-//                   className={`w-full p-2 border ${errors.description ? "border-red-500" : "border-[#868686]"
-//                     } rounded-lg max-w-[500px]`}
+//                   className={`w-full p-2 border ${
+//                     errors.description ? "border-red-500" : "border-[#868686]"
+//                   } rounded-lg max-w-[500px]`}
 //                   rows={4}
 //                 />
 //                 {errors.description && (
@@ -592,8 +612,9 @@
 //                     setSelectedSubCategory("");
 //                     handleChange(e);
 //                   }}
-//                   className={`w-full p-2 border ${errors.gender ? "border-red-500" : "border-[#868686]"
-//                     } rounded-lg max-w-[500px]`}
+//                   className={`w-full p-2 border ${
+//                     errors.gender ? "border-red-500" : "border-[#868686]"
+//                   } rounded-lg max-w-[500px]`}
 //                 >
 //                   <option value="">Select Gender</option>
 //                   {Object.keys(categories).map((gender) => (
@@ -617,8 +638,9 @@
 //                     handleChange(e);
 //                   }}
 //                   disabled={!selectedGender}
-//                   className={`w-full p-2 border ${errors.category ? "border-red-500" : "border-[#868686]"
-//                     } rounded-lg max-w-[500px]`}
+//                   className={`w-full p-2 border ${
+//                     errors.category ? "border-red-500" : "border-[#868686]"
+//                   } rounded-lg max-w-[500px]`}
 //                 >
 //                   <option value="">Select Category</option>
 //                   {selectedGender &&
@@ -642,8 +664,9 @@
 //                     handleChange(e);
 //                   }}
 //                   disabled={!selectedCategory}
-//                   className={`w-full p-2 border ${errors.subCategory ? "border-red-500" : "border-[#868686]"
-//                     } rounded-lg max-w-[500px]`}
+//                   className={`w-full p-2 border ${
+//                     errors.subCategory ? "border-red-500" : "border-[#868686]"
+//                   } rounded-lg max-w-[500px]`}
 //                 >
 //                   <option value="">Select Sub Category</option>
 //                   {selectedGender &&
@@ -658,25 +681,26 @@
 //                 </select>
 //               </div>
 
-// {/* <div>
-//   <label className="block text-[#151515] text-base font-bold font-karla mb-2">
-//     Condition
-//   </label>
-//   <select
-//     name="condition"
-//     value={formData.condition}
-//     onChange={handleChange}
-//     className={`w-full p-2 border ${errors.condition ? "border-red-500" : "border-[#868686]"
-//       } rounded-lg max-w-[500px]`}
-//   >
-//     <option value="">Select Condition</option>
-//     {conditions.map((condition) => (
-//       <option key={condition._id} value={condition._id}>
-//         {condition.conditionName}
-//       </option>
-//     ))}
-//   </select>
-// </div> */}
+//               <div>
+//                 <label className="block text-[#151515] text-base font-bold font-karla mb-2">
+//                   Condition
+//                 </label>
+//                 <select
+//                   name="condition"
+//                   value={formData.condition}
+//                   onChange={handleChange}
+//                   className={`w-full p-2 border ${
+//                     errors.condition ? "border-red-500" : "border-[#868686]"
+//                   } rounded-lg max-w-[500px]`}
+//                 >
+//                   <option value="">Select Condition</option>
+//                   {conditions.map((condition) => (
+//                     <option key={condition._id} value={condition._id}>
+//                       {condition.conditionName}
+//                     </option>
+//                   ))}
+//                 </select>
+//               </div>
 
 //               <div>
 //                 <label className="block text-[#151515] text-base font-bold font-karla mb-2">
@@ -686,8 +710,9 @@
 //                   name="brand"
 //                   value={formData.brand}
 //                   onChange={handleChange}
-//                   className={`w-full p-2 border ${errors.brand ? "border-red-500" : "border-[#868686]"
-//                     } rounded-lg max-w-[500px]`}
+//                   className={`w-full p-2 border ${
+//                     errors.brand ? "border-red-500" : "border-[#868686]"
+//                   } rounded-lg max-w-[500px]`}
 //                 >
 //                   <option value="">Select Brand</option>
 //                   {brands.map((brand) => (
@@ -706,8 +731,9 @@
 //                   name="size"
 //                   value={formData.size}
 //                   onChange={handleChange}
-//                   className={`w-full p-2 border ${errors.size ? "border-red-500" : "border-[#868686]"
-//                     } rounded-lg max-w-[500px]`}
+//                   className={`w-full p-2 border ${
+//                     errors.size ? "border-red-500" : "border-[#868686]"
+//                   } rounded-lg max-w-[500px]`}
 //                 >
 //                   <option value="">Choose Product Size</option>
 //                   {sizes.map((size) => (
@@ -718,7 +744,28 @@
 //                 </select>
 //               </div>
 
-//               <div>
+//                 <div>
+//                 <label className="block text-[#151515] text-base font-bold font-karla mb-2">
+//                   Product Color
+//                 </label>
+//                 <select
+//                   name="color"
+//                   value={formData.color}
+//                   onChange={handleChange}
+//                   className={`w-full p-2 border ${
+//                     errors.size ? "border-red-500" : "border-[#868686]"
+//                   } rounded-lg max-w-[500px]`}
+//                 >
+//                   <option value="">Choose Product color</option>
+//                   {colors.map((color) => (
+//                     <option key={color._id} value={color._id}>
+//                       {color.colorName}
+//                     </option>
+//                   ))}
+//                 </select>
+//               </div>
+
+//               {/* <div>
 //                 <label className="block text-[#151515] text-base font-bold font-karla mb-2">
 //                   Usage
 //                 </label>
@@ -726,8 +773,9 @@
 //                   name="usage"
 //                   value={formData.usage}
 //                   onChange={handleChange}
-//                   className={`w-full p-2 border ${errors.usage ? "border-red-500" : "border-[#868686]"
-//                     } rounded-lg max-w-[500px]`}
+//                   className={`w-full p-2 border ${
+//                     errors.usage ? "border-red-500" : "border-[#868686]"
+//                   } rounded-lg max-w-[500px]`}
 //                 >
 //                   <option value="">Select usage</option>
 //                   <option value="Used Once">Used Once</option>
@@ -738,7 +786,8 @@
 //                 {errors.usage && (
 //                   <p className="text-red-500 mt-1">{errors.usage}</p>
 //                 )}
-//               </div>
+//               </div> */}
+
 //               <div>
 //                 <label className="block text-[#151515] text-base font-bold font-karla mb-2">
 //                   Price (AED)
@@ -749,8 +798,9 @@
 //                   value={formData.price}
 //                   onChange={handleChange}
 //                   placeholder="Enter Product Price in AED"
-//                   className={`w-full p-2 border ${errors.price ? "border-red-500" : "border-[#868686]"
-//                     } rounded-lg max-w-[500px] [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none`}
+//                   className={`w-full p-2 border ${
+//                     errors.price ? "border-red-500" : "border-[#868686]"
+//                   } rounded-lg max-w-[500px] [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none`}
 //                   min="0"
 //                   step="0.01"
 //                   onKeyDown={(e) => {
@@ -804,25 +854,31 @@
 //                   </div>
 //                 ) : null}
 
-//                 {formData.rentOption === "Yes" && Number(formData.price) >= 1000 && (
-//                   <div>
-//                     <label className="block text-[#151515] text-base font-bold font-karla mb-2">
-//                       Rental Price
-//                     </label>
-//                     <input
-//                       type="number"
-//                       name="rentalPrice"
-//                       value={formData.rentalPrice}
-//                       onChange={handleChange}
-//                       placeholder="Enter rental price"
-//                       className={`w-full p-2 border ${errors.rentalPrice ? "border-red-500" : "border-[#868686]"
+//                 {formData.rentOption === "Yes" &&
+//                   Number(formData.price) >= 1000 && (
+//                     <div>
+//                       <label className="block text-[#151515] text-base font-bold font-karla mb-2">
+//                         Rental Price
+//                       </label>
+//                       <input
+//                         type="number"
+//                         name="rentalPrice"
+//                         value={formData.rentalPrice}
+//                         onChange={handleChange}
+//                         placeholder="Enter rental price"
+//                         className={`w-full p-2 border ${
+//                           errors.rentalPrice
+//                             ? "border-red-500"
+//                             : "border-[#868686]"
 //                         } rounded-lg max-w-[500px]`}
-//                     />
-//                     {errors.rentalPrice && (
-//                       <p className="text-red-500 mt-1">{errors.rentalPrice}</p>
-//                     )}
-//                   </div>
-//                 )}
+//                       />
+//                       {errors.rentalPrice && (
+//                         <p className="text-red-500 mt-1">
+//                           {errors.rentalPrice}
+//                         </p>
+//                       )}
+//                     </div>
+//                   )}
 //               </div>
 
 //               <p className="text-gray-500 mt-1 text-left max-w-[500px]">
@@ -840,7 +896,6 @@
 //                   Next
 //                 </button>
 
-//                 {/* <Link href="/"> */}
 //                 <button
 //                   onClick={handleBack}
 //                   type="button"
@@ -849,7 +904,6 @@
 //                 >
 //                   Cancel
 //                 </button>
-//                 {/* </Link> */}
 //               </div>
 //             </form>
 //           </div>
@@ -1120,16 +1174,19 @@
 //           </div>
 //         </>
 //       )}
-//       {/* {successPopups && (
-//         <div className="popup fixed top-1/3 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-green-500 text-white px-6 py-4 rounded shadow-lg z-50">
-//           Product added successfully!
-//         </div>
-//       )} */}
 //     </div>
 //   );
 // };
 
 // export default ItemList;
+
+
+
+
+
+
+
+
 
 "use client";
 
@@ -1141,7 +1198,7 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 
 const ItemList = () => {
-  const [adress, setAdress] = useState([]);
+  const [addresses, setAddresses] = useState([]);
   const [loading, setLoading] = useState(false);
   const [showAddressForm, setShowAddressForm] = useState(false);
   const [selectedAddress, setSelectedAddress] = useState(null);
@@ -1171,7 +1228,7 @@ const ItemList = () => {
         },
       });
       const fetchedAddresses = response?.data?.addresses;
-      setAdress(fetchedAddresses);
+      setAddresses(fetchedAddresses);
     } catch (err) {
       if (err.response && err.response.status === 401) {
         Cookies.remove("auth");
@@ -1198,21 +1255,26 @@ const ItemList = () => {
     condition: "",
     brand: "",
     size: "",
-    usage: "",
     price: "",
     damages: "",
     rentOption: "No",
     rentalPrice: "",
     images: [],
-    country: "",
+    // Updated: New schema field names
+    name: "",
+    mob_no_country_code: "971",
+    mobile_number: "",
+    alt_ph_country_code: "971",
+    alternate_phone: "",
+    house_no: "",
+    building_name: "",
+    area: "",
+    landmark: "",
     city: "",
-    addressLine1: "",
-    addressLine2: "",
-    firstName: "",
-    lastName: "",
+    address_type: "Normal",
     email: "",
-    phone: "",
-    color: "", // Added for color field
+    country: "UAE",
+    color: "",
   });
 
   const [caseState, setCaseState] = useState(1);
@@ -1224,11 +1286,9 @@ const ItemList = () => {
       try {
         const [brandsRes, categoriesRes, conditionsRes, sizesRes, colorRes] =
           await Promise.all([
-            axios.get(
-              `${process.env.NEXT_PUBLIC_API_BASE_URL}/brands/getbrand`
-            ),
+            axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/brands/getbrand`),
             axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/category`),
-            axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/conditions/getcondition` ),
+            axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/conditions/getcondition`),
             axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/sizes/getSizes`),
             axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/colors/getcolor`),
           ]);
@@ -1294,19 +1354,16 @@ const ItemList = () => {
 
   const validateForm = () => {
     let newErrors = {};
-    if (!formData.itemName.trim())
-      newErrors.itemName = "Product title is required";
-    if (!formData.description.trim())
-      newErrors.description = "Description is required";
+    if (!formData.itemName.trim()) newErrors.itemName = "Product title is required";
+    if (!formData.description.trim()) newErrors.description = "Description is required";
     if (!formData.category.trim()) newErrors.category = "Category is required";
     if (!formData.gender) newErrors.gender = "Gender is required";
-    if (!formData.condition) newErrors.condition = "condition is required";
+    if (!formData.condition) newErrors.condition = "Condition is required";
     if (!formData.brand) newErrors.brand = "Brand is required";
     if (!formData.size) newErrors.size = "Size is required";
-    // if (!formData.usage) newErrors.usage = "Usage is required";
+    if (!formData.subCategory.trim()) newErrors.subCategory = "Sub Category is required";
     if (!formData.price.trim()) newErrors.price = "Price is required";
-    if (formData.images.length < 2)
-      newErrors.images = "At least two images are required";
+    if (formData.images.length < 2) newErrors.images = "At least two images are required";
     if (formData.rentOption === "Yes" && !formData.rentalPrice) {
       newErrors.rentalPrice = "Rental price is required when open to rent";
     }
@@ -1370,6 +1427,32 @@ const ItemList = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Updated: Address validation with new field names
+    let addressErrors = {};
+    if (!selectedAddress && !showAddressForm) {
+      addressErrors.pickupAddress = "Please select an existing address or add a new one";
+    }
+    if (showAddressForm) {
+      if (!formData.name.trim()) addressErrors.name = "Name is required";
+      if (!formData.mobile_number.trim()) addressErrors.mobile_number = "Mobile number is required";
+      if (!formData.house_no.trim()) addressErrors.house_no = "House number is required";
+      if (!formData.building_name.trim()) addressErrors.building_name = "Building name is required";
+      if (!formData.area.trim()) addressErrors.area = "Area is required";
+      if (!formData.landmark.trim()) addressErrors.landmark = "Landmark is required";
+      if (!formData.city.trim()) addressErrors.city = "City is required";
+      if (!formData.email.trim()) addressErrors.email = "Email is required";
+    }
+
+    if (Object.keys(addressErrors).length > 0) {
+      setErrors(addressErrors);
+      const firstError = document.querySelector(".text-red-500");
+      if (firstError) {
+        firstError.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+      return;
+    }
+
     if (validateForm()) {
       try {
         const token = getAuthToken();
@@ -1383,34 +1466,39 @@ const ItemList = () => {
           imageUrl = await uploadImage(formData.images);
         }
 
+        // Updated: Use new field names for pickupAddress object
+        const pickupAddress = selectedAddress
+          ? selectedAddress._id // Send only the ID as a string
+          : {
+              name: formData.name,
+              mob_no_country_code: formData.mob_no_country_code,
+              mobile_number: formData.mobile_number,
+              alt_ph_country_code: formData.alt_ph_country_code,
+              alternate_phone: formData.alternate_phone,
+              house_no: formData.house_no,
+              building_name: formData.building_name,
+              area: formData.area,
+              landmark: formData.landmark,
+              city: formData.city,
+              address_type: formData.address_type,
+              email: formData.email,
+              seller: null,
+              isDefault: false,
+              country: formData.country,
+            };
+
         const productData = {
-          approval: {
-            status: "Pending",
-            reason: "",
-            updatedAt: Date.now(),
-          },
+          approval: { status: "Pending", reason: "", updatedAt: Date.now() },
           productType: "Listing",
-          condition: formData.condition, // Should be updated if condition field is re-enabled
+          condition: formData.condition,
           name: formData.itemName,
           size: formData.size,
           openToRent: formData.rentOption,
           usage: formData.usage || "",
           damages: formData.damages || "",
-          seller: null, // Will be set by backend based on authenticated user
+          seller: null,
           admin: null,
-          pickupAddress: selectedAddress
-            ? selectedAddress._id
-            : {
-                country: formData.country,
-                city: formData.city,
-                addressLine1: formData.addressLine1,
-                addressLine2: formData.addressLine2 || "",
-                firstName: formData.firstName,
-                lastName: formData.lastName || "",
-                email: formData.email,
-                phone: Number(formData.phone),
-                isDefault: false,
-              },
+          pickupAddress: pickupAddress,
           pickup: null,
           color: formData.color || null,
           category: {
@@ -1422,16 +1510,9 @@ const ItemList = () => {
           description: formData.description,
           price: Number(formData.price),
           images: imageUrl,
-          pricePerDay:
-            formData.rentOption === "Yes" ? Number(formData.rentalPrice) : 0,
-          pricePerHour:
-            formData.rentOption === "Yes"
-              ? Math.round(Number(formData.price) * 0.02)
-              : 0,
-          deposit:
-            formData.rentOption === "Yes"
-              ? Math.round(Number(formData.price) * 0.2)
-              : 0,
+          pricePerDay: formData.rentOption === "Yes" ? Number(formData.rentalPrice) : 0,
+          pricePerHour: formData.rentOption === "Yes" ? Math.round(Number(formData.price) * 0.02) : 0,
+          deposit: formData.rentOption === "Yes" ? Math.round(Number(formData.price) * 0.2) : 0,
           orders: [],
           rent: [],
           onSale: false,
@@ -1466,6 +1547,11 @@ const ItemList = () => {
         console.error("Error submitting form:", error);
         toast.error(error.response?.data?.message || "Error adding product");
       }
+    } else {
+      const firstError = document.querySelector(".text-red-500");
+      if (firstError) {
+        firstError.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
     }
   };
 
@@ -1496,7 +1582,6 @@ const ItemList = () => {
             />
             <span className="text-gray-700">Use Existing Address</span>
           </label>
-
           <label className="flex items-center gap-2 cursor-pointer">
             <input
               type="radio"
@@ -1523,14 +1608,14 @@ const ItemList = () => {
               >
                 <div className="flex justify-between items-start">
                   <div className="space-y-2">
-                    <p className="font-semibold">
-                      {address.firstName} {address.lastName}
+                    <p className="font-semibold">{address.name}</p>
+                    <p className="text-sm text-gray-600">
+                      {`${address.mob_no_country_code}${address.mobile_number}`}
                     </p>
-                    <p className="text-sm text-gray-600">{address.phone}</p>
                     <p className="text-sm text-gray-600">{address.email}</p>
                     <p className="text-sm text-gray-600">
-                      {address.addressLine1}
-                      {address.addressLine2 && `, ${address.addressLine2}`}
+                      {`${address.house_no}, ${address.building_name}, ${address.area}`}
+                      {address.landmark && `, ${address.landmark}`}
                     </p>
                     <p className="text-sm text-gray-600">
                       {address.city}, {address.country}
@@ -1627,7 +1712,8 @@ const ItemList = () => {
           </div>
 
           <div className="px-4 sm:px-8 md:px-16 lg:px-20 py-8 sm:py-10">
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleNext} className="space-y-6">
+              {/* Product form fields - unchanged */}
               <div>
                 <label className="block text-[#151515] text-base font-bold font-karla mb-2">
                   Product Images
@@ -1638,7 +1724,7 @@ const ItemList = () => {
                     .map((_, idx) => (
                       <div
                         key={idx}
-                        className="relative w-24 h-24 border border-[#E4086F] flex items-center justify-center  overflow-hidden"
+                        className="relative w-24 h-24 border border-[#E4086F] flex items-center justify-center overflow-hidden"
                       >
                         <input
                           type="file"
@@ -1812,6 +1898,9 @@ const ItemList = () => {
                         </option>
                       ))}
                 </select>
+                {errors.subCategory && (
+                  <p className="text-red-500 mt-1">{errors.subCategory}</p>
+                )}
               </div>
 
               <div>
@@ -1877,7 +1966,7 @@ const ItemList = () => {
                 </select>
               </div>
 
-                <div>
+              <div>
                 <label className="block text-[#151515] text-base font-bold font-karla mb-2">
                   Product Color
                 </label>
@@ -1886,7 +1975,7 @@ const ItemList = () => {
                   value={formData.color}
                   onChange={handleChange}
                   className={`w-full p-2 border ${
-                    errors.size ? "border-red-500" : "border-[#868686]"
+                    errors.color ? "border-red-500" : "border-[#868686]"
                   } rounded-lg max-w-[500px]`}
                 >
                   <option value="">Choose Product color</option>
@@ -1897,30 +1986,6 @@ const ItemList = () => {
                   ))}
                 </select>
               </div>
-
-
-              {/* <div>
-                <label className="block text-[#151515] text-base font-bold font-karla mb-2">
-                  Usage
-                </label>
-                <select
-                  name="usage"
-                  value={formData.usage}
-                  onChange={handleChange}
-                  className={`w-full p-2 border ${
-                    errors.usage ? "border-red-500" : "border-[#868686]"
-                  } rounded-lg max-w-[500px]`}
-                >
-                  <option value="">Select usage</option>
-                  <option value="Used Once">Used Once</option>
-                  <option value="Rarely Used">Rarely Used</option>
-                  <option value="Well Used">Well Used</option>
-                  <option value="Never Used">Never Used</option>
-                </select>
-                {errors.usage && (
-                  <p className="text-red-500 mt-1">{errors.usage}</p>
-                )}
-              </div> */}
 
               <div>
                 <label className="block text-[#151515] text-base font-bold font-karla mb-2">
@@ -2023,7 +2088,6 @@ const ItemList = () => {
               <div className="flex space-x-8 mt-6 justify-center">
                 <button
                   type="submit"
-                  onClick={handleNext}
                   className="px-8 py-3 bg-[#E4086F] text-yellow-400 text-lg font-semibold hover:bg-[#d4076e] transition-colors"
                   style={{ borderRadius: "22px" }}
                 >
@@ -2083,35 +2147,45 @@ const ItemList = () => {
             </p>
             <div className="space-y-4">
               <AddressSelection
-                addresses={adress}
+                addresses={addresses}
                 onSelect={(address) => {
                   setSelectedAddress(address);
                   setShowAddressForm(false);
+                  // Updated: Map old field names to new ones for formData
                   setFormData({
                     ...formData,
-                    firstName: address.firstName,
-                    lastName: address.lastName,
-                    email: address.email,
-                    phone: address.phone,
-                    addressLine1: address.addressLine1,
-                    addressLine2: address.addressLine2,
-                    city: address.city,
-                    country: address.country,
+                    name: address.name || "",
+                    mob_no_country_code: address.mob_no_country_code || "971",
+                    mobile_number: address.mobile_number || "",
+                    alt_ph_country_code: address.alt_ph_country_code || "971",
+                    alternate_phone: address.alternate_phone || "",
+                    house_no: address.house_no || "",
+                    building_name: address.building_name || "",
+                    area: address.area || "",
+                    landmark: address.landmark || "",
+                    city: address.city || "",
+                    email: address.email || "",
+                    country: address.country || "UAE",
                   });
                 }}
                 onAddNew={() => {
                   setShowAddressForm(true);
                   setSelectedAddress(null);
+                  // Updated: Reset with new field names
                   setFormData({
                     ...formData,
-                    firstName: "",
-                    lastName: "",
-                    email: "",
-                    phone: "",
-                    addressLine1: "",
-                    addressLine2: "",
+                    name: "",
+                    mob_no_country_code: "971",
+                    mobile_number: "",
+                    alt_ph_country_code: "971",
+                    alternate_phone: "",
+                    house_no: "",
+                    building_name: "",
+                    area: "",
+                    landmark: "",
                     city: "",
-                    country: "",
+                    email: "",
+                    country: "UAE",
                   });
                 }}
               />
@@ -2122,24 +2196,162 @@ const ItemList = () => {
                   <div className="flex flex-wrap sm:flex-nowrap gap-6">
                     <div className="flex-1 flex flex-col">
                       <p className="text-[#151515] text-sm sm:text-base font-bold font-karla">
-                        Country
+                        Name
                       </p>
-                      <select
-                        name="country"
-                        value={formData.country}
+                      <input
+                        maxLength={25}
+                        placeholder="Enter your name"
+                        type="text"
+                        name="name"
+                        value={formData.name}
                         onChange={handleChange}
                         className="w-full h-[50px] border-2 rounded-lg px-5 mt-2 sm:mt-5 font-karla"
-                      >
-                        <option value="">Select a country</option>
-                        <option value="uae">UAE</option>
-                        <option value="saab">Saab</option>
-                        <option value="fiat">Fiat</option>
-                        <option value="audi">Audi</option>
-                      </select>
-                      {errors.country && (
-                        <p className="text-red-500 text-sm mt-1">
-                          {errors.country}
-                        </p>
+                      />
+                      {errors.name && (
+                        <p className="text-red-500 text-sm mt-1">{errors.name}</p>
+                      )}
+                    </div>
+
+                    <div className="flex-1 flex flex-col">
+                      <p className="text-[#151515] text-sm sm:text-base font-bold font-karla">
+                        Mobile Country Code
+                      </p>
+                      <input
+                        maxLength={4}
+                        placeholder="e.g., 971"
+                        type="text"
+                        name="mob_no_country_code"
+                        value={formData.mob_no_country_code}
+                        onChange={handleChange}
+                        className="w-full h-[50px] border-2 rounded-lg px-5 mt-2 sm:mt-5 font-karla"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex flex-wrap sm:flex-nowrap gap-6">
+                    <div className="flex-1 flex flex-col">
+                      <p className="text-[#151515] text-sm sm:text-base font-bold font-karla">
+                        Mobile Number
+                      </p>
+                      <input
+                        maxLength={12}
+                        placeholder="Enter your mobile number"
+                        type="tel"
+                        name="mobile_number"
+                        value={formData.mobile_number}
+                        onChange={handleChange}
+                        className="w-full h-[50px] border-2 rounded-lg px-5 mt-2 sm:mt-5 font-karla"
+                      />
+                      {errors.mobile_number && (
+                        <p className="text-red-500 text-sm mt-1">{errors.mobile_number}</p>
+                      )}
+                    </div>
+
+                    <div className="flex-1 flex flex-col">
+                      <p className="text-[#151515] text-sm sm:text-base font-bold font-karla">
+                        Alternate Mobile Country Code
+                      </p>
+                      <input
+                        maxLength={4}
+                        placeholder="e.g., 971"
+                        type="text"
+                        name="alt_ph_country_code"
+                        value={formData.alt_ph_country_code}
+                        onChange={handleChange}
+                        className="w-full h-[50px] border-2 rounded-lg px-5 mt-2 sm:mt-5 font-karla"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex flex-wrap sm:flex-nowrap gap-6">
+                    <div className="flex-1 flex flex-col">
+                      <p className="text-[#151515] text-sm sm:text-base font-bold font-karla">
+                        Alternate Mobile Number
+                      </p>
+                      <input
+                        maxLength={12}
+                        placeholder="Enter alternate mobile number"
+                        type="tel"
+                        name="alternate_phone"
+                        value={formData.alternate_phone}
+                        onChange={handleChange}
+                        className="w-full h-[50px] border-2 rounded-lg px-5 mt-2 sm:mt-5 font-karla"
+                      />
+                    </div>
+
+                    <div className="flex-1 flex flex-col">
+                      <p className="text-[#151515] text-sm sm:text-base font-bold font-karla">
+                        House No
+                      </p>
+                      <input
+                        maxLength={25}
+                        placeholder="Enter house number"
+                        type="text"
+                        name="house_no"
+                        value={formData.house_no}
+                        onChange={handleChange}
+                        className="w-full h-[50px] border-2 rounded-lg px-5 mt-2 sm:mt-5 font-karla"
+                      />
+                      {errors.house_no && (
+                        <p className="text-red-500 text-sm mt-1">{errors.house_no}</p>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="flex flex-wrap sm:flex-nowrap gap-6">
+                    <div className="flex-1 flex flex-col">
+                      <p className="text-[#151515] text-sm sm:text-base font-bold font-karla">
+                        Building Name
+                      </p>
+                      <input
+                        maxLength={25}
+                        placeholder="Enter building name"
+                        type="text"
+                        name="building_name"
+                        value={formData.building_name}
+                        onChange={handleChange}
+                        className="w-full h-[50px] border-2 rounded-lg px-5 mt-2 sm:mt-5 font-karla"
+                      />
+                      {errors.building_name && (
+                        <p className="text-red-500 text-sm mt-1">{errors.building_name}</p>
+                      )}
+                    </div>
+
+                    <div className="flex-1 flex flex-col">
+                      <p className="text-[#151515] text-sm sm:text-base font-bold font-karla">
+                        Area
+                      </p>
+                      <input
+                        maxLength={25}
+                        placeholder="Enter area"
+                        type="text"
+                        name="area"
+                        value={formData.area}
+                        onChange={handleChange}
+                        className="w-full h-[50px] border-2 rounded-lg px-5 mt-2 sm:mt-5 font-karla"
+                      />
+                      {errors.area && (
+                        <p className="text-red-500 text-sm mt-1">{errors.area}</p>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="flex flex-wrap sm:flex-nowrap gap-6">
+                    <div className="flex-1 flex flex-col">
+                      <p className="text-[#151515] text-sm sm:text-base font-bold font-karla">
+                        Landmark
+                      </p>
+                      <input
+                        maxLength={25}
+                        placeholder="Enter landmark"
+                        type="text"
+                        name="landmark"
+                        value={formData.landmark}
+                        onChange={handleChange}
+                        className="w-full h-[50px] border-2 rounded-lg px-5 mt-2 sm:mt-5 font-karla"
+                      />
+                      {errors.landmark && (
+                        <p className="text-red-500 text-sm mt-1">{errors.landmark}</p>
                       )}
                     </div>
 
@@ -2154,15 +2366,17 @@ const ItemList = () => {
                         className="w-full h-[50px] border-2 rounded-lg px-5 mt-2 sm:mt-5 font-karla"
                       >
                         <option value="">Select a city</option>
-                        <option value="dubai">Dubai</option>
-                        <option value="abudhabi">Abu Dhabi</option>
-                        <option value="sharjah">Sharjah</option>
-                        <option value="ajman">Ajman</option>
+                        <option value="Abu Dhabi">Abu Dhabi</option>
+                        <option value="Ajman">Ajman</option>
+                        <option value="Al-Ain">Al-Ain</option>
+                        <option value="Dubai">Dubai</option>
+                        <option value="Fujairah">Fujairah</option>
+                        <option value="Ras Al Khaimah">Ras Al Khaimah</option>
+                        <option value="Sharjah">Sharjah</option>
+                        <option value="Umm Al-Quwain">Umm Al-Quwain</option>
                       </select>
                       {errors.city && (
-                        <p className="text-red-500 text-sm mt-1">
-                          {errors.city}
-                        </p>
+                        <p className="text-red-500 text-sm mt-1">{errors.city}</p>
                       )}
                     </div>
                   </div>
@@ -2170,122 +2384,54 @@ const ItemList = () => {
                   <div className="flex flex-wrap sm:flex-nowrap gap-6">
                     <div className="flex-1 flex flex-col">
                       <p className="text-[#151515] text-sm sm:text-base font-bold font-karla">
-                        Address Line 1
+                        Address Type
                       </p>
-                      <input
-                        maxLength={25}
-                        placeholder="Enter your address line 1"
-                        type="text"
-                        name="addressLine1"
-                        value={formData.addressLine1}
+                      <select
+                        name="address_type"
+                        value={formData.address_type}
                         onChange={handleChange}
                         className="w-full h-[50px] border-2 rounded-lg px-5 mt-2 sm:mt-5 font-karla"
-                      />
-                      {errors.addressLine1 && (
-                        <p className="text-red-500 text-sm mt-1">
-                          {errors.addressLine1}
-                        </p>
-                      )}
+                      >
+                        <option value="Normal">Normal</option>
+                        <option value="Western">Western</option>
+                      </select>
                     </div>
 
                     <div className="flex-1 flex flex-col">
                       <p className="text-[#151515] text-sm sm:text-base font-bold font-karla">
-                        Address Line 2
+                        Country
                       </p>
                       <input
                         maxLength={25}
-                        placeholder="Enter your address line 2"
+                        placeholder="Enter country"
                         type="text"
-                        name="addressLine2"
-                        value={formData.addressLine2}
+                        name="country"
+                        value={formData.country}
                         onChange={handleChange}
                         className="w-full h-[50px] border-2 rounded-lg px-5 mt-2 sm:mt-5 font-karla"
                       />
-                    </div>
-                  </div>
-
-                  <div className="flex flex-wrap sm:flex-nowrap gap-6">
-                    <div className="flex-1 flex flex-col">
-                      <p className="text-[#151515] text-sm sm:text-base font-bold font-karla">
-                        First name
-                      </p>
-                      <input
-                        maxLength={25}
-                        placeholder="Enter your first name"
-                        type="text"
-                        name="firstName"
-                        value={formData.firstName}
-                        onChange={handleChange}
-                        className="w-full h-[50px] border-2 rounded-lg px-5 mt-2 sm:mt-5 font-karla"
-                      />
-                      {errors.firstName && (
-                        <p className="text-red-500 text-sm mt-1">
-                          {errors.firstName}
-                        </p>
-                      )}
-                    </div>
-
-                    <div className="flex-1 flex flex-col">
-                      <p className="text-[#151515] text-sm sm:text-base font-bold font-karla">
-                        Last name
-                      </p>
-                      <input
-                        maxLength={25}
-                        placeholder="Enter your last name"
-                        type="text"
-                        name="lastName"
-                        value={formData.lastName}
-                        onChange={handleChange}
-                        className="w-full h-[50px] border-2 rounded-lg px-5 mt-2 sm:mt-5 font-karla"
-                      />
-                      {errors.lastName && (
-                        <p className="text-red-500 text-sm mt-1">
-                          {errors.lastName}
-                        </p>
+                      {errors.country && (
+                        <p className="text-red-500 text-sm mt-1">{errors.country}</p>
                       )}
                     </div>
                   </div>
 
-                  <div className="flex flex-wrap sm:flex-nowrap gap-6">
-                    <div className="flex-1 flex flex-col">
-                      <p className="text-[#151515] text-sm sm:text-base font-bold font-karla">
-                        Email address
-                      </p>
-                      <input
-                        maxLength={50}
-                        placeholder="Enter your email address"
-                        type="email"
-                        name="email"
-                        value={formData.email}
-                        onChange={handleChange}
-                        className="w-full h-[50px] border-2 rounded-lg px-5 mt-2 sm:mt-5 font-karla"
-                      />
-                      {errors.email && (
-                        <p className="text-red-500 text-sm mt-1">
-                          {errors.email}
-                        </p>
-                      )}
-                    </div>
-
-                    <div className="flex-1 flex flex-col">
-                      <p className="text-[#151515] text-sm sm:text-base font-bold font-karla">
-                        Phone number
-                      </p>
-                      <input
-                        maxLength={12}
-                        placeholder="Enter your phone number"
-                        type="tel"
-                        name="phone"
-                        value={formData.phone}
-                        onChange={handleChange}
-                        className="w-full h-[50px] border-2 rounded-lg px-5 mt-2 sm:mt-5 font-karla"
-                      />
-                      {errors.phone && (
-                        <p className="text-red-500 text-sm mt-1">
-                          {errors.phone}
-                        </p>
-                      )}
-                    </div>
+                  <div className="flex flex-col">
+                    <p className="text-[#151515] text-sm sm:text-base font-bold font-karla">
+                      Email
+                    </p>
+                    <input
+                      maxLength={50}
+                      placeholder="Enter your email address"
+                      type="email"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleChange}
+                      className="w-full h-[50px] border-2 rounded-lg px-5 mt-2 sm:mt-5 font-karla"
+                    />
+                    {errors.email && (
+                      <p className="text-red-500 text-sm mt-1">{errors.email}</p>
+                    )}
                   </div>
                 </div>
               </div>

@@ -375,6 +375,7 @@ export const SellingProducts = ({ data }) => {
     { label: "Approved Products", value: "Accepted" },
     { label: "Pending Products", value: "Pending" },
     { label: "Rejected Products", value: "Rejected" },
+    { label: "Sold Products", value: "Sold" },
   ];
 
   const filteredData =

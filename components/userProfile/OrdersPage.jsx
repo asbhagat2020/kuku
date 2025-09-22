@@ -1,32 +1,30 @@
 
 
 
+
 "use client";
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useSelector } from "react-redux"; // For Redux state
-import Cookies from "js-cookie"; // For token handling
-import toast from "react-hot-toast"; // For notifications
+import { useSelector } from "react-redux";
+import Cookies from "js-cookie";
+import toast from "react-hot-toast";
 
 const OrdersPage = () => {
   const [activeSection, setActiveSection] = useState("orders");
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [userId, setUserId] = useState(null); // Dynamic userId state
+  const [userId, setUserId] = useState(null);
 
-  // Get user details from Redux store
   const details = useSelector((state) => state.auth.user);
   const id = details?._id;
 
-  // Set userId when id changes
   useEffect(() => {
     setUserId(id);
   }, [id]);
 
-  // Fetch orders when userId is available
   useEffect(() => {
     const fetchOrders = async () => {
       if (!userId) {
@@ -61,76 +59,10 @@ const OrdersPage = () => {
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-gray-50 p-8">
-      <div className="w-full md:w-64">
-        <h1 className="text-4xl font-luckiest mb-8 text-center md:text-left">
-          All Orders
-        </h1>
-        <div className="bg-white rounded-lg shadow-sm p-8 w-[300px]">
-          <div className="space-y-8">
-            <div>
-              <p className="text-[11px] text-gray-400 font-medium tracking-wide uppercase mb-4">
-                ORDERS
-              </p>
-              <button
-                className={`w-full text-left py-1 text-[13px] ${
-                  activeSection === "orders"
-                    ? "text-pink-500 font-medium"
-                    : "text-gray-700"
-                }`}
-                onClick={() => setActiveSection("orders")}
-              >
-                Order & Returns
-              </button>
-            </div>
-            <hr className="border-gray-200" />
-            <div>
-              <p className="text-[11px] text-gray-400 font-medium tracking-wide uppercase mb-4">
-                CREDITS
-              </p>
-              <button
-                className={`w-full text-left py-1 text-[13px] ${
-                  activeSection === "coupons"
-                    ? "text-pink-500 font-medium"
-                    : "text-gray-700"
-                }`}
-                onClick={() => setActiveSection("coupons")}
-              >
-                Coupons
-              </button>
-            </div>
-            <hr className="border-gray-200" />
-            <div>
-              <p className="text-[11px] text-gray-400 font-medium tracking-wide uppercase mb-4">
-                ACCOUNTS
-              </p>
-              <div className="space-y-2">
-                <button
-                  className={`w-full text-left py-1 text-[13px] ${
-                    activeSection === "profile"
-                      ? "text-pink-500 font-medium"
-                      : "text-gray-700"
-                  }`}
-                  onClick={() => setActiveSection("profile")}
-                >
-                  Profile
-                </button>
-                <button
-                  className={`w-full text-left py-1 text-[13px] ${
-                    activeSection === "addresses"
-                      ? "text-pink-500 font-medium"
-                      : "text-gray-700"
-                  }`}
-                  onClick={() => setActiveSection("addresses")}
-                >
-                  Addresses
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="flex-1 md:ml-16 mt-[70px]">
+      <h1 className="text-4xl font-luckiest mb-8 text-center md:text-left">
+        All Orders
+      </h1>
+      <div className="flex-1 mt-[70px]">
         <div className="space-y-4">
           {orders.map((order) => (
             <div key={order._id} className="bg-white rounded-lg p-6 shadow-sm">
@@ -166,7 +98,6 @@ const OrdersPage = () => {
 
                   <div className="flex-1">
                     <div className="flex items-start gap-4 mb-2">
-                      {/* Show "Rent" label and "RENTAL PERIOD" side by side for rental products */}
                       {product.isRental && (
                         <div className="flex items-center gap-2">
                           <h2 className="text-2xl font-bold text-red-500">
@@ -209,9 +140,7 @@ const OrdersPage = () => {
                         </p>
                         <span className="text-green-500 text-sm">
                           {order.discount > 0
-                            ? `${((order.discount / order.totalAmount) * 100).toFixed(
-                                0
-                              )}%OFF`
+                            ? `${((order.discount / order.totalAmount) * 100).toFixed(0)}%OFF`
                             : "No Discount"}
                         </span>
                       </div>
@@ -229,18 +158,26 @@ const OrdersPage = () => {
                           CONDITION:
                         </span>
                         <span className="text-sm text-gray-500 font-semibold">
-                          {product.product?.condition?.conditionName ||
-                            "Unknown Condition"}
+                          {product.product?.condition?.conditionName || "Unknown Condition"}
                         </span>
                       </div>
                     </div>
 
                     {index === 0 && (
-                      <Link href={`/returnorder?orderId=${order._id}`}>
-                        <button className="text-pink-500 font-medium text-sm border-b border-pink-500">
-                          RETURN ORDER
-                        </button>
-                      </Link>
+                      <div className="flex gap-4">
+                        <Link href={`/orderdetails?orderId=${order._id}`}>
+                          <button className="text-blue-500 font-medium text-sm border-b border-blue-500">
+                            ORDER DETAILS
+                          </button>
+                        </Link>
+                        {/* {order.orderStatus === "Delivered" && (
+                          <Link href={`/returnorder?orderId=${order._id}`}>
+                            <button className="text-pink-500 font-medium text-sm border-b border-pink-500">
+                              RETURN ORDER
+                            </button>
+                          </Link>
+                        )} */}
+                      </div>
                     )}
                   </div>
                 </div>

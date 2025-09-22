@@ -1,37 +1,350 @@
-'use client';
+// 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { X } from 'lucide-react';
-import axios from 'axios';
-import Cookies from 'js-cookie';
+// import React, { useState, useEffect } from 'react';
+// import { X } from 'lucide-react';
+// import axios from 'axios';
+// import Cookies from 'js-cookie';
 
-const PickupModal = ({ isOpen, onClose, onSave, mode = 'add', initialData = null }) => {
+// const PickupModal = ({ isOpen, onClose, onSave, mode = 'add', initialData = null }) => {
+//   const [productsData, setProductsData] = useState([]);
+//   const [formData, setFormData] = useState({
+//     firstName: '',
+//     lastName: '',
+//     addressLine1: '',
+//     addressLine2: '',
+//     phone: '',
+//     city: '',
+//     country: '',
+//     email: '',
+//   });
+
+//   useEffect(() => {
+//     if (mode === 'edit' && initialData) {
+//       setFormData({
+//         firstName: initialData.firstName || '',
+//         lastName: initialData.lastName || '',
+//         phone: initialData.phone || '',
+//         addressLine1: initialData.addressLine1 || '',
+//         addressLine2: initialData.addressLine2 || '',
+//         city: initialData.city || '',
+//         country: initialData.country || '',
+//         email: initialData.email || '',
+//       });
+//     }
+//   }, [initialData, mode]);
+
+//   useEffect(() => {
+//     async function fetchData() {
+//       try {
+//         const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/products`);
+//         const datavalue = response.data;
+
+//         const uniqueSellersMap = new Map();
+
+//         datavalue.forEach((data) => {
+//           const sellerId = data?.seller?._id;
+//           const sellerName = data?.seller?.username;
+
+//           if (sellerId && sellerName) {
+//             uniqueSellersMap.set(sellerId, {
+//               id: sellerId,
+//               name: sellerName,
+//             });
+//           }
+//         });
+
+//         const uniqueSellers = Array.from(uniqueSellersMap.values());
+//         console.log(uniqueSellers, 'unique sellers');
+//         setProductsData(uniqueSellers);
+//       } catch (error) {
+//         console.error('Error fetching products:', error);
+//       }
+//     }
+
+//     fetchData();
+//   }, []);
+
+//   const handleChange = (e) => {
+//     const { name, value } = e.target;
+//     setFormData((prev) => ({
+//       ...prev,
+//       [name]: value,
+//     }));
+//   };
+
+//   const handleSubmit = (e) => {
+//     e.preventDefault();
+//     if (mode === 'add') {
+//       addAddress();
+//     } else if (mode === 'edit') {
+//       editAddress();
+//     }
+//   };
+
+//   const addAddress = async () => {
+//     try {
+//       const token = JSON.parse(Cookies.get('auth'));
+//       const apiUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/pickup/address`;
+
+//       console.log(formData, 'formdata');
+//       const response = await axios.post(apiUrl, formData, {
+//         headers: {
+//           Authorization: `Bearer ${token}`,
+//         },
+//       });
+
+//       if (response.status === 201) {
+//         console.log('Address added successfully');
+//         onSave(response.data.address); // Notify parent component with the new address
+//         onClose();
+//         resetForm();
+//       } else {
+//         console.error('Failed to add address');
+//       }
+//     } catch (error) {
+//       console.error('An error occurred while adding the address:', error);
+//     }
+//   };
+
+//   const editAddress = async () => {
+//     console.log(initialData._id, 'kkkk');
+//     try {
+//       const token = JSON.parse(Cookies.get('auth'));
+//       const apiUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/pickup/edit/${initialData._id}`;
+
+//       const response = await axios.put(apiUrl, formData, {
+//         headers: {
+//           Authorization: `Bearer ${token}`,
+//         },
+//       });
+
+//       if (response.status === 200) {
+//         console.log('Address updated successfully');
+//         onSave(response.data.address); // Notify parent component with the updated address
+//         onClose();
+//         resetForm();
+//       } else {
+//         console.error('Failed to update address');
+//       }
+//     } catch (error) {
+//       console.error('An error occurred while updating the address:', error);
+//     }
+//   };
+
+//   const resetForm = () => {
+//     setFormData({
+//       firstName: '',
+//       lastName: '',
+//       addressLine1: '',
+//       addressLine2: '',
+//       phone: '',
+//       city: '',
+//       country: '',
+//       email: '',
+//     });
+//   };
+
+//   if (!isOpen) return null;
+
+//   return (
+//     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 ">
+//       <div className="bg-white rounded-lg w-full max-w-2xl mx-4  overflow-y-auto max-h-[90vh] relative ">
+//         {/* Header */}
+//         <div className="px-8 py-6 border-b border-gray-100">
+//           <div className="flex justify-between items-center">
+//             <h2 className="text-3xl font-luckiest">{mode === 'add' ? 'ADD NEW ADDRESS' : 'EDIT ADDRESS'}</h2>
+//             <button
+//               onClick={onClose}
+//               className="w-8 h-8 rounded-full flex items-center justify-center border border-black hover:bg-gray-100"
+//             >
+//               <X className="w-5 h-5 text-black" strokeWidth={3} />
+//             </button>
+//           </div>
+//         </div>
+
+//         {/* Form */}
+//         <form onSubmit={handleSubmit} className="p-8 space-y-8">
+//           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+//             {/* Full Name */}
+//             <div className="space-y-2">
+//               <label className="block text-sm font-medium text-gray-700">Enter First Name</label>
+//               <input
+//                 type="text"
+//                 name="firstName"
+//                 value={formData.firstName}
+//                 onChange={handleChange}
+//                 placeholder="Full First Name"
+//                 className="w-full h-12 px-4 bg-gray-50 rounded-2xl focus:outline-none focus:ring-2 focus:ring-yellow-500"
+//                 required
+//               />
+//             </div>
+
+//             <div className="space-y-2">
+//               <label className="block text-sm font-medium text-gray-700">Enter Last Name</label>
+//               <input
+//                 type="text"
+//                 name="lastName"
+//                 value={formData.lastName}
+//                 onChange={handleChange}
+//                 placeholder="Full Last Name"
+//                 className="w-full h-12 px-4 bg-gray-50 rounded-2xl focus:outline-none focus:ring-2 focus:ring-yellow-500"
+//                 required
+//               />
+//             </div>
+
+//             {/* Phone Number */}
+//             <div className="space-y-2">
+//               <label className="block text-sm font-medium text-gray-700">Phone Number</label>
+//               <input
+//                 type="tel"
+//                 name="phone"
+//                 value={formData.phone}
+//                 onChange={handleChange}
+//                 placeholder="Enter Phone Number"
+//                 className="w-full h-12 px-4 bg-gray-50 rounded-2xl focus:outline-none focus:ring-2 focus:ring-yellow-500"
+//                 required
+//               />
+//             </div>
+
+//             {/* Address 1 */}
+//             <div className="space-y-2">
+//               <label className="block text-sm font-medium text-gray-700">Address1</label>
+//               <input
+//                 type="text"
+//                 name="addressLine1"
+//                 value={formData.addressLine1}
+//                 onChange={handleChange}
+//                 placeholder="Enter addressLine1"
+//                 className="w-full h-20 px-4 bg-gray-50 rounded-2xl focus:outline-none focus:ring-2 focus:ring-yellow-500"
+//                 required
+//               />
+//             </div>
+//             <div className="space-y-2">
+//               <label className="block text-sm font-medium text-gray-700">Address2</label>
+//               <input
+//                 type="text"
+//                 name="addressLine2"
+//                 value={formData.addressLine2}
+//                 onChange={handleChange}
+//                 placeholder="Enter addressLine2"
+//                 className="w-full h-20 px-4 bg-gray-50 rounded-2xl focus:outline-none focus:ring-2 focus:ring-yellow-500"
+//                 required
+//               />
+//             </div>
+
+//             {/* Address 2 */}
+//             <div className="space-y-2">
+//               <label className="block text-sm font-medium text-gray-700">City</label>
+//               <input
+//                 type="text"
+//                 name="city"
+//                 value={formData.city}
+//                 onChange={handleChange}
+//                 placeholder="Enter City"
+//                 className="w-full h-20 px-4 bg-gray-50 rounded-2xl focus:outline-none focus:ring-2 focus:ring-yellow-500"
+//               />
+//             </div>
+
+//             <div className="space-y-2">
+//               <label className="block text-sm font-medium text-gray-700">Country</label>
+//               <input
+//                 type="text"
+//                 name="country"
+//                 value={formData.country}
+//                 onChange={handleChange}
+//                 placeholder="Enter Country"
+//                 className="w-full h-20 px-4 bg-gray-50 rounded-2xl focus:outline-none focus:ring-2 focus:ring-yellow-500"
+//               />
+//             </div>
+//             <div className="space-y-2">
+//               <label className="block text-sm font-medium text-gray-700">Email</label>
+//               <input
+//                 type="text"
+//                 name="email"
+//                 value={formData.email}
+//                 onChange={handleChange}
+//                 placeholder="Enter email"
+//                 className="w-full h-20 px-4 bg-gray-50 rounded-2xl focus:outline-none focus:ring-2 focus:ring-yellow-500"
+//               />
+//             </div>
+//             <div className="space-y-2">
+//               <label className="block text-sm font-medium text-gray-700">Select Seller</label>
+//               <select
+//                 name="seller"
+//                 value={formData.seller}
+//                 onChange={handleChange}
+//                 className="w-full h-12 px-4 bg-gray-50 rounded-2xl focus:outline-none focus:ring-2 focus:ring-yellow-500"
+//                 required
+//               >
+//                 <option value="">Select Seller</option>
+//                 {productsData?.map((product) => (
+//                   <option key={product.id} value={product.id}>
+//                     {product.name}
+//                   </option>
+//                 ))}
+//               </select>
+//             </div>
+//           </div>
+
+//           {/* Action Buttons */}
+//           <div className="flex justify-end space-x-4 pt-6">
+//             <button
+//               type="submit"
+//               className="px-12 py-3 bg-[#FDE504] hover:bg-yellow-500 text-black rounded-lg font-medium"
+//             >
+//               SAVE
+//             </button>
+//             <button
+//               type="button"
+//               onClick={onClose}
+//               className="px-12 py-3 border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50"
+//             >
+//               CANCEL
+//             </button>
+//           </div>
+//         </form>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default PickupModal;
+
+
+
+
+
+
+
+
+
+
+"use client";
+
+import React, { useState, useEffect } from "react";
+import { X } from "lucide-react";
+import axios from "axios";
+import Cookies from "js-cookie";
+
+const PickupModal = ({ isOpen, onClose, onSave, mode = "add", initialData = null }) => {
   const [productsData, setProductsData] = useState([]);
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    addressLine1: '',
-    addressLine2: '',
-    phone: '',
-    city: '',
-    country: '',
-    email: '',
+    addressName: "",
+    mob_no_country_code: "971",
+    phoneNumber: "",
+    alt_ph_country_code: "971",
+    alternate_phone: "",
+    apartmentDetails: "",
+    apartmentName: "",
+    area: "",
+    landmark: "",
+    city: "",
+    country: "UAE",
+    address_type: "Normal",
+    email: "",
+    seller: "",
+    isDefault: false,
   });
-
-  useEffect(() => {
-    if (mode === 'edit' && initialData) {
-      setFormData({
-        firstName: initialData.firstName || '',
-        lastName: initialData.lastName || '',
-        phone: initialData.phone || '',
-        addressLine1: initialData.addressLine1 || '',
-        addressLine2: initialData.addressLine2 || '',
-        city: initialData.city || '',
-        country: initialData.country || '',
-        email: initialData.email || '',
-      });
-    }
-  }, [initialData, mode]);
 
   useEffect(() => {
     async function fetchData() {
@@ -40,11 +353,9 @@ const PickupModal = ({ isOpen, onClose, onSave, mode = 'add', initialData = null
         const datavalue = response.data;
 
         const uniqueSellersMap = new Map();
-
         datavalue.forEach((data) => {
           const sellerId = data?.seller?._id;
           const sellerName = data?.seller?.username;
-
           if (sellerId && sellerName) {
             uniqueSellersMap.set(sellerId, {
               id: sellerId,
@@ -54,105 +365,230 @@ const PickupModal = ({ isOpen, onClose, onSave, mode = 'add', initialData = null
         });
 
         const uniqueSellers = Array.from(uniqueSellersMap.values());
-        console.log(uniqueSellers, 'unique sellers');
+        console.log("Unique sellers:", uniqueSellers);
         setProductsData(uniqueSellers);
       } catch (error) {
-        console.error('Error fetching products:', error);
+        console.error("Error fetching products:", error);
       }
     }
 
     fetchData();
   }, []);
 
+  useEffect(() => {
+    if (mode === "edit" && initialData) {
+      setFormData({
+        addressName: initialData.name || initialData.addressName || "",
+        mob_no_country_code: initialData.mob_no_country_code || (initialData.phoneNumber?.startsWith("971") ? "971" : "971"),
+        phoneNumber: initialData.mobile_number || (initialData.phoneNumber?.startsWith("971") ? initialData.phoneNumber.slice(3) : initialData.phoneNumber) || "",
+        alt_ph_country_code: initialData.alt_ph_country_code || (initialData.alternate_phone?.startsWith("971") ? "971" : "971"),
+        alternate_phone: initialData.alternate_phone || (initialData.alternate_phone?.startsWith("971") ? initialData.alternate_phone.slice(3) : initialData.alternate_phone) || "",
+        apartmentDetails: initialData.house_no || initialData.apartmentDetails || "",
+        apartmentName: initialData.building_name || initialData.apartmentName || "",
+        area: initialData.area || "",
+        landmark: initialData.landmark || "",
+        city: initialData.city || "",
+        country: initialData.country || "UAE",
+        address_type: initialData.address_type || "Normal",
+        email: initialData.email || "",
+        seller: initialData.seller || "",
+        isDefault: initialData.isDefault || false,
+      });
+    }
+  }, [initialData, mode]);
+
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    const { name, value, type, checked } = e.target;
+    if (name === "phoneNumber" || name === "alternate_phone") {
+      const cleanedValue = value.replace(/\D/g, "").slice(0, 9);
+      setFormData((prev) => ({
+        ...prev,
+        [name]: cleanedValue,
+      }));
+    } else if (name === "mob_no_country_code" || name === "alt_ph_country_code") {
+      const cleanedValue = value.replace(/\D/g, "").slice(0, 4);
+      setFormData((prev) => ({
+        ...prev,
+        [name]: cleanedValue || "971",
+      }));
+    } else if (name === "country") {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: "UAE",
+      }));
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: type === "checkbox" ? checked : value,
+      }));
+    }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (mode === 'add') {
+    if (
+      !formData.addressName ||
+      !formData.phoneNumber ||
+      !formData.apartmentDetails ||
+      !formData.apartmentName ||
+      !formData.area ||
+      !formData.landmark ||
+      !formData.city ||
+      !formData.email ||
+      !formData.seller
+    ) {
+      alert("Please fill all required fields");
+      return;
+    }
+    if (mode === "add") {
       addAddress();
-    } else if (mode === 'edit') {
+    } else if (mode === "edit") {
       editAddress();
     }
   };
 
   const addAddress = async () => {
     try {
-      const token = JSON.parse(Cookies.get('auth'));
+      const token = JSON.parse(Cookies.get("auth") || "{}");
+      if (!token) {
+        throw new Error("No authentication token found");
+      }
       const apiUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/pickup/address`;
 
-      console.log(formData, 'formdata');
-      const response = await axios.post(apiUrl, formData, {
+      const payload = {
+        addressName: formData.addressName,
+        phoneNumber: `${formData.mob_no_country_code}${formData.phoneNumber}`,
+        apartmentDetails: formData.apartmentDetails,
+        apartmentName: formData.apartmentName,
+        area: formData.area,
+        landmark: formData.landmark,
+        city: formData.city,
+        country: formData.country,
+        address_type: formData.address_type,
+        email: formData.email,
+        seller: formData.seller,
+        isDefault: formData.isDefault,
+        ...(formData.alternate_phone && {
+          alternate_phone: `${formData.alt_ph_country_code}${formData.alternate_phone}`,
+        }),
+      };
+
+      console.log("Add payload:", payload);
+
+      const response = await axios.post(apiUrl, payload, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
 
       if (response.status === 201) {
-        console.log('Address added successfully');
-        onSave(response.data.address); // Notify parent component with the new address
+        console.log("Address added successfully:", response.data);
+        const savedAddress = {
+          ...response.data.address,
+          name: response.data.address.name,
+          mobile_number: response.data.address.mobile_number,
+          house_no: response.data.address.house_no,
+          building_name: response.data.address.building_name,
+        };
+        onSave(savedAddress);
         onClose();
         resetForm();
       } else {
-        console.error('Failed to add address');
+        console.error("Failed to add address:", response.data);
+        alert("Failed to add address");
       }
     } catch (error) {
-      console.error('An error occurred while adding the address:', error);
+      console.error("Error adding address:", error.response?.data || error.message);
+      alert("Error adding address: " + (error.response?.data?.message || error.message));
     }
   };
 
   const editAddress = async () => {
-    console.log(initialData._id, 'kkkk');
     try {
-      const token = JSON.parse(Cookies.get('auth'));
+      const token = JSON.parse(Cookies.get("auth") || "{}");
+      if (!token) {
+        throw new Error("No authentication token found");
+      }
       const apiUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/pickup/edit/${initialData._id}`;
 
-      const response = await axios.put(apiUrl, formData, {
+      const payload = {
+        addressName: formData.addressName,
+        phoneNumber: `${formData.mob_no_country_code}${formData.phoneNumber}`,
+        apartmentDetails: formData.apartmentDetails,
+        apartmentName: formData.apartmentName,
+        area: formData.area,
+        landmark: formData.landmark,
+        city: formData.city,
+        country: formData.country,
+        address_type: formData.address_type,
+        email: formData.email,
+        seller: formData.seller,
+        isDefault: formData.isDefault,
+        ...(formData.alternate_phone && {
+          alternate_phone: `${formData.alt_ph_country_code}${formData.alternate_phone}`,
+        }),
+      };
+
+      console.log("Edit payload:", payload);
+
+      const response = await axios.put(apiUrl, payload, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
 
       if (response.status === 200) {
-        console.log('Address updated successfully');
-        onSave(response.data.address); // Notify parent component with the updated address
+        console.log("Address updated successfully:", response.data);
+        const updatedAddress = {
+          ...response.data.address,
+          name: response.data.address.name,
+          mobile_number: response.data.address.mobile_number,
+          house_no: response.data.address.house_no,
+          building_name: response.data.address.building_name,
+        };
+        onSave(updatedAddress);
         onClose();
         resetForm();
       } else {
-        console.error('Failed to update address');
+        console.error("Failed to update address:", response.data);
+        alert("Failed to update address");
       }
     } catch (error) {
-      console.error('An error occurred while updating the address:', error);
+      console.error("Error updating address:", error.response?.data || error.message);
+      alert("Error updating address: " + (error.response?.data?.message || error.message));
     }
   };
 
   const resetForm = () => {
     setFormData({
-      firstName: '',
-      lastName: '',
-      addressLine1: '',
-      addressLine2: '',
-      phone: '',
-      city: '',
-      country: '',
-      email: '',
+      addressName: "",
+      mob_no_country_code: "971",
+      phoneNumber: "",
+      alt_ph_country_code: "971",
+      alternate_phone: "",
+      apartmentDetails: "",
+      apartmentName: "",
+      area: "",
+      landmark: "",
+      city: "",
+      country: "UAE",
+      address_type: "Normal",
+      email: "",
+      seller: "",
+      isDefault: false,
     });
   };
 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 ">
-      <div className="bg-white rounded-lg w-full max-w-2xl mx-4  overflow-y-auto max-h-[90vh] relative ">
-        {/* Header */}
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className="bg-white rounded-lg w-full max-w-2xl mx-4 overflow-y-auto max-h-[90vh] relative">
         <div className="px-8 py-6 border-b border-gray-100">
           <div className="flex justify-between items-center">
-            <h2 className="text-3xl font-luckiest">{mode === 'add' ? 'ADD NEW ADDRESS' : 'EDIT ADDRESS'}</h2>
+            <h2 className="text-3xl font-luckiest">
+              {mode === "add" ? "ADD NEW PICKUP ADDRESS" : "EDIT PICKUP ADDRESS"}
+            </h2>
             <button
               onClick={onClose}
               className="w-8 h-8 rounded-full flex items-center justify-center border border-black hover:bg-gray-100"
@@ -162,87 +598,142 @@ const PickupModal = ({ isOpen, onClose, onSave, mode = 'add', initialData = null
           </div>
         </div>
 
-        {/* Form */}
         <form onSubmit={handleSubmit} className="p-8 space-y-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {/* Full Name */}
             <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">Enter First Name</label>
+              <label className="block text-sm font-medium text-gray-700">Full Name</label>
               <input
                 type="text"
-                name="firstName"
-                value={formData.firstName}
+                name="addressName"
+                value={formData.addressName}
                 onChange={handleChange}
-                placeholder="Full First Name"
+                placeholder="Enter Full Name (e.g., Ashwin Bhagat)"
                 className="w-full h-12 px-4 bg-gray-50 rounded-2xl focus:outline-none focus:ring-2 focus:ring-yellow-500"
                 required
               />
             </div>
 
             <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">Enter Last Name</label>
+              <label className="block text-sm font-medium text-gray-700">Mobile Country Code</label>
               <input
                 type="text"
-                name="lastName"
-                value={formData.lastName}
+                name="mob_no_country_code"
+                value={formData.mob_no_country_code}
                 onChange={handleChange}
-                placeholder="Full Last Name"
+                placeholder="e.g., 971"
                 className="w-full h-12 px-4 bg-gray-50 rounded-2xl focus:outline-none focus:ring-2 focus:ring-yellow-500"
                 required
               />
             </div>
 
-            {/* Phone Number */}
             <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">Phone Number</label>
+              <label className="block text-sm font-medium text-gray-700">Mobile Number</label>
               <input
                 type="tel"
-                name="phone"
-                value={formData.phone}
+                name="phoneNumber"
+                value={formData.phoneNumber}
                 onChange={handleChange}
-                placeholder="Enter Phone Number"
+                placeholder="Enter Mobile Number (e.g., 501234567)"
                 className="w-full h-12 px-4 bg-gray-50 rounded-2xl focus:outline-none focus:ring-2 focus:ring-yellow-500"
                 required
               />
             </div>
 
-            {/* Address 1 */}
             <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">Address1</label>
+              <label className="block text-sm font-medium text-gray-700">Alternate Country Code (Optional)</label>
               <input
                 type="text"
-                name="addressLine1"
-                value={formData.addressLine1}
+                name="alt_ph_country_code"
+                value={formData.alt_ph_country_code}
                 onChange={handleChange}
-                placeholder="Enter addressLine1"
-                className="w-full h-20 px-4 bg-gray-50 rounded-2xl focus:outline-none focus:ring-2 focus:ring-yellow-500"
-                required
+                placeholder="e.g., 971"
+                className="w-full h-12 px-4 bg-gray-50 rounded-2xl focus:outline-none focus:ring-2 focus:ring-yellow-500"
               />
             </div>
+
             <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">Address2</label>
+              <label className="block text-sm font-medium text-gray-700">Alternate Phone Number (Optional)</label>
+              <input
+                type="tel"
+                name="alternate_phone"
+                value={formData.alternate_phone}
+                onChange={handleChange}
+                placeholder="Enter Alternate Phone Number (e.g., 528765432)"
+                className="w-full h-12 px-4 bg-gray-50 rounded-2xl focus:outline-none focus:ring-2 focus:ring-yellow-500"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">House No</label>
               <input
                 type="text"
-                name="addressLine2"
-                value={formData.addressLine2}
+                name="apartmentDetails"
+                value={formData.apartmentDetails}
                 onChange={handleChange}
-                placeholder="Enter addressLine2"
-                className="w-full h-20 px-4 bg-gray-50 rounded-2xl focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                placeholder="Enter House No (e.g., A-15)"
+                className="w-full h-12 px-4 bg-gray-50 rounded-2xl focus:outline-none focus:ring-2 focus:ring-yellow-500"
                 required
               />
             </div>
 
-            {/* Address 2 */}
             <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">City</label>
+              <label className="block text-sm font-medium text-gray-700">Building Name</label>
               <input
                 type="text"
+                name="apartmentName"
+                value={formData.apartmentName}
+                onChange={handleChange}
+                placeholder="Enter Building Name (e.g., Dubai Marina Mall)"
+                className="w-full h-12 px-4 bg-gray-50 rounded-2xl focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                required
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">Area</label>
+              <input
+                type="text"
+                name="area"
+                value={formData.area}
+                onChange={handleChange}
+                placeholder="Enter Area (e.g., Dubai Marina)"
+                className="w-full h-12 px-4 bg-gray-50 rounded-2xl focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                required
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">Landmark</label>
+              <input
+                type="text"
+                name="landmark"
+                value={formData.landmark}
+                onChange={handleChange}
+                placeholder="Enter Landmark (e.g., Near Marina Walk)"
+                className="w-full h-12 px-4 bg-gray-50 rounded-2xl focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                required
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">City</label>
+              <select
                 name="city"
                 value={formData.city}
                 onChange={handleChange}
-                placeholder="Enter City"
-                className="w-full h-20 px-4 bg-gray-50 rounded-2xl focus:outline-none focus:ring-2 focus:ring-yellow-500"
-              />
+                className="w-full h-12 px-4 bg-gray-50 rounded-2xl focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                required
+              >
+                <option value="">Select City</option>
+                <option value="Abu Dhabi">Abu Dhabi</option>
+                <option value="Ajman">Ajman</option>
+                <option value="Al-Ain">Al-Ain</option>
+                <option value="Dubai">Dubai</option>
+                <option value="Fujairah">Fujairah</option>
+                <option value="Ras Al Khaimah">Ras Al Khaimah</option>
+                <option value="Sharjah">Sharjah</option>
+                <option value="Umm Al-Quwain">Umm Al-Quwain</option>
+              </select>
             </div>
 
             <div className="space-y-2">
@@ -253,21 +744,25 @@ const PickupModal = ({ isOpen, onClose, onSave, mode = 'add', initialData = null
                 value={formData.country}
                 onChange={handleChange}
                 placeholder="Enter Country"
-                className="w-full h-20 px-4 bg-gray-50 rounded-2xl focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                className="w-full h-12 px-4 bg-gray-50 rounded-2xl focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                readOnly
               />
             </div>
+
             <div className="space-y-2">
               <label className="block text-sm font-medium text-gray-700">Email</label>
               <input
-                type="text"
+                type="email"
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                placeholder="Enter email"
-                className="w-full h-20 px-4 bg-gray-50 rounded-2xl focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                placeholder="Enter Email (e.g., ashwinbt.moshimoshi@gmail.com)"
+                className="w-full h-12 px-4 bg-gray-50 rounded-2xl focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                required
               />
             </div>
-            <div className="space-y-2">
+
+            {/* <div className="space-y-2">
               <label className="block text-sm font-medium text-gray-700">Select Seller</label>
               <select
                 name="seller"
@@ -283,10 +778,20 @@ const PickupModal = ({ isOpen, onClose, onSave, mode = 'add', initialData = null
                   </option>
                 ))}
               </select>
+            </div> */}
+
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">Set as Default Address</label>
+              <input
+                type="checkbox"
+                name="isDefault"
+                checked={formData.isDefault}
+                onChange={handleChange}
+                className="h-5 w-5 text-yellow-500 focus:ring-yellow-500"
+              />
             </div>
           </div>
 
-          {/* Action Buttons */}
           <div className="flex justify-end space-x-4 pt-6">
             <button
               type="submit"

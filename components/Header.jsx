@@ -1,8 +1,3 @@
-
-
-
-
-
 "use client";
 import Image from "next/image";
 
@@ -24,9 +19,10 @@ import { logout, token } from "@/store/auth/authSlice";
 import { showSuccessNotification } from "@/utils/Notification/notif";
 import toast from "react-hot-toast";
 import { useFilter } from "@/context/FilterContext";
+import GoogleTranslate from "./GoogleTranslate";
 
 const Header = () => {
- const filterContext = useFilter();
+  const filterContext = useFilter();
   const setSearch = filterContext?.setSearch;
   const [isSearchVisible, setIsSearchVisible] = useState(false);
   const [isMobileSearchVisible, setIsMobileSearchVisible] = useState(false);
@@ -49,7 +45,6 @@ const Header = () => {
   const { data: session, status } = useSession();
   const router = useRouter();
   const dispatch = useDispatch();
- 
 
   const { token } = useSelector((store) => store.auth);
   useEffect(() => {
@@ -107,77 +102,77 @@ const Header = () => {
 
   // const offers = [];
 
-const fetchSubcategorySuggestions = async (searchTerm) => {
-  if (!searchTerm.trim()) {
-    setSuggestions([]);
-    return;
-  }
-
-  setIsLoading(true);
-  try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/products`);
-    const products = await response.json();
-
-    // Extract unique subcategories AND categories that match the search term
-    const matchingSubcategories = products
-      .filter((product) =>
-        product.category?.subCategoryName
-          ?.toLowerCase()
-          .includes(searchTerm.toLowerCase())
-      )
-      .map((product) => product.category.subCategoryName)
-      .filter((value, index, self) => self.indexOf(value) === index);
-
-    // Extract unique categories that match the search term
-    const matchingCategories = products
-      .filter((product) =>
-        product.category?.categoryName
-          ?.toLowerCase()
-          .includes(searchTerm.toLowerCase())
-      )
-      .map((product) => product.category.categoryName)
-      .filter((value, index, self) => self.indexOf(value) === index);
-
-    // Combine both arrays and remove duplicates, limit to 5 suggestions
-    const allSuggestions = [...matchingSubcategories, ...matchingCategories]
-      .filter((value, index, self) => self.indexOf(value) === index)
-      .slice(0, 5);
-
-    setSuggestions(allSuggestions);
-  } catch (error) {
-    console.error("Error fetching category suggestions:", error);
-    setSuggestions([]);
-  } finally {
-    setIsLoading(false);
-  }
-};
-
-const handleSearch = async (subcategory) => {
-  try {
-    // Set the search term in the filter context
-    if (setSearch) {
-      setSearch(subcategory);
+  const fetchSubcategorySuggestions = async (searchTerm) => {
+    if (!searchTerm.trim()) {
+      setSuggestions([]);
+      return;
     }
-    
-    // Create URL with search parameter
-    const searchParams = new URLSearchParams();
-    searchParams.set('search', subcategory);
-    
-    // Navigate to selling page with search parameter
-    router.push(`/selling-page?${searchParams.toString()}`);
-    
-    // Clear local state
-    setSearchValue('');
-    setSuggestions([]);
-    setIsSearchVisible(false);
-    setIsMobileSearchVisible(false);
-    
-  } catch (error) {
-    console.error('Error during search:', error);
-    toast.error('Search failed. Please try again.');
-  }
-};
 
+    setIsLoading(true);
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/products`
+      );
+      const products = await response.json();
+
+      // Extract unique subcategories AND categories that match the search term
+      const matchingSubcategories = products
+        .filter((product) =>
+          product.category?.subCategoryName
+            ?.toLowerCase()
+            .includes(searchTerm.toLowerCase())
+        )
+        .map((product) => product.category.subCategoryName)
+        .filter((value, index, self) => self.indexOf(value) === index);
+
+      // Extract unique categories that match the search term
+      const matchingCategories = products
+        .filter((product) =>
+          product.category?.categoryName
+            ?.toLowerCase()
+            .includes(searchTerm.toLowerCase())
+        )
+        .map((product) => product.category.categoryName)
+        .filter((value, index, self) => self.indexOf(value) === index);
+
+      // Combine both arrays and remove duplicates, limit to 5 suggestions
+      const allSuggestions = [...matchingSubcategories, ...matchingCategories]
+        .filter((value, index, self) => self.indexOf(value) === index)
+        .slice(0, 5);
+
+      setSuggestions(allSuggestions);
+    } catch (error) {
+      console.error("Error fetching category suggestions:", error);
+      setSuggestions([]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleSearch = async (subcategory) => {
+    try {
+      // Set the search term in the filter context
+      if (setSearch) {
+        setSearch(subcategory);
+      }
+
+      // Create URL with search parameter
+      const searchParams = new URLSearchParams();
+      searchParams.set("search", subcategory);
+
+      // Navigate to selling page with search parameter
+      router.push(`/selling-page?${searchParams.toString()}`);
+
+      // Clear local state
+      setSearchValue("");
+      setSuggestions([]);
+      setIsSearchVisible(false);
+      setIsMobileSearchVisible(false);
+    } catch (error) {
+      console.error("Error during search:", error);
+      toast.error("Search failed. Please try again.");
+    }
+  };
 
   const toggleSearch = () => {
     if (hamburger) {
@@ -202,8 +197,8 @@ const handleSearch = async (subcategory) => {
     setSearchValue(value);
 
     // Debounce the API call
-    clearTimeout(window.searchTimeout);
-    window.searchTimeout = setTimeout(() => {
+    clearTimeout(window.clearTimeout);
+    window.clearTimeout = setTimeout(() => {
       fetchSubcategorySuggestions(value);
     }, 300);
   };
@@ -264,8 +259,6 @@ const handleSearch = async (subcategory) => {
         setIsMobileSearchVisible(false);
       }
 
-       
-
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setIsDropdownVisible(false); // Close dropdown if clicked outside
       }
@@ -274,13 +267,13 @@ const handleSearch = async (subcategory) => {
         setIsNotificationVisible(false);
       }
 
-       if (typeof document !== "undefined") {
-      document.addEventListener("mousedown", handleClickOutside);
-    }
+      if (typeof document !== "undefined") {
+        document.addEventListener("mousedown", handleClickOutside);
+      }
 
-     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
+      return () => {
+        document.removeEventListener("mousedown", handleClickOutside);
+      };
     };
 
     // Add event listener
@@ -341,7 +334,10 @@ const handleSearch = async (subcategory) => {
 
   return (
     <header className="w-full mx-auto">
-      <LanguageSelector />
+      {/* <LanguageSelector /> */}
+      <div className="bg-[#0D0D0D] px-4 py-2">
+        <GoogleTranslate />
+      </div>
       <div
         id="header"
         className={`w-full transition-all duration-300 ${
@@ -367,7 +363,7 @@ const handleSearch = async (subcategory) => {
                 KUKU
               </h1>
             </Link>
-            
+
             {/* Mobile Menu Button */}
             <Image
               onClick={handleHandburger}
@@ -377,7 +373,7 @@ const handleSearch = async (subcategory) => {
               alt=""
               className="pl-2 lg:hidden cursor-pointer"
             />
-            
+
             {/* Mobile Logo */}
             <div
               className={`lg:hidden pl-2 sm:pl-4 ${
@@ -429,7 +425,10 @@ const handleSearch = async (subcategory) => {
           <div className="flex items-center gap-2 sm:gap-3 md:gap-4 lg:gap-[10px]">
             {/* Search Section */}
             {isSearchVisible ? (
-              <div ref={searchRef} className="relative h-[42px] sm:h-[48px] lg:h-[54px] pl-2 sm:pl-4 lg:pl-5">
+              <div
+                ref={searchRef}
+                className="relative h-[42px] sm:h-[48px] lg:h-[54px] pl-2 sm:pl-4 lg:pl-5"
+              >
                 <input
                   className="w-[180px] xs:w-[220px] sm:w-[280px] md:w-[380px] lg:w-[480px] xl:w-[550px] h-full bg-white rounded-lg px-6 md:px-6 lg:px-8 outline-none appearance-none transition-all duration-300 text-sm sm:text-base"
                   type="text"
@@ -664,11 +663,11 @@ const handleSearch = async (subcategory) => {
                           Orders
                         </div>
                       </Link>
-                      <Link href="#">
+                      {/* <Link href="#">
                         <div className="px-4 pb-2 hover:bg-gray-100 cursor-pointer font-karla hover:text-pink-500 font-bold">
                           Setting
                         </div>
-                      </Link>
+                      </Link> */}
                       <button
                         onClick={() => {
                           if (session) {
@@ -698,10 +697,10 @@ const handleSearch = async (subcategory) => {
             </div>
           </div>
         </div>
-        
+
         {/* Bottom Navigation Component */}
         <BottomNavigation />
-        
+
         {/* Mobile Hamburger Menu - Enhanced responsive design */}
         <div
           className={`w-full h-screen bg-yellow-500 lg:hidden fixed px-4 sm:px-[20px] py-[20px] top-[-2px] left-0 right-0 bottom-0 z-[1000] transition-transform ease-in-out duration-300 ${
@@ -730,7 +729,10 @@ const handleSearch = async (subcategory) => {
             {/* Mobile Search Section - Enhanced responsiveness */}
             <div className="flex items-center justify-evenly gap-4 sm:gap-[40px]">
               {isMobileSearchVisible ? (
-                <div ref={mobileSearchRef} className="relative flex-1 mx-2 sm:mx-4">
+                <div
+                  ref={mobileSearchRef}
+                  className="relative flex-1 mx-2 sm:mx-4"
+                >
                   <input
                     className="w-full h-8 sm:h-10 bg-white rounded-lg px-8 sm:px-[50px] outline-none appearance-none text-sm sm:text-base"
                     type="text"
@@ -882,10 +884,10 @@ const handleSearch = async (subcategory) => {
                 />
               </div>
               <hr />
-              <SettingsDropdown
+              {/* <SettingsDropdown
                 isOpen={currentOpenDropdown === "setting"}
                 onToggle={() => handleToggle("setting")}
-              />
+              /> */}
             </div>
           </div>
           <div className="flex mx-6 mt-5 justify-between">
@@ -917,11 +919,11 @@ const handleSearch = async (subcategory) => {
                 />
               </div>
             </Link>
-            <Link href="/user_profile">
+            <Link href={userID ? `/user_profile/${userID}` : "/user_profile"}>
               <div
                 className={`${
                   iconsPath ? "bg-[#393939]" : "bg-white/40"
-                } h-[54px] p-[15px]  rounded-[100px]`}
+                } h-[54px] p-[15px] rounded-[100px]`}
               >
                 <Image
                   alt="profile icon"
