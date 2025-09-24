@@ -1,11 +1,3 @@
-
-
-
-
-
-
-
-
 // "use client";
 
 // import { useEffect, useState } from "react";
@@ -651,11 +643,6 @@
 //   );
 // };
 
-
-
-
-
-
 "use client";
 
 import { useEffect, useState } from "react";
@@ -737,7 +724,12 @@ export const FilterBySubcategory = () => {
           },
         }
       );
-      console.log("Remaining offers for product", productId, ":", res.data.remainingOffers);
+      console.log(
+        "Remaining offers for product",
+        productId,
+        ":",
+        res.data.remainingOffers
+      );
       setRemainingOffers((prev) => ({
         ...prev,
         [productId]: res.data.remainingOffers,
@@ -803,7 +795,9 @@ export const FilterBySubcategory = () => {
   };
 
   const isProductInWishlist = (productId) => {
-    return AllWishlist.some((wishlistItem) => wishlistItem.productId === productId);
+    return AllWishlist.some(
+      (wishlistItem) => wishlistItem.productId === productId
+    );
   };
 
   const isFollowingSeller = (sellerId) => {
@@ -834,7 +828,9 @@ export const FilterBySubcategory = () => {
     // Check remaining offers
     const remaining = remainingOffers[card._id] || 0;
     if (remaining <= 0) {
-      setErrorMessage("You have reached the maximum limit of 3 offers for this product.");
+      setErrorMessage(
+        "You have reached the maximum limit of 3 offers for this product."
+      );
       setOfferLimitPopupOpen(true);
       return;
     }
@@ -853,7 +849,11 @@ export const FilterBySubcategory = () => {
   const handlePriceSelection = (price) => {
     const parsedPrice = parseFloat(price);
     setSelectedPrice(parsedPrice);
-    if (parsedPrice && !isNaN(parsedPrice) && parsedPrice >= (currentProduct?.price * 0.7)) {
+    if (
+      parsedPrice &&
+      !isNaN(parsedPrice) &&
+      parsedPrice >= currentProduct?.price * 0.7
+    ) {
       setIsSubmitDisabled(false);
     } else {
       setIsSubmitDisabled(true);
@@ -886,7 +886,9 @@ export const FilterBySubcategory = () => {
         fetchRemainingOfferCount(currentProduct._id);
       }
     } catch (error) {
-      setErrorMessage(error.response?.data?.message || "Failed to submit offer");
+      setErrorMessage(
+        error.response?.data?.message || "Failed to submit offer"
+      );
       setErrorPopupOpen(true);
     }
   };
@@ -909,7 +911,9 @@ export const FilterBySubcategory = () => {
           prevWishlist.filter((item) => item.productId !== id)
         );
       } else {
-        setErrorMessage(`Failed to remove from wishlist: ${response.data.message}`);
+        setErrorMessage(
+          `Failed to remove from wishlist: ${response.data.message}`
+        );
         setErrorPopupOpen(true);
       }
     } catch (error) {
@@ -940,7 +944,9 @@ export const FilterBySubcategory = () => {
         if (response.status === 200) {
           getUserWishlistdata();
         } else {
-          setErrorMessage(`Failed to add to wishlist: ${response.data.message}`);
+          setErrorMessage(
+            `Failed to add to wishlist: ${response.data.message}`
+          );
           setErrorPopupOpen(true);
         }
       } catch (error) {
@@ -1058,7 +1064,9 @@ export const FilterBySubcategory = () => {
     return (
       <div className="p-3 sm:p-4 md:p-6 ml-0 sm:ml-4 md:ml-6 lg:ml-8 h-auto w-auto font-karla z-10">
         <div className="flex flex-col items-center justify-center h-64 px-4">
-          <p className="text-lg sm:text-xl text-red-500 mb-4 text-center">Error: {apiError}</p>
+          <p className="text-lg sm:text-xl text-red-500 mb-4 text-center">
+            Error: {apiError}
+          </p>
           <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 w-full sm:w-auto">
             <button
               onClick={() => {
@@ -1151,27 +1159,56 @@ export const FilterBySubcategory = () => {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-3 gap-4 sm:gap-6">
           {currentCards.map((card) => (
-            <div key={card._id} className="flex flex-col max-w-sm mx-auto w-full">
+            <div
+              key={card._id}
+              className="flex flex-col max-w-sm mx-auto w-full"
+            >
               <div className="flex justify-between items-center space-x-2 sm:space-x-4">
                 <div className="flex space-x-2 sm:space-x-4 items-center min-w-0 flex-1">
                   {!isAdminProduct(card) ? (
-                    <Link href={`/user_profile/${card?.seller?._id}`}>
-                      <Image
-                        src={card?.seller?.avatar || "/profile_icon.svg"}
-                        alt="User avatar"
-                        width={48}
-                        height={48}
-                        className="object-contain h-8 w-8 sm:h-10 sm:w-10 md:h-12 md:w-12 flex-shrink-0"
-                      />
-                    </Link>
+                    <div
+                      className="relative h-8 w-8 sm:h-10 sm:w-10 md:h-12 md:w-12 rounded-full overflow-hidden bg-gray-200 flex-shrink-0 cursor-pointer"
+                      onClick={
+                        token
+                          ? undefined
+                          : () => {
+                              toast.success("Please Login First.");
+                              setTimeout(() => {
+                                router.push("/login");
+                              }, 500);
+                            }
+                      }
+                    >
+                      {token ? (
+                        <Link href={`/user_profile/${card?.seller?._id}`}>
+                          <Image
+                            src={card?.seller?.avatar || "/profile_icon.svg"}
+                            alt="User avatar"
+                            fill
+                            sizes="48px"
+                            className="object-cover"
+                          />
+                        </Link>
+                      ) : (
+                        <Image
+                          src={card?.seller?.avatar || "/profile_icon.svg"}
+                          alt="User avatar"
+                          fill
+                          sizes="48px"
+                          className="object-cover"
+                        />
+                      )}
+                    </div>
                   ) : (
-                    <Image
-                      src="/profile_icon.svg"
-                      alt="Admin avatar"
-                      width={48}
-                      height={48}
-                      className="object-contain h-8 w-8 sm:h-10 sm:w-10 md:h-12 md:w-12 flex-shrink-0"
-                    />
+                    <div className="relative h-8 w-8 sm:h-10 sm:w-10 md:h-12 md:w-12 rounded-full overflow-hidden bg-gray-200 flex-shrink-0">
+                      <Image
+                        src="/profile_icon.svg"
+                        alt="Admin avatar"
+                        fill
+                        sizes="48px"
+                        className="object-cover"
+                      />
+                    </div>
                   )}
                   <p className="font-bold text-xs sm:text-sm truncate">
                     {isAdminProduct(card)
@@ -1268,7 +1305,10 @@ export const FilterBySubcategory = () => {
                 AED {card.price}
               </h2>
               <p className="text-sm text-gray-600">
-                Offers Remaining: {remainingOffers[card._id] !== undefined ? remainingOffers[card._id] : "Loading..."}
+                Offers Remaining:{" "}
+                {remainingOffers[card._id] !== undefined
+                  ? remainingOffers[card._id]
+                  : "Loading..."}
               </p>
               <div className="mt-2 flex flex-wrap gap-1 sm:gap-2">
                 {card.category?.parentCategory && (

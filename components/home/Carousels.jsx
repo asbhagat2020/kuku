@@ -1,3 +1,10 @@
+
+
+
+
+
+
+
 // "use client";
 // import Image from "next/image";
 // import React, { useState, useRef, useEffect } from "react";
@@ -32,6 +39,8 @@
 //   const details = useSelector((state) => state.auth.user);
 //   const [errorPopupOpen, setErrorPopupOpen] = useState(false);
 //   const [errorMessage, setErrorMessage] = useState("");
+//   const [offerLimitPopupOpen, setOfferLimitPopupOpen] = useState(false);
+//   const [remainingOffers, setRemainingOffers] = useState({});
 //   const userID = details?._id;
 
 //   const [userFollowingIds, setUserFollowingIds] = useState([]);
@@ -56,12 +65,37 @@
 //     }
 //   };
 
+//   const fetchRemainingOfferCount = async (productId) => {
+//     try {
+//       const token = JSON.parse(Cookies.get("auth"));
+//       const res = await axios.get(
+//         `${process.env.NEXT_PUBLIC_API_BASE_URL}/offer/remaining/${productId}`,
+//         {
+//           headers: {
+//             Authorization: `Bearer ${token}`,
+//           },
+//         }
+//       );
+//       console.log("Remaining offers for product", productId, ":", res.data.remainingOffers);
+//       setRemainingOffers((prev) => ({
+//         ...prev,
+//         [productId]: res.data.remainingOffers,
+//       }));
+//     } catch (error) {
+//       console.log("Error fetching remaining offer count", error);
+//     }
+//   };
+
 //   useEffect(() => {
 //     if (token) {
 //       getUserFollowingList();
 //       getUserWishlistdata();
+//       // Fetch remaining offer count for each product
+//       product.forEach((item) => {
+//         fetchRemainingOfferCount(item._id);
+//       });
 //     }
-//   }, [token]);
+//   }, [token, product]);
 
 //   const getUserWishlistdata = async () => {
 //     try {
@@ -105,6 +139,7 @@
 //           setAllWishlist((prevWishlist) =>
 //             prevWishlist.filter((item) => item.productId !== id)
 //           );
+//           toast.success("Removed from wishlist");
 //         }
 //       } else {
 //         const response = await axios.post(
@@ -119,10 +154,11 @@
 
 //         if (response.status === 200) {
 //           getUserWishlistdata();
+//           toast.success("Added to wishlist");
 //         }
 //       }
 //     } catch (error) {
-//       setErrorMessage(error.response?.data?.message || error.message);
+//       setErrorMessage(error.response?.data?.message || "Failed to update wishlist");
 //       setErrorPopupOpen(true);
 //     }
 //   };
@@ -130,10 +166,19 @@
 //   const handleOpenOfferPopup = (item) => {
 //     if (!token) {
 //       handleLoginNotification();
-//     } else {
-//       setCurrentProduct(item);
-//       setIsOfferPopupOpen(true);
+//       return;
 //     }
+
+//     // Check remaining offers
+//     const remaining = remainingOffers[item._id] || 0;
+//     if (remaining <= 0) {
+//       setErrorMessage("You have reached the maximum limit of 3 offers for this product.");
+//       setOfferLimitPopupOpen(true);
+//       return;
+//     }
+
+//     setCurrentProduct(item);
+//     setIsOfferPopupOpen(true);
 //   };
 
 //   const handleCloseOfferPopup = () => {
@@ -144,8 +189,9 @@
 //   };
 
 //   const handlePriceSelection = (price) => {
-//     setSelectedPrice(price);
-//     if (price && !isNaN(price)) {
+//     const parsedPrice = parseFloat(price);
+//     setSelectedPrice(parsedPrice);
+//     if (parsedPrice && !isNaN(parsedPrice) && parsedPrice >= (currentProduct?.price * 0.7)) {
 //       setIsSubmitDisabled(false);
 //     } else {
 //       setIsSubmitDisabled(true);
@@ -155,10 +201,13 @@
 //   const handleOfferSubmit = async () => {
 //     try {
 //       const token = JSON.parse(Cookies.get("auth"));
-//       const data = { offerPrice: selectedPrice, seller: currentProduct.seller };
+//       const data = {
+//         productId: currentProduct._id,
+//         offerPrice: selectedPrice,
+//       };
 
 //       const response = await axios.post(
-//         `${process.env.NEXT_PUBLIC_API_BASE_URL}/offer/add/${currentProduct._id}`,
+//         `${process.env.NEXT_PUBLIC_API_BASE_URL}/offer/create`,
 //         data,
 //         {
 //           headers: {
@@ -167,17 +216,17 @@
 //         }
 //       );
 
-//       if (response.status === 200) {
+//       if (response.status === 201) {
 //         setOfferSubmitted(true);
 //         handleCloseOfferPopup();
 //         toast.success("Offer submitted successfully!");
+//         fetchRemainingOfferCount(currentProduct._id);
 //       } else {
 //         setErrorMessage(`Failed to submit offer: ${response.data.message}`);
 //         setErrorPopupOpen(true);
 //       }
 //     } catch (error) {
-//       console.error("An error occurred:", error.message);
-//       setErrorMessage(` ${error.response?.data?.message || error.message}`);
+//       setErrorMessage(error.response?.data?.message || "Failed to submit offer");
 //       setErrorPopupOpen(true);
 //     }
 //   };
@@ -209,6 +258,7 @@
 //             return [...prevFollowingIds, sellerId];
 //           }
 //         });
+//         toast.success(response.data.message);
 //       }
 //     } catch (error) {
 //       console.error("Error toggling follow status:", error);
@@ -304,7 +354,7 @@
 //       const totalSlides = product.length;
 //       const visibleSlides = getVisibleSlides();
 //       const maxProgress = Math.max(0, totalSlides - visibleSlides);
-//       const newProgress = (current / maxProgress) * 100;
+//       const newProgress = maxProgress > 0 ? (current / maxProgress) * 100 : 0;
 //       setProgress(Math.min(newProgress, 100));
 //     },
 //   };
@@ -427,7 +477,7 @@
 //                   >
 //                     <div className="h-[54px] p-[15px] bg-white rounded-[100px] cursor-pointer">
 //                       <Image
-//                         alt=""
+//                         alt="Handshake"
 //                         width={24}
 //                         height={24}
 //                         src="/hand_shake.svg"
@@ -460,7 +510,10 @@
 //                 <div className="mt-2 w-full">
 //                   <h3 className="font-karla font-bold text-base">{item.name}</h3>
 //                   <p className="text-black text-[25px] font-bold font-karla leading-[30px]">
-//                    AED {item.price}
+//                     AED {item.price}
+//                   </p>
+//                   <p className="text-sm text-gray-600">
+//                     Offers Remaining: {remainingOffers[item._id] !== undefined ? remainingOffers[item._id] : "Loading..."}
 //                   </p>
 //                 </div>
 //               </div>
@@ -494,10 +547,11 @@
 //         isOfferPopupOpen={isOfferPopupOpen}
 //         product={currentProduct}
 //         handlePriceSelection={handlePriceSelection}
-//         handleOpenModal={handleOfferSubmit}
+//         handleOfferSubmit={handleOfferSubmit}
 //         handleCloseOfferPopup={handleCloseOfferPopup}
 //         selectedPrice={selectedPrice}
 //         isSubmitDisabled={isSubmitDisabled}
+//         remainingOffers={remainingOffers[currentProduct?._id] || 0}
 //       />
 //       {errorPopupOpen && (
 //         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
@@ -514,12 +568,26 @@
 //           </div>
 //         </div>
 //       )}
+//       {offerLimitPopupOpen && (
+//         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 p-4">
+//           <div className="bg-white rounded-lg shadow-lg p-4 sm:p-6 w-full max-w-sm sm:max-w-md">
+//             <p className="text-red-600 font-semibold text-center text-sm sm:text-base">
+//               You have reached the maximum limit of 3 offers for this product.
+//             </p>
+//             <button
+//               onClick={() => setOfferLimitPopupOpen(false)}
+//               className="mt-4 w-full bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded transition-colors duration-300 text-sm sm:text-base"
+//             >
+//               Close
+//             </button>
+//           </div>
+//         </div>
+//       )}
 //     </div>
 //   );
 // };
 
 // export default Carousels;
-
 
 
 
@@ -600,7 +668,12 @@ const Carousels = () => {
           },
         }
       );
-      console.log("Remaining offers for product", productId, ":", res.data.remainingOffers);
+      console.log(
+        "Remaining offers for product",
+        productId,
+        ":",
+        res.data.remainingOffers
+      );
       setRemainingOffers((prev) => ({
         ...prev,
         [productId]: res.data.remainingOffers,
@@ -682,7 +755,9 @@ const Carousels = () => {
         }
       }
     } catch (error) {
-      setErrorMessage(error.response?.data?.message || "Failed to update wishlist");
+      setErrorMessage(
+        error.response?.data?.message || "Failed to update wishlist"
+      );
       setErrorPopupOpen(true);
     }
   };
@@ -696,7 +771,9 @@ const Carousels = () => {
     // Check remaining offers
     const remaining = remainingOffers[item._id] || 0;
     if (remaining <= 0) {
-      setErrorMessage("You have reached the maximum limit of 3 offers for this product.");
+      setErrorMessage(
+        "You have reached the maximum limit of 3 offers for this product."
+      );
       setOfferLimitPopupOpen(true);
       return;
     }
@@ -715,7 +792,11 @@ const Carousels = () => {
   const handlePriceSelection = (price) => {
     const parsedPrice = parseFloat(price);
     setSelectedPrice(parsedPrice);
-    if (parsedPrice && !isNaN(parsedPrice) && parsedPrice >= (currentProduct?.price * 0.7)) {
+    if (
+      parsedPrice &&
+      !isNaN(parsedPrice) &&
+      parsedPrice >= currentProduct?.price * 0.7
+    ) {
       setIsSubmitDisabled(false);
     } else {
       setIsSubmitDisabled(true);
@@ -750,7 +831,9 @@ const Carousels = () => {
         setErrorPopupOpen(true);
       }
     } catch (error) {
-      setErrorMessage(error.response?.data?.message || "Failed to submit offer");
+      setErrorMessage(
+        error.response?.data?.message || "Failed to submit offer"
+      );
       setErrorPopupOpen(true);
     }
   };
@@ -809,7 +892,9 @@ const Carousels = () => {
   }, []);
 
   const isProductInWishlist = (productId) => {
-    return AllWishlist.some((wishlistItem) => wishlistItem.productId === productId);
+    return AllWishlist.some(
+      (wishlistItem) => wishlistItem.productId === productId
+    );
   };
 
   const isFollowingSeller = (sellerId) => {
@@ -938,17 +1023,39 @@ const Carousels = () => {
               <div className="mx-auto max-w-[307px]">
                 <div className="flex justify-between items-center mb-2 space-x-4 w-full">
                   <div className="flex space-x-4 items-center">
-                    <Link href={`/user_profile/${item?.seller?._id}`}>
-                      <img
-                        src={item?.seller?.avatar || "/profile_icon.svg"}
-                        alt="User avatar"
-                        className="object-contain h-12 w-12 rounded-full"
-                      />
-                    </Link>
-                    <p className="font-bold text-sm">{item?.seller?.username}</p>
+                    {/* Fixed: Removed nested Link component */}
+                    {token ? (
+                      <Link href={`/user_profile/${item?.seller?._id}`}>
+                        <div className="relative h-12 w-12 rounded-full overflow-hidden bg-gray-200 flex-shrink-0 cursor-pointer">
+                          <Image
+                            src={item?.seller?.avatar || "/profile_icon.svg"}
+                            alt="User avatar"
+                            fill
+                            sizes="48px"
+                            className="object-cover"
+                          />
+                        </div>
+                      </Link>
+                    ) : (
+                      <div
+                        className="relative h-12 w-12 rounded-full overflow-hidden bg-gray-200 flex-shrink-0 cursor-pointer"
+                        onClick={handleLoginNotification}
+                      >
+                        <Image
+                          src={item?.seller?.avatar || "/profile_icon.svg"}
+                          alt="User avatar"
+                          fill
+                          sizes="48px"
+                          className="object-cover"
+                        />
+                      </div>
+                    )}
+                    <p className="font-bold text-sm truncate">
+                      {item?.seller?.username}
+                    </p>
                   </div>
                   <button
-                    className={`mt-2 px-4 sm:px-6 py-1 ${
+                    className={`mt-2 px-4 sm:px-6 py-1 flex-shrink-0 ${
                       isFollowingSeller(item?.seller?._id)
                         ? "bg-gray-500"
                         : "bg-custom-green"
@@ -956,7 +1063,9 @@ const Carousels = () => {
                     onClick={() => handleToggleFollow(item?.seller?._id)}
                     disabled={loading}
                   >
-                    {isFollowingSeller(item?.seller?._id) ? "Unfollow" : "Follow"}
+                    {isFollowingSeller(item?.seller?._id)
+                      ? "Unfollow"
+                      : "Follow"}
                   </button>
                 </div>
                 <div
@@ -1019,7 +1128,9 @@ const Carousels = () => {
                           <div className="relative h-[404px] w-full">
                             <Image
                               src={imgSrc}
-                              alt={`Image ${imgIndex + 1} of ${item?.name || "carousel item"}`}
+                              alt={`Image ${imgIndex + 1} of ${
+                                item?.name || "carousel item"
+                              }`}
                               layout="fill"
                               objectFit="cover"
                               className="rounded-[20px]"
@@ -1032,12 +1143,17 @@ const Carousels = () => {
                   </div>
                 </div>
                 <div className="mt-2 w-full">
-                  <h3 className="font-karla font-bold text-base">{item.name}</h3>
+                  <h3 className="font-karla font-bold text-base">
+                    {item.name}
+                  </h3>
                   <p className="text-black text-[25px] font-bold font-karla leading-[30px]">
                     AED {item.price}
                   </p>
                   <p className="text-sm text-gray-600">
-                    Offers Remaining: {remainingOffers[item._id] !== undefined ? remainingOffers[item._id] : "Loading..."}
+                    Offers Remaining:{" "}
+                    {remainingOffers[item._id] !== undefined
+                      ? remainingOffers[item._id]
+                      : "Loading..."}
                   </p>
                 </div>
               </div>

@@ -583,7 +583,7 @@ export default function Renting() {
                   <p className="text-sm font-medium text-blue-800">
                     A refundable security deposit of AED {deposit} is required
                     for renting this item. The deposit will be refunded after
-                    the KuKu team verifies the item's condition upon return.
+                    the KuKu team verifies the item&apos;s condition upon return.
                   </p>
                 </div>
                 <div className="mt-3">
