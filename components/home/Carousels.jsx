@@ -1149,12 +1149,12 @@ const Carousels = () => {
                   <p className="text-black text-[25px] font-bold font-karla leading-[30px]">
                     AED {item.price}
                   </p>
-                  <p className="text-sm text-gray-600">
+                  {/* <p className="text-sm text-gray-600">
                     Offers Remaining:{" "}
                     {remainingOffers[item._id] !== undefined
                       ? remainingOffers[item._id]
                       : "Loading..."}
-                  </p>
+                  </p> */}
                 </div>
               </div>
             </div>

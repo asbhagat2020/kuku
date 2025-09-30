@@ -1304,12 +1304,12 @@ export const FilterBySubcategory = () => {
               <h2 className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold text-gray-800">
                 AED {card.price}
               </h2>
-              <p className="text-sm text-gray-600">
+              {/* <p className="text-sm text-gray-600">
                 Offers Remaining:{" "}
                 {remainingOffers[card._id] !== undefined
                   ? remainingOffers[card._id]
                   : "Loading..."}
-              </p>
+              </p> */}
               <div className="mt-2 flex flex-wrap gap-1 sm:gap-2">
                 {card.category?.parentCategory && (
                   <span className="text-xs bg-gray-200 rounded-full px-2 py-1">

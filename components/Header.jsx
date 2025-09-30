@@ -953,11 +953,6 @@
 
 
 
-
-
-
-
-
 "use client";
 import Image from "next/image";
 
@@ -969,7 +964,6 @@ import Link from "next/link";
 import WomenDropdown from "./WomenDropdown";
 import MenDropdown from "./MenDropdown";
 import KidsDropdown from "./KidsDropdown";
-import LanguageSelector from "./LanguageSelector";
 import { BottomNavigation } from "./BottomNavigation";
 import SettingsDropdown from "./SettingsDropdown";
 import { signIn, signOut, useSession } from "next-auth/react";
@@ -980,6 +974,7 @@ import { showSuccessNotification } from "@/utils/Notification/notif";
 import toast from "react-hot-toast";
 import { useFilter } from "@/context/FilterContext";
 import GoogleTranslate from "./GoogleTranslate";
+import axios from "axios";
 
 const Header = () => {
   const filterContext = useFilter();
@@ -1003,6 +998,7 @@ const Header = () => {
   const [isLocalToken, setIsLocalToken] = useState(false);
   const [userID, setUserID] = useState();
   const { data: session, status } = useSession();
+  const [totalNotificationCount, setTotalNotificationCount] = useState(0);
   const router = useRouter();
   const dispatch = useDispatch();
 
@@ -1020,6 +1016,69 @@ const Header = () => {
   useEffect(() => {
     setUserID(id);
   }, [id]);
+
+  useEffect(() => {
+    const fetchInitialCounts = async () => {
+      try {
+        const token = JSON.parse(Cookies.get("auth") || "null");
+        if (!token) return; // Skip if not authenticated
+
+        // Fetch notification count
+        const notificationResponse = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/notification`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        const notificationsData = Array.isArray(notificationResponse.data)
+          ? notificationResponse.data
+          : notificationResponse.data?.data?.notifications || [];
+        const notificationUnreadCount = notificationsData.filter(
+          (n) => n.status === "UNREAD"
+        ).length;
+
+        // Fetch offer count and offer notifications
+        const offerResponse = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/offer/get`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        const offerCount = offerResponse.data.offers?.length || 0;
+
+        const offerNotificationResponse = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/offerNotify`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        const offerNotificationsData = Array.isArray(
+          offerNotificationResponse.data
+        )
+          ? offerNotificationResponse.data
+          : [];
+        const unreadOfferNotificationCount = offerNotificationsData.filter(
+          (n) => !n.read
+        ).length;
+
+        const totalOfferCount = offerCount + unreadOfferNotificationCount;
+        setTotalNotificationCount(notificationUnreadCount + totalOfferCount);
+      } catch (error) {
+        console.error("Error fetching initial counts:", error);
+        toast.error("Failed to fetch notification counts");
+      }
+    };
+
+    fetchInitialCounts();
+    const interval = setInterval(() => {
+      fetchInitialCounts(); // Fetch every 2 seconds
+    }, 30000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const handleNotificationCountUpdate = (notificationCount, offerCount) => {
+    setTotalNotificationCount(notificationCount + offerCount);
+  };
 
   const handleToggle = (dropdown) => {
     setCurrentOpenDropdown(currentOpenDropdown === dropdown ? null : dropdown);
@@ -1040,28 +1099,7 @@ const Header = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const notifications = [
-    {
-      text: "A Seller has posted item for your emergency requirement",
-      date: "July 28, 2024 at 07:40 AM",
-    },
-    {
-      text: '"Lulu & Sky - Orange crochet cottage Kurta" Bid placed',
-      date: "July 28, 2024 at 07:40 AM",
-    },
-    {
-      text: '"Lulu & Sky - Orange crochet cottage Kurta" Bid placed',
-      date: "July 28, 2024 at 07:40 AM",
-    },
-    {
-      text: '"Lulu & Sky - Orange crochet cottage Kurta" Bid placed',
-      date: "July 28, 2024 at 07:40 AM",
-    },
-    {
-      text: '"Lulu & Sky - Orange crochet cottage Kurta" Bid placed',
-      date: "July 28, 2024 at 07:40 AM",
-    },
-  ];
+  const notifications = [];
 
   // Fixed offers variable
   const offers = [];
@@ -1329,7 +1367,7 @@ const Header = () => {
 
   return (
     <header className="w-full mx-auto">
-      {/* <LanguageSelector /> */}
+
       <div className="bg-[#0D0D0D] px-4 py-2">
         <GoogleTranslate />
       </div>
@@ -1517,27 +1555,9 @@ const Header = () => {
               </div>
             )}
 
-            {/* Notification Icon - Fixed spacing issue */}
-            {/* {!isNotificationDisabled && (
-              <div
-                className={`h-8 w-8 sm:h-10 sm:w-10 lg:h-[54px] lg:w-[54px] flex items-center justify-center bg-white/40 rounded-full cursor-pointer ${
-                  isSearchVisible ? "block" : ""
-                }`}
-                onClick={toggleNotifications}
-              >
-                <Image
-                  alt="notification icon"
-                  width={20}
-                  height={20}
-                  src="/notification.svg"
-                  className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6"
-                />
-              </div>
-            )} */}
-
             {(session || isLocalToken) && !isNotificationDisabled && (
               <div
-                className={`h-8 w-8 sm:h-10 sm:w-10 lg:h-[54px] lg:w-[54px] flex items-center justify-center bg-white/40 rounded-full cursor-pointer ${
+                className={`relative h-8 w-8 sm:h-10 sm:w-10 lg:h-[54px] lg:w-[54px] flex items-center justify-center bg-white/40 rounded-full cursor-pointer ${
                   isSearchVisible ? "block" : ""
                 }`}
                 onClick={toggleNotifications}
@@ -1549,6 +1569,11 @@ const Header = () => {
                   src="/notification.svg"
                   className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6"
                 />
+                {totalNotificationCount > 0 && (
+                  <span className="absolute top-2 right-4 translate-x-1/3 -translate-y-1/3 bg-[#FDE504] text-black font-karla font-semibold rounded-full h-[18px] w-[18px] flex items-center justify-center text-[10px]">
+                    {totalNotificationCount}
+                  </span>
+                )}
               </div>
             )}
 
@@ -1558,6 +1583,7 @@ const Header = () => {
                 notifications={notifications}
                 offers={offers}
                 onClose={() => setIsNotificationOpen(false)}
+                onCountUpdate={handleNotificationCountUpdate}
               />
             )}
 

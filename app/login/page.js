@@ -443,10 +443,6 @@ export default function Login() {
               <img src="/devicon_facebook.svg" alt="Facebook" className="h-5 w-5 mr-3" />
               <span className="text-gray-800 font-bold font-karla">Continue with Facebook</span>
             </button>
-            <button className="w-full flex items-center justify-center p-3 bg-gray-100 border border-gray-300 rounded-lg">
-              <img src="/ic_round-apple.svg" alt="Apple" className="h-5 w-5 mr-3" />
-              <span className="text-gray-800 font-bold font-karla">Continue with Apple</span>
-            </button>
           </div>
           <p className="mt-6 text-center text-[#999999] text-base font-normal font-karla leading-[18.40px]">
             Don’t have an account? <a href="/registration" className="text-pink-600 font-karla">Sign up</a>

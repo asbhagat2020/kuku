@@ -5,7 +5,7 @@ import Image from "next/image";
 import { Bell, Check, X, Filter, Search } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
-const NotificationComponent = () => {
+const NotificationComponent = ({ fetchCounts }) => {
   const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -68,6 +68,7 @@ const NotificationComponent = () => {
         )
       );
       setUnreadCount((prev) => Math.max(0, prev - 1));
+      fetchCounts();
     } catch (error) {
       console.error("Error marking notification as read:", error);
     }
@@ -84,6 +85,7 @@ const NotificationComponent = () => {
 
       setNotifications((prev) => prev.map((n) => ({ ...n, status: "READ" })));
       setUnreadCount(0);
+      fetchCounts();
     } catch (error) {
       console.error("Error marking all notifications as read:", error);
     }

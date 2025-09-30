@@ -263,6 +263,41 @@ export const facebookSignIn = createAsyncThunk(
   }
 );
 
+// export const updateDetails = createAsyncThunk(
+//   "auth/updateDetails",
+//   async (
+//     { KukuUsername, fullName, Description, phone, location, isChecked, id },
+//     { rejectWithValue }
+//   ) => {
+//     console.log(fullName);
+
+//     try {
+//       const response = await axios.patch(
+//         `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/update/details/${id}`,
+//         {
+//           username: KukuUsername,
+//           name: fullName,
+//           phone: phone,
+//           description: Description,
+//           location: location,
+//           anonymous: !isChecked,
+//         }
+//       );
+//       Cookies.set("auth", JSON.stringify(response.data.token));
+//       Cookies.set("user", JSON.stringify(response.data.user));
+//       console.log(response.data.message);
+//       toast.success(response.data.message);
+//       return response.data.user;
+//     } catch (error) {
+//       toast.error(error.response?.data?.message || "Update failed");
+//       return rejectWithValue(error.response?.data?.message || "Update failed");
+//     }
+//   }
+// );
+
+// 2. Create the slice
+
+
 export const updateDetails = createAsyncThunk(
   "auth/updateDetails",
   async (
@@ -289,13 +324,22 @@ export const updateDetails = createAsyncThunk(
       toast.success(response.data.message);
       return response.data.user;
     } catch (error) {
-      toast.error(error.response?.data?.message || "Update failed");
-      return rejectWithValue(error.response?.data?.message || "Update failed");
+      const errorMessage = error.response?.data?.message || "Update failed";
+      const errorField = error.response?.data?.field;
+      
+      toast.error(errorMessage);
+      
+      // Return both message and field info for better handling
+      return rejectWithValue({
+        message: errorMessage,
+        field: errorField
+      });
     }
   }
 );
 
-// 2. Create the slice
+
+
 const authSlice = createSlice({
   name: "auth",
   initialState,

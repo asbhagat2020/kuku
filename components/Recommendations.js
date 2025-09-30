@@ -677,9 +677,9 @@ const RecommendationCard = ({ id, product, price }) => {
         <p className="text-lg font-semibold text-left">
           AED {product.price || price}
         </p>
-        <p className="text-sm text-gray-600">
+        {/* <p className="text-sm text-gray-600">
           Offers Remaining: {remainingOffers !== undefined ? remainingOffers : "Loading..."}
-        </p>
+        </p> */}
       </div>
     </div>
   );

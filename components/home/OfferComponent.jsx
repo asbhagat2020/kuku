@@ -1,3 +1,6 @@
+
+
+
 // import React, { useState, useEffect } from "react";
 // import Cookies from "js-cookie";
 // import axios from "axios";
@@ -48,7 +51,8 @@
 //         }
 //       );
 //       const offersData = offerResponse.data.offers || [];
-//       setOffers(offersData);
+//       // Sort offers by createdAt in descending order to show newest first
+//       setOffers(offersData.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)));
 
 //       // Fetch offer notifications
 //       const notificationResponse = await axios.get(
@@ -708,6 +712,8 @@
 
 
 
+
+
 import React, { useState, useEffect } from "react";
 import Cookies from "js-cookie";
 import axios from "axios";
@@ -718,7 +724,7 @@ import { Bell, Check, X, Filter, Search } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import toast from "react-hot-toast";
 
-const OfferComponent = ({ setOfferCount }) => {
+const OfferComponent = ({ setOfferCount, fetchCounts }) => {
   const [offers, setOffers] = useState([]);
   const [offerNotifications, setOfferNotifications] = useState([]);
   const [unreadNotificationCount, setUnreadNotificationCount] = useState(0);
@@ -817,6 +823,7 @@ const OfferComponent = ({ setOfferCount }) => {
       setUnreadNotificationCount(newUnreadCount);
       const pendingOffers = offers.filter(offer => offer.status === "Pending");
       setOfferCount(pendingOffers.length + newUnreadCount);
+      fetchCounts();
     } catch (error) {
       console.error("Error marking notification as read:", error);
       toast.error("Failed to mark notification as read");
