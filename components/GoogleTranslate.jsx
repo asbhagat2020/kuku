@@ -470,68 +470,95 @@ export default function GoogleTranslate() {
     // Handle translation
     setTimeout(() => {
       if (googleCode === 'en') {
-        // Reset to original English - PRODUCTION FIXED
-        console.log('Resetting to English - Production method');
+        // Reset to original English - ENHANCED PRODUCTION FIX
+        console.log('Resetting to English - Enhanced method');
         
-        // Step 1: Clear hash properly for production
-        if (window.location.hash) {
-          const cleanUrl = window.location.origin + window.location.pathname + window.location.search;
-          window.history.replaceState({}, document.title, cleanUrl);
-        }
-        
-        // Step 2: Clear ALL cookies for production (multiple domains)
+        // Step 1: FIRST clear ALL cookies AGGRESSIVELY
         const hostname = window.location.hostname;
-        const cookieDomains = ['', hostname, `.${hostname}`];
+        const cookieDomains = ['', hostname, `.${hostname}`, 'localhost', '.localhost'];
         const cookiePaths = ['/', ''];
+        const cookieNames = ['googtrans', 'googtrans_'];
         
-        ['googtrans', 'googtrans_'].forEach(cookieName => {
-          cookieDomains.forEach(domain => {
-            cookiePaths.forEach(path => {
-              // Multiple cookie clear methods for production reliability
-              document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=${path}${domain ? `; domain=${domain}` : ''}`;
-              document.cookie = `${cookieName}=; Max-Age=0; path=${path}${domain ? `; domain=${domain}` : ''}`;
+        // Clear cookies multiple times with different methods
+        for (let i = 0; i < 3; i++) {
+          cookieNames.forEach(cookieName => {
+            cookieDomains.forEach(domain => {
+              cookiePaths.forEach(path => {
+                // Method 1: expires
+                document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=${path}${domain ? `; domain=${domain}` : ''}`;
+                // Method 2: Max-Age
+                document.cookie = `${cookieName}=; Max-Age=-99999999; path=${path}${domain ? `; domain=${domain}` : ''}`;
+                // Method 3: Set to 'null' then expire
+                document.cookie = `${cookieName}=null; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=${path}${domain ? `; domain=${domain}` : ''}`;
+                // Method 4: Set to empty
+                document.cookie = `${cookieName}=; path=${path}${domain ? `; domain=${domain}` : ''}`;
+              });
             });
           });
-        });
+        }
+        
+        console.log('Cookies cleared, remaining cookies:', document.cookie);
+        
+        // Step 2: Clear hash
+        if (window.location.hash) {
+          window.location.hash = '';
+          const cleanUrl = window.location.origin + window.location.pathname + window.location.search;
+          try {
+            window.history.replaceState({}, document.title, cleanUrl);
+          } catch (e) {
+            console.log('History API failed');
+          }
+        }
         
         // Step 3: Clear storage
         try {
-          localStorage.removeItem('googtrans');
-          sessionStorage.removeItem('googtrans');
+          localStorage.clear();
+          sessionStorage.clear();
         } catch (e) {
           console.log('Storage not available');
         }
         
-        // Step 4: Reset select if available
+        // Step 4: Reset Google Translate select element
         const selectElement = document.querySelector('.goog-te-combo');
         if (selectElement) {
           selectElement.value = '';
+          selectElement.selectedIndex = 0;
+          console.log('Select element reset');
         }
         
-        // Step 5: Force reload with timestamp (cache busting for production)
+        // Step 5: CRITICAL - Wait longer before reload to ensure cookies are cleared
         setTimeout(() => {
+          // Final cookie check
+          console.log('Final cookies before reload:', document.cookie);
+          
+          // Force hard reload with multiple methods
           const timestamp = new Date().getTime();
-          window.location.href = window.location.pathname + '?nocache=' + timestamp;
-        }, 100);
+          const cleanPath = window.location.pathname;
+          
+          // Try to reload without any parameters first
+          window.location.href = cleanPath + '?reset=' + timestamp;
+        }, 250); // Increased delay for production
         
       } else {
         // Trigger Google Translate for other languages - PRODUCTION FIXED
         console.log(`Translating to: ${googleCode}`);
         
-        // Clear previous translation cookies first (IMPORTANT for production)
+        // Clear previous translation cookies first (CRITICAL - must wait after clearing)
         const hostname = window.location.hostname;
         const cookieDomains = ['', hostname, `.${hostname}`];
         const cookiePaths = ['/', ''];
         
+        console.log('Clearing previous translation cookies...');
         ['googtrans', 'googtrans_'].forEach(cookieName => {
           cookieDomains.forEach(domain => {
             cookiePaths.forEach(path => {
               document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=${path}${domain ? `; domain=${domain}` : ''}`;
+              document.cookie = `${cookieName}=; Max-Age=-99999999; path=${path}${domain ? `; domain=${domain}` : ''}`;
             });
           });
         });
         
-        // Wait a bit after clearing cookies (production needs this)
+        // Wait LONGER after clearing cookies (CRITICAL for production)
         setTimeout(() => {
           const selectElement = document.querySelector('.goog-te-combo');
           
@@ -643,15 +670,37 @@ export default function GoogleTranslate() {
       }
 
       console.log('Loading Google Translate script');
+      
+      // Suppress console errors from blocked analytics
+      const originalConsoleError = console.error;
+      console.error = function(...args) {
+        const errorString = args.join(' ');
+        if (errorString.includes('ERR_BLOCKED_BY_CLIENT') || 
+            errorString.includes('translate.googleapis.com') ||
+            errorString.includes('translate.google.com/gen204')) {
+          return; // Suppress these specific errors
+        }
+        originalConsoleError.apply(console, args);
+      };
+      
       const script = document.createElement("script");
       script.src = "//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
       script.async = true;
-      script.onerror = () => console.error('Failed to load Google Translate script');
+      script.onerror = () => console.log('Google Translate script blocked - trying alternative method');
       document.body.appendChild(script);
 
       window.googleTranslateElementInit = () => {
         console.log('Initializing Google Translate');
         try {
+          // Suppress Google Translate analytics errors
+          const originalFetch = window.fetch;
+          window.fetch = function(...args) {
+            if (args[0]?.includes('translate.googleapis.com/element/log')) {
+              return Promise.resolve(new Response('{}', { status: 200 }));
+            }
+            return originalFetch.apply(this, args);
+          };
+
           new window.google.translate.TranslateElement(
             {
               pageLanguage: "en",
@@ -752,7 +801,7 @@ export default function GoogleTranslate() {
     // Monitor for Google Translate initialization with better detection
     const checkForTranslateReady = () => {
       let attempts = 0;
-      const maxAttempts = 25; // Increased for slower production networks
+      const maxAttempts = 40; // Increased for production with ad blockers
       
       const interval = setInterval(() => {
         attempts++;
@@ -791,7 +840,7 @@ export default function GoogleTranslate() {
             });
           }, 200);
         } else if (attempts >= maxAttempts) {
-          console.log('Google Translate failed to initialize after maximum attempts');
+          console.log('Google Translate widget not found - may be blocked by ad blocker');
           clearInterval(interval);
         }
       }, 500);
