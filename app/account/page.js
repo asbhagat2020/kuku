@@ -339,7 +339,7 @@ export default function Account() {
         </div>
 
         <div className="text-black text-xl font-karla font-bold mb-6">
-          Let&apos;s set your account up
+          Let&#39;s set your account up
         </div>
 
         {/* Form */}
