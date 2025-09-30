@@ -17,7 +17,6 @@
 //   const dispatch = useDispatch();
 //   const name=useSelector((state)=>state.auth.user)
 
-
 //   const router=useRouter()
 //   // Fetch user data from Redux and update local state on component load
 //   useEffect(() => {
@@ -102,7 +101,7 @@
 //               Phone Number
 //             </label>
 //             <input
-//               type="tel"           
+//               type="tel"
 //   pattern="[\+]{0,1}[0-9]{10,15}"
 //               placeholder="Enter your phone number"
 //               value={phone}
@@ -169,20 +168,6 @@
 //   );
 // }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 "use client"; // Ensure Client-Side rendering
 
 import { updateDetails } from "@/store/auth/authSlice";
@@ -201,7 +186,7 @@ export default function Account() {
   const [id, setId] = useState("");
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
-  
+
   const dispatch = useDispatch();
   const name = useSelector((state) => state.auth.user);
   const router = useRouter();
@@ -222,19 +207,19 @@ export default function Account() {
   // Phone number validation function
   const validatePhoneNumber = (phoneNumber) => {
     // Remove any whitespace
-    const cleanPhone = phoneNumber.replace(/\s/g, '');
-    
+    const cleanPhone = phoneNumber.replace(/\s/g, "");
+
     // Check if it contains only numbers and optional + at the beginning
     const phoneRegex = /^[\+]?[0-9]{10,15}$/;
-    
+
     if (!cleanPhone) {
       return "Phone number is required";
     }
-    
+
     if (!phoneRegex.test(cleanPhone)) {
       return "Phone number must contain only numbers (10-15 digits) and can start with +";
     }
-    
+
     return null;
   };
 
@@ -242,7 +227,7 @@ export default function Account() {
     e.preventDefault();
     setErrors({});
     setIsLoading(true);
-    
+
     // Validate phone number before submission
     const phoneError = validatePhoneNumber(phone);
     if (phoneError) {
@@ -250,37 +235,46 @@ export default function Account() {
       setIsLoading(false);
       return;
     }
-    
-    console.log({ KukuUsername, fullName, Description, phone, location, isChecked });
-    
-    const resultAction = await dispatch(updateDetails({ 
-      KukuUsername, 
-      fullName, 
-      Description, 
-      phone, 
-      location, 
-      isChecked, 
-      id 
-    }));
-    
+
+    console.log({
+      KukuUsername,
+      fullName,
+      Description,
+      phone,
+      location,
+      isChecked,
+    });
+
+    const resultAction = await dispatch(
+      updateDetails({
+        KukuUsername,
+        fullName,
+        Description,
+        phone,
+        location,
+        isChecked,
+        id,
+      })
+    );
+
     console.log("Result Action:", resultAction); // Debug log
 
     if (updateDetails.fulfilled.match(resultAction)) {
-      router.push('/');
+      router.push("/");
     } else if (updateDetails.rejected.match(resultAction)) {
       const errorData = resultAction.payload;
-      
+
       // If there's a specific field error (like username), highlight that field
       if (errorData?.field) {
         setErrors({
-          [errorData.field]: errorData.message
+          [errorData.field]: errorData.message,
         });
       }
-      
+
       // The toast is already shown in the slice, but you can add additional handling here
       console.error("Update failed:", errorData?.message);
     }
-    
+
     setIsLoading(false);
   };
 
@@ -292,33 +286,34 @@ export default function Account() {
     setKukuUsername(e.target.value);
     // Clear username error when user starts typing
     if (errors.username) {
-      setErrors(prev => ({ ...prev, username: null }));
+      setErrors((prev) => ({ ...prev, username: null }));
     }
   };
 
   const handlePhoneChange = (e) => {
     const inputValue = e.target.value;
-    
+
     // Only allow numbers, + symbol (at the beginning), and spaces
-    const filteredValue = inputValue.replace(/[^0-9+\s]/g, '');
-    
+    const filteredValue = inputValue.replace(/[^0-9+\s]/g, "");
+
     // Ensure + can only be at the beginning
     let cleanValue = filteredValue;
-    if (filteredValue.includes('+')) {
+    if (filteredValue.includes("+")) {
       const plusCount = (filteredValue.match(/\+/g) || []).length;
-      if (plusCount > 1 || filteredValue.indexOf('+') !== 0) {
+      if (plusCount > 1 || filteredValue.indexOf("+") !== 0) {
         // Remove extra + signs or + signs not at the beginning
-        cleanValue = filteredValue.charAt(0) === '+' ? 
-          '+' + filteredValue.slice(1).replace(/\+/g, '') : 
-          filteredValue.replace(/\+/g, '');
+        cleanValue =
+          filteredValue.charAt(0) === "+"
+            ? "+" + filteredValue.slice(1).replace(/\+/g, "")
+            : filteredValue.replace(/\+/g, "");
       }
     }
-    
+
     setPhone(cleanValue);
-    
+
     // Clear phone error when user starts typing
     if (errors.phone) {
-      setErrors(prev => ({ ...prev, phone: null }));
+      setErrors((prev) => ({ ...prev, phone: null }));
     }
   };
 
@@ -338,11 +333,13 @@ export default function Account() {
         {/* Logo Section */}
         <div className="flex items-center gap-2 mb-8">
           <img src="/Group1.svg" alt="KUKU Logo" className="h-14 w-14" />
-          <div className="text-black text-3xl font-['Palanquin Dark'] font-bold">KUKU</div>
+          <div className="text-black text-3xl font-['Palanquin Dark'] font-bold">
+            KUKU
+          </div>
         </div>
 
         <div className="text-black text-xl font-karla font-bold mb-6">
-          Let's set your account up
+          Let&apos;s set your account up
         </div>
 
         {/* Form */}
@@ -358,7 +355,7 @@ export default function Account() {
               value={KukuUsername}
               onChange={handleUsernameChange}
               className={`w-full p-3 border ${
-                errors.username ? 'border-red-500' : 'border-gray-300'
+                errors.username ? "border-red-500" : "border-gray-300"
               } bg-gray-100 rounded-lg text-start text-black text-sm font-normal font-karla leading-none outline-none`}
               required
             />
@@ -392,7 +389,7 @@ export default function Account() {
               value={phone}
               onChange={handlePhoneChange}
               className={`w-full p-3 border ${
-                errors.phone ? 'border-red-500' : 'border-gray-300'
+                errors.phone ? "border-red-500" : "border-gray-300"
               } bg-gray-100 rounded-lg text-start text-black text-sm font-normal font-karla leading-none outline-none`}
               required
             />
@@ -400,7 +397,8 @@ export default function Account() {
               <p className="text-red-500 text-xs mt-1">{errors.phone}</p>
             )}
             <p className="text-gray-500 text-xs mt-1">
-              Only numbers allowed (10-15 digits). Country code with + is optional.
+              Only numbers allowed (10-15 digits). Country code with + is
+              optional.
             </p>
           </div>
 
@@ -418,7 +416,8 @@ export default function Account() {
               </span>
             </label>
             <span className="text-black text-xs font-normal font-karla leading-none mt-1 ml-6">
-              If checked, KuKu will only show your KuKu identity and not your full name.
+              If checked, KuKu will only show your KuKu identity and not your
+              full name.
             </span>
           </div>
 
@@ -427,10 +426,10 @@ export default function Account() {
             type="submit"
             disabled={isLoading}
             className={`w-full p-3 ${
-              isLoading ? 'bg-gray-400' : 'bg-yellow-400'
+              isLoading ? "bg-gray-400" : "bg-yellow-400"
             } text-black font-semibold font-karla rounded-lg`}
           >
-            {isLoading ? 'Updating...' : 'Continue'}
+            {isLoading ? "Updating..." : "Continue"}
           </button>
         </form>
       </div>
