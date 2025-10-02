@@ -58,6 +58,8 @@ import { Karla, Luckiest_Guy, Palanquin_Dark } from "next/font/google";
 import ReduxProvider from "./ReduxProvider/ReduxProvider";
 import ClientSessionProvider from "@/components/sessionProvider";
 import { getServerSession } from "next-auth";
+import { TranslationProvider } from "@/lib/TranslationContext";
+import Header from "@/components/Header";
 
 const karla = Karla({
   subsets: ["latin"],
@@ -89,8 +91,11 @@ export default async function RootLayout({ children }) {
       >
         <ClientSessionProvider session={session}>
           <ReduxProvider>
+            <TranslationProvider>
+              {/* <Header /> */}
             {children}
             <Toaster />
+            </TranslationProvider>
           </ReduxProvider>
         </ClientSessionProvider>
       </body>

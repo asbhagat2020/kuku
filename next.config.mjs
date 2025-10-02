@@ -6,6 +6,19 @@ const nextConfig = {
    images: {
     unoptimized: true, // disables Next.js image optimization, avoids using sharp
   },
+  async headers() {
+    return [
+      {
+        source: "/(.*)",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "no-store, max-age=0",
+          },
+        ],
+      },
+    ];
+  },
 };
 
 export default nextConfig;
