@@ -32,9 +32,9 @@ import { ImagesComponent } from "./ImagesComponent";
 import { ActiveFilters } from "./ActiveFilters";
 import { FilterProvider } from "../context/FilterContext";
 
-export const MainComponent = ({ initialSearch }) => {
+export const MainComponent = ({ initialSearch, categoryName }) => {
   return (
-    <FilterProvider initialSearch={initialSearch}>
+    <FilterProvider initialSearch={initialSearch} categoryName={categoryName}>
       <div className="w-full mx-auto">
         <div className="h-auto flex flex-col lg:flex-row gap-4 lg:gap-6 xl:gap-8">
           <SideBar />

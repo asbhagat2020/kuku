@@ -23,19 +23,18 @@
 
 
 
-
+// selling-page/page.js
 
 "use client";
 import { useSearchParams } from 'next/navigation';
-import { useEffect } from 'react';
 import Header from "@/components/Header";
 import { MainComponent } from "../../components/MainComponent";
 import Footer from "@/components/Footer";
-import { useFilter } from "@/context/FilterContext";
 
 const Page = () => {
   const searchParams = useSearchParams();
   const searchQuery = searchParams.get('search');
+  const categoryName = searchParams.get("categoryName");
 
   return (
     <>
@@ -46,7 +45,7 @@ const Page = () => {
             SEE WHAT&#39;S SELLING
           </p>
         </div>
-        <MainComponent initialSearch={searchQuery} />
+        <MainComponent initialSearch={searchQuery} categoryName={categoryName}/>
       </div>
       <Footer />
     </>

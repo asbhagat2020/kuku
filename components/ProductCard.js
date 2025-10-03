@@ -849,7 +849,7 @@
 //             isSubmitDisabled={isSubmitDisabled}
 //             remainingOffers={remainingOffers}
 //             offerAmount={offerAmount}
-//             setOfferAmount={setOfferAmount} 
+//             setOfferAmount={setOfferAmount}
 //           />
 
 //           {errorPopupOpen && (
@@ -891,15 +891,6 @@
 // };
 
 // export default ProductCard;
-
-
-
-
-
-
-
-
-
 
 "use client";
 
@@ -966,12 +957,6 @@ const ProductCard = (productDetails) => {
             Authorization: `Bearer ${token}`,
           },
         }
-      );
-      console.log(
-        "Remaining offers for product",
-        productId,
-        ":",
-        res.data.remainingOffers
       );
       setRemainingOffers(res.data.remainingOffers);
     } catch (error) {
@@ -1567,7 +1552,16 @@ const ProductCard = (productDetails) => {
                   className="text-black-500 text-sm font-medium"
                   style={{ marginBottom: "10px", marginTop: "10px" }}
                 >
-                  {product?.seller?.products.length} Products Sold
+                  {/* {product?.seller?.products.length} Products Sold */}
+                  {(() => {
+                    const soldProducts =
+                      product?.seller?.products?.filter(
+                        (p) => p.approval?.status === "Sold"
+                      ) || [];
+                    return soldProducts.length > 0
+                      ? `${soldProducts.length} Products Sold`
+                      : "No Product Sold";
+                  })()}
                 </p>
 
                 <Link
@@ -1753,7 +1747,7 @@ const ProductCard = (productDetails) => {
             isSubmitDisabled={isSubmitDisabled}
             remainingOffers={remainingOffers}
             offerAmount={offerAmount}
-            setOfferAmount={setOfferAmount} 
+            setOfferAmount={setOfferAmount}
           />
 
           {errorPopupOpen && (

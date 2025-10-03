@@ -104,12 +104,7 @@ export const ImagesComponent = () => {
           },
         }
       );
-      console.log(
-        "Remaining offers for product",
-        productId,
-        ":",
-        res.data.remainingOffers
-      );
+     
       setRemainingOffers((prev) => ({
         ...prev,
         [productId]: res.data.remainingOffers,

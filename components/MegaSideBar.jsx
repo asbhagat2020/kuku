@@ -1,3 +1,4 @@
+
 // "use client";
 
 // import { useState, useEffect, useRef } from "react";
@@ -96,7 +97,7 @@
 //         </div>
 
 //         {/* Loading Sidebar */}
-//         <div className="fixed lg:sticky top-20 left-0 h-auto lg:h-[calc(100vh-210px)] w-64 pl-0 pr-4 pt-4 pb-4 z-10 lg:w-80 lg:mt-10 lg:ml-2 lg:block overflow-y-auto">
+//         <div className="fixed lg:sticky top-20 left-0 h-auto lg:h-[calc(100vh-210px)] w-64 pl-0 pr-4 pt-4 pb-4 z-30 lg:w-[260px] xl:w-80 lg:mt-10 lg:ml-2 lg:block overflow-y-auto scrollbar-hide">
 //           <div className="p-4 lg:p-4 shadow-md bg-white rounded-lg">
 //             <h1 className="text-2xl pt-1 text-custom-pink font-bold">
 //               Filter by
@@ -125,9 +126,9 @@
 //       {/* Sidebar */}
 //       <div
 //         ref={sidebarRef}
-//         className={`fixed lg:sticky top-20 left-0 h-auto lg:h-[calc(100vh-210px)] w-64 pl-0 pr-4 pt-4 pb-4 z-10 transform ${
+//         className={`fixed lg:sticky top-20 left-0 h-auto lg:h-[calc(100vh-210px)] w-64 pl-0 pr-4 pt-4 pb-4 z-30 transform ${
 //           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-//         } transition-transform duration-300 ease-in-out lg:translate-x-0 lg:w-[240px] xl-w-80 lg:mt-10 lg:ml-2 lg:block overflow-y-auto`}
+//         } transition-transform duration-300 ease-in-out lg:translate-x-0 lg:w-[260px] xl:w-80 lg:mt-10 lg:ml-2 lg:block overflow-y-auto scrollbar-hide`}
 //       >
 //         <div className="p-4 lg:p-4 shadow-md bg-white rounded-lg">
 //           <h1 className="text-2xl pt-1 text-custom-pink font-bold">
@@ -412,6 +413,16 @@
 //         .custom-checkbox.checked::after {
 //           opacity: 1;
 //         }
+
+//         /* Hide scrollbar for webkit browsers */
+//         .scrollbar-hide {
+//           -ms-overflow-style: none;
+//           scrollbar-width: none;
+//         }
+        
+//         .scrollbar-hide::-webkit-scrollbar {
+//           display: none;
+//         }
 //       `}</style>
 //     </>
 //   );
@@ -425,30 +436,53 @@
 
 
 
-
-
-
 "use client";
 
 import { useState, useEffect, useRef } from "react";
 import { FiMenu, FiChevronUp, FiChevronDown, FiX } from "react-icons/fi";
 import { useFilter } from "../context/FilterContext";
+import axios from "axios";
 
 export const MegaSideBar = () => {
-  const [openDropdown, setOpenDropdown] = useState(null);
+  const [openDropdown, setOpenDropdown] = useState("category"); // Default open Category section
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [categoryStructure, setCategoryStructure] = useState([]);
+  const [expandedParentCategories, setExpandedParentCategories] = useState(new Set(["Men"])); // Default expand "Men"
+  const [expandedCategories, setExpandedCategories] = useState(new Set());
   const sidebarRef = useRef(null);
 
-  // Access filter context
-  const { filters, toggleFilter, filterOptions, loading, categoryInfo } =
-    useFilter();
+  const { filters, toggleFilter, filterOptions, loading } = useFilter();
 
-  // Toggle sidebar visibility
+  // Fetch category structure from API
+  useEffect(() => {
+    const fetchCategoryStructure = async () => {
+      try {
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/category`
+        );
+        const data = response.data.data || [];
+        console.log("MegaSideBar Category Structure:", data);
+        setCategoryStructure(data);
+      } catch (error) {
+        console.error("Error fetching category structure in MegaSideBar:", error);
+      }
+    };
+
+    fetchCategoryStructure();
+  }, []);
+
+  // Log states for debugging
+  useEffect(() => {
+    console.log("MegaSideBar Expanded Parent Categories:", [...expandedParentCategories]);
+    console.log("MegaSideBar Expanded Categories:", [...expandedCategories]);
+    console.log("MegaSideBar Filters:", filters);
+    console.log("MegaSideBar Filter Options:", filterOptions);
+  }, [expandedParentCategories, expandedCategories, filters, filterOptions]);
+
   const toggleSidebar = () => {
     setIsSidebarOpen((prev) => !prev);
   };
 
-  // Close sidebar when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
@@ -467,22 +501,58 @@ export const MegaSideBar = () => {
     };
   }, [isSidebarOpen]);
 
-  // Toggle filter dropdown visibility
   const handleDropdownToggle = (dropdown) => {
+    console.log("MegaSideBar Toggling dropdown:", dropdown);
     setOpenDropdown((prev) => (prev === dropdown ? null : dropdown));
   };
 
-  // Check if a filter option is currently selected
+  // Toggle parentCategory expansion
+  const toggleParentCategory = (parentCategory) => {
+    console.log("MegaSideBar Toggling parentCategory:", parentCategory);
+    setExpandedParentCategories((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(parentCategory)) {
+        newSet.delete(parentCategory);
+        // Clear categoryNames under this parentCategory
+        setExpandedCategories((prevCats) => {
+          const newCats = new Set(prevCats);
+          categoryStructure
+            .find((cat) => cat.parentCategory === parentCategory)
+            ?.categories.forEach((cat) => newCats.delete(cat.categoryName));
+          return newCats;
+        });
+      } else {
+        newSet.add(parentCategory);
+      }
+      console.log("MegaSideBar New Parent Categories Set:", [...newSet]);
+      return newSet;
+    });
+  };
+
+  // Toggle categoryName expansion
+  const toggleCategoryName = (categoryName) => {
+    console.log("MegaSideBar Toggling categoryName:", categoryName);
+    setExpandedCategories((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(categoryName)) {
+        newSet.delete(categoryName);
+      } else {
+        newSet.add(categoryName);
+      }
+      console.log("MegaSideBar New Categories Set:", [...newSet]);
+      return newSet;
+    });
+  };
+
   const isFilterSelected = (type, value) => {
     return filters[type].includes(value);
   };
 
-  // Handle filter selection/deselection
   const handleFilterChange = (type, value) => {
+    console.log("MegaSideBar Filter changed:", { type, value });
     toggleFilter(type, value);
   };
 
-  // Show selected filters at the top
   const renderSelectedFilters = (type) => {
     if (filters[type].length === 0) return null;
 
@@ -515,7 +585,6 @@ export const MegaSideBar = () => {
   if (loading) {
     return (
       <>
-        {/* Hamburger Icon for Mobile */}
         <div className="lg:hidden sticky top-0 left-0 z-0">
           <button
             onClick={toggleSidebar}
@@ -525,12 +594,9 @@ export const MegaSideBar = () => {
           </button>
         </div>
 
-        {/* Loading Sidebar */}
         <div className="fixed lg:sticky top-20 left-0 h-auto lg:h-[calc(100vh-210px)] w-64 pl-0 pr-4 pt-4 pb-4 z-30 lg:w-[260px] xl:w-80 lg:mt-10 lg:ml-2 lg:block overflow-y-auto scrollbar-hide">
           <div className="p-4 lg:p-4 shadow-md bg-white rounded-lg">
-            <h1 className="text-2xl pt-1 text-custom-pink font-bold">
-              Filter by
-            </h1>
+            <h1 className="text-2xl pt-1 text-custom-pink font-bold">Filter by</h1>
             <div className="mt-4 flex items-center justify-center py-8">
               <div className="text-gray-500">Loading filters...</div>
             </div>
@@ -542,7 +608,6 @@ export const MegaSideBar = () => {
 
   return (
     <>
-      {/* Hamburger Icon for Mobile */}
       <div className="lg:hidden sticky top-0 left-0 z-0">
         <button
           onClick={toggleSidebar}
@@ -552,7 +617,6 @@ export const MegaSideBar = () => {
         </button>
       </div>
 
-      {/* Sidebar */}
       <div
         ref={sidebarRef}
         className={`fixed lg:sticky top-20 left-0 h-auto lg:h-[calc(100vh-210px)] w-64 pl-0 pr-4 pt-4 pb-4 z-30 transform ${
@@ -560,11 +624,10 @@ export const MegaSideBar = () => {
         } transition-transform duration-300 ease-in-out lg:translate-x-0 lg:w-[260px] xl:w-80 lg:mt-10 lg:ml-2 lg:block overflow-y-auto scrollbar-hide`}
       >
         <div className="p-4 lg:p-4 shadow-md bg-white rounded-lg">
-          <h1 className="text-2xl pt-1 text-custom-pink font-bold">
-            Filter by
-          </h1>
+          <h1 className="text-2xl pt-1 text-custom-pink font-bold">Filter by</h1>
+
           <div className="mt-4 filter-section flex flex-col space-y-4">
-            {/* Category Filter */}
+            {/* Category Filter (Nested) */}
             <div className="filter-section flex flex-col">
               <div
                 className="flex items-center justify-between cursor-pointer"
@@ -584,42 +647,179 @@ export const MegaSideBar = () => {
                 </div>
               </div>
 
-              {/* Show selected category filters */}
-              {renderSelectedFilters("category")}
-
               {openDropdown === "category" && (
                 <div
                   id="category-options"
                   className="flex flex-col space-y-1 mt-2 ml-3"
                 >
-                  {filterOptions.category.map((category) => (
-                    <div className="flex items-center" key={category}>
-                      <input
-                        type="checkbox"
-                        id={`category-${category}`}
-                        name="category"
-                        value={category}
-                        checked={isFilterSelected("category", category)}
-                        onChange={() =>
-                          handleFilterChange("category", category)
-                        }
-                        className="hidden"
-                      />
-                      <label
-                        htmlFor={`category-${category}`}
-                        className="flex items-center cursor-pointer"
-                      >
-                        <span
-                          className={`custom-checkbox ${
-                            isFilterSelected("category", category)
-                              ? "checked"
-                              : ""
-                          }`}
-                        />
-                        {category}
-                      </label>
-                    </div>
-                  ))}
+                  {categoryStructure.length === 0 ? (
+                    <div className="text-gray-500">Loading categories...</div>
+                  ) : (
+                    categoryStructure.map((parentCat) => (
+                      <div key={parentCat._id} className="ml-2">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center">
+                            <input
+                              type="checkbox"
+                              id={`category-${parentCat._id}`}
+                              name="category"
+                              value={parentCat.parentCategory}
+                              checked={isFilterSelected(
+                                "category",
+                                parentCat.parentCategory
+                              )}
+                              onChange={() =>
+                                handleFilterChange("category", parentCat.parentCategory)
+                              }
+                              className="hidden"
+                            />
+                            <label
+                              htmlFor={`category-${parentCat._id}`}
+                              className="flex items-center cursor-pointer font-semibold"
+                            >
+                              <span
+                                className={`custom-checkbox ${
+                                  isFilterSelected("category", parentCat.parentCategory)
+                                    ? "checked"
+                                    : ""
+                                }`}
+                              />
+                              {parentCat.parentCategory}
+                            </label>
+                          </div>
+                          <div
+                            className="p-1 cursor-pointer"
+                            onClick={() => {
+                              console.log("MegaSideBar Chevron clicked for parentCategory:", parentCat.parentCategory);
+                              toggleParentCategory(parentCat.parentCategory);
+                            }}
+                          >
+                            <span className="text-gray-500">
+                              {expandedParentCategories.has(parentCat.parentCategory) ? (
+                                <FiChevronUp />
+                              ) : (
+                                <FiChevronDown />
+                              )}
+                            </span>
+                          </div>
+                        </div>
+                        {/* Category Names */}
+                        {expandedParentCategories.has(parentCat.parentCategory) && (
+                          <div className="ml-4">
+                            {parentCat.categories.length === 0 ? (
+                              <div className="text-gray-500">No categories available</div>
+                            ) : (
+                              parentCat.categories
+                                .filter((cat) => cat.status === "active")
+                                .map((cat) => (
+                                  <div key={cat._id}>
+                                    <div className="flex items-center justify-between mt-1">
+                                      <div className="flex items-center">
+                                        <input
+                                          type="checkbox"
+                                          id={`categoryName-${cat._id}`}
+                                          name="categoryName"
+                                          value={cat.categoryName}
+                                          checked={isFilterSelected(
+                                            "categoryName",
+                                            cat.categoryName
+                                          )}
+                                          onChange={() =>
+                                            handleFilterChange("categoryName", cat.categoryName)
+                                          }
+                                          className="hidden"
+                                        />
+                                        <label
+                                          htmlFor={`categoryName-${cat._id}`}
+                                          className="flex items-center cursor-pointer"
+                                        >
+                                          <span
+                                            className={`custom-checkbox ${
+                                              isFilterSelected("categoryName", cat.categoryName)
+                                                ? "checked"
+                                                : ""
+                                            }`}
+                                          />
+                                          {cat.categoryName}
+                                        </label>
+                                      </div>
+                                      <div
+                                        className="p-1 cursor-pointer"
+                                        onClick={() => {
+                                          console.log("MegaSideBar Chevron clicked for categoryName:", cat.categoryName);
+                                          toggleCategoryName(cat.categoryName);
+                                        }}
+                                      >
+                                        <span className="text-gray-500">
+                                          {expandedCategories.has(cat.categoryName) ? (
+                                            <FiChevronUp />
+                                          ) : (
+                                            <FiChevronDown />
+                                          )}
+                                        </span>
+                                      </div>
+                                    </div>
+                                    {/* SubCategory Names */}
+                                    {expandedCategories.has(cat.categoryName) && (
+                                      <div className="ml-4">
+                                        {cat.subCategories?.length === 0 ? (
+                                          <div className="text-gray-500">
+                                            No subcategories available
+                                          </div>
+                                        ) : (
+                                          cat.subCategories
+                                            .filter((subCat) => subCat.status === "active")
+                                            .map((subCat) => (
+                                              <div
+                                                key={subCat._id}
+                                                className="flex items-center mt-1"
+                                              >
+                                                <input
+                                                  type="checkbox"
+                                                  id={`subCategoryName-${subCat._id}`}
+                                                  name="subCategoryName"
+                                                  value={subCat.subCategoryName}
+                                                  checked={isFilterSelected(
+                                                    "subCategoryName",
+                                                    subCat.subCategoryName
+                                                  )}
+                                                  onChange={() =>
+                                                    handleFilterChange(
+                                                      "subCategoryName",
+                                                      subCat.subCategoryName
+                                                    )
+                                                  }
+                                                  className="hidden"
+                                                />
+                                                <label
+                                                  htmlFor={`subCategoryName-${subCat._id}`}
+                                                  className="flex items-center cursor-pointer"
+                                                >
+                                                  <span
+                                                    className={`custom-checkbox ${
+                                                      isFilterSelected(
+                                                        "subCategoryName",
+                                                        subCat.subCategoryName
+                                                      )
+                                                        ? "checked"
+                                                        : ""
+                                                    }`}
+                                                  />
+                                                  {subCat.subCategoryName}
+                                                </label>
+                                              </div>
+                                            ))
+                                        )}
+                                      </div>
+                                    )}
+                                  </div>
+                                ))
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    ))
+                  )}
                 </div>
               )}
             </div>
@@ -637,16 +837,11 @@ export const MegaSideBar = () => {
                 <label className="font-semibold mb-2">Price</label>
                 <div className="h-auto w-auto p-2 bg-gray-200 rounded-full">
                   <span className="text-gray-500">
-                    {openDropdown === "price" ? (
-                      <FiChevronUp />
-                    ) : (
-                      <FiChevronDown />
-                    )}
+                    {openDropdown === "price" ? <FiChevronUp /> : <FiChevronDown />}
                   </span>
                 </div>
               </div>
 
-              {/* Show selected price filters */}
               {renderSelectedFilters("price")}
 
               {openDropdown === "price" && (
@@ -695,16 +890,11 @@ export const MegaSideBar = () => {
                 <label className="font-semibold mb-2">Size</label>
                 <div className="h-auto w-auto p-2 bg-gray-200 rounded-full">
                   <span className="text-gray-500">
-                    {openDropdown === "size" ? (
-                      <FiChevronUp />
-                    ) : (
-                      <FiChevronDown />
-                    )}
+                    {openDropdown === "size" ? <FiChevronUp /> : <FiChevronDown />}
                   </span>
                 </div>
               </div>
 
-              {/* Show selected size filters */}
               {renderSelectedFilters("size")}
 
               {openDropdown === "size" && (
@@ -762,7 +952,6 @@ export const MegaSideBar = () => {
                 </div>
               </div>
 
-              {/* Show selected condition filters */}
               {renderSelectedFilters("condition")}
 
               {openDropdown === "condition" && (
@@ -778,9 +967,7 @@ export const MegaSideBar = () => {
                         name="condition"
                         value={condition}
                         checked={isFilterSelected("condition", condition)}
-                        onChange={() =>
-                          handleFilterChange("condition", condition)
-                        }
+                        onChange={() => handleFilterChange("condition", condition)}
                         className="hidden"
                       />
                       <label
@@ -843,12 +1030,11 @@ export const MegaSideBar = () => {
           opacity: 1;
         }
 
-        /* Hide scrollbar for webkit browsers */
         .scrollbar-hide {
           -ms-overflow-style: none;
           scrollbar-width: none;
         }
-        
+
         .scrollbar-hide::-webkit-scrollbar {
           display: none;
         }

@@ -1,3 +1,4 @@
+
 // "use client";
 // import Image from "next/image";
 // import React, { useState, useRef, useEffect } from "react";
@@ -5,31 +6,57 @@
 // import "slick-carousel/slick/slick.css";
 // import "slick-carousel/slick/slick-theme.css";
 // import { motion } from "framer-motion";
+// import axios from "axios";
 
 // const CategoryCarousel = () => {
+//   const [products, setProducts] = useState([]); // Dynamic products from API
 //   const [currentSlide, setCurrentSlide] = useState(0);
 //   const [centerIndex, setCenterIndex] = useState(0);
+//   const [loading, setLoading] = useState(true);
+//   const [error, setError] = useState(null);
 //   const sliderRef = useRef(null);
 
-//   const products = [
-//     { title: "Top", price: "12 AED", image: "/top.png" },
-//     { title: "Bottom", price: "12 AED", image: "/bottom.png" },
-//     { title: "T-shirt", price: "12 AED", image: "/t-shirt.png" },
-//     { title: "Top", price: "12 AED", image: "/top.png" },
-//     { title: "Bottom", price: "12 AED", image: "/bottom.png" },
-//     { title: "Tshirt", price: "12 AED", image: "/t-shirt.png" },
-//     { title: "Top", price: "12 AED", image: "/top.png" },
-//     { title: "Bottom", price: "12 AED", image: "/bottom.png" },
-//     { title: "T-shirt", price: "12 AED", image: "/t-shirt.png" },
-//     { title: "T-shirt", price: "12 AED", image: "/t-shirt.png" },
-//   ];
+//   // Fetch categories from API
+//   useEffect(() => {
+//     const fetchCategories = async () => {
+//       try {
+//         setLoading(true);
+//         const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/category`);
+        
+//         if (response.data && response.data.data) {
+//           // Flatten all active categories from parent categories
+//           const allCategories = response.data.data.flatMap((parentCat) =>
+//             parentCat.categories
+//               .filter((cat) => cat.status === "active") // Only active ones
+//               .map((cat) => ({
+//                 title: cat.categoryName,
+//                 image: cat.image || "/default-category.png", // Default if null
+//                 price: "12 AED", // Hardcoded, replace with dynamic if needed
+//               }))
+//           );
+//           setProducts(allCategories);
+//         } else {
+//           setError("No data received from API");
+//         }
+//       } catch (err) {
+//         console.error("Error fetching categories:", err);
+//         setError("Failed to fetch categories");
+//         // Fallback to empty array or static if needed
+//         setProducts([]);
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+
+//     fetchCategories();
+//   }, []);
 
 //   const settings = {
 //     dots: false,
 //     arrows: false,
-//     infinite: true,
+//     infinite: products.length > 1, // Infinite only if enough items
 //     speed: 500,
-//     slidesToShow: 4.36,
+//     slidesToShow: Math.min(4.36, products.length), // Adjust based on data
 //     slidesToScroll: 1,
 //     centerMode: true,
 //     centerPadding: "0px",
@@ -38,21 +65,21 @@
 //       {
 //         breakpoint: 1280,
 //         settings: {
-//           slidesToShow: 3,
+//           slidesToShow: Math.min(3, products.length),
 //           slidesToScroll: 1,
 //         },
 //       },
 //       {
 //         breakpoint: 1024,
 //         settings: {
-//           slidesToShow: 3,
+//           slidesToShow: Math.min(3, products.length),
 //           slidesToScroll: 1,
 //         },
 //       },
 //       {
 //         breakpoint: 768,
 //         settings: {
-//           slidesToShow: 2.4,
+//           slidesToShow: Math.min(2.4, products.length),
 //           slidesToScroll: 1,
 //         },
 //       },
@@ -65,6 +92,7 @@
 //       },
 //     ],
 //   };
+
 //   const [isLeftHovered, setIsLeftHovered] = useState(false);
 //   const [isRightHovered, setIsRightHovered] = useState(false);
 
@@ -102,7 +130,23 @@
 //   };
 
 //   // Get the current product's title
-//   const currentTitle = products[currentSlide]?.title.toUpperCase() || "T-SHIRT";
+//   const currentTitle = products[currentSlide]?.title.toUpperCase() || "CATEGORY";
+
+//   if (loading) {
+//     return (
+//       <div className="w-full mx-auto flex flex-col overflow-hidden px-[20px] md:px-0 h-[400px] items-center justify-center">
+//         <p>Loading categories...</p>
+//       </div>
+//     );
+//   }
+
+//   if (error || products.length === 0) {
+//     return (
+//       <div className="w-full mx-auto flex flex-col overflow-hidden px-[20px] md:px-0 h-[400px] items-center justify-center">
+//         <p>{error || "No categories available"}</p>
+//       </div>
+//     );
+//   }
 
 //   return (
 //     <div className="w-full mx-auto flex flex-col overflow-hidden px-[20px] md:px-0 ">
@@ -129,7 +173,7 @@
 //                 height={307}
 //                 layout="responsive"
 //                 alt={item.title}
-//                 className="w-[307px] "
+//                 className="w-[307px]"
 //               />
 //             </div>
 //           </div>
@@ -235,10 +279,6 @@
 
 
 
-
-
-
-
 "use client";
 import Image from "next/image";
 import React, { useState, useRef, useEffect } from "react";
@@ -247,31 +287,32 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { motion } from "framer-motion";
 import axios from "axios";
+import { useRouter } from "next/navigation"; // Add useRouter
 
 const CategoryCarousel = () => {
-  const [products, setProducts] = useState([]); // Dynamic products from API
+  const [products, setProducts] = useState([]);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [centerIndex, setCenterIndex] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const sliderRef = useRef(null);
+  const router = useRouter(); // Initialize router
 
   // Fetch categories from API
   useEffect(() => {
     const fetchCategories = async () => {
       try {
         setLoading(true);
-        const response = await axios.get("http://localhost:5000/api/category");
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/category`);
         
         if (response.data && response.data.data) {
-          // Flatten all active categories from parent categories
           const allCategories = response.data.data.flatMap((parentCat) =>
             parentCat.categories
-              .filter((cat) => cat.status === "active") // Only active ones
+              .filter((cat) => cat.status === "active")
               .map((cat) => ({
                 title: cat.categoryName,
-                image: cat.image || "/default-category.png", // Default if null
-                price: "12 AED", // Hardcoded, replace with dynamic if needed
+                image: cat.image || "/default-category.png",
+                price: "12 AED",
               }))
           );
           setProducts(allCategories);
@@ -281,7 +322,6 @@ const CategoryCarousel = () => {
       } catch (err) {
         console.error("Error fetching categories:", err);
         setError("Failed to fetch categories");
-        // Fallback to empty array or static if needed
         setProducts([]);
       } finally {
         setLoading(false);
@@ -294,9 +334,9 @@ const CategoryCarousel = () => {
   const settings = {
     dots: false,
     arrows: false,
-    infinite: products.length > 1, // Infinite only if enough items
+    infinite: products.length > 1,
     speed: 500,
-    slidesToShow: Math.min(4.36, products.length), // Adjust based on data
+    slidesToShow: Math.min(4.36, products.length),
     slidesToScroll: 1,
     centerMode: true,
     centerPadding: "0px",
@@ -369,7 +409,11 @@ const CategoryCarousel = () => {
     }
   };
 
-  // Get the current product's title
+  // Handle category click to navigate to selling-page
+  const handleCategoryClick = (categoryName) => {
+    router.push(`/selling-page?categoryName=${encodeURIComponent(categoryName)}`);
+  };
+
   const currentTitle = products[currentSlide]?.title.toUpperCase() || "CATEGORY";
 
   if (loading) {
@@ -393,28 +437,33 @@ const CategoryCarousel = () => {
       <Slider ref={sliderRef} {...settings}>
         {products.map((item, index) => (
           <div className="relative" key={index}>
-            {index !== currentSlide && (
-              <div className="absolute top-2 left-10 md:left-[40px] h-[25px] px-2.5 py-[5px] bg-[#e4086f]/10 rounded-[10px] justify-center items-center gap-2.5 inline-flex">
-                <div className="text-black text-xs font-normal font-karla">
-                  {item.title}
-                </div>
-              </div>
-            )}
             <div
-              className={`w-[300px] h-[386px] mx-8 bg-white transition-all duration-500 ${
-                index === currentSlide
-                  ? "shadow-lg rounded-[155px]"
-                  : "rounded-[20px]"
-              }`}
+              className="cursor-pointer"
+              onClick={() => handleCategoryClick(item.title)} // Add click handler
             >
-              <Image
-                src={item.image}
-                width={307}
-                height={307}
-                layout="responsive"
-                alt={item.title}
-                className="w-[307px]"
-              />
+              {index !== currentSlide && (
+                <div className="absolute top-2 left-10 md:left-[40px] h-[25px] px-2.5 py-[5px] bg-[#e4086f]/10 rounded-[10px] justify-center items-center gap-2.5 inline-flex">
+                  <div className="text-black text-xs font-normal font-karla">
+                    {item.title}
+                  </div>
+                </div>
+              )}
+              <div
+                className={`w-[300px] h-[386px] mx-8 bg-white transition-all duration-500 ${
+                  index === currentSlide
+                    ? "shadow-lg rounded-[155px]"
+                    : "rounded-[20px]"
+                }`}
+              >
+                <Image
+                  src={item.image}
+                  width={307}
+                  height={307}
+                  layout="responsive"
+                  alt={item.title}
+                  className="w-[307px]"
+                />
+              </div>
             </div>
           </div>
         ))}
@@ -434,7 +483,6 @@ const CategoryCarousel = () => {
             />
           </div>
 
-          {/* Central Title Section */}
           <div className="h-[84px] px-4 py-4 bg-[#f0fafe] rounded-[20px] flex justify-center items-center gap-2.5">
             <div className="text-[#070707] text-base sm:text-xl font-bold font-karla leading-normal">
               {currentTitle}
@@ -454,7 +502,6 @@ const CategoryCarousel = () => {
           </div>
         </div>
 
-        {/* Left Arrow Button */}
         <div className="hidden sm:flex">
           <motion.div
             whileHover={{
@@ -475,14 +522,12 @@ const CategoryCarousel = () => {
           </motion.div>
         </div>
 
-        {/* Central Title Section for larger screens */}
-        <div className="hidden sm:flex h-[84px] w-[220px] px-4 sm:px-[60px] py-4 sm:py-[30px] bg-[#f0fafe] rounded-[20px]  justify-center items-center gap-2.5">
+        <div className="hidden sm:flex h-[84px] w-[220px] px-4 sm:px-[60px] py-4 sm:py-[30px] bg-[#f0fafe] rounded-[20px] justify-center items-center gap-2.5">
           <div className="text-[#070707] text-base sm:text-xl font-bold font-karla leading-normal">
             {currentTitle}
           </div>
         </div>
 
-        {/* Right Arrow Button */}
         <div className="hidden sm:flex">
           <motion.div
             whileHover={{

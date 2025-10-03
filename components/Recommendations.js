@@ -359,7 +359,6 @@ const RecommendationCard = ({ id, product, price }) => {
           },
         }
       );
-      console.log("Remaining offers for product", productId, ":", res.data.remainingOffers);
       setRemainingOffers(res.data.remainingOffers);
     } catch (error) {
       console.log("Error fetching remaining offer count", error);
