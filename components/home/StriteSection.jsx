@@ -105,7 +105,7 @@ const StriteSection = () => {
           width={300}
           height={300}
           className="w-[200px] h-[200px] sm:w-[300px] sm:h-[300px] md:w-[400px] md:h-[400px] lg:w-[550px] lg:h-[576px]"
-          src="/teenagers.png"
+          src="/teenageru.png"
         />
       </div>
 
