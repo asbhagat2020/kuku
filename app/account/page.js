@@ -1,173 +1,3 @@
-// "use client"; // Ensure Client-Side rendering
-
-// import { updateDetails } from "@/store/auth/authSlice";
-// import { useRouter } from "next/navigation";
-// import { useEffect, useState } from "react";
-// import { useDispatch, useSelector } from "react-redux";
-
-// export default function Account() {
-//   // State variables for form inputs
-//   const [KukuUsername, setKukuUsername] = useState("");
-//   const [fullName, setFullName] = useState("");
-//   const [phone, setPhone] = useState("");
-//   const [Description, setDescription] = useState("");
-//   const [location, setLocation] = useState("");
-//   const [isChecked, setIsChecked] = useState(false);
-//   const [id,setId]=useState('')
-//   const dispatch = useDispatch();
-//   const name=useSelector((state)=>state.auth.user)
-
-//   const router=useRouter()
-//   // Fetch user data from Redux and update local state on component load
-//   useEffect(() => {
-//     if (name) {
-//       setKukuUsername(name?.username || "");
-//       setFullName(name?.name || "");
-//       setId(name?._id || "")
-//     }
-//   }, [name]);
-
-//   // Handle form submission
-//   const handleSubmit = async(e) => {
-//     e.preventDefault();
-//     console.log({ KukuUsername, fullName, Description,phone, location, isChecked });
-//     const res=await dispatch(updateDetails({ KukuUsername, fullName,phone, Description, location, isChecked,id}))
-//     if(res.type==="auth/updateDetails/fulfilled"){
-//       router.push('/')
-//     }
-//   };
-
-//   const handleCheckboxChange = (e) => {
-//     setIsChecked(e.target.checked);
-//   };
-
-//   return (
-//     <div className="flex flex-col md:flex-row h-[800px]">
-//       {/* Left Image Section */}
-//       <div className="w-1/2 bg-gray-100">
-//         <img
-//           src="/bag-promotional-image-bag-advertising-image-fashion-banner-poster-fashion-banner-fashion-shop-banner 2.png"
-//           alt="Promotional"
-//           className="w-[703px] h-[800px] object-cover"
-//         />
-//       </div>
-
-//       {/* Right Form Section */}
-//       <div className="w-1/2 flex flex-col justify-center items-center px-[150px] py-2">
-//         {/* Logo Section */}
-//         <div className="flex items-center gap-2 mb-8">
-//           <img src="/Group1.svg" alt="KUKU Logo" className="h-14 w-14" />
-//           <div className="text-black text-3xl font-['Palanquin Dark'] font-bold">KUKU</div>
-//         </div>
-
-//         <div className="text-black text-xl font-karla font-bold mb-6">
-//           Let’s set your account up
-//         </div>
-
-//         {/* Form */}
-//         <form onSubmit={handleSubmit} className="w-full max-w-md">
-//           {/* Kuku Username */}
-//           <div className="mb-4">
-//             <label className="text-black text-base font-karla font-bold mb-2 block">
-//               Kuku Username
-//             </label>
-//             <input
-//               type="text"
-//               placeholder="Enter your Kuku username"
-//               value={KukuUsername}
-//               onChange={(e) => setKukuUsername(e.target.value)}
-//               className="w-full p-3 border border-gray-300 bg-gray-100 rounded-lg text-start text-black text-sm font-normal font-karla leading-none outline-none"
-//               required
-//             />
-//           </div>
-
-//           {/* Full Name */}
-//           <div className="mb-4">
-//             <label className="text-black text-base font-karla font-bold mb-2 block">
-//               Full Name
-//             </label>
-//             <input
-//               type="text"
-//               placeholder="Enter your full name"
-//               value={fullName}
-//               onChange={(e) => setFullName(e.target.value)}
-//               className="w-full p-3 border border-gray-300 bg-gray-100 rounded-lg text-start text-black text-sm font-normal font-karla leading-none outline-none"
-//               required
-//             />
-//           </div>
-
-//           <div className="mb-4">
-//             <label className="text-black text-base font-karla font-bold mb-2 block">
-//               Phone Number
-//             </label>
-//             <input
-//               type="tel"
-//   pattern="[\+]{0,1}[0-9]{10,15}"
-//               placeholder="Enter your phone number"
-//               value={phone}
-//               onChange={(e) => setPhone(e.target.value)}
-//               className="w-full p-3 border border-gray-300 bg-gray-100 rounded-lg text-start text-black text-sm font-normal font-karla leading-none outline-none"
-//               required
-//             />
-//           </div>
-
-//           {/* Description */}
-//           {/* <div className="mb-4">
-//             <label className="text-black text-base font-karla font-bold mb-2 block">
-//               Description
-//             </label>
-//             <input
-//               type="text"
-//               placeholder="Enter a brief description"
-//               value={Description}
-//               onChange={(e) => setDescription(e.target.value)}
-//               className="w-full p-3 border border-gray-300 bg-gray-100 rounded-lg text-start text-black text-sm font-normal font-karla leading-none outline-none"
-//             />
-//           </div> */}
-
-//           {/* Location */}
-//           {/* <div className="mb-4">
-//             <label className="text-black text-base font-karla font-bold mb-2 block">
-//               Location
-//             </label>
-//             <input
-//               type="text"
-//               placeholder="Enter your location"
-//               value={location}
-//               onChange={(e) => setLocation(e.target.value)}
-//               className="w-full p-3 border border-gray-300 bg-gray-100 rounded-lg text-start text-black text-sm font-normal font-karla leading-none outline-none"
-//               required
-//             />
-//           </div> */}
-
-//           {/* Checkbox */}
-//           <div className="flex flex-col items-start h-1 mb-12">
-//             <label className="flex items-center cursor-pointer">
-//               <input
-//                 type="checkbox"
-//                 checked={isChecked}
-//                 onChange={handleCheckboxChange}
-//                 className="mr-2"
-//               />
-//               <span className=" text-black text-sm font-normal font-karla leading-none">
-//                 By clicking here, Kuku lets you disclose your full name, but your Kuku username will be visible to all.
-//               </span>
-//             </label>
-//           </div>
-
-//           {/* Submit Button */}
-//           <button
-//             type="submit"
-//             className="w-full p-3 bg-yellow-400 text-black font-semibold font-karla rounded-lg"
-//           >
-//             Continue
-//           </button>
-//         </form>
-//       </div>
-//     </div>
-//   );
-// }
-
 "use client"; // Ensure Client-Side rendering
 
 import { updateDetails } from "@/store/auth/authSlice";
@@ -345,7 +175,7 @@ export default function Account() {
         {/* Form */}
         <form onSubmit={handleSubmit} className="w-full max-w-md">
           {/* Kuku Username */}
-          <div className="mb-4">
+          {/* <div className="mb-4">
             <label className="text-black text-base font-karla font-bold mb-2 block">
               Kuku Username
             </label>
@@ -362,6 +192,20 @@ export default function Account() {
             {errors.username && (
               <p className="text-red-500 text-xs mt-1">{errors.username}</p>
             )}
+          </div> */}
+          <div className="mb-4">
+            <label className="text-black text-base font-karla font-bold mb-2 block">
+              Kuku Username
+            </label>
+            <input
+              type="text"
+              value={KukuUsername}
+              readOnly
+              className="w-full p-3 border border-gray-300 bg-gray-200 cursor-not-allowed rounded-lg text-start text-black text-sm font-normal font-karla leading-none outline-none"
+            />
+            <p className="text-gray-500 text-xs mt-1">
+              Your KuKu username cannot be changed.
+            </p>
           </div>
 
           {/* Full Name */}
