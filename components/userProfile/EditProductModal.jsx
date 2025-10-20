@@ -1,6 +1,3 @@
-
-
-
 // "use client";
 // import { useState, useEffect } from "react";
 // import axios from "axios";
@@ -26,7 +23,7 @@
 //     brand: "",
 //     productType: "Listing",
 //     pickupAddress: {
-//       _id: "", // Store PickupAddress ObjectId
+//       _id: "",
 //       name: "",
 //       mob_no_country_code: "971",
 //       mobile_number: "",
@@ -52,7 +49,6 @@
 //   const [conditions, setConditions] = useState([]);
 //   const [sizes, setSizes] = useState([]);
 //   const [colors, setColors] = useState([]);
-//   const [selectedImages, setSelectedImages] = useState([]);
 //   const [uploadedImageUrls, setUploadedImageUrls] = useState([]);
 //   const [uploadingImages, setUploadingImages] = useState(false);
 //   const [selectedGender, setSelectedGender] = useState("");
@@ -63,7 +59,6 @@
 
 //   const token = Cookies.get("auth") ? JSON.parse(Cookies.get("auth")) : null;
 
-//   // City options based on pickupAddressSchema enum
 //   const cityOptions = [
 //     "Abu Dhabi",
 //     "Ajman",
@@ -75,7 +70,6 @@
 //     "Umm Al-Quwain",
 //   ];
 
-//   // Fetch reference data (brands, categories, conditions, sizes, colors)
 //   useEffect(() => {
 //     const fetchReferenceData = async () => {
 //       try {
@@ -88,7 +82,6 @@
 //             axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/colors/getcolor`),
 //           ]);
 
-//         // Handle categories data structure
 //         const Categories = categoriesRes.data.data.reduce((acc, category) => {
 //           if (!acc[category.parentCategory]) {
 //             acc[category.parentCategory] = [];
@@ -109,7 +102,6 @@
 //     fetchReferenceData();
 //   }, []);
 
-//   // Populate form data when product is available
 //   useEffect(() => {
 //     if (product && categories) {
 //       const categoryObj = product.category;
@@ -194,7 +186,7 @@
 //         pickupAddress: {
 //           ...prev.pickupAddress,
 //           [field]: field === "mobile_number" || field === "alternate_phone"
-//             ? value.replace(/[^0-9]/g, "").slice(0, 9) // Only digits, max 9
+//             ? value.replace(/[^0-9]/g, "").slice(0, 9)
 //             : value,
 //           ...(field === "mobile_number" && { mob_no_country_code: "971" }),
 //           ...(field === "alternate_phone" && { alt_ph_country_code: "971" }),
@@ -257,21 +249,24 @@
 //     setSelectedSubCategory(e.target.value);
 //   };
 
-//   const handleImageSelect = (event) => {
+//   const handleImageSelect = async (event) => {
 //     const files = Array.from(event.target.files);
-//     setSelectedImages((prevImages) => [...prevImages, ...files]);
-//   };
-
-//   const uploadImages = async () => {
-//     if (selectedImages.length === 0) {
-//       toast.error("Please select images to upload.");
+    
+//     const totalImages = uploadedImageUrls.length + files.length;
+    
+//     if (totalImages > 4) {
+//       toast.error("Maximum 4 images allowed!");
 //       return;
 //     }
+
+//     if (files.length === 0) return;
+
 //     setUploadingImages(true);
+    
 //     try {
-//       const uploadPromises = selectedImages.map(async (image) => {
+//       const uploadPromises = files.map(async (file) => {
 //         const formData = new FormData();
-//         formData.append("file", image);
+//         formData.append("file", file);
 //         const response = await axios.post(
 //           `${process.env.NEXT_PUBLIC_API_BASE_URL}/upload/single`,
 //           formData,
@@ -288,15 +283,24 @@
 //           throw new Error(`Upload failed with status ${response.status}`);
 //         }
 //       });
-//       const imageUrls = await Promise.all(uploadPromises);
-//       setUploadedImageUrls(imageUrls);
-//       toast.success("Images uploaded successfully!");
+      
+//       const newImageUrls = await Promise.all(uploadPromises);
+      
+//       setUploadedImageUrls((prev) => [...prev, ...newImageUrls]);
+      
+//       toast.success(`${newImageUrls.length} image(s) uploaded successfully!`);
 //     } catch (error) {
 //       console.error("Error uploading images:", error);
 //       toast.error("Failed to upload images. Please try again.");
 //     } finally {
 //       setUploadingImages(false);
+//       event.target.value = "";
 //     }
+//   };
+
+//   const handleRemoveImage = (indexToRemove) => {
+//     setUploadedImageUrls((prev) => prev.filter((_, index) => index !== indexToRemove));
+//     toast.success("Image removed");
 //   };
 
 //   const handleSubmit = async (e) => {
@@ -306,7 +310,6 @@
 //       return;
 //     }
 
-//     // Required fields for product
 //     const requiredFields = ["name", "price", "condition", "size", "category", "brand"];
 //     if (formData.openToRent === "Yes" || formData.productType === "Listing" || formData.productType === "Rental") {
 //       requiredFields.push(
@@ -323,13 +326,11 @@
 //       }
 //     }
 
-//     // Validate price for rental
 //     if (formData.openToRent === "Yes" && Number(formData.price) <= 1000) {
 //       setError("Price must be above 1000 AED for rental products");
 //       return;
 //     }
 
-//     // Validate missing fields
 //     const missingFields = requiredFields.filter((field) => {
 //       if (field.includes(".")) {
 //         const [parent, child] = field.split(".");
@@ -343,7 +344,16 @@
 //       return;
 //     }
 
-//     // Validate city
+//     if (uploadedImageUrls.length < 2) {
+//       setError("Please upload at least 2 images");
+//       return;
+//     }
+
+//     if (uploadedImageUrls.length > 4) {
+//       setError("Maximum 4 images allowed");
+//       return;
+//     }
+
 //     if ((formData.openToRent === "Yes" || formData.productType === "Listing" || formData.productType === "Rental") &&
 //         !cityOptions.includes(formData.pickupAddress.city)) {
 //       setError("Please select a valid city from the list");
@@ -352,7 +362,6 @@
 
 //     setError("");
 
-//     // Prepare category data
 //     let categoryData = {};
 //     if (selectedGender && selectedCategory && categories && categories[selectedGender]) {
 //       const selectedCategoryData = categories[selectedGender].flatMap((catObj) => catObj.categories || []).find((cat) => cat._id === selectedCategory);
@@ -374,7 +383,6 @@
 //       return;
 //     }
 
-//     // Update existing pickup address if required
 //     let pickupAddressId = formData.pickupAddress._id;
 //     if (formData.openToRent === "Yes" || formData.productType === "Listing" || formData.productType === "Rental") {
 //       if (!pickupAddressId) {
@@ -395,7 +403,7 @@
 //         address_type: formData.pickupAddress.address_type,
 //         email: formData.pickupAddress.email || undefined,
 //         country: formData.pickupAddress.country,
-//         seller: product.seller, // Assuming seller ID from product
+//         seller: product.seller,
 //       };
 
 //       try {
@@ -417,10 +425,9 @@
 //       }
 //     }
 
-//     // Prepare product data
 //     const productData = {
 //       name: formData.name,
-//       images: uploadedImageUrls.length > 0 ? uploadedImageUrls : formData.images,
+//       images: uploadedImageUrls,
 //       price: Number(formData.price),
 //       description: formData.description,
 //       condition: formData.condition,
@@ -503,7 +510,6 @@
 //             )}
 //             <form onSubmit={handleSubmit}>
 //               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-//                 {/* Left column - Basic product info */}
 //                 <div className="space-y-4">
 //                   <div>
 //                     <label className="block text-sm font-medium text-gray-700">
@@ -673,7 +679,7 @@
 //                   </div>
 //                   <div>
 //                     <label className="block text-sm font-medium text-gray-700">
-//                       Images
+//                       Images* (Min: 2, Max: 4)
 //                     </label>
 //                     <input
 //                       type="file"
@@ -681,39 +687,54 @@
 //                       accept="image/*"
 //                       className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
 //                       onChange={handleImageSelect}
+//                       disabled={uploadingImages || uploadedImageUrls.length >= 4}
 //                     />
-//                     {selectedImages.length > 0 && (
-//                       <div className="mt-2">
-//                         <button
-//                           type="button"
-//                           onClick={uploadImages}
-//                           disabled={uploadingImages}
-//                           className="px-4 py-2 bg-pink-500 text-white rounded-md hover:bg-pink-600 focus:outline-none focus:ring-2 focus:ring-pink-500"
-//                         >
-//                           {uploadingImages ? "Uploading..." : "Upload Images"}
-//                         </button>
+//                     {uploadingImages && (
+//                       <div className="mt-2 text-sm text-blue-600 flex items-center">
+//                         <svg className="animate-spin h-4 w-4 mr-2" viewBox="0 0 24 24">
+//                           <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+//                           <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+//                         </svg>
+//                         Uploading...
 //                       </div>
 //                     )}
 //                     {uploadedImageUrls.length > 0 && (
 //                       <div className="mt-2">
-//                         <p className="text-sm font-medium text-gray-700">
-//                           Uploaded Images:
+//                         <p className="text-sm font-medium text-gray-700 mb-2">
+//                           Uploaded Images ({uploadedImageUrls.length}/4):
 //                         </p>
-//                         <div className="flex flex-wrap">
+//                         <div className="flex flex-wrap gap-2">
 //                           {uploadedImageUrls.map((url, index) => (
-//                             <img
-//                               key={index}
-//                               src={url}
-//                               alt={`Uploaded Image ${index + 1}`}
-//                               className="w-20 h-20 object-cover rounded-md mr-2 mb-2 border border-gray-200"
-//                             />
+//                             <div key={index} className="relative group">
+//                               <img
+//                                 src={url}
+//                                 alt={`Image ${index + 1}`}
+//                                 className="w-20 h-20 object-cover rounded-md border border-gray-200"
+//                               />
+//                               <button
+//                                 type="button"
+//                                 onClick={() => handleRemoveImage(index)}
+//                                 className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600"
+//                               >
+//                                 <X className="w-4 h-4" />
+//                               </button>
+//                             </div>
 //                           ))}
 //                         </div>
+//                         {uploadedImageUrls.length < 2 && (
+//                           <p className="mt-1 text-xs text-red-500">
+//                             Please upload at least 2 images
+//                           </p>
+//                         )}
+//                         {uploadedImageUrls.length >= 4 && (
+//                           <p className="mt-1 text-xs text-gray-500">
+//                             Maximum 4 images reached
+//                           </p>
+//                         )}
 //                       </div>
 //                     )}
 //                   </div>
 //                 </div>
-//                 {/* Right column - Additional product info */}
 //                 <div className="space-y-4">
 //                   <div>
 //                     <label className="block text-sm font-medium text-gray-700">
@@ -1021,12 +1042,6 @@
 
 
 
-
-
-
-
-
-
 "use client";
 import { useState, useEffect } from "react";
 import axios from "axios";
@@ -1045,7 +1060,6 @@ const EditProductModal = ({ isOpen, product, onClose, onSave }) => {
     color: "",
     openToRent: "No",
     pricePerDay: "",
-    pricePerHour: "",
     deposit: "",
     damages: "",
     category: "",
@@ -1172,9 +1186,8 @@ const EditProductModal = ({ isOpen, product, onClose, onSave }) => {
         condition: product.condition?._id || "",
         size: product.size?._id || "",
         color: product.color?._id || "",
-        openToRent: product.openToRent || "No",
+        openToRent: product.openToRent ? "Yes" : "No",
         pricePerDay: product.pricePerDay || "",
-        pricePerHour: product.pricePerHour || "",
         deposit: product.deposit || "",
         damages: product.damages || "",
         category: categoryName,
@@ -1222,7 +1235,13 @@ const EditProductModal = ({ isOpen, product, onClose, onSave }) => {
         },
       }));
     } else {
-      setFormData((prev) => ({ ...prev, [name]: value }));
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value,
+        ...(name === "price" && {
+          deposit: value ? Math.round(Number(value) * 0.2) : "",
+        }),
+      }));
     }
   };
 
@@ -1233,7 +1252,6 @@ const EditProductModal = ({ isOpen, product, onClose, onSave }) => {
       openToRent: value,
       ...(value === "No" && {
         pricePerDay: "",
-        pricePerHour: "",
         deposit: "",
         pickupAddress: {
           ...prev.pickupAddress,
@@ -1280,7 +1298,6 @@ const EditProductModal = ({ isOpen, product, onClose, onSave }) => {
 
   const handleImageSelect = async (event) => {
     const files = Array.from(event.target.files);
-    
     const totalImages = uploadedImageUrls.length + files.length;
     
     if (totalImages > 4) {
@@ -1351,7 +1368,7 @@ const EditProductModal = ({ isOpen, product, onClose, onSave }) => {
         "pickupAddress.address_type"
       );
       if (formData.openToRent === "Yes") {
-        requiredFields.push("pricePerDay", "pricePerHour", "deposit");
+        requiredFields.push("pricePerDay", "deposit");
       }
     }
 
@@ -1465,9 +1482,8 @@ const EditProductModal = ({ isOpen, product, onClose, onSave }) => {
       category: categoryData,
       size: formData.size,
       openToRent: formData.openToRent,
-      pricePerDay: formData.openToRent === "Yes" ? Number(formData.pricePerDay) : undefined,
-      pricePerHour: formData.openToRent === "Yes" ? Number(formData.pricePerHour) : undefined,
-      deposit: formData.openToRent === "Yes" ? Number(formData.deposit) : undefined,
+      pricePerDay: formData.openToRent === "Yes" ? Number(formData.pricePerDay) : 0,
+      deposit: formData.openToRent === "Yes" ? Number(formData.deposit) : 0,
       damages: formData.damages,
       productType: formData.productType,
       pickupAddress: pickupAddressId || undefined,
@@ -1812,27 +1828,13 @@ const EditProductModal = ({ isOpen, product, onClose, onSave }) => {
                     <>
                       <div>
                         <label className="block text-sm font-medium text-gray-700">
-                          Price Per Day* (AED)
+                          Rental Price Per Day* (AED)
                         </label>
                         <input
                           type="number"
                           name="pricePerDay"
                           className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
                           value={formData.pricePerDay}
-                          onChange={handleChange}
-                          required
-                          min="0"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700">
-                          Price Per Hour* (AED)
-                        </label>
-                        <input
-                          type="number"
-                          name="pricePerHour"
-                          className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
-                          value={formData.pricePerHour}
                           onChange={handleChange}
                           required
                           min="0"
@@ -1847,9 +1849,7 @@ const EditProductModal = ({ isOpen, product, onClose, onSave }) => {
                           name="deposit"
                           className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
                           value={formData.deposit}
-                          onChange={handleChange}
-                          required
-                          min="0"
+                          disabled
                         />
                       </div>
                     </>
