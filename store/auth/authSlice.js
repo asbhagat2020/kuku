@@ -350,35 +350,477 @@
 
 
 
+// import { toast } from "react-hot-toast";
+// import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+// import axios from "axios";
+// import Cookies from "js-cookie";
+
+// const user =
+//   typeof window !== "undefined" && Cookies.get("user")
+//     ? JSON.parse(Cookies.get("user"))
+//     : {
+//         _id: "",
+//         username: "",
+//         name: "",
+//       };
+// const token =
+//   typeof window !== "undefined" && Cookies.get("auth")
+//     ? JSON.parse(Cookies.get("auth"))
+//     : null;
+
+// const initialState = {
+//   user: user,
+//   token: token,
+//   isAuthenticated: false,
+//   loading: false,
+//   error: null,
+//   otpSend: false,
+//   signupSuccess: false,
+// };
+
+// // Register OTP - countryCode remove kiya
+// export const registerOtp = createAsyncThunk(
+//   "auth/sendRegistrationOtp",
+//   async ({ emailOrPhone }, { rejectWithValue }) => {
+//     try {
+//       if (!process.env.NEXT_PUBLIC_API_BASE_URL) {
+//         console.error("NEXT_PUBLIC_API_BASE_URL is not defined");
+//         toast.error("Server configuration error. Please contact support.");
+//         return rejectWithValue("Server configuration error");
+//       }
+      
+//       console.log("Sending registration OTP request:", { emailOrPhone });
+      
+//       const response = await axios.post(
+//         `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/register/otp`,
+//         { emailOrPhone }
+//       );
+      
+//       toast.success(response?.data?.message || "OTP sent successfully");
+//       return response.data;
+//     } catch (error) {
+//       console.error("registerOtp error:", {
+//         message: error.message,
+//         status: error.response?.status,
+//         data: error.response?.data,
+//       });
+//       const errorMessage = error.response?.data?.message || "Failed to send OTP";
+//       toast.error(errorMessage);
+//       return rejectWithValue(errorMessage);
+//     }
+//   }
+// );
+
+// export const googleSignUp = createAsyncThunk(
+//   "auth/googleSignUp",
+//   async ({ session, status }, { rejectWithValue }) => {
+//     try {
+//       if (!process.env.NEXT_PUBLIC_API_BASE_URL) {
+//         console.error("NEXT_PUBLIC_API_BASE_URL is not defined");
+//         toast.error("Server configuration error. Please contact support.");
+//         return rejectWithValue("Server configuration error");
+//       }
+//       console.log("Google Sign-Up request for:", session.user.email);
+//       const response = await axios.post(
+//         `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/register/social`,
+//         {
+//           email: session.user.email,
+//           name: session.user.name,
+//         }
+//       );
+//       toast.success("Sign up successful");
+//       return response.data;
+//     } catch (error) {
+//       console.error("googleSignUp error:", {
+//         message: error.message,
+//         status: error.response?.status,
+//         data: error.response?.data,
+//       });
+//       const errorMessage = error.response?.data?.message || "Google signup failed";
+//       toast.error(errorMessage);
+//       return rejectWithValue(errorMessage);
+//     }
+//   }
+// );
+
+// export const googleSignIn = createAsyncThunk(
+//   "auth/googleSignIn",
+//   async ({ session }, { rejectWithValue }) => {
+//     try {
+//       if (!process.env.NEXT_PUBLIC_API_BASE_URL) {
+//         console.error("NEXT_PUBLIC_API_BASE_URL is not defined");
+//         toast.error("Server configuration error. Please contact support.");
+//         return rejectWithValue("Server configuration error");
+//       }
+//       console.log("Google Sign-In request for:", session?.user?.email);
+//       const response = await axios.post(
+//         `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/login/social`,
+//         {
+//           email: session?.user?.email,
+//         }
+//       );
+//       Cookies.set("auth", JSON.stringify(response.data.token));
+//       Cookies.set("user", JSON.stringify(response.data.user));
+//       toast.success("Sign in successful");
+//       return response.data;
+//     } catch (error) {
+//       console.error("googleSignIn error:", {
+//         message: error.message,
+//         status: error.response?.status,
+//         data: error.response?.data,
+//       });
+//       const errorMessage = error.response?.data?.message || "Google signin failed";
+//       toast.error(errorMessage);
+//       return rejectWithValue(errorMessage);
+//     }
+//   }
+// );
+
+// // Signin OTP - countryCode remove kiya
+// export const signinOtp = createAsyncThunk(
+//   "auth/sendSigninOtp",
+//   async ({ emailOrPhone }, { rejectWithValue }) => {
+//     try {
+//       if (!process.env.NEXT_PUBLIC_API_BASE_URL) {
+//         console.error("NEXT_PUBLIC_API_BASE_URL is not defined");
+//         toast.error("Server configuration error. Please contact support.");
+//         return rejectWithValue("Server configuration error");
+//       }
+      
+//       console.log("Sending OTP request:", { emailOrPhone });
+      
+//       const response = await axios.post(
+//         `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/login/otp`,
+//         { emailOrPhone }
+//       );
+      
+//       toast.success(response?.data?.message || "OTP sent successfully");
+//       return response.data;
+//     } catch (error) {
+//       console.error("signinOtp error:", {
+//         message: error.message,
+//         status: error.response?.status,
+//         data: error.response?.data,
+//       });
+//       const errorMessage = error.response?.data?.message || "Failed to send OTP";
+//       toast.error(errorMessage);
+//       return rejectWithValue(errorMessage);
+//     }
+//   }
+// );
+
+// // Verify Signin OTP - countryCode remove kiya
+// export const verifySigninOtp = createAsyncThunk(
+//   "auth/otpSignIn",
+//   async ({ emailOrPhone, otp }, { rejectWithValue }) => {
+//     try {
+//       if (!process.env.NEXT_PUBLIC_API_BASE_URL) {
+//         console.error("NEXT_PUBLIC_API_BASE_URL is not defined");
+//         toast.error("Server configuration error. Please contact support.");
+//         return rejectWithValue("Server configuration error");
+//       }
+      
+//       console.log("Verifying OTP for:", { emailOrPhone, otp });
+      
+//       const response = await axios.post(
+//         `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/otp/login/verify`,
+//         { emailOrPhone, otp: +otp }
+//       );
+      
+//       Cookies.set("auth", JSON.stringify(response.data.token));
+//       Cookies.set("user", JSON.stringify(response.data.user));
+//       toast.success("Login successful");
+//       return response.data;
+//     } catch (error) {
+//       console.error("verifySigninOtp error:", {
+//         message: error.message,
+//         status: error.response?.status,
+//         data: error.response?.data,
+//       });
+//       const errorMessage = error.response?.data?.message || "Invalid OTP";
+//       toast.error(errorMessage);
+//       return rejectWithValue(errorMessage);
+//     }
+//   }
+// );
+
+// // OTP Signup - already no countryCode
+// export const otpSignup = createAsyncThunk(
+//   "auth/otpSignup",
+//   async ({ emailOrPhone, otp }, { rejectWithValue }) => {
+//     try {
+//       if (!process.env.NEXT_PUBLIC_API_BASE_URL) {
+//         console.error("NEXT_PUBLIC_API_BASE_URL is not defined");
+//         toast.error("Server configuration error. Please contact support.");
+//         return rejectWithValue("Server configuration error");
+//       }
+      
+//       console.log("Verifying signup OTP for:", emailOrPhone);
+      
+//       const response = await axios.post(
+//         `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/otp/register/verify`,
+//         { emailOrPhone, otp: +otp }
+//       );
+      
+//       Cookies.set("auth", JSON.stringify(response.data.token));
+//       Cookies.set("user", JSON.stringify(response.data.user));
+//       toast.success(response.data.message || "Registration successful");
+//       return response.data;
+//     } catch (error) {
+//       console.error("otpSignup error:", {
+//         message: error.message,
+//         status: error.response?.status,
+//         data: error.response?.data,
+//       });
+//       const errorMessage = error.response?.data?.message || "OTP verification failed";
+//       toast.error(errorMessage);
+//       return rejectWithValue(errorMessage);
+//     }
+//   }
+// );
+
+// export const facebookSignIn = createAsyncThunk(
+//   "auth/facebookSignIn",
+//   async (_, { rejectWithValue }) => {
+//     // Placeholder for Facebook Sign-In
+//     try {
+//       throw new Error("Facebook Sign-In not implemented");
+//     } catch (error) {
+//       console.error("facebookSignIn error:", error);
+//       toast.error("Facebook Sign-In not implemented");
+//       return rejectWithValue("Facebook Sign-In not implemented");
+//     }
+//   }
+// );
+
+// export const updateDetails = createAsyncThunk(
+//   "auth/updateDetails",
+//   async (
+//     { KukuUsername, fullName, Description, phone, location, isChecked, id },
+//     { rejectWithValue }
+//   ) => {
+//     try {
+//       if (!process.env.NEXT_PUBLIC_API_BASE_URL) {
+//         console.error("NEXT_PUBLIC_API_BASE_URL is not defined");
+//         toast.error("Server configuration error. Please contact support.");
+//         return rejectWithValue("Server configuration error");
+//       }
+//       console.log("Updating details for user ID:", id);
+//       const response = await axios.patch(
+//         `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/update/details/${id}`,
+//         {
+//           username: KukuUsername,
+//           name: fullName,
+//           phone: phone,
+//           description: Description,
+//           location: location,
+//           anonymous: !isChecked,
+//         }
+//       );
+//       Cookies.set("auth", JSON.stringify(response.data.token));
+//       Cookies.set("user", JSON.stringify(response.data.user));
+//       toast.success(response.data.message || "Details updated successfully");
+//       return response.data.user;
+//     } catch (error) {
+//       console.error("updateDetails error:", {
+//         message: error.message,
+//         status: error.response?.status,
+//         data: error.response?.data,
+//       });
+//       const errorMessage = error.response?.data?.message || "Update failed";
+//       const errorField = error.response?.data?.field;
+//       toast.error(errorMessage);
+//       return rejectWithValue({
+//         message: errorMessage,
+//         field: errorField,
+//       });
+//     }
+//   }
+// );
+
+// const authSlice = createSlice({
+//   name: "auth",
+//   initialState,
+//   reducers: {
+//     logout: (state) => {
+//       state.user = null;
+//       state.token = null;
+//       state.isAuthenticated = false;
+//       state.otpSend = false;
+//       state.signupSuccess = false;
+//       Cookies.remove("auth");
+//       Cookies.remove("user");
+//     },
+//     clearOtp: (state) => {
+//       state.otpSend = false;
+//     },
+//   },
+//   extraReducers: (builder) => {
+//     builder
+//       .addCase(registerOtp.pending, (state) => {
+//         state.loading = true;
+//         state.error = null;
+//         state.otpSend = false;
+//       })
+//       .addCase(registerOtp.fulfilled, (state, action) => {
+//         state.loading = false;
+//         state.otpSend = true;
+//       })
+//       .addCase(registerOtp.rejected, (state, action) => {
+//         state.loading = false;
+//         state.error = action.payload;
+//       });
+//     builder
+//       .addCase(otpSignup.pending, (state) => {
+//         state.loading = true;
+//         state.error = null;
+//         state.signupSuccess = false;
+//       })
+//       .addCase(otpSignup.fulfilled, (state, action) => {
+//         state.user = action.payload.user;
+//         state.token = action.payload.token;
+//         state.loading = false;
+//         state.error = null;
+//         state.signupSuccess = true;
+//         state.isAuthenticated = true;
+//       })
+//       .addCase(otpSignup.rejected, (state, action) => {
+//         state.error = action.payload;
+//         state.loading = false;
+//         state.signupSuccess = false;
+//       });
+//     builder
+//       .addCase(googleSignUp.pending, (state) => {
+//         state.loading = true;
+//         state.error = null;
+//       })
+//       .addCase(googleSignUp.fulfilled, (state, action) => {
+//         state.user = action.payload.user;
+//         state.token = action.payload.token;
+//         state.isAuthenticated = true;
+//         state.loading = false;
+//       })
+//       .addCase(googleSignUp.rejected, (state, action) => {
+//         state.error = action.payload;
+//         state.loading = false;
+//       });
+//     builder
+//       .addCase(googleSignIn.pending, (state) => {
+//         state.loading = true;
+//         state.error = null;
+//       })
+//       .addCase(googleSignIn.fulfilled, (state, action) => {
+//         state.user = action.payload.user;
+//         state.token = action.payload.token;
+//         state.isAuthenticated = true;
+//         state.loading = false;
+//       })
+//       .addCase(googleSignIn.rejected, (state, action) => {
+//         state.error = action.payload;
+//         state.loading = false;
+//       });
+//     builder
+//       .addCase(verifySigninOtp.pending, (state) => {
+//         state.loading = true;
+//         state.error = null;
+//       })
+//       .addCase(verifySigninOtp.fulfilled, (state, action) => {
+//         state.user = action.payload.user;
+//         state.token = action.payload.token;
+//         state.isAuthenticated = true;
+//         state.loading = false;
+//       })
+//       .addCase(verifySigninOtp.rejected, (state, action) => {
+//         state.error = action.payload;
+//         state.loading = false;
+//       });
+//     builder
+//       .addCase(facebookSignIn.pending, (state) => {
+//         state.loading = true;
+//         state.error = null;
+//       })
+//       .addCase(facebookSignIn.fulfilled, (state, action) => {
+//         state.user = action.payload;
+//         state.isAuthenticated = true;
+//         state.loading = false;
+//       })
+//       .addCase(facebookSignIn.rejected, (state, action) => {
+//         state.error = action.payload;
+//         state.loading = false;
+//       });
+//     builder
+//       .addCase(updateDetails.pending, (state) => {
+//         state.loading = true;
+//         state.error = null;
+//       })
+//       .addCase(updateDetails.fulfilled, (state, action) => {
+//         state.user = action.payload;
+//         state.isAuthenticated = true;
+//         state.loading = false;
+//       })
+//       .addCase(updateDetails.rejected, (state, action) => {
+//         state.error = action.payload;
+//         state.loading = false;
+//       });
+//   },
+// });
+
+// export const { logout, clearOtp } = authSlice.actions;
+// export default authSlice.reducer;
+
+
+
+
+
+
+
+
+"use client";
+
 import { toast } from "react-hot-toast";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import Cookies from "js-cookie";
 
+// Safely parse user cookie
 const user =
   typeof window !== "undefined" && Cookies.get("user")
-    ? JSON.parse(Cookies.get("user"))
-    : {
-        _id: "",
-        username: "",
-        name: "",
-      };
+    ? (() => {
+        try {
+          const userCookie = Cookies.get("user");
+          return userCookie ? JSON.parse(userCookie) : { _id: "", username: "", name: "" };
+        } catch (error) {
+          console.error("Error parsing user cookie:", error);
+          return { _id: "", username: "", name: "" };
+        }
+      })()
+    : { _id: "", username: "", name: "" };
+
+// Safely parse auth cookie
 const token =
   typeof window !== "undefined" && Cookies.get("auth")
-    ? JSON.parse(Cookies.get("auth"))
+    ? (() => {
+        try {
+          const authCookie = Cookies.get("auth");
+          return authCookie ? JSON.parse(authCookie) : null;
+        } catch (error) {
+          console.error("Error parsing auth cookie:", error);
+          return null;
+        }
+      })()
     : null;
 
 const initialState = {
   user: user,
   token: token,
-  isAuthenticated: false,
+  isAuthenticated: !!token, // Set isAuthenticated based on token
   loading: false,
   error: null,
   otpSend: false,
   signupSuccess: false,
 };
 
-// Register OTP - countryCode remove kiya
+// Register OTP
 export const registerOtp = createAsyncThunk(
   "auth/sendRegistrationOtp",
   async ({ emailOrPhone }, { rejectWithValue }) => {
@@ -388,14 +830,14 @@ export const registerOtp = createAsyncThunk(
         toast.error("Server configuration error. Please contact support.");
         return rejectWithValue("Server configuration error");
       }
-      
+
       console.log("Sending registration OTP request:", { emailOrPhone });
-      
+
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/register/otp`,
         { emailOrPhone }
       );
-      
+
       toast.success(response?.data?.message || "OTP sent successfully");
       return response.data;
     } catch (error) {
@@ -476,7 +918,6 @@ export const googleSignIn = createAsyncThunk(
   }
 );
 
-// Signin OTP - countryCode remove kiya
 export const signinOtp = createAsyncThunk(
   "auth/sendSigninOtp",
   async ({ emailOrPhone }, { rejectWithValue }) => {
@@ -486,14 +927,14 @@ export const signinOtp = createAsyncThunk(
         toast.error("Server configuration error. Please contact support.");
         return rejectWithValue("Server configuration error");
       }
-      
+
       console.log("Sending OTP request:", { emailOrPhone });
-      
+
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/login/otp`,
         { emailOrPhone }
       );
-      
+
       toast.success(response?.data?.message || "OTP sent successfully");
       return response.data;
     } catch (error) {
@@ -509,7 +950,6 @@ export const signinOtp = createAsyncThunk(
   }
 );
 
-// Verify Signin OTP - countryCode remove kiya
 export const verifySigninOtp = createAsyncThunk(
   "auth/otpSignIn",
   async ({ emailOrPhone, otp }, { rejectWithValue }) => {
@@ -519,14 +959,14 @@ export const verifySigninOtp = createAsyncThunk(
         toast.error("Server configuration error. Please contact support.");
         return rejectWithValue("Server configuration error");
       }
-      
+
       console.log("Verifying OTP for:", { emailOrPhone, otp });
-      
+
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/otp/login/verify`,
         { emailOrPhone, otp: +otp }
       );
-      
+
       Cookies.set("auth", JSON.stringify(response.data.token));
       Cookies.set("user", JSON.stringify(response.data.user));
       toast.success("Login successful");
@@ -544,7 +984,6 @@ export const verifySigninOtp = createAsyncThunk(
   }
 );
 
-// OTP Signup - already no countryCode
 export const otpSignup = createAsyncThunk(
   "auth/otpSignup",
   async ({ emailOrPhone, otp }, { rejectWithValue }) => {
@@ -554,14 +993,14 @@ export const otpSignup = createAsyncThunk(
         toast.error("Server configuration error. Please contact support.");
         return rejectWithValue("Server configuration error");
       }
-      
+
       console.log("Verifying signup OTP for:", emailOrPhone);
-      
+
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/otp/register/verify`,
         { emailOrPhone, otp: +otp }
       );
-      
+
       Cookies.set("auth", JSON.stringify(response.data.token));
       Cookies.set("user", JSON.stringify(response.data.user));
       toast.success(response.data.message || "Registration successful");
@@ -582,7 +1021,6 @@ export const otpSignup = createAsyncThunk(
 export const facebookSignIn = createAsyncThunk(
   "auth/facebookSignIn",
   async (_, { rejectWithValue }) => {
-    // Placeholder for Facebook Sign-In
     try {
       throw new Error("Facebook Sign-In not implemented");
     } catch (error) {

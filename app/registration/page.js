@@ -200,10 +200,6 @@
 
 
 
-
-
-
-
 "use client";
 
 import { useState, useEffect, useRef } from "react";
@@ -214,13 +210,13 @@ import { googleSignUp, otpSignup, registerOtp } from "@/store/auth/authSlice";
 import { toast } from "react-hot-toast";
 
 export default function Home() {
-  const [phoneNumber, setPhoneNumber] = useState(""); // Local UAE phone
+  const [emailOrPhone, setEmailOrPhone] = useState("");
   const [otp, setOtp] = useState("");
   const [isChecked, setIsChecked] = useState(false);
   const [isOtpSent, setIsOtpSent] = useState(false);
   const [timer, setTimer] = useState(0);
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false); // Added loading state
   const router = useRouter();
   const dispatch = useDispatch();
   const { data: session, status } = useSession();
@@ -232,30 +228,33 @@ export default function Home() {
     setIsOtpSent(otpSent);
   }, [otpSent]);
 
-  // Validate UAE local phone
+  // Validate email or UAE local phone number
   const validateInput = (input) => {
-    const phoneRegex = /^[5][0-9]{8}$/; // UAE local: 9 digits starting with 5
-    if (phoneRegex.test(input)) return "phone";
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const phoneRegexUAE = /^[5][0-9]{8}$/; // 9 digits starting with 5 for UAE
+    if (emailRegex.test(input)) return "email";
+    if (phoneRegexUAE.test(input)) return "phone";
     return "invalid";
   };
 
   const handleOtpsend = async () => {
-    if (!phoneNumber.trim()) {
-      setError("Please enter your UAE phone number");
+    let inputValue = emailOrPhone.trim();
+    if (!inputValue) {
+      setError("Please enter your email or UAE phone number");
       return;
     }
 
-    const inputType = validateInput(phoneNumber);
+    const inputType = validateInput(inputValue);
     if (inputType === "invalid") {
-      setError("Please enter a valid 9-digit UAE number starting with 5 (e.g., 543781819)");
+      setError("Please enter a valid email or 9-digit UAE number starting with 5 (e.g., 543781819)");
       return;
     }
 
     setError("");
     setLoading(true);
     try {
-      console.log("Sending OTP request:", { emailOrPhone: phoneNumber });
-      const res = await dispatch(registerOtp({ emailOrPhone: phoneNumber }));
+      console.log("Sending OTP request:", { emailOrPhone: inputValue });
+      const res = await dispatch(registerOtp({ emailOrPhone: inputValue }));
       if (res.type === "auth/sendRegistrationOtp/fulfilled") {
         setIsOtpSent(true);
         const currentTime = Date.now();
@@ -275,8 +274,10 @@ export default function Home() {
   };
 
   const handleRegister = async () => {
-    if (validateInput(phoneNumber) === "invalid") {
-      setError("Please enter a valid UAE phone number");
+    let inputValue = emailOrPhone.trim();
+    const inputType = validateInput(inputValue);
+    if (inputType === "invalid") {
+      setError("Please enter a valid email or UAE phone number");
       return;
     }
 
@@ -292,7 +293,7 @@ export default function Home() {
 
     setLoading(true);
     try {
-      const res = await dispatch(otpSignup({ emailOrPhone: phoneNumber, otp }));
+      const res = await dispatch(otpSignup({ emailOrPhone: inputValue, otp }));
       if (res.type === "auth/otpSignup/fulfilled") {
         toast.success("Registration successful!");
         router.push("/account");
@@ -300,6 +301,7 @@ export default function Home() {
         setError(res.payload || "Invalid OTP. Please try again.");
       }
     } catch (error) {
+      console.error("handleRegister error:", error);
       setError("An error occurred while verifying OTP. Please try again.");
     } finally {
       setLoading(false);
@@ -319,6 +321,7 @@ export default function Home() {
             setError(res.payload || "Google Sign-Up failed.");
           }
         } catch (error) {
+          console.error("Google Sign-Up error:", error);
           setError("An error occurred during Google Sign-Up.");
         }
       }
@@ -364,12 +367,12 @@ export default function Home() {
           <div className="text-black text-xl font-Karla font-bold mb-6">Create your account</div>
           <form className="w-full max-w-md">
             <div className="mb-4">
-              <label className="text-black text-base font-Karla font-bold mb-2 block">Phone Number</label>
+              <label className="text-black text-base font-Karla font-bold mb-2 block">Email or Phone Number</label>
               <input
                 type="text"
-                placeholder="Enter your UAE phone number (e.g., 543781819)"
-                value={phoneNumber}
-                onChange={(e) => setPhoneNumber(e.target.value)}
+                placeholder="Enter your email or UAE phone number (e.g., test@example.com or 543781819)"
+                value={emailOrPhone}
+                onChange={(e) => setEmailOrPhone(e.target.value)}
                 className="w-full p-3 border border-gray-300 bg-gray-100 rounded-lg text-start text-black text-sm font-normal font-karla leading-none"
                 required
               />
