@@ -2,6 +2,7 @@
 
 
 
+
 // "use client";
 
 // import React, { useState, useEffect } from "react";
@@ -320,6 +321,21 @@
 //             </div>
 //           </div>
 //         </div>
+//         {order?.isFullRefunded && (
+//           <div className="max-w-6xl mx-auto px-6 py-6">
+//             <h3 className="text-lg md:text-xl font-karla mb-4 font-semibold text-center md:text-left">Refund Details</h3>
+//             <div className="bg-[#F7F7F6] shadow-md border border-gray-200 p-6 rounded-lg">
+//               <div className="flex justify-between items-center mb-2">
+//                 <p className="text-black font-karla text-sm md:text-[16px] font-semibold">Refund Status</p>
+//                 <p className="text-emerald-500 text-xs md:text-[12px]">Fully Refunded</p>
+//               </div>
+//               <div className="flex justify-between items-center">
+//                 <p className="text-black font-karla text-sm md:text-[16px] font-semibold">Refunded Amount</p>
+//                 <p className="text-gray-400 text-xs md:text-[12px]">AED {order?.fullRefundedAmount?.toFixed(2) || "0.00"}</p>
+//               </div>
+//             </div>
+//           </div>
+//         )}
 //       </div>
 //       {showCancelDialog && (
 //         <Modal onClose={() => setShowCancelDialog(false)}>
@@ -366,10 +382,14 @@
 
 
 
+
+
+
+
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { Check } from "lucide-react";
 import Link from "next/link";
 import toast from "react-hot-toast";
@@ -406,6 +426,7 @@ const Modal = ({ children, onClose }) => (
 
 const OrderDetails = () => {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const [showCancelDialog, setShowCancelDialog] = useState(false);
   const [showSuccessDialog, setShowSuccessDialog] = useState(false);
   const [order, setOrder] = useState(null);
@@ -483,6 +504,10 @@ const OrderDetails = () => {
       setError(err.message);
       toast.error(err.message);
     }
+  };
+
+  const handleTrackReturn = () => {
+    router.push(`/returnorder/track-return-status?orderId=${orderId}`);
   };
 
   if (loading) return <div className="text-center p-8">Loading...</div>;
@@ -571,6 +596,8 @@ const OrderDetails = () => {
                   ? "bg-emerald-100 text-emerald-600"
                   : order?.orderStatus === "Returned"
                   ? "bg-yellow-100 text-yellow-600"
+                  : order?.orderStatus === "Buyer Wanted Return Item"
+                  ? "bg-orange-100 text-orange-600"
                   : "bg-blue-100 text-blue-600"
               }`}
             >
@@ -659,6 +686,14 @@ const OrderDetails = () => {
                 {order?.orderStatus === "Confirmed" && (
                   <button onClick={() => setShowCancelDialog(true)} className={`font-karla text-[${CONSTANTS.COLORS.PRIMARY}] underline text-sm font-bold`}>
                     Cancel Order
+                  </button>
+                )}
+                {order?.orderStatus === "Buyer Wanted Return Item" && (
+                  <button 
+                    onClick={handleTrackReturn}
+                    className={`font-karla text-[${CONSTANTS.COLORS.PRIMARY}] underline text-sm font-bold hover:opacity-80 transition-opacity`}
+                  >
+                    Track Your Return Item
                   </button>
                 )}
               </div>

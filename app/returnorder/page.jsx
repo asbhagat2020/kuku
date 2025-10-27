@@ -10,7 +10,7 @@ export default function ReturnOrder() {
   return (
     <>
       <Header />
-      <ReturnOrderPage /> {/* searchParams prop ki zarurat nahi */}
+      <ReturnOrderPage /> 
       <Footer />
     </>
   );

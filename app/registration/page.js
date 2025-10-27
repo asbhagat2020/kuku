@@ -261,7 +261,7 @@ export default function Home() {
         const remainingTimeInMs = res.payload.otpExpires - currentTime;
         const remainingTimeInSeconds = Math.ceil(remainingTimeInMs / 1000);
         setTimer(remainingTimeInSeconds);
-        toast.success("OTP sent successfully!");
+        // toast.success("OTP sent successfully!");
       } else {
         setError(res.payload || "Failed to send OTP. Please try again.");
       }
@@ -295,7 +295,7 @@ export default function Home() {
     try {
       const res = await dispatch(otpSignup({ emailOrPhone: inputValue, otp }));
       if (res.type === "auth/otpSignup/fulfilled") {
-        toast.success("Registration successful!");
+        // toast.success("Registration successful!");
         router.push("/account");
       } else {
         setError(res.payload || "Invalid OTP. Please try again.");
@@ -315,7 +315,7 @@ export default function Home() {
         try {
           const res = await dispatch(googleSignUp({ session, status }));
           if (res.type === "auth/googleSignUp/fulfilled") {
-            toast.success("Google Sign-Up successful!");
+            // toast.success("Google Sign-Up successful!");
             router.push("/account");
           } else {
             setError(res.payload || "Google Sign-Up failed.");
