@@ -1,3 +1,11 @@
+
+
+
+
+
+
+
+
 // "use client";
 // import { useState, useEffect } from "react";
 // import { useSelector } from "react-redux";
@@ -22,11 +30,14 @@
 //     const token = JSON.parse(Cookies.get("auth"));
 //     setLoading(true);
 //     try {
-//       const res = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/products/getProductsByUser/${data?._id}`, {
-//         headers: { Authorization: `Bearer ${token}` },
-//       });
+//       const res = await axios.get(
+//         `${process.env.NEXT_PUBLIC_API_BASE_URL}/products/getProductsByUser/${data?._id}`,
+//         {
+//           headers: { Authorization: `Bearer ${token}` },
+//         }
+//       );
 //       if (res.status === 200) {
-//         console.log("Products from API:", res.data.products);
+//         // console.log("Products from API:", res.data.products);
 //         setProducts(res.data.products || []);
 //       }
 //     } catch (error) {
@@ -41,9 +52,12 @@
 //     const token = JSON.parse(Cookies.get("auth"));
 //     setLoading(true);
 //     try {
-//       const res = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/reviews/buyer-products`, {
-//         headers: { Authorization: `Bearer ${token}` },
-//       });
+//       const res = await axios.get(
+//         `${process.env.NEXT_PUBLIC_API_BASE_URL}/reviews/buyer-products`,
+//         {
+//           headers: { Authorization: `Bearer ${token}` },
+//         }
+//       );
 //       if (res.status === 200) {
 //         console.log("Reviews from API:", res.data);
 //         setUserReviews(res.data || []);
@@ -59,13 +73,13 @@
 //   useEffect(() => {
 //     if (data?._id) {
 //       getProductsByUser();
-//       fetchUserReviews(); // Fetch reviews for review count
+//       fetchUserReviews();
 //     }
 //   }, [data]);
 
 //   useEffect(() => {
-//     console.log("Products state updated:", products);
-//     console.log("User Reviews state updated:", userReviews);
+//     // console.log("Products state updated:", products);
+//     // console.log("User Reviews state updated:", userReviews);
 //   }, [products, userReviews]);
 
 //   // Calculate review count properly
@@ -76,7 +90,10 @@
 //     }, 0);
 //   };
 
-//   const soldData = data?.products || [];
+//   // Filter sold products
+//   const soldData = products.filter(
+//     (product) => product.approval?.status === "Sold"
+//   );
 //   const reviewData = data || {};
 //   const statsData = [
 //     { id: 13, title: "Total Sales", stat: "1,000" },
@@ -90,34 +107,37 @@
 //   const reviewCount = getReviewCount();
 
 //   const baseTabs = [
-//     { 
-//       label: "Selling", 
-//       component: SellingProducts, 
-//       data: products, 
-//       count: products?.length || 0 
+//     {
+//       label: "Selling",
+//       component: SellingProducts,
+//       data: products,
+//       count: products?.length || 0,
 //     },
-//     { 
-//       label: "Sold", 
-//       component: SoldCards, 
-//       data: soldData, 
-//       count: soldData?.length || 0 
+//     {
+//       label: "Sold",
+//       component: SoldCards,
+//       data: soldData,
+//       count: soldData?.length || 0, // Correct count for sold products
 //     },
-//     { 
-//       label: "Reviews", 
-//       component: ReviewCards, 
-//       data: reviewData, 
-//       count: reviewCount // Use calculated review count
+//     {
+//       label: "Reviews",
+//       component: ReviewCards,
+//       data: reviewData,
+//       count: reviewCount,
 //     },
-//     { 
-//       label: "Stats", 
-//       component: StatsCards, 
-//       data: statsData, 
-//       count: statsData?.length || 0 
+//     {
+//       label: "Stats",
+//       component: StatsCards,
+//       data: statsData,
+//       count: statsData?.length || 0,
 //     },
 //   ];
 
-//   const tabs = isOwnProfile 
-//     ? [...baseTabs, { label: "Add Products", component: AddProductComponent, data: null, count: "" }]
+//   const tabs = isOwnProfile
+//     ? [
+//         ...baseTabs,
+//         { label: "Add Products", component: AddProductComponent, data: null, count: "" },
+//       ]
 //     : baseTabs;
 
 //   const [selectedTab, setSelectedTab] = useState(tabs[0]);
@@ -136,16 +156,13 @@
 
 //   // Update selected tab when data changes to reflect new counts
 //   useEffect(() => {
-//     setSelectedTab(prevTab => {
-//       const updatedTab = tabs.find(tab => tab.label === prevTab.label);
+//     setSelectedTab((prevTab) => {
+//       const updatedTab = tabs.find((tab) => tab.label === prevTab.label);
 //       return updatedTab || tabs[0];
 //     });
 //   }, [reviewCount, products.length, soldData.length]);
 
-//   console.log("Selected tab:", selectedTab.label);
-//   console.log("Selected tab data:", selectedTab.data);
-//   console.log("Review count:", reviewCount);
-//   console.log("Tabs:", tabs);
+
 
 //   return (
 //     <div className="mt-24 flex flex-col items-center">
@@ -193,7 +210,6 @@
 
 
 
-
 "use client";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
@@ -225,7 +241,6 @@ export const DetailsSection = ({ data }) => {
         }
       );
       if (res.status === 200) {
-        console.log("Products from API:", res.data.products);
         setProducts(res.data.products || []);
       }
     } catch (error) {
@@ -266,8 +281,8 @@ export const DetailsSection = ({ data }) => {
   }, [data]);
 
   useEffect(() => {
-    console.log("Products state updated:", products);
-    console.log("User Reviews state updated:", userReviews);
+    // console.log("Products state updated:", products);
+    // console.log("User Reviews state updated:", userReviews);
   }, [products, userReviews]);
 
   // Calculate review count properly
@@ -305,7 +320,7 @@ export const DetailsSection = ({ data }) => {
       label: "Sold",
       component: SoldCards,
       data: soldData,
-      count: soldData?.length || 0, // Correct count for sold products
+      count: soldData?.length || 0,
     },
     {
       label: "Reviews",
@@ -316,7 +331,8 @@ export const DetailsSection = ({ data }) => {
     {
       label: "Stats",
       component: StatsCards,
-      data: statsData,
+      data: data, // Pass user data instead of statsData
+      statsData: statsData, // Pass statsData separately
       count: statsData?.length || 0,
     },
   ];
@@ -350,11 +366,6 @@ export const DetailsSection = ({ data }) => {
     });
   }, [reviewCount, products.length, soldData.length]);
 
-  console.log("Selected tab:", selectedTab.label);
-  console.log("Selected tab data:", selectedTab.data);
-  console.log("Review count:", reviewCount);
-  console.log("Tabs:", tabs);
-
   return (
     <div className="mt-24 flex flex-col items-center">
       <nav className="w-full max-w-[1300px]">
@@ -383,7 +394,11 @@ export const DetailsSection = ({ data }) => {
             <div className="text-lg text-gray-600">Loading...</div>
           </div>
         ) : selectedTab.component ? (
-          <selectedTab.component data={selectedTab.data} />
+          <selectedTab.component
+            data={selectedTab.data}
+            statsData={selectedTab.statsData} // Pass statsData if available
+            userId={data?._id} // Explicitly pass userId
+          />
         ) : (
           <div className="flex justify-center items-center h-64">
             <p className="text-red-500 text-lg">Component not found for {selectedTab.label}</p>
