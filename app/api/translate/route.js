@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import axios from "axios";
 
 // Google Translate API ka limit: max 128 texts per request
-const BATCH_SIZE = 10000;
+const BATCH_SIZE = 100;
 
 export async function POST(request) {
   try {

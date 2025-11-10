@@ -86,10 +86,11 @@ const Footer = () => {
     <footer className="w-full mx-auto bg-[#FDE504] pt-12 pb-0">
       <div className="px-4 sm:px-8 lg:px-[71px] grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-8 mb-16">
         <FooterColumn title="About">
-          <FooterLink href="#">Who we are ?</FooterLink>
-          <FooterLink href="#">How it works ?</FooterLink>
-          <FooterLink href="#">Our Services</FooterLink>
+          <FooterLink href="/who-we-are">Who we are ?</FooterLink>
+          <FooterLink href="/how-it-works">How it works ?</FooterLink>
+          <FooterLink href="/our-services-and-features">Our Services and features</FooterLink>
           <FooterLink href="#">Sustainability</FooterLink>
+          <FooterLink href="/how-we-calculate-aur-carbon-footprint">How we calculate our Carbon footprint</FooterLink>
         </FooterColumn>
         <FooterColumn title="Categories">
           <FooterLink href="/mega-filter?parentCategory=Men">Men</FooterLink>
@@ -99,16 +100,16 @@ const Footer = () => {
           <FooterLink href="/mega-filter?parentCategory=Kid">Kids</FooterLink>
         </FooterColumn>
         <FooterColumn title="Help">
-          <FooterLink href="#">How to Sell - Tips and Tricks</FooterLink>
-          <FooterLink href="#">Payments</FooterLink>
-          <FooterLink href="#">Return / Cancellations / Refund</FooterLink>
+          <FooterLink href="/tips-and-tricks">How to Sell - Tips and Tricks</FooterLink>
+           <FooterLink href="/payments-and-commissions">Payments &amp; Commission Structure</FooterLink>
+          <FooterLink href="/return-cancellation-refund">Return / Cancellations / Refund</FooterLink>
           <FooterLink href="#">FAQ</FooterLink>
         </FooterColumn>
         <FooterColumn title="Guide">
-          <FooterLink href="#">Terms & Conditions</FooterLink>
-          <FooterLink href="#">Payments</FooterLink>
-          <FooterLink href="#">Commission Structure</FooterLink>
-          <FooterLink href="#">Privacy Policy</FooterLink>
+          <FooterLink href="/terms-and-conditions">Terms & Conditions</FooterLink>
+          <FooterLink href="/privacy-policy">KuKu Privacy Policy</FooterLink>
+          <FooterLink href="/all-policy">Policies</FooterLink>
+          <FooterLink href="/seller-education-guidelines">Seller Education</FooterLink>
         </FooterColumn>
         <FooterColumn title="Connect">
           <FooterLink href="#">Contact Us</FooterLink>

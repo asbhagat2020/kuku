@@ -6,7 +6,7 @@
 // "use client";
 
 // import React, { useState, useEffect } from "react";
-// import { useSearchParams } from "next/navigation";
+// import { useSearchParams, useRouter } from "next/navigation";
 // import { Check } from "lucide-react";
 // import Link from "next/link";
 // import toast from "react-hot-toast";
@@ -43,6 +43,7 @@
 
 // const OrderDetails = () => {
 //   const searchParams = useSearchParams();
+//   const router = useRouter();
 //   const [showCancelDialog, setShowCancelDialog] = useState(false);
 //   const [showSuccessDialog, setShowSuccessDialog] = useState(false);
 //   const [order, setOrder] = useState(null);
@@ -120,6 +121,10 @@
 //       setError(err.message);
 //       toast.error(err.message);
 //     }
+//   };
+
+//   const handleTrackReturn = () => {
+//     router.push(`/returnorder/track-return-status?orderId=${orderId}`);
 //   };
 
 //   if (loading) return <div className="text-center p-8">Loading...</div>;
@@ -208,6 +213,8 @@
 //                   ? "bg-emerald-100 text-emerald-600"
 //                   : order?.orderStatus === "Returned"
 //                   ? "bg-yellow-100 text-yellow-600"
+//                   : order?.orderStatus === "Buyer Wanted Return Item"
+//                   ? "bg-orange-100 text-orange-600"
 //                   : "bg-blue-100 text-blue-600"
 //               }`}
 //             >
@@ -298,6 +305,14 @@
 //                     Cancel Order
 //                   </button>
 //                 )}
+//                 {order?.orderStatus === "Buyer Wanted Return Item" && (
+//                   <button 
+//                     onClick={handleTrackReturn}
+//                     className={`font-karla text-[${CONSTANTS.COLORS.PRIMARY}] underline text-sm font-bold hover:opacity-80 transition-opacity`}
+//                   >
+//                     Track Your Return Item
+//                   </button>
+//                 )}
 //               </div>
 //               <div className="flex justify-between mb-4">
 //                 <div className="flex-1 ml-[450px]">
@@ -385,7 +400,6 @@
 
 
 
-
 "use client";
 
 import React, { useState, useEffect } from "react";
@@ -406,6 +420,12 @@ const CONSTANTS = {
   TIMING: {
     SUCCESS_MODAL_DURATION: 3000,
   },
+};
+
+// YE HELPER ADD KIYA → Sirf text change karega
+const getCleanStatus = (status) => {
+  if (status === "Buyer Wanted Return Item") return "Return Requested";
+  return status;
 };
 
 const ProgressStep = ({ isCompleted, number, title, subtitle, alignment = "start" }) => (
@@ -481,7 +501,6 @@ const OrderDetails = () => {
       return;
     }
     try {
-      // Filter out invalid entries from orderStatusHistory
       const validHistory = (order?.orderStatusHistory || []).filter(
         (entry) => entry.status && entry.timestamp
       );
@@ -544,12 +563,10 @@ const OrderDetails = () => {
       },
     ];
 
-    // Add reverse shipment steps for rented items after delivery
     if (order?.products?.[0]?.isRental) {
       const returnScheduledRecord = order?.processingDetails?.returnDetails?.returnStatusHistory?.find((h) => h.status === "Return Scheduled");
       const returnPickedUpRecord = order?.processingDetails?.returnDetails?.returnStatusHistory?.find((h) => h.status === "Return Picked Up");
       
-      // Reverse Shipment Created - completed when returnStatus is "Return Scheduled" or later
       steps.push({
         title: "Reverse Shipment Created",
         subtitle: returnScheduledRecord?.timestamp
@@ -559,7 +576,6 @@ const OrderDetails = () => {
           ["Return Scheduled", "Return Picked Up", "Return Delivered"].includes(order?.processingDetails?.returnDetails?.returnStatus),
       });
 
-      // Item Picked Up - completed when returnStatus is "Return Picked Up" or later
       steps.push({
         title: "Item Picked Up",
         subtitle: returnPickedUpRecord?.timestamp
@@ -601,7 +617,7 @@ const OrderDetails = () => {
                   : "bg-blue-100 text-blue-600"
               }`}
             >
-              {order?.orderStatus}
+              {getCleanStatus(order?.orderStatus)}
             </span>
           </div>
           <p className="text-gray-500 text-sm mt-2">Date: {order?.createdAt ? new Date(order.createdAt).toLocaleDateString() : "N/A"}</p>
@@ -693,7 +709,7 @@ const OrderDetails = () => {
                     onClick={handleTrackReturn}
                     className={`font-karla text-[${CONSTANTS.COLORS.PRIMARY}] underline text-sm font-bold hover:opacity-80 transition-opacity`}
                   >
-                    Track Your Return Item
+                    Track Your Return
                   </button>
                 )}
               </div>

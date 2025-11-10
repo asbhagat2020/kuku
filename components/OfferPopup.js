@@ -1,10 +1,3 @@
-
-
-
-
-
-
-
 // "use client";
 
 // import { useState } from "react";
@@ -139,15 +132,9 @@
 
 // export default OfferPopup;
 
-
-
-
-
-
-
-
 "use client";
 
+import Link from "next/link";
 import { useState, useEffect } from "react";
 
 const OfferPopup = ({
@@ -173,7 +160,11 @@ const OfferPopup = ({
       return false;
     }
     if (parsedPrice < minimumPrice) {
-      setPriceError(`Offer price must be at least AED ${minimumPrice.toFixed(2)} (70% of listed price)`);
+      setPriceError(
+        `Offer price must be at least AED ${minimumPrice.toFixed(
+          2
+        )} (70% of listed price)`
+      );
       return false;
     }
     setPriceError("");
@@ -209,9 +200,7 @@ const OfferPopup = ({
           >
             Listed Price:{" "}
           </span>
-          <span
-            style={{ color: "#070707", fontSize: "14px", fontWeight: 700 }}
-          >
+          <span style={{ color: "#070707", fontSize: "14px", fontWeight: 700 }}>
             AED {product?.price}
           </span>
         </div>
@@ -226,9 +215,7 @@ const OfferPopup = ({
           >
             Minimum Offer Price:{" "}
           </span>
-          <span
-            style={{ color: "#070707", fontSize: "14px", fontWeight: 700 }}
-          >
+          <span style={{ color: "#070707", fontSize: "14px", fontWeight: 700 }}>
             AED {minimumPrice.toFixed(2)}
           </span>
         </div>
@@ -243,9 +230,7 @@ const OfferPopup = ({
           >
             Offers Remaining:{" "}
           </span>
-          <span
-            style={{ color: "#070707", fontSize: "14px", fontWeight: 700 }}
-          >
+          <span style={{ color: "#070707", fontSize: "14px", fontWeight: 700 }}>
             {remainingOffers}
           </span>
         </div>
@@ -262,7 +247,9 @@ const OfferPopup = ({
         >
           <button
             className={`w-[89px] h-[41px] py-[8.66px] px-[10.93px] bg-white rounded-[6.93px] border ${
-              selectedPrice === product?.price * 0.8 ? "border-pink-500" : "border-[#878787]"
+              selectedPrice === product?.price * 0.8
+                ? "border-pink-500"
+                : "border-[#878787]"
             } inline-flex items-center justify-center gap-[8.66px]`}
             onClick={() => handlePriceSelection(product?.price * 0.8)}
             style={{
@@ -275,7 +262,9 @@ const OfferPopup = ({
           </button>
           <button
             className={`w-[89px] h-[41px] py-[8.66px] px-[10.93px] bg-white rounded-[6.93px] border ${
-              selectedPrice === product?.price * 0.85 ? "border-pink-500" : "border-[#878787]"
+              selectedPrice === product?.price * 0.85
+                ? "border-pink-500"
+                : "border-[#878787]"
             } inline-flex items-center justify-center gap-[8.66px]`}
             onClick={() => handlePriceSelection(product?.price * 0.85)}
             style={{
@@ -308,13 +297,25 @@ const OfferPopup = ({
         <div className="text-[#E4086F] text-[12px] font-karla font-bold capitalize tracking-[0.96px] break-words mt-1 mb-[30px]">
           Suggested
         </div>
-
-        <p className="text-sm font-bold text-[#525252] mb-4 font-karla">
+        {/* <p className="text-sm font-bold text-[#525252] mb-4 font-karla">
           You can only make up to three offers per item. If the seller accepts your
           offer, you&apos;ll be notified to place the order. Other users can
           still buy the item before you.
-        </p>
+        </p> */}
 
+        <p className="text-sm font-bold text-[#525252] mb-4 font-karla">
+          You can make up to three offers per item as per our{" "}
+          <Link
+            href="/make-an-offer-policy"
+            className="text-[#007bff] underline"
+            target="_blank"
+          >
+            offer policy
+          </Link>
+          . If the seller accepts your offer, you&apos;ll be notified to place
+          the order. Please note, other users can still purchase the item before
+          you.
+        </p>
         <div className="justify-center flex-col">
           <button
             onClick={handleOfferSubmit}
