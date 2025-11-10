@@ -15,7 +15,7 @@ export const TermsAndConditions = () => {
             Welcome to KuKu, a curated platform for buying, selling, renting, and giving away fashion and lifestyle products.
           </p>
           <p className="text-lg text-blue-200 mt-2">
-            These Terms & Conditions govern your access to and use of the KuKu mobile application, website, and related services.
+            These Terms &amp; Conditions govern your access to and use of the KuKu mobile application, website, and related services.
           </p>
           <p className="mt-4 text-blue-100 font-medium">
             By creating an account or using KuKu in any way, you agree to be bound by these Terms. If you do not agree, please do not use the platform.
@@ -34,51 +34,51 @@ export const TermsAndConditions = () => {
           <ul className="space-y-2 text-gray-700">
             <li className="flex">
               <span className="mr-2">•</span>
-              <span><strong>"KuKu"</strong> refers to the app/platform operated by <strong>KuTech Global LLC FZ</strong> or its authorized entity.</span>
+              <span><strong>&quot;KuKu&quot;</strong> refers to the app/platform operated by <strong>KuTech Global LLC FZ</strong> or its authorized entity.</span>
             </li>
             <li className="flex">
               <span className="mr-2">•</span>
-              <span><strong>"User"</strong> refers to any person using the KuKu platform.</span>
+              <span><strong>&quot;User&quot;</strong> refers to any person using the KuKu platform.</span>
             </li>
             <li className="flex">
               <span className="mr-2">•</span>
-              <span><strong>"Seller"</strong> refers to any user listing an item for sale, rent, or giveaway.</span>
+              <span><strong>&quot;Seller&quot;</strong> refers to any user listing an item for sale, rent, or giveaway.</span>
             </li>
             <li className="flex">
               <span className="mr-2">•</span>
-              <span><strong>"Buyer"</strong> refers to any user purchasing or renting an item on KuKu.</span>
+              <span><strong>&quot;Buyer&quot;</strong> refers to any user purchasing or renting an item on KuKu.</span>
             </li>
             <li className="flex">
               <span className="mr-2">•</span>
-              <span><strong>"KuKit"</strong> is KuKu’s managed inventory and fulfillment service for batch items.</span>
+              <span><strong>&quot;KuKit&quot;</strong> is KuKu&apos;s managed inventory and fulfillment service for batch items.</span>
             </li>
             <li className="flex">
               <span className="mr-2">•</span>
-              <span><strong>"Giveaway"</strong> refers to donation of eligible textiles/items via the platform.</span>
+              <span><strong>&quot;Giveaway&quot;</strong> refers to donation of eligible textiles/items via the platform.</span>
             </li>
             <li className="flex">
               <span className="mr-2">•</span>
-              <span><strong>"Rental"</strong> refers to the temporary use of a product by a renter for a fee.</span>
+              <span><strong>&quot;Rental&quot;</strong> refers to the temporary use of a product by a renter for a fee.</span>
             </li>
             <li className="flex">
               <span className="mr-2">•</span>
-              <span><strong>"Quality Check" (QC)</strong> is KuKu’s internal inspection process for verifying item condition and eligibility.</span>
+              <span><strong>&quot;Quality Check&quot; (QC)</strong> is KuKu&apos;s internal inspection process for verifying item condition and eligibility.</span>
             </li>
             <li className="flex">
               <span className="mr-2">•</span>
-              <span><strong>“Standard Listing Service”</strong> – where sellers retain items until sold.</span>
+              <span><strong>&quot;Standard Listing Service&quot;</strong> – where sellers retain items until sold.</span>
             </li>
             <li className="flex">
               <span className="mr-2">•</span>
-              <span><strong>“KuKu Wallet”</strong> – in-app balance for payouts and refunds.</span>
+              <span><strong>&quot;KuKu Wallet&quot;</strong> – in-app balance for payouts and refunds.</span>
             </li>
             <li className="flex">
               <span className="mr-2">•</span>
-              <span><strong>“User Content”</strong> – user-uploaded text, images, and listings.</span>
+              <span><strong>&quot;User Content&quot;</strong> – user-uploaded text, images, and listings.</span>
             </li>
             <li className="flex">
               <span className="mr-2">•</span>
-              <span><strong>“KuKu Center”</strong> – the physical or designated hub for QC and logistics.</span>
+              <span><strong>&quot;KuKu Center&quot;</strong> – the physical or designated hub for QC and logistics.</span>
             </li>
           </ul>
         </div>
@@ -151,7 +151,7 @@ export const TermsAndConditions = () => {
         <div className="rounded-lg p-6">
           <div className="flex items-center mb-4">
             <Package className="w-6 h-6 mr-3 text-emerald-600" />
-            <h2 className="text-xl font-bold text-gray-800">4. Listings & Item Guidelines</h2>
+            <h2 className="text-xl font-bold text-gray-800">4. Listings &amp; Item Guidelines</h2>
           </div>
           <p className="text-gray-700 mb-3"><strong>All listings must:</strong></p>
           <ul className="space-y-2 text-gray-700">
@@ -165,7 +165,7 @@ export const TermsAndConditions = () => {
             </li>
             <li className="flex">
               <span className="mr-2">•</span>
-              <span>Follow KuKu’s <strong>content, authenticity, and hygiene standards</strong></span>
+              <span>Follow KuKu&apos;s <strong>content, authenticity, and hygiene standards</strong></span>
             </li>
             <li className="flex">
               <span className="mr-2">•</span>
@@ -230,7 +230,7 @@ export const TermsAndConditions = () => {
           <ul className="space-y-2 text-gray-700 ml-8 mt-2">
             <li className="flex">
               <span className="mr-2">•</span>
-              <span>List approved items on the seller’s behalf</span>
+              <span>List approved items on the seller&apos;s behalf</span>
             </li>
             <li className="flex">
               <span className="mr-2">•</span>
@@ -244,11 +244,11 @@ export const TermsAndConditions = () => {
           <ul className="space-y-2 text-gray-700 mt-3">
             <li className="flex">
               <span className="mr-2">•</span>
-              <span>Sellers must agree to <strong>KuKit’s item intake and rejection policies</strong> separately.</span>
+              <span>Sellers must agree to <strong>KuKit&apos;s item intake and rejection policies</strong> separately.</span>
             </li>
             <li className="flex">
               <span className="mr-2">•</span>
-              <span><strong>Unsold items after 180 days</strong> may be returned to the seller or donated at KuKu’s discretion.</span>
+              <span><strong>Unsold items after 180 days</strong> may be returned to the seller or donated at KuKu&apos;s discretion.</span>
             </li>
             <li className="flex">
               <span className="mr-2">•</span>
@@ -261,7 +261,7 @@ export const TermsAndConditions = () => {
         <div className="rounded-lg p-6">
           <div className="flex items-center mb-4">
             <DollarSign className="w-6 h-6 mr-3 text-emerald-600" />
-            <h2 className="text-xl font-bold text-gray-800">7. Payments & Commission</h2>
+            <h2 className="text-xl font-bold text-gray-800">7. Payments &amp; Commission</h2>
           </div>
           <ul className="space-y-2 text-gray-700">
             <li className="flex">
@@ -286,7 +286,7 @@ export const TermsAndConditions = () => {
             </li>
           </ul>
           <p className="mt-3 text-gray-700 italic">
-            (Refer to the <strong>Commission & Fees Policy</strong> for full breakdown.)
+            (Refer to the <strong>Commission &amp; Fees Policy</strong> for full breakdown.)
           </p>
         </div>
 
@@ -312,7 +312,7 @@ export const TermsAndConditions = () => {
         <div className="rounded-lg p-6">
           <div className="flex items-center mb-4">
             <Recycle className="w-6 h-6 mr-3 text-teal-600" />
-            <h2 className="text-xl font-bold text-gray-800">9. Giveaways & Donations</h2>
+            <h2 className="text-xl font-bold text-gray-800">9. Giveaways &amp; Donations</h2>
           </div>
           <ul className="space-y-2 text-gray-700">
             <li className="flex">
@@ -339,7 +339,7 @@ export const TermsAndConditions = () => {
             </li>
           </ul>
           <p className="mt-3 text-gray-700">
-            Giveaways are <strong>not returnable</strong> and are handled at KuKu’s discretion. KuKu does <strong>not guarantee</strong> that all donated items will be accepted by charities; non-eligible items will be <strong>repurposed/recycled/upcycled/resold responsibly</strong>.
+            Giveaways are <strong>not returnable</strong> and are handled at KuKu&apos;s discretion. KuKu does <strong>not guarantee</strong> that all donated items will be accepted by charities; non-eligible items will be <strong>repurposed/recycled/upcycled/resold responsibly</strong>.
           </p>
         </div>
 
@@ -347,7 +347,7 @@ export const TermsAndConditions = () => {
         <div className="rounded-lg p-6">
           <div className="flex items-center mb-4">
             <Truck className="w-6 h-6 mr-3 text-orange-600" />
-            <h2 className="text-xl font-bold text-gray-800">10. Returns & Refunds</h2>
+            <h2 className="text-xl font-bold text-gray-800">10. Returns &amp; Refunds</h2>
           </div>
           <ul className="space-y-2 text-gray-700">
             <li className="flex">
@@ -373,7 +373,7 @@ export const TermsAndConditions = () => {
             Once approved, refunds will be issued via <strong>original payment method or KuKu wallet credit</strong>.
           </p>
           <p className="mt-2 text-gray-700 italic">
-            (Refer to the <strong>Return & Refund Policy</strong> for detailed terms.)
+            (Refer to the <strong>Return &amp; Refund Policy</strong> for detailed terms.)
           </p>
         </div>
 
@@ -382,7 +382,7 @@ export const TermsAndConditions = () => {
           <div className="flex items-start">
             <AlertTriangle className="w-6 h-6 mr-3 text-amber-700 flex-shrink-0 mt-1" />
             <div>
-              <h3 className="font-bold text-amber-900 mb-2">11. Liability & Disclaimers</h3>
+              <h3 className="font-bold text-amber-900 mb-2">11. Liability &amp; Disclaimers</h3>
               <ul className="space-y-2 text-gray-800">
                 <li className="flex">
                   <span className="mr-2">•</span>
@@ -437,7 +437,7 @@ export const TermsAndConditions = () => {
             </li>
             <li className="flex">
               <span className="mr-2">•</span>
-              <span><strong>Unauthorized use</strong> of KuKu’s trademarks, branding, or likeness for commercial purposes is <strong>strictly prohibited</strong>.</span>
+              <span><strong>Unauthorized use</strong> of KuKu&apos;s trademarks, branding, or likeness for commercial purposes is <strong>strictly prohibited</strong>.</span>
             </li>
             <li className="flex">
               <span className="mr-2">•</span>
@@ -454,7 +454,7 @@ export const TermsAndConditions = () => {
         <div className="rounded-lg p-6">
           <div className="flex items-center mb-4">
             <XCircle className="w-6 h-6 mr-3 text-red-600" />
-            <h2 className="text-xl font-bold text-gray-800">13. Account Suspension & Termination</h2>
+            <h2 className="text-xl font-bold text-gray-800">13. Account Suspension &amp; Termination</h2>
           </div>
           <p className="text-gray-700 mb-3">
             KuKu may <strong>suspend or permanently disable</strong> accounts that:
@@ -508,10 +508,10 @@ export const TermsAndConditions = () => {
         <div className="rounded-lg p-6">
           <div className="flex items-center mb-4">
             <Globe className="w-6 h-6 mr-3 text-indigo-600" />
-            <h2 className="text-xl font-bold text-gray-800">15. Governing Law & Jurisdiction</h2>
+            <h2 className="text-xl font-bold text-gray-800">15. Governing Law &amp; Jurisdiction</h2>
           </div>
           <p className="text-gray-700">
-            These Terms & Conditions are <strong>governed by the laws of the United Arab Emirates</strong>. Any disputes shall be resolved through <strong>UAE courts</strong>, unless otherwise mutually agreed.
+            These Terms &amp; Conditions are <strong>governed by the laws of the United Arab Emirates</strong>. Any disputes shall be resolved through <strong>UAE courts</strong>, unless otherwise mutually agreed.
           </p>
         </div>
 

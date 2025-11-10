@@ -28,7 +28,7 @@ export const HowItWorks = () => {
       details: [
         "1. Declutter What You Don’t Want: Clothes, bedsheets, curtains-anything in good condition or even a little worn.",
         "2. We Pick It Up by the Kilo: Schedule a pickup and we’ll collect everything in one go-priced per kg (super affordable).",
-        "3. We Find It a New Purpose: We sort and either: 💚 Donate to charity ♻️ Recycle responsibly 🔁 Repurpose creatively 💸 Resell with proceeds supporting circular initiatives",
+        "3. We Find It a New Purpose: We sort and either: Donate to charity Recycle responsibly Repurpose creatively Resell with proceeds supporting circular initiatives",
         "4. Feel-Good Bonus: No effort, no waste, and all the good feels."
       ]
     }
@@ -44,7 +44,7 @@ export const HowItWorks = () => {
             How It Works?
           </h1>
           <p className="text-xl text-blue-100 max-w-3xl mx-auto">
-            ✨ Three ways to KuKu your clutter! Whether you’re a DIY lister or a "please just handle it" kind of person-we got you. KuKu offers two super easy ways to turn your extra stuff into cash, space, or good vibes.
+            Three ways to KuKu your clutter! Whether you&apos;re a DIY lister or a &quot;please just handle it&quot; kind of person-we got you. KuKu offers three super easy ways to turn your extra stuff into cash, space, or good vibes.
           </p>
         </div>
       </div>
@@ -71,11 +71,11 @@ export const HowItWorks = () => {
         {/* Footer Text - Simple */}
         <div className="rounded-lg p-6 text-center">
           <p className="text-2xl font-bold text-gray-800 mb-4">
-            💬 No sketchy chats. No meetups. Just smooth, smart, circular selling.
+            No sketchy chats. No meetups. Just smooth, smart, circular selling.
           </p>
           <p className="text-lg text-gray-700 mb-4">
             Decluttering should feel fun, not like a part-time job.<br />
-            With KuKu, you list it-or let us-and we’ll do the heavy lifting. Literally.
+            With KuKu, you list it-or let us-and we&apos;ll do the heavy lifting. Literally.
           </p>
           <p className="text-3xl font-bold text-purple-600">
             So go ahead:<br />

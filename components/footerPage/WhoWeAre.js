@@ -18,22 +18,22 @@ export const WhoWeAre = () => {
         {/* Main Content */}
         <div className="rounded-lg p-6 text-center">
           <p className="text-xl text-gray-700 leading-relaxed max-w-4xl mx-auto">
-            Hey, we’re KuKu - your friendly neighborhood marketplace where pre-loved finds get a second chance and your closet finally gets to breathe.
+            Hey, we&apos;re KuKu - your friendly neighborhood marketplace where pre-loved finds get a second chance and your closet finally gets to breathe.
           </p>
           <p className="text-lg text-gray-700 mt-8 leading-relaxed max-w-4xl mx-auto">
-            Let’s be real: we all have clothes we don't wear anymore. That jacket you swore you’d wear? Still hanging! Those jeans? Too tight, too loose, or just not your vibe anymore. At KuKu we help you turn that “someday I’ll wear it” pile into something way better- cash, space or a happy new customer
+            Let&apos;s be real: we all have clothes we don&apos;t wear anymore. That jacket you swore you&apos;d wear? Still hanging! Those jeans? Too tight, too loose, or just not your vibe anymore. At KuKu we help you turn that “someday I&apos;ll wear it” pile into something way better- cash, space or a happy new customer
           </p>
           <p className="text-lg text-gray-700 mt-8 leading-relaxed max-w-4xl mx-auto">
-            KuKu makes it super easy to sell your extra stuff, rent out what you rarely use, or give away old textiles to be reused, repurposed, or recycled. We pick things up, check them out, and handle delivery-so you don’t have to lift a finger (except maybe to snap a pic of your item and with our Ku-Kit service you don't even have to do that!)
+            KuKu makes it super easy to sell your extra stuff, rent out what you rarely use, or give away old textiles to be reused, repurposed, or recycled. We pick things up, check them out, and handle delivery-so you don&apos;t have to lift a finger (except maybe to snap a pic of your item and with our Ku-Kit service you don&apos;t even have to do that!)
           </p>
           <p className="text-lg text-gray-700 mt-8 leading-relaxed max-w-4xl mx-auto">
-            Whether you’re decluttering, downsizing, or just done with hoarding-KuKu helps you live lighter, shop smarter, and make room for what matters.
+            Whether you&apos;re decluttering, downsizing, or just done with hoarding-KuKu helps you live lighter, shop smarter, and make room for what matters.
           </p>
           <p className="text-lg text-gray-700 mt-8 leading-relaxed max-w-4xl mx-auto">
             Think of us as your digital thrift store, rental hub, and donation bin-all rolled into one fun, fuss-free app.
           </p>
           <p className="text-3xl font-bold text-purple-600 mt-12">
-            Let’s keep it moving. Lets keep it KuKu.
+            Let&apos;s keep it moving. Lets keep it KuKu.
           </p>
         </div>
 

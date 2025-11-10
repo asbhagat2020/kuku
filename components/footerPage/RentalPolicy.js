@@ -1,5 +1,5 @@
 import React from 'react';
-import { Calendar, Package, Truck, Shield, CheckCircle, XCircle, AlertTriangle, Clock, DollarSign, RefreshCw, Mail } from 'lucide-react';
+import { Calendar, Package, Truck, Shield, CheckCircle, XCircle, AlertTriangle, Clock, DollarSign, RefreshCw, Mail, FileText } from 'lucide-react';
 
 export const RentalPolicy = () => {
   return (
@@ -12,10 +12,10 @@ export const RentalPolicy = () => {
             KuKu Rental Policy
           </h1>
           <p className="text-xl text-blue-100 max-w-4xl mx-auto">
-            This policy explains how KuKu’s rental service works — including eligibility, deposits, logistics, and user responsibilities.
+            This policy explains how KuKu&apos;s rental service works — including eligibility, deposits, logistics, and user responsibilities.
           </p>
           <p className="text-lg text-blue-200 mt-2">
-            By using KuKu’s rental service, you agree to the following terms and conditions.
+            By using KuKu&apos;s rental service, you agree to the following terms and conditions.
           </p>
         </div>
       </div>
@@ -173,7 +173,7 @@ export const RentalPolicy = () => {
             </li>
           </ul>
           <p className="mt-3 text-gray-700 italic">
-            If post-rental QC identifies issues, <strong>deductions may apply</strong> to the renter’s deposit.
+            If post-rental QC identifies issues, <strong>deductions may apply</strong> to the renter&apos;s deposit.
           </p>
         </div>
 
@@ -297,7 +297,7 @@ export const RentalPolicy = () => {
             </li>
             <li className="flex">
               <span className="mr-2">•</span>
-              <span>KuKu’s decision will be based on:</span>
+              <span>KuKu&apos;s decision will be based on:</span>
             </li>
           </ul>
           <ul className="space-y-2 text-gray-700 ml-8 mt-2">
