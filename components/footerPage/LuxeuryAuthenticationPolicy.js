@@ -1,7 +1,7 @@
 import React from 'react';
 import { Shield, CheckCircle, AlertTriangle, Package, FileWarning, Gavel, RefreshCw } from 'lucide-react';
 
-export const LuxuryAuthenticationPolicy = () => {
+export const LuxeuryAuthenticationPolicy = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
       {/* Header */}

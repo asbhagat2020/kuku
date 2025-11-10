@@ -15,7 +15,7 @@ export const AllPolicy = () => {
     { icon: <Users className="w-6 h-6" />, name: "KuKu Community Guidelines", path: "/community-guidelines" },
     { icon: <Cookie className="w-6 h-6" />, name: "KuKu Cookie Policy", path: "/cookie-policy" },
     { icon: <Gift className="w-6 h-6" />, name: "KuKu Giveaway Policy", path: "/giveaway-policy" },
-    { icon: <Shield className="w-6 h-6" />, name: "KuKu Luxury Authentication Policy Phase 1", path: "/luxury-authentication-policy" },
+    { icon: <Shield className="w-6 h-6" />, name: "KuKu Luxury Authentication Policy Phase 1", path: "/luxeury-authentication-policy" },
     { icon: <DollarSign className="w-6 h-6" />, name: "KuKu Make An Offer Policy", path: "/make-an-offer-policy" },
     { icon: <Truck className="w-6 h-6" />, name: "KuKu Pick Up and Delivery Policy", path: "/pickup-and-delivery-policy" },
     { icon: <Lock className="w-6 h-6" />, name: "KuKu Privacy Policy", path: "/privacy-policy" },

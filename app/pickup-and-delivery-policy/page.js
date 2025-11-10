@@ -1,5 +1,5 @@
 import Footer from "@/components/Footer";
-import { PickuupAndDeliveryPolicy } from "@/components/footerPage/PickuupAndDeliveryPolicy";
+import { PickupAndDeliveryPolicy } from "@/components/footerPage/PickupAndDeliveryPolicy";
 import Header from "@/components/Header";
 
 
@@ -7,7 +7,7 @@ export default function page() {
     return (
     <>
       <Header />
-      <PickuupAndDeliveryPolicy/>
+      <PickupAndDeliveryPolicy/>
       <Footer />
     </>
   );

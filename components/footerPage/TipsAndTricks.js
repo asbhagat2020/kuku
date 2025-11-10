@@ -5,64 +5,64 @@ export const TipsAndTricks = () => {
   const tips = [
     {
       icon: <User className="w-6 h-6" />,
-      title: "💁‍♀️ 1. Your Profile = Your Storefront",
+      title: "1. Your Profile = Your Storefront",
       details: [
-        "You don't need to be a fashion influencer. Just be you, but a little KuKu.",
-        "📸 Upload a profile pic - your face, your fav shoe, your dog- just no grey icons.",
-        "📝 Write a quick, fun bio - “Serial declutterer. Occasional impulse shopper. Closet for rent.”",
-        "🔄 Stay active - more listings = more eyeballs = more love."
+        "You don&apos;t need to be a fashion influencer. Just be you, but a little KuKu.",
+        "Upload a profile pic - your face, your fav shoe, your dog- just no grey icons.",
+        "Write a quick, fun bio - “Serial declutterer. Occasional impulse shopper. Closet for rent.”",
+        "Stay active - more listings = more eyeballs = more love."
       ]
     },
     {
       icon: <Camera className="w-6 h-6" />,
-      title: "📸 2. Photos That Slay",
+      title: "2. Photos That Slay",
       details: [
         "Nobody wants to buy a mystery blur. Make your pieces shine!",
-        "💡 Natural light is your BFF - it shows true color and fabric.",
-        "🔄 Show all sides - front, back, close-up of tags, cute details, and even that tiny mark you promised to disclose.",
-        "🧺 Clean, tidy background - your duvet doesn't need a cameo.",
-        "✨ Bonus: A styled flat-lay or hanger shot adds pro-level vibes."
+        "Natural light is your BFF - it shows true color and fabric.",
+        "Show all sides - front, back, close-up of tags, cute details, and even that tiny mark you promised to disclose.",
+        "Clean, tidy background - your duvet doesn&apos;t need a cameo.",
+        "Bonus: A styled flat-lay or hanger shot adds pro-level vibes."
       ]
     },
     {
       icon: <Tag className="w-6 h-6" />,
-      title: "📝 3. Let the Listing Do the Talking",
+      title: "3. Let the Listing Do the Talking",
       details: [
         "No DMs? No problem. Your listing is your pitch. Make it work!",
-        "🏷️ Title it right -“Mango Floral Wrap Dress, Size S” is 🔥",
-        "🧼 Condition check - Be real about wear, stains, or tags. Honesty = trust = cha-ching.",
-        "📏 Add sizing details - actual measurements score major points.",
-        "💡 Suggest how to style - “Perfect for coffee dates or last-minute weddings.”"
+        "Title it right -“Mango Floral Wrap Dress, Size S” is fire",
+        "Condition check - Be real about wear, stains, or tags. Honesty = trust = cha-ching.",
+        "Add sizing details - actual measurements score major points.",
+        "Suggest how to style - “Perfect for coffee dates or last-minute weddings.”"
       ]
     },
     {
       icon: <DollarSign className="w-6 h-6" />,
-      title: "💰 4. Be a Bargain Boss",
+      title: "4. Be a Bargain Boss",
       details: [
-        "The Bargain Button is ON – that means buyers can send offers anytime. Your job? Respond quickly! ⏱️",
+        "The Bargain Button is ON – that means buyers can send offers anytime. Your job? Respond quickly!",
         "Fast replies = better chances of sealing the deal.",
-        "If someone likes your item, that's your cue to show them some price love.",
-        "Counter-offers are cool too -it's a friendly haggle, not a battle.",
-        "Bundle up similar items and offer a discount - it's like a thrift-store treasure chest."
+        "If someone likes your item, that&apos;s your cue to show them some price love.",
+        "Counter-offers are cool too -it&apos;s a friendly haggle, not a battle.",
+        "Bundle up similar items and offer a discount - it&apos;s like a thrift-store treasure chest."
       ]
     },
     {
       icon: <Heart className="w-6 h-6" />,
-      title: "📣 5. Use the Social Sauce",
+      title: "5. Use the Social Sauce",
       details: [
-        "You're not just a seller- you're part of the KuKu crew. So mingle a bit!",
-        "❤️ Like other listings - KuKu's algorithm might just return the favor.",
-        "⭐ Follow sellers you vibe with - builds your own following too.",
-        "👀 Regular activity keeps your listings fresh in the feed."
+        "You&apos;re not just a seller- you&apos;re part of the KuKu crew. So mingle a bit!",
+        "Like other listings - KuKu&apos;s algorithm might just return the favor.",
+        "Follow sellers you vibe with - builds your own following too.",
+        "Regular activity keeps your listings fresh in the feed."
       ]
     },
     {
       icon: <RefreshCw className="w-6 h-6" />,
-      title: "♻️ Bonus Round: Keep It Moving",
+      title: "Bonus Round: Keep It Moving",
       details: [
-        "🚀 New listings = new chances to sell. Post often!",
-        "✅ Mark sold items quickly – keep your profile sharp.",
-        "🎯 Update prices if an item's been sitting too long – it might just need a nudge."
+        "New listings = new chances to sell. Post often!",
+        "Mark sold items quickly – keep your profile sharp.",
+        "Update prices if an item&apos;s been sitting too long – it might just need a nudge."
       ]
     }
   ];
@@ -77,10 +77,10 @@ export const TipsAndTricks = () => {
             Tips and Tricks
           </h1>
           <p className="text-xl text-blue-100 max-w-3xl mx-auto">
-            🛍️ How to Sell Like a Total KuKu Star
+            How to Sell Like a Total KuKu Star
           </p>
           <p className="text-lg text-blue-100 mt-4 max-w-4xl mx-auto">
-            Closet full? Style evolved? Cash flow dreams? Welcome to the big leagues of sustainable style. Here's how to make your listings pop and your items drop (into someone else's cart, that is).
+            Closet full? Style evolved? Cash flow dreams? Welcome to the big leagues of sustainable style. Here&apos;s how to make your listings pop and your items drop (into someone else&apos;s cart, that is).
           </p>
         </div>
       </div>
@@ -108,11 +108,11 @@ export const TipsAndTricks = () => {
         <div className="rounded-lg p-6 text-center bg-green-50">
           <h2 className="text-2xl font-bold text-gray-800 mb-4 flex items-center justify-center">
             <Globe className="w-8 h-8 mr-2 text-green-600" />
-            🌍 One Last Thing... You're a Planet Hero
+            One Last Thing... You&apos;re a Planet Hero
           </h2>
           <p className="text-lg text-gray-700">
             Every item you sell gives it a second life and saves it from landfill fate.<br />
-            You're not just decluttering. You're doing climate good. 💚
+            You&apos;re not just decluttering. You&apos;re doing climate good.
           </p>
         </div>
 
