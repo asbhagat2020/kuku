@@ -1224,12 +1224,6 @@
 
 // export default ItemList;
 
-
-
-
-
-
-
 // "use client";
 
 // import React, { useEffect, useState } from "react";
@@ -2560,14 +2554,6 @@
 
 // export default ItemList;
 
-
-
-
-
-
-
-
-
 "use client";
 
 import React, { useEffect, useState } from "react";
@@ -2672,11 +2658,17 @@ const ItemList = () => {
       try {
         const [brandsRes, categoriesRes, conditionsRes, sizesRes, colorRes] =
           await Promise.all([
-            axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/brands/getbrand`),
+            axios.get(
+              `${process.env.NEXT_PUBLIC_API_BASE_URL}/brands/getbrand`
+            ),
             axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/category`),
-            axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/conditions/getcondition`),
+            axios.get(
+              `${process.env.NEXT_PUBLIC_API_BASE_URL}/conditions/getcondition`
+            ),
             axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/sizes/getSizes`),
-            axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/colors/getcolor`),
+            axios.get(
+              `${process.env.NEXT_PUBLIC_API_BASE_URL}/colors/getcolor`
+            ),
           ]);
 
         setBrands(brandsRes.data.brands || []);
@@ -2745,8 +2737,10 @@ const ItemList = () => {
 
   const validateForm = () => {
     let newErrors = {};
-    if (!formData.itemName.trim()) newErrors.itemName = "Product title is required";
-    if (!formData.description.trim()) newErrors.description = "Description is required";
+    if (!formData.itemName.trim())
+      newErrors.itemName = "Product title is required";
+    if (!formData.description.trim())
+      newErrors.description = "Description is required";
     if (!formData.category.trim()) newErrors.category = "Category is required";
     if (!formData.gender) newErrors.gender = "Gender is required";
     if (!formData.condition) newErrors.condition = "Condition is required";
@@ -2755,15 +2749,18 @@ const ItemList = () => {
       newErrors.customBrand = "Custom brand name is required";
     }
     if (!formData.size) newErrors.size = "Size is required";
-    if (!formData.subCategory.trim()) newErrors.subCategory = "Sub Category is required";
+    if (!formData.subCategory.trim())
+      newErrors.subCategory = "Sub Category is required";
     if (!formData.price.trim()) newErrors.price = "Price is required";
     if (!formData.color) newErrors.color = "Color is required";
     if (formData.color === "Other" && !customColor.trim()) {
       newErrors.customColor = "Custom color name is required";
     }
-    if (formData.images.length < 2) newErrors.images = "At least two images are required";
+    if (formData.images.length < 2)
+      newErrors.images = "At least two images are required";
     if (formData.rentOption === "Yes" && !formData.rentalPrice) {
-      newErrors.rentalPrice = "Rental price per day is required when open to rent";
+      newErrors.rentalPrice =
+        "Rental price per day is required when open to rent";
     }
     if (formData.rentOption === "Yes" && Number(formData.price) <= 500) {
       newErrors.price = "Price must be above 500 AED for rental products";
@@ -2833,15 +2830,20 @@ const ItemList = () => {
 
     let addressErrors = {};
     if (!selectedAddress && !showAddressForm) {
-      addressErrors.pickupAddress = "Please select an existing address or add a new one";
+      addressErrors.pickupAddress =
+        "Please select an existing address or add a new one";
     }
     if (showAddressForm) {
       if (!formData.name.trim()) addressErrors.name = "Name is required";
-      if (!formData.mobile_number.trim()) addressErrors.mobile_number = "Mobile number is required";
-      if (!formData.house_no.trim()) addressErrors.house_no = "House number is required";
-      if (!formData.building_name.trim()) addressErrors.building_name = "Building name is required";
+      if (!formData.mobile_number.trim())
+        addressErrors.mobile_number = "Mobile number is required";
+      if (!formData.house_no.trim())
+        addressErrors.house_no = "House number is required";
+      if (!formData.building_name.trim())
+        addressErrors.building_name = "Building name is required";
       if (!formData.area.trim()) addressErrors.area = "Area is required";
-      if (!formData.landmark.trim()) addressErrors.landmark = "Landmark is required";
+      if (!formData.landmark.trim())
+        addressErrors.landmark = "Landmark is required";
       if (!formData.city.trim()) addressErrors.city = "City is required";
       if (!formData.email.trim()) addressErrors.email = "Email is required";
     }
@@ -2913,8 +2915,12 @@ const ItemList = () => {
           description: formData.description,
           price: Number(formData.price),
           images: imageUrl,
-          pricePerDay: formData.rentOption === "Yes" ? Number(formData.rentalPrice) : 0,
-          deposit: formData.rentOption === "Yes" ? Math.round(Number(formData.price) * 0.2) : 0,
+          pricePerDay:
+            formData.rentOption === "Yes" ? Number(formData.rentalPrice) : 0,
+          deposit:
+            formData.rentOption === "Yes"
+              ? Math.round(Number(formData.price) * 0.2)
+              : 0,
           orders: [],
           rent: [],
           onSale: false,
@@ -2963,7 +2969,13 @@ const ItemList = () => {
     router.back();
   };
 
-  const AddressSelection = ({ addresses, onSelect, onAddNew, selectedType, setSelectedType }) => {
+  const AddressSelection = ({
+    addresses,
+    onSelect,
+    onAddNew,
+    selectedType,
+    setSelectedType,
+  }) => {
     const handleTypeChange = (type) => {
       setSelectedType(type);
       if (type === "new") {
@@ -3377,7 +3389,9 @@ const ItemList = () => {
                       }}
                       placeholder="Enter custom brand name"
                       className={`w-full p-2 border ${
-                        errors.customBrand ? "border-red-500" : "border-[#868686]"
+                        errors.customBrand
+                          ? "border-red-500"
+                          : "border-[#868686]"
                       } rounded-lg max-w-[500px]`}
                       disabled={isSubmitting}
                     />
@@ -3445,7 +3459,9 @@ const ItemList = () => {
                       }}
                       placeholder="Enter custom color name"
                       className={`w-full p-2 border ${
-                        errors.customColor ? "border-red-500" : "border-[#868686]"
+                        errors.customColor
+                          ? "border-red-500"
+                          : "border-[#868686]"
                       } rounded-lg max-w-[500px]`}
                       disabled={isSubmitting}
                     />
@@ -3525,32 +3541,50 @@ const ItemList = () => {
                   </div>
                 ) : null}
 
-                {formData.rentOption === "Yes" && Number(formData.price) >= 1000 && (
-                  <div>
-                    <label className="block text-[#151515] text-base font-bold font-karla mb-2">
-                      Rental Price (per day)
-                    </label>
-                    <input
-                      type="number"
-                      name="rentalPrice"
-                      value={formData.rentalPrice}
-                      onChange={handleChange}
-                      placeholder="Enter rental price per day"
-                      className={`w-full p-2 border ${
-                        errors.rentalPrice ? "border-red-500" : "border-[#868686]"
-                      } rounded-lg max-w-[500px]`}
-                      disabled={isSubmitting}
-                    />
-                    {errors.rentalPrice && (
-                      <p className="text-red-500 mt-1">{errors.rentalPrice}</p>
-                    )}
-                  </div>
-                )}
+                {formData.rentOption === "Yes" &&
+                  Number(formData.price) >= 1000 && (
+                    <div>
+                      <label className="block text-[#151515] text-base font-bold font-karla mb-2">
+                        Rental Price (per day)
+                      </label>
+                      <input
+                        type="number"
+                        name="rentalPrice"
+                        value={formData.rentalPrice}
+                        onChange={handleChange}
+                        placeholder="Enter rental price per day"
+                        className={`w-full p-2 border ${
+                          errors.rentalPrice
+                            ? "border-red-500"
+                            : "border-[#868686]"
+                        } rounded-lg max-w-[500px]`}
+                        disabled={isSubmitting}
+                      />
+                      {errors.rentalPrice && (
+                        <p className="text-red-500 mt-1">
+                          {errors.rentalPrice}
+                        </p>
+                      )}
+                    </div>
+                  )}
               </div>
 
-              <p className="text-gray-500 mt-1 text-left max-w-[500px]">
+              {/* <p className="text-gray-500 mt-1 text-left max-w-[500px]">
                 Renting option is available only when the price of the product is
                 above <span className="text-[#E4086F]">1000 AED</span>
+              </p> */}
+
+              <p className="text-gray-500 mt-1 text-left max-w-[500px]">
+                Renting option is available only when the price of the product
+                is above <span className="text-[#E4086F]">1000 AED</span>. See
+                our{" "}
+                <Link
+                  href="/rental-policy"
+                  className="text-[#E4086F] hover:underline"
+                >
+                  Renting Policy
+                </Link>
+                .
               </p>
 
               <div className="flex space-x-8 mt-6 justify-center">
@@ -3681,7 +3715,9 @@ const ItemList = () => {
                         disabled={isSubmitting}
                       />
                       {errors.name && (
-                        <p className="text-red-500 text-sm mt-1">{errors.name}</p>
+                        <p className="text-red-500 text-sm mt-1">
+                          {errors.name}
+                        </p>
                       )}
                     </div>
 
@@ -3714,7 +3750,9 @@ const ItemList = () => {
                         disabled={isSubmitting}
                       />
                       {errors.mobile_number && (
-                        <p className="text-red-500 text-sm mt-1">{errors.mobile_number}</p>
+                        <p className="text-red-500 text-sm mt-1">
+                          {errors.mobile_number}
+                        </p>
                       )}
                     </div>
                   </div>
@@ -3735,7 +3773,9 @@ const ItemList = () => {
                         disabled={isSubmitting}
                       />
                       {errors.house_no && (
-                        <p className="text-red-500 text-sm mt-1">{errors.house_no}</p>
+                        <p className="text-red-500 text-sm mt-1">
+                          {errors.house_no}
+                        </p>
                       )}
                     </div>
 
@@ -3754,7 +3794,9 @@ const ItemList = () => {
                         disabled={isSubmitting}
                       />
                       {errors.building_name && (
-                        <p className="text-red-500 text-sm mt-1">{errors.building_name}</p>
+                        <p className="text-red-500 text-sm mt-1">
+                          {errors.building_name}
+                        </p>
                       )}
                     </div>
                   </div>
@@ -3775,7 +3817,9 @@ const ItemList = () => {
                         disabled={isSubmitting}
                       />
                       {errors.area && (
-                        <p className="text-red-500 text-sm mt-1">{errors.area}</p>
+                        <p className="text-red-500 text-sm mt-1">
+                          {errors.area}
+                        </p>
                       )}
                     </div>
 
@@ -3794,7 +3838,9 @@ const ItemList = () => {
                         disabled={isSubmitting}
                       />
                       {errors.landmark && (
-                        <p className="text-red-500 text-sm mt-1">{errors.landmark}</p>
+                        <p className="text-red-500 text-sm mt-1">
+                          {errors.landmark}
+                        </p>
                       )}
                     </div>
                   </div>
@@ -3822,7 +3868,9 @@ const ItemList = () => {
                         <option value="Umm Al-Quwain">Umm Al-Quwain</option>
                       </select>
                       {errors.city && (
-                        <p className="text-red-500 text-sm mt-1">{errors.city}</p>
+                        <p className="text-red-500 text-sm mt-1">
+                          {errors.city}
+                        </p>
                       )}
                     </div>
 
@@ -3841,7 +3889,9 @@ const ItemList = () => {
                         disabled={isSubmitting}
                       />
                       {errors.country && (
-                        <p className="text-red-500 text-sm mt-1">{errors.country}</p>
+                        <p className="text-red-500 text-sm mt-1">
+                          {errors.country}
+                        </p>
                       )}
                     </div>
                   </div>
@@ -3861,7 +3911,9 @@ const ItemList = () => {
                       disabled={isSubmitting}
                     />
                     {errors.email && (
-                      <p className="text-red-500 text-sm mt-1">{errors.email}</p>
+                      <p className="text-red-500 text-sm mt-1">
+                        {errors.email}
+                      </p>
                     )}
                   </div>
                 </div>
@@ -3873,7 +3925,9 @@ const ItemList = () => {
                 onClick={handleSubmit}
                 disabled={isSubmitting}
                 className={`w-full sm:w-auto px-6 py-3 sm:py-4 bg-[#e4086f] rounded-[22px] text-[#fde504] text-lg sm:text-xl font-bold font-karla transition-opacity duration-200 ${
-                  isSubmitting ? "opacity-50 cursor-not-allowed" : "hover:bg-[#d4076e]"
+                  isSubmitting
+                    ? "opacity-50 cursor-not-allowed"
+                    : "hover:bg-[#d4076e]"
                 }`}
               >
                 {isSubmitting ? "Listing..." : "List Now"}
@@ -3882,7 +3936,9 @@ const ItemList = () => {
                 onClick={() => setCaseState(1)}
                 disabled={isSubmitting}
                 className={`w-full sm:w-auto px-6 py-3 sm:py-4 rounded-[22px] border border-[#e4086f] text-[#e4086f] text-lg sm:text-xl font-bold font-karla transition-colors duration-200 ${
-                  isSubmitting ? "opacity-50 cursor-not-allowed" : "hover:bg-[#fce4f4]"
+                  isSubmitting
+                    ? "opacity-50 cursor-not-allowed"
+                    : "hover:bg-[#fce4f4]"
                 }`}
               >
                 Back

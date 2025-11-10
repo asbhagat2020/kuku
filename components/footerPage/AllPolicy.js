@@ -1,33 +1,159 @@
-import React from 'react';
-import { Sparkles, Leaf, ShoppingBag, Star, Heart, Users, FileText, Package, AlertCircle, Cookie, Gift, Shield, DollarSign, Truck, Lock, CheckCircle, UserPlus, CreditCard, RefreshCw, Globe } from 'lucide-react';
+import React from "react";
+import {
+  Sparkles,
+  Leaf,
+  ShoppingBag,
+  Star,
+  Heart,
+  Users,
+  FileText,
+  Package,
+  AlertCircle,
+  Cookie,
+  Gift,
+  Shield,
+  DollarSign,
+  Truck,
+  Lock,
+  CheckCircle,
+  UserPlus,
+  CreditCard,
+  RefreshCw,
+  Globe,
+} from "lucide-react";
 
 export const AllPolicy = () => {
   const policies = [
-    { icon: <Sparkles className="w-6 h-6" />, name: "How It Works", path: "/how-it-works" },
-    { icon: <Leaf className="w-6 h-6" />, name: "How We Calculate Our Carbon Footprint", path: "/how-we-calculate-our-carbon-footprint" },
-    { icon: <ShoppingBag className="w-6 h-6" />, name: "Our Services and Features", path: "/our-services-and-features" },
-    { icon: <Star className="w-6 h-6" />, name: "Seller Education Guidelines", path: "/seller-education-guidelines" },
-    { icon: <Heart className="w-6 h-6" />, name: "Tips and Tricks on How to Sell on KuKu", path: "/tips-and-tricks" },
-    { icon: <Users className="w-6 h-6" />, name: "Who We Are", path: "/who-we-are" },
-    { icon: <FileText className="w-6 h-6" />, name: "Content Policy", path: "/content-policy" },
-    { icon: <Package className="w-6 h-6" />, name: "Ku-Kit T&C", path: "/ku-kit-t&c" },
-    { icon: <AlertCircle className="w-6 h-6" />, name: "KuKu Active Account Policy", path: "/active-account-policy" },
-    { icon: <Users className="w-6 h-6" />, name: "KuKu Community Guidelines", path: "/community-guidelines" },
-    { icon: <Cookie className="w-6 h-6" />, name: "KuKu Cookie Policy", path: "/cookie-policy" },
-    { icon: <Gift className="w-6 h-6" />, name: "KuKu Giveaway Policy", path: "/giveaway-policy" },
-    { icon: <Shield className="w-6 h-6" />, name: "KuKu Luxury Authentication Policy Phase 1", path: "/luxeury-authentication-policy" },
-    { icon: <DollarSign className="w-6 h-6" />, name: "KuKu Make An Offer Policy", path: "/make-an-offer-policy" },
-    { icon: <Truck className="w-6 h-6" />, name: "KuKu Pick Up and Delivery Policy", path: "/pickup-and-delivery-policy" },
-    { icon: <Lock className="w-6 h-6" />, name: "KuKu Privacy Policy", path: "/privacy-policy" },
-    { icon: <CheckCircle className="w-6 h-6" />, name: "KuKu Quality Check (QC) Policy", path: "/quality-check-policy" },
-    { icon: <FileText className="w-6 h-6" />, name: "KuKu Seller Policy", path: "/seller-policy" },
-    { icon: <UserPlus className="w-6 h-6" />, name: "KuKu Sign-Up Policy", path: "/sign-up-policy" },
-    { icon: <Package className="w-6 h-6" />, name: "KuKu Storage and Handling Policy", path: "/storage-handling-policy" },
-    { icon: <FileText className="w-6 h-6" />, name: "KuKu Terms and Conditions", path: "/terms-and-conditions" },
-    { icon: <Shield className="w-6 h-6" />, name: "KuKu Verification and Authentication", path: "/varification-and-authentication" },
-    { icon: <CreditCard className="w-6 h-6" />, name: "Payments and Commissions", path: "/payments-and-commissions" },
-    { icon: <AlertCircle className="w-6 h-6" />, name: "QC Fail Policies for B and S", path: "/qc-fail-policies" },
-    { icon: <RefreshCw className="w-6 h-6" />, name: "Return Refund Cancellation", path: "/return-cancellation-refund" },
+    {
+      icon: <Sparkles className="w-6 h-6" />,
+      name: "How It Works",
+      path: "/how-it-works",
+    },
+    {
+      icon: <Leaf className="w-6 h-6" />,
+      name: "How We Calculate Our Carbon Footprint",
+      path: "/how-we-calculate-our-carbon-footprint",
+    },
+    {
+      icon: <ShoppingBag className="w-6 h-6" />,
+      name: "Our Services and Features",
+      path: "/our-services-and-features",
+    },
+    {
+      icon: <Star className="w-6 h-6" />,
+      name: "Seller Education Guidelines",
+      path: "/seller-education-guidelines",
+    },
+    {
+      icon: <Heart className="w-6 h-6" />,
+      name: "Tips and Tricks on How to Sell on KuKu",
+      path: "/tips-and-tricks",
+    },
+    {
+      icon: <Users className="w-6 h-6" />,
+      name: "Who We Are",
+      path: "/who-we-are",
+    },
+    {
+      icon: <FileText className="w-6 h-6" />,
+      name: "Content Policy",
+      path: "/content-policy",
+    },
+    {
+      icon: <Package className="w-6 h-6" />,
+      name: "Ku-Kit T&C",
+      path: "/ku-kit-t&c",
+    },
+    {
+      icon: <AlertCircle className="w-6 h-6" />,
+      name: "KuKu Active Account Policy",
+      path: "/active-account-policy",
+    },
+    {
+      icon: <Users className="w-6 h-6" />,
+      name: "KuKu Community Guidelines",
+      path: "/community-guidelines",
+    },
+    {
+      icon: <Cookie className="w-6 h-6" />,
+      name: "KuKu Cookie Policy",
+      path: "/cookie-policy",
+    },
+    {
+      icon: <Gift className="w-6 h-6" />,
+      name: "KuKu Giveaway Policy",
+      path: "/giveaway-policy",
+    },
+    {
+      icon: <Gift className="w-6 h-6" />,
+      name: "KuKu Rental Policy",
+      path: "/rental-policy",
+    },
+    {
+      icon: <Shield className="w-6 h-6" />,
+      name: "KuKu Luxury Authentication Policy Phase 1",
+      path: "/luxeury-authentication-policy",
+    },
+    {
+      icon: <DollarSign className="w-6 h-6" />,
+      name: "KuKu Make An Offer Policy",
+      path: "/make-an-offer-policy",
+    },
+    {
+      icon: <Truck className="w-6 h-6" />,
+      name: "KuKu Pick Up and Delivery Policy",
+      path: "/pickup-and-delivery-policy",
+    },
+    {
+      icon: <Lock className="w-6 h-6" />,
+      name: "KuKu Privacy Policy",
+      path: "/privacy-policy",
+    },
+    {
+      icon: <CheckCircle className="w-6 h-6" />,
+      name: "KuKu Quality Check (QC) Policy",
+      path: "/quality-check-policy",
+    },
+    {
+      icon: <FileText className="w-6 h-6" />,
+      name: "KuKu Seller Policy",
+      path: "/seller-policy",
+    },
+    {
+      icon: <UserPlus className="w-6 h-6" />,
+      name: "KuKu Sign-Up Policy",
+      path: "/sign-up-policy",
+    },
+    {
+      icon: <Package className="w-6 h-6" />,
+      name: "KuKu Storage and Handling Policy",
+      path: "/storage-handling-policy",
+    },
+    {
+      icon: <FileText className="w-6 h-6" />,
+      name: "KuKu Terms and Conditions",
+      path: "/terms-and-conditions",
+    },
+    {
+      icon: <Shield className="w-6 h-6" />,
+      name: "KuKu Verification and Authentication",
+      path: "/varification-and-authentication",
+    },
+    {
+      icon: <CreditCard className="w-6 h-6" />,
+      name: "Payments and Commissions",
+      path: "/payments-and-commissions",
+    },
+    {
+      icon: <AlertCircle className="w-6 h-6" />,
+      name: "QC Fail Policies for B and S",
+      path: "/qc-fail-policies",
+    },
+    {
+      icon: <RefreshCw className="w-6 h-6" />,
+      name: "Return Refund Cancellation",
+      path: "/return-cancellation-refund",
+    },
   ];
 
   return (
@@ -40,7 +166,8 @@ export const AllPolicy = () => {
             All KuKu Policies & Guidelines
           </h1>
           <p className="text-xl text-blue-100 max-w-3xl mx-auto">
-            Everything you need to know about using KuKu safely, sustainably, and successfully.
+            Everything you need to know about using KuKu safely, sustainably,
+            and successfully.
           </p>
         </div>
       </div>
@@ -54,7 +181,9 @@ export const AllPolicy = () => {
               className="bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 p-6 flex items-center space-x-4 hover:bg-purple-50 border border-gray-100"
             >
               <div className="text-purple-600">{policy.icon}</div>
-              <h3 className="text-lg font-semibold text-gray-800">{policy.name}</h3>
+              <h3 className="text-lg font-semibold text-gray-800">
+                {policy.name}
+              </h3>
             </a>
           ))}
         </div>
@@ -64,7 +193,8 @@ export const AllPolicy = () => {
           <FileText className="w-14 h-14 mx-auto mb-4" />
           <h2 className="text-3xl font-bold mb-4">Have Questions?</h2>
           <p className="text-lg mb-6 max-w-2xl mx-auto">
-            Our support team is here to help with any policy or guideline inquiries.
+            Our support team is here to help with any policy or guideline
+            inquiries.
           </p>
           <a
             href="mailto:support@letskuku.com"

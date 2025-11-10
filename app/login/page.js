@@ -1,7 +1,3 @@
-
-
-
-
 // "use client";
 
 // import { useState, useEffect, useRef } from "react";
@@ -190,23 +186,19 @@
 //   );
 // }
 
-
-
-
-
-
-
-
-
-
 "use client";
 
 import { useState, useEffect, useRef } from "react";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
-import { googleSignIn, signinOtp, verifySigninOtp } from "@/store/auth/authSlice";
+import {
+  googleSignIn,
+  signinOtp,
+  verifySigninOtp,
+} from "@/store/auth/authSlice";
 import { toast } from "react-hot-toast";
+import Link from "next/link";
 
 export default function Login() {
   const [emailOrPhone, setEmailOrPhone] = useState(""); // For email or local UAE phone
@@ -250,7 +242,9 @@ export default function Login() {
 
     const inputType = validateInput(inputValue);
     if (inputType === "invalid") {
-      setError("Please enter a valid email or 9-digit UAE number starting with 5 (e.g., 543781819)");
+      setError(
+        "Please enter a valid email or 9-digit UAE number starting with 5 (e.g., 543781819)"
+      );
       return;
     }
 
@@ -286,7 +280,9 @@ export default function Login() {
     let inputValue = emailOrPhone.trim();
     setLoading(true);
     try {
-      const res = await dispatch(verifySigninOtp({ emailOrPhone: inputValue, otp }));
+      const res = await dispatch(
+        verifySigninOtp({ emailOrPhone: inputValue, otp })
+      );
       if (res.type === "auth/otpSignIn/fulfilled") {
         // toast.success("Login successful!");
         router.push("/");
@@ -354,12 +350,18 @@ export default function Login() {
         <div className="w-full md:w-1/2 flex flex-col justify-center items-center p-4 md:p-8">
           <div className="flex items-center gap-2 mb-8">
             <img src="/Group1.svg" alt="KUKU Logo" className="h-10 w-10" />
-            <div className="text-black text-2xl font-palanquin_dark font-bold">KUKU</div>
+            <div className="text-black text-2xl font-palanquin_dark font-bold">
+              KUKU
+            </div>
           </div>
-          <div className="text-black text-xl font-karla font-bold mb-6">Please sign in to continue</div>
+          <div className="text-black text-xl font-karla font-bold mb-6">
+            Please sign in to continue
+          </div>
           <form className="w-full max-w-md">
             <div className="mb-4">
-              <label className="text-black text-base font-karla font-bold mb-2 block">Email or Phone Number</label>
+              <label className="text-black text-base font-karla font-bold mb-2 block">
+                Email or Phone Number
+              </label>
               <input
                 className="w-full p-3 border border-gray-300 bg-gray-100 rounded-lg text-start text-black text-sm font-normal font-karla"
                 type="text"
@@ -373,7 +375,9 @@ export default function Login() {
               {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
             </div>
             <div className="mb-2">
-              <label className="text-black text-base font-karla font-bold mb-2 block">OTP</label>
+              <label className="text-black text-base font-karla font-bold mb-2 block">
+                OTP
+              </label>
               <input
                 type="text"
                 placeholder="Enter the OTP received"
@@ -387,7 +391,9 @@ export default function Login() {
             {isOtpSent && (
               <div className="mt-1 text-[#e4086f] text-sm font-normal font-karla underline leading-none">
                 {timer > 0
-                  ? `Resend OTP in ${Math.floor(timer / 60)}:${timer % 60 < 10 ? "0" : ""}${timer % 60}`
+                  ? `Resend OTP in ${Math.floor(timer / 60)}:${
+                      timer % 60 < 10 ? "0" : ""
+                    }${timer % 60}`
                   : "You can resend the OTP now."}
               </div>
             )}
@@ -408,20 +414,26 @@ export default function Login() {
               <button
                 type="button"
                 className={`w-full p-3 ${
-                  isOtpSent && timer > 0 || loading
+                  (isOtpSent && timer > 0) || loading
                     ? "bg-gray-300 cursor-not-allowed opacity-50"
                     : "bg-yellow-400"
                 } text-black font-semibold font-karla rounded-lg`}
                 onClick={handleSendOtp}
-                disabled={isOtpSent && timer > 0 || loading}
+                disabled={(isOtpSent && timer > 0) || loading}
               >
-                {loading ? "Sending..." : isOtpSent && timer > 0 ? "Resend OTP" : "Send OTP"}
+                {loading
+                  ? "Sending..."
+                  : isOtpSent && timer > 0
+                  ? "Resend OTP"
+                  : "Send OTP"}
               </button>
               <button
                 type="button"
                 onClick={handleContinue}
                 className={`w-full p-3 ${
-                  otp === "" || loading ? "bg-yellow-300 cursor-not-allowed opacity-50" : "bg-yellow-400"
+                  otp === "" || loading
+                    ? "bg-yellow-300 cursor-not-allowed opacity-50"
+                    : "bg-yellow-400"
                 } text-black font-semibold font-karla rounded-lg`}
                 disabled={otp === "" || loading}
               >
@@ -434,16 +446,46 @@ export default function Login() {
               onClick={handleGoogleSignIn}
               className="w-full flex items-center justify-center p-3 bg-gray-100 border border-gray-300 rounded-lg mb-4"
             >
-              <img src="/devicon_google.png" alt="Google" className="h-5 w-5 mr-3" />
-              <span className="text-gray-800 font-bold font-karla">Sign in with Google</span>
+              <img
+                src="/devicon_google.png"
+                alt="Google"
+                className="h-5 w-5 mr-3"
+              />
+              <span className="text-gray-800 font-bold font-karla">
+                Sign in with Google
+              </span>
             </button>
             <button className="w-full flex items-center justify-center p-3 bg-gray-100 border border-gray-300 rounded-lg mb-4">
-              <img src="/devicon_facebook.svg" alt="Facebook" className="h-5 w-5 mr-3" />
-              <span className="text-gray-800 font-bold font-karla">Continue with Facebook</span>
+              <img
+                src="/devicon_facebook.svg"
+                alt="Facebook"
+                className="h-5 w-5 mr-3"
+              />
+              <span className="text-gray-800 font-bold font-karla">
+                Continue with Facebook
+              </span>
             </button>
           </div>
-          <p className="mt-6 text-center text-[#999999] text-base font-normal font-karla leading-[18.40px]">
+          {/* <p className="mt-6 text-center text-[#999999] text-base font-normal font-karla leading-[18.40px]">
             Don’t have an account? <a href="/registration" className="text-pink-600 font-karla">Sign up</a>
+          </p> */}
+
+          <p className="mt-6 text-center text-[#999999] text-base font-normal font-karla leading-[18.40px]">
+            Don’t have an account?{" "}
+            <Link
+              href="/registration"
+              className="text-pink-600 font-karla hover:underline"
+            >
+              Sign up
+            </Link>{" "}
+            — read our{" "}
+            <Link
+              href="/sign-up-policy"
+              className="text-pink-600 font-karla hover:underline"
+            >
+              Sign Up Policy
+            </Link>
+            .
           </p>
         </div>
       </div>
