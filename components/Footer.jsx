@@ -89,7 +89,7 @@ const Footer = () => {
           <FooterLink href="/who-we-are">Who we are ?</FooterLink>
           <FooterLink href="/how-it-works">How it works ?</FooterLink>
           <FooterLink href="/our-services-and-features">Our Services and features</FooterLink>
-          <FooterLink href="#">Sustainability</FooterLink>
+          <FooterLink href="/sustainability">Sustainability</FooterLink>
           <FooterLink href="/how-we-calculate-aur-carbon-footprint">How we calculate our Carbon footprint</FooterLink>
         </FooterColumn>
         <FooterColumn title="Categories">
@@ -103,7 +103,7 @@ const Footer = () => {
           <FooterLink href="/tips-and-tricks">How to Sell - Tips and Tricks</FooterLink>
            <FooterLink href="/payments-and-commissions">Payments &amp; Commission Structure</FooterLink>
           <FooterLink href="/return-cancellation-refund">Return / Cancellations / Refund</FooterLink>
-          <FooterLink href="#">FAQ</FooterLink>
+          <FooterLink href="/faq">FAQ</FooterLink>
         </FooterColumn>
         <FooterColumn title="Guide">
           <FooterLink href="/terms-and-conditions">Terms & Conditions</FooterLink>

@@ -446,7 +446,7 @@ const KukuitMain = () => {
               <p className="text-base sm:text-xl font-normal font-karla leading-tight sm:leading-7">
                 I agree to the{" "}
                 <Link
-                  href={"/terms"}
+                  href={"/terms-and-conditions"}
                   target="_blank"
                   className="text-[#E4086F] underline"
                 >
@@ -456,9 +456,9 @@ const KukuitMain = () => {
                 <Link
                   target="_blank"
                   className="text-[#E4086F] underline"
-                  href={"/policies"}
+                  href={"/ku-kit-t&c"}
                 >
-                  Privacy Policies
+                 Kukit Privacy Policies
                 </Link>{" "}
               </p>
             </div>

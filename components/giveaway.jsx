@@ -2938,7 +2938,7 @@ const Giveaway = () => {
               <p className="text-base sm:text-xl font-normal font-karla leading-tight sm:leading-7">
                 I agree to the{" "}
                 <Link
-                  href={"/terms"}
+                  href={"/terms-and-conditions"}
                   target="_blank"
                   className="text-[#E4086F] underline"
                 >
@@ -2948,9 +2948,9 @@ const Giveaway = () => {
                 <Link
                   target="_blank"
                   className="text-[#E4086F] underline"
-                  href={"/policies"}
+                  href={"/giveaway-policy"}
                 >
-                  Privacy Policies
+                 Giveaway Privacy Policies
                 </Link>{" "}
               </p>
             </div>

@@ -20,6 +20,8 @@ import {
   CreditCard,
   RefreshCw,
   Globe,
+  Home,
+  HelpCircle,
 } from "lucide-react";
 
 export const AllPolicy = () => {
@@ -85,7 +87,7 @@ export const AllPolicy = () => {
       path: "/giveaway-policy",
     },
     {
-      icon: <Gift className="w-6 h-6" />,
+      icon: <Home className="w-6 h-6" />,
       name: "KuKu Rental Policy",
       path: "/rental-policy",
     },
@@ -153,6 +155,16 @@ export const AllPolicy = () => {
       icon: <RefreshCw className="w-6 h-6" />,
       name: "Return Refund Cancellation",
       path: "/return-cancellation-refund",
+    },
+    {
+      icon: <Leaf className="w-6 h-6" />,
+        name: "Sustainability",
+      path: "/sustainability",
+    },
+    {
+      icon: <HelpCircle className="w-6 h-6" />,
+      name: "FAQ",
+      path: "/faq",
     },
   ];
 

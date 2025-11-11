@@ -328,7 +328,7 @@ const Popup = ({ isOpen, onClose }) => {
             </Link>
 
             {/* Ku-Kit T&C link */}
-            <div className="my-1 text-center">
+            {/* <div className="my-1 text-center">
               <Link
                 href="/ku-kit-t&c"
                 target="_blank"
@@ -336,7 +336,7 @@ const Popup = ({ isOpen, onClose }) => {
               >
                 Kukit policy
               </Link>
-            </div>
+            </div> */}
           </div>
 
           {/* Or separator */}
@@ -386,7 +386,7 @@ const Popup = ({ isOpen, onClose }) => {
             </Link>
 
             {/* Giveaway policy link */}
-            <div className="mt-1 text-center">
+            {/* <div className="mt-1 text-center">
               <Link
                 href="/giveaway-policy"
                 target="_blank"
@@ -394,7 +394,7 @@ const Popup = ({ isOpen, onClose }) => {
               >
                 Giveaway policy
               </Link>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
