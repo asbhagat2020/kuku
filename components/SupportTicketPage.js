@@ -137,7 +137,7 @@ const SupportTicketPage = () => {
           <FaSpinner className="text-6xl text-pink-600 animate-spin mx-auto mb-4" />
           <h2 className="text-2xl font-bold text-pink-600 mb-2">Redirecting to Login...</h2>
           <p className="text-gray-600">Please login to view your support ticket</p>
-          <p className="text-sm text-gray-500 mt-2">You'll return to your ticket after login</p>
+          <p className="text-sm text-gray-500 mt-2">You&apos;ll return to your ticket after login</p>
         </div>
       </div>
     );
@@ -186,7 +186,7 @@ const SupportTicketPage = () => {
         <div className="bg-white rounded-3xl shadow-2xl p-8 text-center">
           <FaEnvelope className="text-6xl text-gray-400 mx-auto mb-4 opacity-50" />
           <h2 className="text-xl font-bold text-gray-600 mb-2">Ticket Not Found</h2>
-          <p className="text-gray-500">The ticket you're looking for doesn't exist</p>
+          <p className="text-gray-500">The ticket you&apos;re looking for doesn&apos;t exist</p>
           <button
             onClick={() => router.push('/support')}
             className="mt-6 px-6 py-3 bg-pink-600 text-white rounded-xl font-bold hover:bg-pink-700"
@@ -308,7 +308,7 @@ const SupportTicketPage = () => {
               <div className="flex items-center gap-3">
                 <FaHourglassHalf className="text-yellow-500 text-xl animate-pulse" />
                 <div>
-                  <p className="text-yellow-800 font-bold">We're working on this</p>
+                  <p className="text-yellow-800 font-bold">We&apos;re working on this</p>
                   <p className="text-yellow-700 text-sm mt-1">
                     Our team will reply within 24 hours. You can also reply to our email.
                   </p>
