@@ -347,6 +347,15 @@ export default function Login() {
     setIsOtpSent(otpSent);
   }, [otpSent]);
 
+
+  useEffect(() => {
+  console.log("🔍 Environment Check:", {
+    hasGoogleClientId: !!process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
+    nextAuthUrl: process.env.NEXTAUTH_URL || "Not set (will use window.location.origin)",
+    currentOrigin: window.location.origin,
+  });
+}, []);
+
   // Validate email or UAE local phone
   const validateInput = (input) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
