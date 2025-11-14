@@ -59,7 +59,6 @@
 
 
 
-
 // app/api/auth/[...nextauth]/route.js
 import NextAuth from "next-auth"
 import GoogleProvider from "next-auth/providers/google"
@@ -92,23 +91,31 @@ export const authOptions = {
   },
   callbacks: {
     async redirect({ url, baseUrl }) {
-      console.log("Redirect callback:", { url, baseUrl });
+      console.log("🔄 Redirect callback:", { url, baseUrl });
       
-      // Same origin check
+      // Agar URL "/login" hai, to directly "/" pe redirect karo
+      if (url === `${baseUrl}/login` || url === '/login') {
+        console.log("✅ Redirecting to homepage");
+        return baseUrl; // Homepage
+      }
+      
+      // Agar URL relative hai (/ se start)
       if (url.startsWith('/')) return `${baseUrl}${url}`;
+      
+      // Agar URL same origin hai
       if (new URL(url).origin === baseUrl) return url;
       
+      // Default: baseUrl (homepage)
       return baseUrl;
     },
     async session({ session, token }) {
-      // Optional: Session mein additional data
       if (session?.user) {
         session.user.id = token.sub;
       }
       return session;
     },
   },
-  debug: true, // Detailed logs ke liye
+  debug: true,
 }
 
 const handler = NextAuth(authOptions)
