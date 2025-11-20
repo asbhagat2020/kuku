@@ -344,7 +344,7 @@ const EditItem = ({ data }) => {
                 {errors.images && (
                   <p className="text-red-500 mt-1">{errors.images}</p>
                 )}
-                <a href="/tips" className="text-[#E4086F] mt-2 underline">
+                <a href="/tips-and-tricks" className="text-[#E4086F] mt-2 underline">
                   Read our video and photo tips
                 </a>
               </div>

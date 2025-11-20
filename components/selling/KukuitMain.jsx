@@ -1,13 +1,3 @@
-
-
-
-
-
-
-
-
-
-
 import { GoogleMap, MarkerF, useLoadScript } from "@react-google-maps/api";
 import { useEffect, useState } from "react";
 import Image from "next/image";
@@ -88,7 +78,7 @@ const KukuitMain = () => {
         `${backendUrl}/geocode?latitude=${latitude}&longitude=${longitude}`
       );
       const data = await response.json();
-      
+
       if (data?.results?.length > 0) {
         const result = data.results[0];
         const formattedAddress = result.formatted_address;
@@ -96,22 +86,38 @@ const KukuitMain = () => {
         setLocation({ latitude, longitude });
 
         const addressComponents = result.address_components;
-        let city = "", house_no = "", building_name = "", area = "", landmark = "", country = "UAE";
+        let city = "",
+          house_no = "",
+          building_name = "",
+          area = "",
+          landmark = "",
+          country = "UAE";
 
         addressComponents.forEach((component) => {
           if (component.types.includes("locality")) city = component.long_name;
-          else if (component.types.includes("sublocality") && !city) city = component.long_name;
-          if (component.types.includes("street_number")) house_no = component.long_name;
-          if (component.types.includes("route") || component.types.includes("premise")) {
-            building_name = (building_name ? building_name + " " : "") + component.long_name;
+          else if (component.types.includes("sublocality") && !city)
+            city = component.long_name;
+          if (component.types.includes("street_number"))
+            house_no = component.long_name;
+          if (
+            component.types.includes("route") ||
+            component.types.includes("premise")
+          ) {
+            building_name =
+              (building_name ? building_name + " " : "") + component.long_name;
           }
-          if (component.types.includes("neighborhood")) area = component.long_name;
-          if (component.types.includes("landmark")) landmark = component.long_name;
-          if (component.types.includes("country")) country = component.long_name;
+          if (component.types.includes("neighborhood"))
+            area = component.long_name;
+          if (component.types.includes("landmark"))
+            landmark = component.long_name;
+          if (component.types.includes("country"))
+            country = component.long_name;
         });
 
         if (!house_no && !building_name) {
-          const addressParts = formattedAddress.split(",").map(part => part.trim());
+          const addressParts = formattedAddress
+            .split(",")
+            .map((part) => part.trim());
           if (addressParts.length > 2) {
             house_no = addressParts[0] || house_no;
             building_name = addressParts[1] || building_name;
@@ -170,7 +176,8 @@ const KukuitMain = () => {
             Your pickup schedule has been sent to us
           </h2>
           <div className="text-[#7f808c] text-base sm:text-xl font-normal font-karla leading-7 sm:leading-9 text-center mt-2 sm:mt-4">
-            Sit back and Relax while our team contacts you to confirm the pick up
+            Sit back and Relax while our team contacts you to confirm the pick
+            up
           </div>
         </div>
       </div>
@@ -256,12 +263,14 @@ const KukuitMain = () => {
     if (formData.mob_no_country_code !== "971") {
       newErrors.mob_no_country_code = "Mobile country code must be 971";
     }
-    if (!formData.mobile_number) newErrors.mobile_number = "Mobile number is required";
+    if (!formData.mobile_number)
+      newErrors.mobile_number = "Mobile number is required";
     else if (!/^\d{9,10}$/.test(formData.mobile_number)) {
       newErrors.mobile_number = "Mobile number must be 9-10 digits";
     }
     if (!formData.house_no) newErrors.house_no = "House no is required";
-    if (!formData.building_name) newErrors.building_name = "Building name is required";
+    if (!formData.building_name)
+      newErrors.building_name = "Building name is required";
     if (!formData.area) newErrors.area = "Area is required";
     if (!formData.landmark) newErrors.landmark = "Landmark is required";
     if (!formData.city) newErrors.city = "City is required";
@@ -270,7 +279,8 @@ const KukuitMain = () => {
     else if (!/\S+@\S+\.\S+/.test(formData.email)) {
       newErrors.email = "Email is invalid";
     }
-    if (!formData.agreeTerms) newErrors.agreeTerms = "You must agree to the terms";
+    if (!formData.agreeTerms)
+      newErrors.agreeTerms = "You must agree to the terms";
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -357,8 +367,13 @@ const KukuitMain = () => {
               </p>
             </div>
             <DraggableProgressBar
-              setSelectedScale={setSelectedScale}
-              customNumber={selectedScale && selectedScale >= 5 ? customNumber : ""}
+              setSelectedScale={(val) => {
+                setSelectedScale(val);
+                setCustomNumber(val.toString()); 
+              }}
+              customNumber={
+                selectedScale && selectedScale >= 5 ? customNumber : ""
+              }
               min={5}
               max={35}
               step={1}
@@ -375,9 +390,10 @@ const KukuitMain = () => {
                 placeholder="Enter custom number"
                 min="0"
               />
-              {(!selectedScale && customNumber === "") && (
+              {!selectedScale && customNumber === "" && (
                 <p className="text-red-500 text-sm mt-1">
-                  Please select either from scale or enter the number of items manually
+                  Please select either from scale or enter the number of items
+                  manually
                 </p>
               )}
             </div>
@@ -458,7 +474,7 @@ const KukuitMain = () => {
                   className="text-[#E4086F] underline"
                   href={"/ku-kit-t&c"}
                 >
-                 Kukit Privacy Policies
+                  Kukit Privacy Policies
                 </Link>{" "}
               </p>
             </div>
@@ -497,7 +513,8 @@ const KukuitMain = () => {
               </p>
             </div>
             <p className="text-[#a8a8a8] text-sm sm:text-base font-normal font-karla">
-              Please enter your pickup details (fields can be edited even after map selection)
+              Please enter your pickup details (fields can be edited even after
+              map selection)
             </p>
             <div className="w-full h-[200px] sm:h-[392px] mt-6 sm:mt-[36px] shadow">
               {isLoaded ? (
@@ -507,7 +524,12 @@ const KukuitMain = () => {
                   zoom={13}
                   onClick={handleMapClick}
                 >
-                  <MarkerF position={{ lat: markerPosition[0], lng: markerPosition[1] }} />
+                  <MarkerF
+                    position={{
+                      lat: markerPosition[0],
+                      lng: markerPosition[1],
+                    }}
+                  />
                 </GoogleMap>
               ) : (
                 <div>Loading map...</div>
@@ -516,7 +538,9 @@ const KukuitMain = () => {
             <div className="flex flex-col lg:flex-row mt-6 sm:mt-[36px] gap-6 lg:gap-[54px]">
               {/* Personal Details (Left Side) */}
               <div className="w-full lg:w-1/2 flex flex-col gap-6">
-                <h3 className="text-[#151515] text-lg font-bold font-karla">Personal Details</h3>
+                <h3 className="text-[#151515] text-lg font-bold font-karla">
+                  Personal Details
+                </h3>
                 <div className="flex flex-col">
                   <p className="text-[#151515] text-sm sm:text-base font-bold font-karla">
                     First Name
@@ -531,7 +555,9 @@ const KukuitMain = () => {
                     className="w-full h-[50px] border-2 rounded-lg px-5 mt-2 sm:mt-5 font-karla"
                   />
                   {errors.firstName && (
-                    <p className="text-red-500 text-sm mt-1">{errors.firstName}</p>
+                    <p className="text-red-500 text-sm mt-1">
+                      {errors.firstName}
+                    </p>
                   )}
                 </div>
                 <div className="flex flex-col">
@@ -548,7 +574,9 @@ const KukuitMain = () => {
                     className="w-full h-[50px] border-2 rounded-lg px-5 mt-2 sm:mt-5 font-karla"
                   />
                   {errors.lastName && (
-                    <p className="text-red-500 text-sm mt-1">{errors.lastName}</p>
+                    <p className="text-red-500 text-sm mt-1">
+                      {errors.lastName}
+                    </p>
                   )}
                 </div>
                 <div className="flex flex-col">
@@ -563,7 +591,9 @@ const KukuitMain = () => {
                     className="w-full h-[50px] border-2 rounded-lg px-5 mt-2 sm:mt-5 font-karla bg-gray-100 cursor-not-allowed"
                   />
                   {errors.mob_no_country_code && (
-                    <p className="text-red-500 text-sm mt-1">{errors.mob_no_country_code}</p>
+                    <p className="text-red-500 text-sm mt-1">
+                      {errors.mob_no_country_code}
+                    </p>
                   )}
                 </div>
                 <div className="flex flex-col">
@@ -580,7 +610,9 @@ const KukuitMain = () => {
                     className="w-full h-[50px] border-2 rounded-lg px-5 mt-2 sm:mt-5 font-karla"
                   />
                   {errors.mobile_number && (
-                    <p className="text-red-500 text-sm mt-1">{errors.mobile_number}</p>
+                    <p className="text-red-500 text-sm mt-1">
+                      {errors.mobile_number}
+                    </p>
                   )}
                 </div>
                 <div className="flex flex-col">
@@ -603,7 +635,9 @@ const KukuitMain = () => {
               </div>
               {/* Address Details (Right Side) */}
               <div className="w-full lg:w-1/2 flex flex-col gap-6">
-                <h3 className="text-[#151515] text-lg font-bold font-karla">Address Details</h3>
+                <h3 className="text-[#151515] text-lg font-bold font-karla">
+                  Address Details
+                </h3>
                 <div className="flex flex-col">
                   <p className="text-[#151515] text-sm sm:text-base font-bold font-karla">
                     House No
@@ -618,7 +652,9 @@ const KukuitMain = () => {
                     className="w-full h-[50px] border-2 rounded-lg px-5 mt-2 sm:mt-5 font-karla"
                   />
                   {errors.house_no && (
-                    <p className="text-red-500 text-sm mt-1">{errors.house_no}</p>
+                    <p className="text-red-500 text-sm mt-1">
+                      {errors.house_no}
+                    </p>
                   )}
                 </div>
                 <div className="flex flex-col">
@@ -635,7 +671,9 @@ const KukuitMain = () => {
                     className="w-full h-[50px] border-2 rounded-lg px-5 mt-2 sm:mt-5 font-karla"
                   />
                   {errors.building_name && (
-                    <p className="text-red-500 text-sm mt-1">{errors.building_name}</p>
+                    <p className="text-red-500 text-sm mt-1">
+                      {errors.building_name}
+                    </p>
                   )}
                 </div>
                 <div className="flex flex-col">
@@ -669,7 +707,9 @@ const KukuitMain = () => {
                     className="w-full h-[50px] border-2 rounded-lg px-5 mt-2 sm:mt-5 font-karla"
                   />
                   {errors.landmark && (
-                    <p className="text-red-500 text-sm mt-1">{errors.landmark}</p>
+                    <p className="text-red-500 text-sm mt-1">
+                      {errors.landmark}
+                    </p>
                   )}
                 </div>
                 <div className="flex flex-col">
@@ -703,7 +743,9 @@ const KukuitMain = () => {
                     className="w-full h-[50px] border-2 rounded-lg px-5 mt-2 sm:mt-5 font-karla"
                   />
                   {errors.country && (
-                    <p className="text-red-500 text-sm mt-1">{errors.country}</p>
+                    <p className="text-red-500 text-sm mt-1">
+                      {errors.country}
+                    </p>
                   )}
                 </div>
               </div>
@@ -794,7 +836,3 @@ const KukuitMain = () => {
 };
 
 export default KukuitMain;
-
-
-
-

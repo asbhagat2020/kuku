@@ -698,7 +698,7 @@ const ShareModal = ({ isOpen, onClose, userDetails }) => {
             <div className="w-12 h-12 rounded-full bg-[#AF65E6] border-2 border-yellow-400 p-1 flex-shrink-0">
               <Image
                 unoptimized
-                src={userDetails?.user?.avatar || "/kuku-suit 2.png"}
+                src={userDetails?.user?.avatar || "/kuku_logo.svg"}
                 width={40}
                 height={40}
                 className="w-full h-full rounded-full object-cover"

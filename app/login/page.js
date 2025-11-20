@@ -1,10 +1,12 @@
 
 
+
+
 // "use client";
 
 // import { useState, useEffect, useRef } from "react";
 // import { signIn, useSession } from "next-auth/react";
-// import { useRouter } from "next/navigation";
+// import { useRouter, useSearchParams } from "next/navigation";
 // import { useDispatch, useSelector } from "react-redux";
 // import {
 //   googleSignIn,
@@ -15,7 +17,7 @@
 // import Link from "next/link";
 
 // export default function Login() {
-//   const [emailOrPhone, setEmailOrPhone] = useState(""); // For email or local UAE phone
+//   const [emailOrPhone, setEmailOrPhone] = useState("");
 //   const [otp, setOtp] = useState("");
 //   const [isChecked, setIsChecked] = useState(false);
 //   const [isOtpSent, setIsOtpSent] = useState(false);
@@ -24,6 +26,7 @@
 //   const [loading, setLoading] = useState(false);
 //   const dispatch = useDispatch();
 //   const router = useRouter();
+//   const searchParams = useSearchParams();
 //   const { data: session, status } = useSession();
 //   const hasSentRef = useRef(false);
 
@@ -33,17 +36,22 @@
 //     setIsOtpSent(otpSent);
 //   }, [otpSent]);
 
+
+//   useEffect(() => {
+//   console.log("🔍 Environment Check:", {
+//     hasGoogleClientId: !!process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
+//     nextAuthUrl: process.env.NEXTAUTH_URL || "Not set (will use window.location.origin)",
+//     currentOrigin: window.location.origin,
+//   });
+// }, []);
+
 //   // Validate email or UAE local phone
 //   const validateInput = (input) => {
 //     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-//     const phoneRegexUAE = /^[5][0-9]{8}$/; // 9 digits starting with 5 for UAE
+//     const phoneRegexUAE = /^[5][0-9]{8}$/;
 
-//     if (emailRegex.test(input)) {
-//       return "email";
-//     }
-//     if (phoneRegexUAE.test(input)) {
-//       return "phone";
-//     }
+//     if (emailRegex.test(input)) return "email";
+//     if (phoneRegexUAE.test(input)) return "phone";
 //     return "invalid";
 //   };
 
@@ -65,7 +73,6 @@
 //     setError("");
 //     setLoading(true);
 //     try {
-//       console.log("Sending OTP request:", { emailOrPhone: inputValue });
 //       const res = await dispatch(signinOtp({ emailOrPhone: inputValue }));
 //       if (res.type === "auth/sendSigninOtp/fulfilled") {
 //         setIsOtpSent(true);
@@ -73,7 +80,6 @@
 //         const remainingTimeInMs = res.payload.otpExpires - currentTime;
 //         const remainingTimeInSeconds = Math.ceil(remainingTimeInMs / 1000);
 //         setTimer(remainingTimeInSeconds);
-//         // toast.success("OTP sent successfully!");
 //       } else {
 //         setError(res.payload || "Failed to send OTP. Please try again.");
 //       }
@@ -84,6 +90,33 @@
 //       setLoading(false);
 //     }
 //   };
+
+
+
+//   const handleLoginSuccess = () => {
+//   const redirectTo = searchParams.get("redirect");
+//   const returnTo = searchParams.get("returnTo");
+
+//   // Pehle redirect check karo (naya wala)
+//   if (redirectTo) {
+//     setTimeout(() => {
+//       router.push(redirectTo);
+//     }, 100);
+//     return;
+//   }
+
+//   // Purana ticket wala logic
+//   if (returnTo && returnTo.startsWith("ticket-")) {
+//     const ticketId = returnTo.replace("ticket-", "");
+//     setTimeout(() => {
+//       router.push(`/support?ticket=${ticketId}`);
+//     }, 100);
+//     return;
+//   }
+
+//   // Default homepage
+//   router.push("/");
+// };
 
 //   const handleContinue = async () => {
 //     if (!otp.trim()) {
@@ -98,28 +131,29 @@
 //         verifySigninOtp({ emailOrPhone: inputValue, otp })
 //       );
 //       if (res.type === "auth/otpSignIn/fulfilled") {
-//         // toast.success("Login successful!");
-//         router.push("/");
+//         setLoading(false);
+//         handleLoginSuccess();
 //       } else {
 //         setError(res.payload || "Invalid OTP. Please try again.");
+//         setLoading(false);
 //       }
 //     } catch (error) {
 //       console.error("handleContinue error:", error);
 //       setError("An error occurred while verifying OTP. Please try again.");
-//     } finally {
 //       setLoading(false);
 //     }
 //   };
 
+//   // Google Sign-In with redirect back
 //   useEffect(() => {
-//     const handleGoogleSignIn = async () => {
+//     const handleGoogleSignInEffect = async () => {
 //       if (session && !hasSentRef.current) {
 //         hasSentRef.current = true;
 //         try {
 //           const res = await dispatch(googleSignIn({ session, status }));
 //           if (res.type === "auth/googleSignIn/fulfilled") {
-//             // toast.success("Google Sign-In successful!");
-//             router.push("/");
+//             setLoading(false);
+//             handleLoginSuccess();
 //           } else {
 //             setError(res.payload || "Google Sign-In failed.");
 //           }
@@ -128,9 +162,10 @@
 //         }
 //       }
 //     };
-//     handleGoogleSignIn();
-//   }, [session, dispatch, status, router]);
+//     handleGoogleSignInEffect();
+//   }, [session, dispatch, status]);
 
+//   // Timer for OTP resend
 //   useEffect(() => {
 //     let interval = null;
 //     if (isOtpSent && timer > 0) {
@@ -147,7 +182,8 @@
 //     setIsChecked(e.target.checked);
 //   };
 
-//   const handleGoogleSignIn = () => {
+//   const handleGoogleLogin = () => {
+//     // Google login ke liye - direct signIn call karo, bina localStorage ke
 //     signIn("google", { redirect: false });
 //   };
 
@@ -181,9 +217,7 @@
 //                 type="text"
 //                 placeholder="Enter your email or UAE phone number (e.g., test@example.com or 543781819)"
 //                 value={emailOrPhone}
-//                 onChange={(e) => {
-//                   setEmailOrPhone(e.target.value);
-//                 }}
+//                 onChange={(e) => setEmailOrPhone(e.target.value)}
 //                 required
 //               />
 //               {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
@@ -257,7 +291,7 @@
 //           </form>
 //           <div className="w-full max-w-md mt-6">
 //             <button
-//               onClick={handleGoogleSignIn}
+//               onClick={handleGoogleLogin}
 //               className="w-full flex items-center justify-center p-3 bg-gray-100 border border-gray-300 rounded-lg mb-4"
 //             >
 //               <img
@@ -269,23 +303,10 @@
 //                 Sign in with Google
 //               </span>
 //             </button>
-//             <button className="w-full flex items-center justify-center p-3 bg-gray-100 border border-gray-300 rounded-lg mb-4">
-//               <img
-//                 src="/devicon_facebook.svg"
-//                 alt="Facebook"
-//                 className="h-5 w-5 mr-3"
-//               />
-//               <span className="text-gray-800 font-bold font-karla">
-//                 Continue with Facebook
-//               </span>
-//             </button>
 //           </div>
-//           {/* <p className="mt-6 text-center text-[#999999] text-base font-normal font-karla leading-[18.40px]">
-//             Don’t have an account? <a href="/registration" className="text-pink-600 font-karla">Sign up</a>
-//           </p> */}
 
 //           <p className="mt-6 text-center text-[#999999] text-base font-normal font-karla leading-[18.40px]">
-//             Don’t have an account?{" "}
+//            Don&apos;t have an account?{" "}
 //             <Link
 //               href="/registration"
 //               className="text-pink-600 font-karla hover:underline"
@@ -306,9 +327,6 @@
 //     </div>
 //   );
 // }
-
-
-
 
 
 
@@ -335,6 +353,7 @@ export default function Login() {
   const [timer, setTimer] = useState(0);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [inputType, setInputType] = useState(""); // Track if email or phone
   const dispatch = useDispatch();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -347,14 +366,13 @@ export default function Login() {
     setIsOtpSent(otpSent);
   }, [otpSent]);
 
-
   useEffect(() => {
-  console.log("🔍 Environment Check:", {
-    hasGoogleClientId: !!process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
-    nextAuthUrl: process.env.NEXTAUTH_URL || "Not set (will use window.location.origin)",
-    currentOrigin: window.location.origin,
-  });
-}, []);
+    console.log("🔍 Environment Check:", {
+      hasGoogleClientId: !!process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
+      nextAuthUrl: process.env.NEXTAUTH_URL || "Not set (will use window.location.origin)",
+      currentOrigin: window.location.origin,
+    });
+  }, []);
 
   // Validate email or UAE local phone
   const validateInput = (input) => {
@@ -366,6 +384,39 @@ export default function Login() {
     return "invalid";
   };
 
+  // Handle input change with auto-detection
+  const handleInputChange = (e) => {
+    let value = e.target.value;
+    
+    // Email detection - agar @ hai ya email pattern match karta hai
+    if (value.includes('@') || inputType === 'email') {
+      setEmailOrPhone(value);
+      setInputType('email');
+      setError("");
+      return;
+    }
+    
+    // Agar koi letter hai (except @), to email mode
+    if (/[a-zA-Z]/.test(value)) {
+      setEmailOrPhone(value);
+      setInputType('email');
+      setError("");
+      return;
+    }
+    
+    // Phone number - only digits, max 9
+    const digitsOnly = value.replace(/\D/g, '');
+    if (digitsOnly.length <= 9) {
+      setEmailOrPhone(digitsOnly);
+      setInputType(digitsOnly ? 'phone' : '');
+      setError("");
+    } else if (digitsOnly.length === 0) {
+      setEmailOrPhone('');
+      setInputType('');
+      setError("");
+    }
+  };
+
   const handleSendOtp = async () => {
     let inputValue = emailOrPhone.trim();
     if (!inputValue) {
@@ -373,8 +424,8 @@ export default function Login() {
       return;
     }
 
-    const inputType = validateInput(inputValue);
-    if (inputType === "invalid") {
+    const inputTypeValidation = validateInput(inputValue);
+    if (inputTypeValidation === "invalid") {
       setError(
         "Please enter a valid email or 9-digit UAE number starting with 5 (e.g., 543781819)"
       );
@@ -402,20 +453,29 @@ export default function Login() {
     }
   };
 
-  // Smart redirect after login - sirf ticket case ke liye
   const handleLoginSuccess = () => {
+    const redirectTo = searchParams.get("redirect");
     const returnTo = searchParams.get("returnTo");
-    
-    // Agar returnTo hai aur ticket se related hai, to ticket page pe jao
+
+    // Pehle redirect check karo (naya wala)
+    if (redirectTo) {
+      setTimeout(() => {
+        router.push(redirectTo);
+      }, 100);
+      return;
+    }
+
+    // Purana ticket wala logic
     if (returnTo && returnTo.startsWith("ticket-")) {
       const ticketId = returnTo.replace("ticket-", "");
       setTimeout(() => {
         router.push(`/support?ticket=${ticketId}`);
       }, 100);
-    } else {
-      // Normal login - homepage pe jao
-      router.push("/");
+      return;
     }
+
+    // Default homepage
+    router.push("/");
   };
 
   const handleContinue = async () => {
@@ -512,15 +572,41 @@ export default function Login() {
               <label className="text-black text-base font-karla font-bold mb-2 block">
                 Email or Phone Number
               </label>
-              <input
-                className="w-full p-3 border border-gray-300 bg-gray-100 rounded-lg text-start text-black text-sm font-normal font-karla"
-                type="text"
-                placeholder="Enter your email or UAE phone number (e.g., test@example.com or 543781819)"
-                value={emailOrPhone}
-                onChange={(e) => setEmailOrPhone(e.target.value)}
-                required
-              />
+
+              {/* Conditional rendering based on input type */}
+              {inputType === "phone" ? (
+                <div className="flex items-center w-full border border-gray-300 bg-gray-100 rounded-lg">
+                  <span className="pl-3 text-gray-600 font-medium text-sm">
+                    +971
+                  </span>
+                  <input
+                    type="text"
+                    placeholder="543781819"
+                    value={emailOrPhone}
+                    onChange={handleInputChange}
+                    className="flex-1 p-3 bg-transparent outline-none text-black text-sm font-normal font-karla leading-none"
+                    required
+                  />
+                </div>
+              ) : (
+                <input
+                  className="w-full p-3 border border-gray-300 bg-gray-100 rounded-lg text-start text-black text-sm font-normal font-karla"
+                  type="text"
+                  placeholder="Enter your email or UAE phone number (e.g., test@example.com or 543781819)"
+                  value={emailOrPhone}
+                  onChange={handleInputChange}
+                  required
+                />
+              )}
+
               {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
+
+              {/* Helper text */}
+              {inputType === "phone" && (
+                <p className="text-gray-500 text-xs mt-1">
+                  UAE country code (+971) will be used
+                </p>
+              )}
             </div>
             <div className="mb-2">
               <label className="text-black text-base font-karla font-bold mb-2 block">
@@ -603,20 +689,10 @@ export default function Login() {
                 Sign in with Google
               </span>
             </button>
-            <button className="w-full flex items-center justify-center p-3 bg-gray-100 border border-gray-300 rounded-lg mb-4">
-              <img
-                src="/devicon_facebook.svg"
-                alt="Facebook"
-                className="h-5 w-5 mr-3"
-              />
-              <span className="text-gray-800 font-bold font-karla">
-                Continue with Facebook
-              </span>
-            </button>
           </div>
 
           <p className="mt-6 text-center text-[#999999] text-base font-normal font-karla leading-[18.40px]">
-           Don&apos;t have an account?{" "}
+            Don&apos;t have an account?{" "}
             <Link
               href="/registration"
               className="text-pink-600 font-karla hover:underline"

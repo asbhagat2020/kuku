@@ -51,6 +51,10 @@ export const ImagesComponent = () => {
 
   const [AllWishlist, setAllWishlist] = useState([]);
 
+  const isOwnProduct = (product) => {
+    return product?.seller?._id === userID;
+  };
+
   const handleClearSearch = () => {
     // const params = new URLSearchParams(useSearchParams().toString());
     const params = new URLSearchParams(searchParams.toString());
@@ -104,7 +108,7 @@ export const ImagesComponent = () => {
           },
         }
       );
-     
+
       setRemainingOffers((prev) => ({
         ...prev,
         [productId]: res.data.remainingOffers,
@@ -157,6 +161,11 @@ export const ImagesComponent = () => {
       setTimeout(() => {
         router.push("/login");
       }, 500);
+      return;
+    }
+
+    if (isOwnProduct(card)) {
+      toast.error("You cannot make an offer on your own product!");
       return;
     }
 
@@ -516,7 +525,7 @@ export const ImagesComponent = () => {
                 </Slider>
 
                 <div className="absolute w-full bottom-4 sm:bottom-4 flex justify-evenly items-center px-2 sm:px-4 gap-2">
-                  {token ? (
+                  {/* {token ? (
                     <Link
                       href={`/selling-page/${card._id}`}
                       className="w-[70%]"
@@ -529,6 +538,27 @@ export const ImagesComponent = () => {
                     <button
                       className="w-[70%] p-2 py-2 sm:py-3 md:py-[15px] text-xs sm:text-sm md:text-base bg-custom-yellow text-black rounded-xl sm:rounded-2xl font-bold mr-1 hover:bg-yellow-400 transition-colors duration-300"
                       onClick={handleCartNavigation}
+                    >
+                      Buy Now
+                    </button>
+                  )} */}
+                  {token ? (
+                    <button
+                      onClick={() => {
+                        if (isOwnProduct(card)) {
+                          toast.error("You cannot buy your own product!");
+                        } else {
+                          router.push(`/selling-page/${card._id}`);
+                        }
+                      }}
+                      className="w-[70%] p-2 py-2 sm:py-3 md:py-[15px] text-xs sm:text-sm md:text-base bg-custom-yellow text-black rounded-xl sm:rounded-2xl font-bold hover:bg-yellow-400 transition-colors duration-300"
+                    >
+                      Buy Now
+                    </button>
+                  ) : (
+                    <button
+                      onClick={handleCartNavigation}
+                      className="w-[70%] p-2 py-2 sm:py-3 md:py-[15px] text-xs sm:text-sm md:text-base bg-custom-yellow text-black rounded-xl sm:rounded-2xl font-bold hover:bg-yellow-400 transition-colors duration-300"
                     >
                       Buy Now
                     </button>

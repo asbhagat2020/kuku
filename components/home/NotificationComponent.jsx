@@ -4,8 +4,12 @@ import axios from "axios";
 import Image from "next/image";
 import { Bell, Check, X, Filter, Search } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useRouter } from "next/navigation";
+import { toast } from "react-hot-toast";
+import { jwtDecode } from "jwt-decode";
 
 const NotificationComponent = ({ fetchCounts }) => {
+  const router = useRouter();
   const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -22,9 +26,58 @@ const NotificationComponent = ({ fetchCounts }) => {
     return () => clearInterval(interval);
   }, []);
 
+
+
+const handleNotificationClick = async (notification) => {
+  console.log("Notification clicked:", notification.title);
+
+  if (notification.status === "UNREAD") {
+    await markAsRead(notification._id);
+  }
+
+  if (!notification.type?.startsWith("PRODUCT_")) return;
+
+  const productId = notification.data?.product?._id;
+  if (!productId) return;
+
+  let statusSlug = "all";
+  switch (notification.type) {
+    case "PRODUCT_PENDING":   statusSlug = "pending"; break;
+    case "PRODUCT_APPROVED":  statusSlug = "accepted"; break;
+    case "PRODUCT_REJECTED":  statusSlug = "rejected"; break;
+    case "PRODUCT_SOLD":      statusSlug = "sold"; break;
+  }
+
+  const token = Cookies.get("auth");
+  if (!token) {
+    toast.error("Login required!");
+    return;
+  }
+
+  let userId;
+  try {
+    const decoded = jwtDecode(token);
+    userId = decoded.id;  
+    console.log("User ID from JWT:", userId);
+  } catch (e) {
+    console.error("JWT decode failed:", e);
+    toast.error("Invalid session!");
+    return;
+  }
+
+  if (!userId) return;
+
+  const url = `/user_profile/${userId}/selling/${statusSlug}#product-${productId}`;
+  console.log("Redirecting to:", url);
+
+  setTimeout(() => {
+    router.push(url);
+  }, 200);
+};
+
   const fetchNotifications = async () => {
     try {
-      const token = JSON.parse(Cookies.get("auth") || 'null');
+      const token = JSON.parse(Cookies.get("auth") || "null");
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/notification`,
         {
@@ -33,7 +86,7 @@ const NotificationComponent = ({ fetchCounts }) => {
           },
         }
       );
-      
+
       const notificationsData =
         response.data?.data?.notifications || response.data || [];
       setNotifications(
@@ -55,7 +108,7 @@ const NotificationComponent = ({ fetchCounts }) => {
 
   const markAsRead = async (notificationId) => {
     try {
-      const token = JSON.parse(Cookies.get("auth") || 'null');
+      const token = JSON.parse(Cookies.get("auth") || "null");
       await axios.patch(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/notification/${notificationId}/read`,
         {},
@@ -93,7 +146,7 @@ const NotificationComponent = ({ fetchCounts }) => {
 
   const deleteNotification = async (notificationId) => {
     try {
-      const token = JSON.parse(Cookies.get("auth") || 'null');
+      const token = JSON.parse(Cookies.get("auth") || "null");
       await axios.delete(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/notification/${notificationId}`,
         { headers: { Authorization: `Bearer ${token}` } }
@@ -226,7 +279,10 @@ const NotificationComponent = ({ fetchCounts }) => {
                 className={`p-4 border-b hover:bg-gray-50 transition-colors cursor-pointer ${
                   notification.status === "UNREAD" ? "bg-blue-50" : ""
                 }`}
-                onClick={() => markAsRead(notification._id)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleNotificationClick(notification);
+                }}
               >
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex items-start gap-3 flex-1">

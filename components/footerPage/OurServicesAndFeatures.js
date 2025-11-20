@@ -5,7 +5,7 @@ export const OurServicesAndFeatures = () => {
   const services = [
     {
       icon: <ShoppingBag className="w-6 h-6" />,
-      title: "📸 Sell Your Stuff",
+      title: "Sell Your Stuff",
       details: [
         "Got clothes or home items you no longer use? List them on KuKu, and we’ll pick them up only after they’re sold.",
         "We do a quality check to make sure the buyer gets exactly what they saw-and you get paid stress-free."
@@ -13,7 +13,7 @@ export const OurServicesAndFeatures = () => {
     },
     {
       icon: <Package className="w-6 h-6" />,
-      title: "📦 Ku-Kit",
+      title: "Ku-Kit",
       details: [
         "Too busy to list? Just send us a bunch of items. We’ll take care of everything-from photography to listings to delivery.",
         "All you have to do is sit back and watch the sales roll in."
@@ -21,19 +21,19 @@ export const OurServicesAndFeatures = () => {
     },
     {
       icon: <Gift className="w-6 h-6" />,
-      title: "🎁 Giveaway Service",
+      title: "Giveaway Service",
       details: [
         "Don’t want to sell? Declutter the easy way.",
         "We’ll pick up your old clothes, curtains, or bedsheets by weight, and either:",
-        "· 💚 Donate them",
-        "· ♻️ Recycle them",
-        "· 🔁 Repily them",
-        "· 💸 Resell for circular good"
+        "Donate them",
+        "Recycle them",
+        "Repily them",
+        "Resell for circular good"
       ]
     },
     {
       icon: <RefreshCw className="w-6 h-6" />,
-      title: "🔄 Renting Service",
+      title: "Renting Service",
       details: [
         "Need something for a short time? KuKu lets you rent items from other users-perfect for one-time events, shoots, or short-term needs.",
         "Coming soon to your app experience!"
@@ -44,18 +44,18 @@ export const OurServicesAndFeatures = () => {
   const features = [
     {
       icon: <Users className="w-6 h-6" />,
-      title: "🤝 Socio-Commerce Vibes",
+      title: "Socio-Commerce Vibes",
       details: [
         "KuKu isn’t just a marketplace - it’s a community.",
-        "· Follow your favorite sellers",
-        "· Like the items you love",
-        "· Bargain directly with sellers (yes, it’s built in!)",
-        "· Stay connected and shop with personality"
+        "Follow your favorite sellers",
+        "Like the items you love",
+        "Bargain directly with sellers (yes, it’s built in!)",
+        "Stay connected and shop with personality"
       ]
     },
     {
       icon: <AlertTriangle className="w-6 h-6" />,
-      title: "🚨 Emergency Listings",
+      title: "Emergency Listings",
       details: [
         "Need something ASAP?",
         "Use the Emergency Section to post urgent needs - whether it’s a costume, or a last-minute dress. Help and offers roll in fast from nearby users."
@@ -63,7 +63,7 @@ export const OurServicesAndFeatures = () => {
     },
     {
       icon: <ShieldCheck className="w-6 h-6" />,
-      title: "✅ Quality Check Guarantee",
+      title: "Quality Check Guarantee",
       details: [
         "We personally check every sold item before it reaches the buyer - so what you see is exactly what you get.",
         "No surprises. No catfish clothing."
@@ -86,7 +86,7 @@ export const OurServicesAndFeatures = () => {
       <div className="max-w-6xl mx-auto px-4 py-12 space-y-12">
         {/* Services */}
         <div className="rounded-lg p-6">
-          <h2 className="text-xl font-bold text-gray-800 mb-4">🛍️ Our Services</h2>
+          <h2 className="text-xl font-bold text-gray-800 mb-4"> Our Services</h2>
         </div>
 
         {services.map((service, index) => (
@@ -108,7 +108,7 @@ export const OurServicesAndFeatures = () => {
 
         {/* Features */}
         <div className="rounded-lg p-6">
-          <h2 className="text-xl font-bold text-gray-800 mb-4">⚙️ Our Features</h2>
+          <h2 className="text-xl font-bold text-gray-800 mb-4"> Our Features</h2>
         </div>
 
         {features.map((feature, index) => (
@@ -131,7 +131,7 @@ export const OurServicesAndFeatures = () => {
         {/* Closing */}
         <div className="rounded-lg p-6 text-center">
           <p className="text-2xl font-bold text-gray-800 mb-4">
-            🧠 Smart. Social. Sustainable.
+             Smart. Social. Sustainable.
           </p>
           <p className="text-lg text-gray-700 mb-4">
             KuKu makes it fun to buy less, share more, and keep stuff moving. Whether you’re here to clean out your closet, score great finds, or just support circular living - you’re in the right place.

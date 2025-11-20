@@ -205,15 +205,15 @@ const Footer = () => {
             <PaymentIcon src="/fontisto_visa.svg" />
           </div>
           <p className="text-white text-xs font-normal font-karla text-center">
-            Copyright © 2024 Kuku. All Rights Reserved.
+           Kutech Global LLC FZ. 2025
           </p>
           <div className="flex flex-wrap gap-2 justify-center sm:justify-end">
-            <button className="px-3 py-1 bg-white rounded-full flex items-center gap-2">
+            {/* <button className="px-3 py-1 bg-white rounded-full flex items-center gap-2">
               <Image src="/download-cloud.svg" width={18} height={18} alt="" />
               <span className="text-[#2f2f2f] text-xs font-bold font-karla">
                 Download Kuku
               </span>
-            </button>
+            </button> */}
             <button className="flex items-center gap-1">
               <Image src="/globe.svg" width={18} height={18} alt="" />
               <span className="text-white text-xs font-bold font-karla">

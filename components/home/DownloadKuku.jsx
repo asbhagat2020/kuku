@@ -11,11 +11,23 @@ import toast from "react-hot-toast";
 
 const DownloadKuku = () => {
   const router = useRouter();
-  const token = Cookies.get("auth") ? JSON.parse(Cookies.get("auth")) : null;
+  // const token = Cookies.get("auth") ? JSON.parse(Cookies.get("auth")) : null;
 
   const isMobileOrTablet = useMediaQuery("(max-width: 1024px)"); // Check for mobile and tablet view (iPad)
   const dispatch = useDispatch();
   const isPopupOpen = useSelector((state) => state.popup.isOpen);
+
+  const token = (() => {
+    try {
+      const authCookie = Cookies.get("auth");
+      return authCookie && authCookie !== "undefined"
+        ? JSON.parse(authCookie)
+        : null;
+    } catch (error) {
+      console.error("Error parsing auth cookie:", error);
+      return null;
+    }
+  })();
 
   const handleSellNowClick = () => {
     if (!token) {

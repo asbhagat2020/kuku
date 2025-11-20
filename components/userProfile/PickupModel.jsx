@@ -628,7 +628,7 @@ const PickupModal = ({ isOpen, onClose, onSave, mode = "add", initialData = null
       !formData.apartmentDetails ||
       !formData.apartmentName ||
       !formData.area ||
-      !formData.landmark ||
+      // !formData.landmark ||
       !formData.city ||
       !formData.email
     ) {
@@ -904,7 +904,7 @@ const PickupModal = ({ isOpen, onClose, onSave, mode = "add", initialData = null
             </div>
 
             <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">Landmark</label>
+              <label className="block text-sm font-medium text-gray-700">Landmark (Optional)</label>
               <input
                 type="text"
                 name="landmark"
@@ -912,7 +912,7 @@ const PickupModal = ({ isOpen, onClose, onSave, mode = "add", initialData = null
                 onChange={handleChange}
                 placeholder="Enter Landmark (e.g., Near Marina Walk)"
                 className="w-full h-12 px-4 bg-gray-50 rounded-2xl focus:outline-none focus:ring-2 focus:ring-yellow-500"
-                required
+    
               />
             </div>
 
@@ -926,14 +926,8 @@ const PickupModal = ({ isOpen, onClose, onSave, mode = "add", initialData = null
                 required
               >
                 <option value="">Select City</option>
-                <option value="Abu Dhabi">Abu Dhabi</option>
-                <option value="Ajman">Ajman</option>
-                <option value="Al-Ain">Al-Ain</option>
                 <option value="Dubai">Dubai</option>
-                <option value="Fujairah">Fujairah</option>
-                <option value="Ras Al Khaimah">Ras Al Khaimah</option>
                 <option value="Sharjah">Sharjah</option>
-                <option value="Umm Al-Quwain">Umm Al-Quwain</option>
               </select>
             </div>
 

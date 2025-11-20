@@ -30,7 +30,7 @@ export const WhoWeAre = () => {
             Whether you&apos;re decluttering, downsizing, or just done with hoarding-KuKu helps you live lighter, shop smarter, and make room for what matters.
           </p>
           <p className="text-lg text-gray-700 mt-8 leading-relaxed max-w-4xl mx-auto">
-            Think of us as your digital thrift store, rental hub, and donation bin-all rolled into one fun, fuss-free app.
+            Think of us as your digital thrift store, rental hub, and donation bin-all rolled into one fun, fuss-free platform.
           </p>
           <p className="text-3xl font-bold text-purple-600 mt-12">
             Let&apos;s keep it moving. Lets keep it KuKu.

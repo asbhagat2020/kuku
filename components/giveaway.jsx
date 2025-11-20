@@ -2300,7 +2300,7 @@ const Giveaway = () => {
         if (!formData.house_no.trim()) errors.house_no = "House number is required";
         if (!formData.building_name.trim()) errors.building_name = "Building name is required";
         if (!formData.area.trim()) errors.area = "Area is required";
-        if (!formData.landmark.trim()) errors.landmark = "Landmark is required";
+        // if (!formData.landmark.trim()) errors.landmark = "Landmark is required";
         if (!formData.city.trim()) errors.city = "City is required";
       }
       if (!formData.pickTime) errors.pickTime = "Pick time is required";
@@ -2760,7 +2760,7 @@ const Giveaway = () => {
                   <div className="flex flex-wrap sm:flex-nowrap gap-6">
                     <div className="flex-1 flex flex-col">
                       <p className="text-[#151515] text-sm sm:text-base font-bold font-karla">
-                        Landmark
+                        Landmark (Optional)
                       </p>
                       <input
                         maxLength={25}
@@ -2786,14 +2786,8 @@ const Giveaway = () => {
                         className="w-full h-[50px] border-2 rounded-lg px-5 mt-2 sm:mt-5 font-karla"
                       >
                         <option value="">Select a city</option>
-                        <option value="Abu Dhabi">Abu Dhabi</option>
-                        <option value="Ajman">Ajman</option>
-                        <option value="Al-Ain">Al-Ain</option>
                         <option value="Dubai">Dubai</option>
-                        <option value="Fujairah">Fujairah</option>
-                        <option value="Ras Al Khaimah">Ras Al Khaimah</option>
                         <option value="Sharjah">Sharjah</option>
-                        <option value="Umm Al-Quwain">Umm Al-Quwain</option>
                       </select>
                       {formErrors.city && (
                         <p className="text-red-500 text-sm mt-1">{formErrors.city}</p>
@@ -2890,7 +2884,7 @@ const Giveaway = () => {
                   }`}
                 >
                   <option value="">Select Item</option>
-                  <option value="cloths">Clothes</option>
+                  <option value="clothes">Clothes</option>
                   <option value="curtain">Curtains</option>
                   <option value="bedsheet">Bedsheets</option>
                 </select>
@@ -3032,7 +3026,7 @@ const Giveaway = () => {
               <div onClick={handleBackButton} className="cursor-pointer">
                 <img src="/gv_arrow.png" alt="Back" className="w-8 h-8" />
               </div>
-              <img src="/help_gv.png" alt="Help" className="w-24 h-8" />
+              {/* <img src="/help_gv.png" alt="Help" className="w-24 h-8" /> */}
             </div>
 
             <div className="w-full md:w-[88%] flex justify-center items-center mb-12 mx-auto">
@@ -3087,9 +3081,9 @@ const Giveaway = () => {
               marginBottom: "10px",
             }}
           />
-          <button className="absolute top-4 right-4 z-10">
+          {/* <button className="absolute top-4 right-4 z-10">
             <img src="/help_gv.png" alt="Help" className="w-24 h-8" />
-          </button>
+          </button> */}
         </div>
       )}
 

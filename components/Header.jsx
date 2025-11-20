@@ -1,6 +1,3 @@
-
-
-
 "use client";
 import Image from "next/image";
 
@@ -68,7 +65,18 @@ const Header = () => {
   useEffect(() => {
     const fetchInitialCounts = async () => {
       try {
-        const token = JSON.parse(Cookies.get("auth") || "null");
+        // const token = JSON.parse(Cookies.get("auth") || "null");
+        const token = (() => {
+          try {
+            const authCookie = Cookies.get("auth");
+            return authCookie && authCookie !== "undefined"
+              ? JSON.parse(authCookie)
+              : null;
+          } catch (error) {
+            console.error("Error parsing auth cookie:", error);
+            return null;
+          }
+        })();
         if (!token) return; // Skip if not authenticated
 
         // Fetch notification count
@@ -152,94 +160,65 @@ const Header = () => {
   // Fixed offers variable
   const offers = [];
 
-  // const fetchSubcategorySuggestions = async (searchTerm) => {
-  //   if (!searchTerm.trim()) {
-  //     setSuggestions([]);
-  //     return;
-  //   }
+  const fetchSubcategorySuggestions = async (searchTerm) => {
+    if (!searchTerm.trim()) {
+      setSuggestions([]);
+      return;
+    }
+    setIsLoading(true);
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/products`
+      );
+      const products = await response.json();
 
-  //   setIsLoading(true);
-  //   try {
-  //     const response = await fetch(
-  //       `${process.env.NEXT_PUBLIC_API_BASE_URL}/products`
-  //     );
-  //     const products = await response.json();
+      // Existing: Matching subcategories
+      const matchingSubcategories = products
+        .filter((product) =>
+          product.category?.subCategoryName
+            ?.toLowerCase()
+            .includes(searchTerm.toLowerCase())
+        )
+        .map((product) => product.category.subCategoryName)
+        .filter((value, index, self) => self.indexOf(value) === index);
 
-  //     // Extract unique subcategories AND categories that match the search term
-  //     const matchingSubcategories = products
-  //       .filter((product) =>
-  //         product.category?.subCategoryName
-  //           ?.toLowerCase()
-  //           .includes(searchTerm.toLowerCase())
-  //       )
-  //       .map((product) => product.category.subCategoryName)
-  //       .filter((value, index, self) => self.indexOf(value) === index);
+      // Existing: Matching categories
+      const matchingCategories = products
+        .filter((product) =>
+          product.category?.categoryName
+            ?.toLowerCase()
+            .includes(searchTerm.toLowerCase())
+        )
+        .map((product) => product.category.categoryName)
+        .filter((value, index, self) => self.indexOf(value) === index);
 
-  //     // Extract unique categories that match the search term
-  //     const matchingCategories = products
-  //       .filter((product) =>
-  //         product.category?.categoryName
-  //           ?.toLowerCase()
-  //           .includes(searchTerm.toLowerCase())
-  //       )
-  //       .map((product) => product.category.categoryName)
-  //       .filter((value, index, self) => self.indexOf(value) === index);
+      // New: Matching seller usernames
+      const matchingUsernames = products
+        .filter((product) =>
+          product.seller?.username
+            ?.toLowerCase()
+            .includes(searchTerm.toLowerCase())
+        )
+        .map((product) => product.seller.username) // Username ko suggestion mein daal
+        .filter((value, index, self) => self.indexOf(value) === index);
 
-  //     // Combine both arrays and remove duplicates, limit to 5 suggestions
-  //     const allSuggestions = [...matchingSubcategories, ...matchingCategories]
-  //       .filter((value, index, self) => self.indexOf(value) === index)
-  //       .slice(0, 5);
+      // Combine all and remove duplicates, limit to 5
+      const allSuggestions = [
+        ...matchingSubcategories,
+        ...matchingCategories,
+        ...matchingUsernames,
+      ]
+        .filter((value, index, self) => self.indexOf(value) === index)
+        .slice(0, 5);
 
-  //     setSuggestions(allSuggestions);
-  //   } catch (error) {
-  //     console.error("Error fetching category suggestions:", error);
-  //     setSuggestions([]);
-  //   } finally {
-  //     setIsLoading(false);
-  //   }
-  // };
-
-const fetchSubcategorySuggestions = async (searchTerm) => {
-  if (!searchTerm.trim()) {
-    setSuggestions([]);
-    return;
-  }
-  setIsLoading(true);
-  try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/products`);
-    const products = await response.json();
-
-    // Existing: Matching subcategories
-    const matchingSubcategories = products
-      .filter((product) => product.category?.subCategoryName?.toLowerCase().includes(searchTerm.toLowerCase()))
-      .map((product) => product.category.subCategoryName)
-      .filter((value, index, self) => self.indexOf(value) === index);
-
-    // Existing: Matching categories
-    const matchingCategories = products
-      .filter((product) => product.category?.categoryName?.toLowerCase().includes(searchTerm.toLowerCase()))
-      .map((product) => product.category.categoryName)
-      .filter((value, index, self) => self.indexOf(value) === index);
-
-    // New: Matching seller usernames
-    const matchingUsernames = products
-      .filter((product) => product.seller?.username?.toLowerCase().includes(searchTerm.toLowerCase()))
-      .map((product) => product.seller.username)  // Username ko suggestion mein daal
-      .filter((value, index, self) => self.indexOf(value) === index);
-
-    // Combine all and remove duplicates, limit to 5
-    const allSuggestions = [...matchingSubcategories, ...matchingCategories, ...matchingUsernames]
-      .filter((value, index, self) => self.indexOf(value) === index)
-      .slice(0, 5);
-
-    setSuggestions(allSuggestions);
-  } catch (error) {
-    console.error("Error fetching suggestions:", error);
-    setSuggestions([]);
-  } finally {
-    setIsLoading(false);
-  }
-};
+      setSuggestions(allSuggestions);
+    } catch (error) {
+      console.error("Error fetching suggestions:", error);
+      setSuggestions([]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleSearch = async (subcategory) => {
     try {
@@ -457,7 +436,6 @@ const fetchSubcategorySuggestions = async (searchTerm) => {
 
   return (
     <header className="w-full mx-auto">
-
       <div className="bg-[#0D0D0D] px-4 py-2">
         <GoogleTranslate />
       </div>
@@ -660,7 +638,7 @@ const fetchSubcategorySuggestions = async (searchTerm) => {
                   className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6"
                 />
                 {totalNotificationCount > 0 && (
-                  <span className="absolute top-2 right-4 translate-x-1/3 -translate-y-1/3 bg-[#FDE504] text-black font-karla font-semibold rounded-full h-[18px] w-[18px] flex items-center justify-center text-[10px]">
+                  <span className="absolute top-2 right-4 translate-x-1/3 -translate-y-1/3 bg-[#FF0000] text-black font-karla font-semibold rounded-full h-[18px] w-[18px] flex items-center justify-center text-[10px]">
                     {totalNotificationCount}
                   </span>
                 )}

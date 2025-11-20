@@ -1355,7 +1355,7 @@ const OfferComponent = ({ setOfferCount, fetchCounts }) => {
                       className="text-sm text-gray-600 leading-tight"
                     >
                       I agree to the terms and conditions by KUKU.
-                      <a href="#" className="text-blue-600 underline">
+                      <a href="/make-an-offer-policy" className="text-blue-600 underline">
                         Click here to know more
                       </a>
                     </label>
