@@ -624,8 +624,28 @@ const Header = () => {
             )}
 
             {(session || isLocalToken) && !isNotificationDisabled && (
+              // <div
+              //   className={`relative h-8 w-8 sm:h-10 sm:w-10 lg:h-[54px] lg:w-[54px] flex items-center justify-center bg-white/40 rounded-full cursor-pointer ${
+              //     isSearchVisible ? "block" : ""
+              //   }`}
+              //   onClick={toggleNotifications}
+              // >
+              //   <Image
+              //     alt="notification icon"
+              //     width={20}
+              //     height={20}
+              //     src="/notification.svg"
+              //     className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6"
+              //   />
+              //   {totalNotificationCount > 0 && (
+              //     <span className="absolute top-2 right-4 translate-x-1/3 -translate-y-1/3 bg-[#FF0000] text-black font-karla font-semibold rounded-full h-[18px] w-[18px] flex items-center justify-center text-[10px]">
+              //       {totalNotificationCount}
+              //     </span>
+              //   )}
+              // </div>
+
               <div
-                className={`relative h-8 w-8 sm:h-10 sm:w-10 lg:h-[54px] lg:w-[54px] flex items-center justify-center bg-white/40 rounded-full cursor-pointer ${
+                className={`relative h-8 w-8 sm:h-10 sm:w-10 lg:h-[54px] lg:w-[54px] flex items-center justify-center bg-white/40 rounded-full cursor-pointer group ${
                   isSearchVisible ? "block" : ""
                 }`}
                 onClick={toggleNotifications}
@@ -642,6 +662,9 @@ const Header = () => {
                     {totalNotificationCount}
                   </span>
                 )}
+                <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 bg-black text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-50">
+                  Notifications
+                </span>
               </div>
             )}
 
@@ -656,7 +679,7 @@ const Header = () => {
             )}
 
             {/* Cart Icon - Desktop Only */}
-            <div
+            {/* <div
               className={`${
                 cartPath ? "bg-[#393939]" : "bg-white/40"
               } h-[54px] p-[15px] rounded-[100px] hidden lg:block cursor-pointer`}
@@ -670,10 +693,29 @@ const Header = () => {
                 height={24}
                 src={cartPath ? "/cart_white.svg" : "/cart.svg"}
               />
+            </div> */}
+
+            <div
+              className={`${
+                cartPath ? "bg-[#393939]" : "bg-white/40"
+              } h-[54px] p-[15px] rounded-[100px] hidden lg:block cursor-pointer relative group`}
+              onClick={() => {
+                handleNavigation("cart");
+              }}
+            >
+              <Image
+                alt="cart icon"
+                width={24}
+                height={24}
+                src={cartPath ? "/cart_white.svg" : "/cart.svg"}
+              />
+              <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 bg-black text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                Cart
+              </span>
             </div>
 
             {/* Wishlist Icon - Fixed spacing and responsive sizing */}
-            <div
+            {/* <div
               className={`h-8 w-8 sm:h-10 sm:w-10 lg:h-[54px] lg:w-[54px] flex items-center justify-center rounded-full cursor-pointer ${
                 wishPath ? "bg-[#393939]" : "bg-white/40"
               }`}
@@ -688,6 +730,26 @@ const Header = () => {
                 src={wishPath ? "/wishlist_white.svg" : "/wishlist.svg"}
                 className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6"
               />
+            </div> */}
+
+            <div
+              className={`h-8 w-8 sm:h-10 sm:w-10 lg:h-[54px] lg:w-[54px] flex items-center justify-center rounded-full cursor-pointer relative group ${
+                wishPath ? "bg-[#393939]" : "bg-white/40"
+              }`}
+              onClick={() => {
+                handleNavigation("wishlist");
+              }}
+            >
+              <Image
+                alt="wishlist icon"
+                width={20}
+                height={20}
+                src={wishPath ? "/wishlist_white.svg" : "/wishlist.svg"}
+                className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6"
+              />
+              <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 bg-black text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                Wishlist
+              </span>
             </div>
 
             {/* Profile Icon - Desktop Only */}
@@ -698,7 +760,7 @@ const Header = () => {
                 handleClick(userID);
               }}
             >
-              <div
+              {/* <div
                 className={`${
                   iconsPath ? "bg-[#393939]" : "bg-white/40"
                 } h-[54px] p-[15px] rounded-[100px] hidden lg:block cursor-pointer`}
@@ -709,25 +771,38 @@ const Header = () => {
                   height={24}
                   src={iconsPath ? "/profile_white.svg" : "/profile_black.svg"}
                 />
+              </div> */}
+
+              <div
+                className={`${
+                  iconsPath ? "bg-[#393939]" : "bg-white/40"
+                } h-[54px] p-[15px] rounded-[100px] hidden lg:block cursor-pointer relative group`}
+              >
+                <Image
+                  alt="profile icon"
+                  width={24}
+                  height={24}
+                  src={iconsPath ? "/profile_white.svg" : "/profile_black.svg"}
+                />
+                <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 bg-black text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                  Profile
+                </span>
               </div>
             </Link>
 
             {/* Dropdown Menu - Desktop Only */}
             <div ref={dropdownRef} className="relative">
-              <div
-                onClick={toggleDropdown}
-                className="cursor-pointer hidden lg:block"
-              >
+              <div onClick={toggleDropdown} className="cursor-pointer">
                 <Image
                   alt="dropdown"
-                  width={14}
-                  height={14}
+                  width={18}
+                  height={18}
                   src="/heade_drop_down.svg"
                 />
               </div>
 
               {isDropdownVisible && (
-                <div className="absolute py-[26px] px-[10px] right-0 top-[40px] min-w-[120px] bg-white border border-gray-300 rounded-lg shadow-lg z-10 ">
+                <div className="absolute py-[26px] px-[10px] right-0 top-[40px] min-w-[160px] bg-white border border-gray-300 rounded-lg shadow-lg z-10 ">
                   {session || isLocalToken ? (
                     <>
                       <Link
