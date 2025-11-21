@@ -43,8 +43,8 @@ const Hero = () => {
     <div className="relative w-full mx-auto h-[1024px] 2xl-[1400px] bg-gradient-to-l from-[#F3B202] via-[#F4B202] to-[#EDA702] overflow-hidden pb-5">
       <div className="absolute top-10 left-0 w-full h-[90%]">
         <Image
-          unoptimized={true}
-          src="/home_bg.png"
+          // unoptimized={true}
+          src="/home_bg.webp"
           layout="fill"
           objectFit="cover"
           alt="home_bg"
@@ -58,6 +58,7 @@ const Hero = () => {
           src="/star.png"
           objectFit="cover"
           alt="star"
+          loading="lazy"
         />
       </div>
       <div className="absolute top-48 right-[350px]">
