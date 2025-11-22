@@ -176,7 +176,7 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="flex flex-col gap-4 items-center md:items-end">
+        {/* <div className="flex flex-col gap-4 items-center md:items-end">
           <Link href={"#"} target="_blank">
             <Image
               src="/googlePlay.png"
@@ -193,7 +193,7 @@ const Footer = () => {
               alt="App Store"
             />
           </Link>
-        </div>
+        </div> */}
       </div>
 
       <div className="bg-[#E4086F] px-4 sm:px-8 lg:px-16 py-5">

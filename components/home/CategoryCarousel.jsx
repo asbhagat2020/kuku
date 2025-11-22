@@ -1,4 +1,3 @@
-
 // "use client";
 // import Image from "next/image";
 // import React, { useState, useRef, useEffect } from "react";
@@ -7,14 +6,16 @@
 // import "slick-carousel/slick/slick-theme.css";
 // import { motion } from "framer-motion";
 // import axios from "axios";
+// import { useRouter } from "next/navigation"; // Add useRouter
 
 // const CategoryCarousel = () => {
-//   const [products, setProducts] = useState([]); // Dynamic products from API
+//   const [products, setProducts] = useState([]);
 //   const [currentSlide, setCurrentSlide] = useState(0);
 //   const [centerIndex, setCenterIndex] = useState(0);
 //   const [loading, setLoading] = useState(true);
 //   const [error, setError] = useState(null);
 //   const sliderRef = useRef(null);
+//   const router = useRouter(); // Initialize router
 
 //   // Fetch categories from API
 //   useEffect(() => {
@@ -24,14 +25,13 @@
 //         const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/category`);
         
 //         if (response.data && response.data.data) {
-//           // Flatten all active categories from parent categories
 //           const allCategories = response.data.data.flatMap((parentCat) =>
 //             parentCat.categories
-//               .filter((cat) => cat.status === "active") // Only active ones
+//               .filter((cat) => cat.status === "active")
 //               .map((cat) => ({
 //                 title: cat.categoryName,
-//                 image: cat.image || "/default-category.png", // Default if null
-//                 price: "12 AED", // Hardcoded, replace with dynamic if needed
+//                 image: cat.image || "/default-category.png",
+//                 price: "12 AED",
 //               }))
 //           );
 //           setProducts(allCategories);
@@ -41,7 +41,6 @@
 //       } catch (err) {
 //         console.error("Error fetching categories:", err);
 //         setError("Failed to fetch categories");
-//         // Fallback to empty array or static if needed
 //         setProducts([]);
 //       } finally {
 //         setLoading(false);
@@ -54,9 +53,9 @@
 //   const settings = {
 //     dots: false,
 //     arrows: false,
-//     infinite: products.length > 1, // Infinite only if enough items
+//     infinite: products.length > 1,
 //     speed: 500,
-//     slidesToShow: Math.min(4.36, products.length), // Adjust based on data
+//     slidesToShow: Math.min(4.36, products.length),
 //     slidesToScroll: 1,
 //     centerMode: true,
 //     centerPadding: "0px",
@@ -129,7 +128,11 @@
 //     }
 //   };
 
-//   // Get the current product's title
+//   // Handle category click to navigate to selling-page
+//   const handleCategoryClick = (categoryName) => {
+//     router.push(`/selling-page?categoryName=${encodeURIComponent(categoryName)}`);
+//   };
+
 //   const currentTitle = products[currentSlide]?.title.toUpperCase() || "CATEGORY";
 
 //   if (loading) {
@@ -153,28 +156,33 @@
 //       <Slider ref={sliderRef} {...settings}>
 //         {products.map((item, index) => (
 //           <div className="relative" key={index}>
-//             {index !== currentSlide && (
-//               <div className="absolute top-2 left-10 md:left-[40px] h-[25px] px-2.5 py-[5px] bg-[#e4086f]/10 rounded-[10px] justify-center items-center gap-2.5 inline-flex">
-//                 <div className="text-black text-xs font-normal font-karla">
-//                   {item.title}
-//                 </div>
-//               </div>
-//             )}
 //             <div
-//               className={`w-[300px] h-[386px] mx-8 bg-white transition-all duration-500 ${
-//                 index === currentSlide
-//                   ? "shadow-lg rounded-[155px]"
-//                   : "rounded-[20px]"
-//               }`}
+//               className="cursor-pointer"
+//               onClick={() => handleCategoryClick(item.title)} // Add click handler
 //             >
-//               <Image
-//                 src={item.image}
-//                 width={307}
-//                 height={307}
-//                 layout="responsive"
-//                 alt={item.title}
-//                 className="w-[307px]"
-//               />
+//               {index !== currentSlide && (
+//                 <div className="absolute top-2 left-10 md:left-[40px] h-[25px] px-2.5 py-[5px] bg-[#e4086f]/10 rounded-[10px] justify-center items-center gap-2.5 inline-flex">
+//                   <div className="text-black text-xs font-normal font-karla">
+//                     {item.title}
+//                   </div>
+//                 </div>
+//               )}
+//               <div
+//                 className={`w-[300px] h-[386px] mx-8 bg-white transition-all duration-500 ${
+//                   index === currentSlide
+//                     ? "shadow-lg rounded-[155px]"
+//                     : "rounded-[20px]"
+//                 }`}
+//               >
+//                 <Image
+//                   src={item.image}
+//                   width={307}
+//                   height={307}
+//                   layout="responsive"
+//                   alt={item.title}
+//                   className="w-[307px]"
+//                 />
+//               </div>
 //             </div>
 //           </div>
 //         ))}
@@ -194,7 +202,6 @@
 //             />
 //           </div>
 
-//           {/* Central Title Section */}
 //           <div className="h-[84px] px-4 py-4 bg-[#f0fafe] rounded-[20px] flex justify-center items-center gap-2.5">
 //             <div className="text-[#070707] text-base sm:text-xl font-bold font-karla leading-normal">
 //               {currentTitle}
@@ -214,7 +221,6 @@
 //           </div>
 //         </div>
 
-//         {/* Left Arrow Button */}
 //         <div className="hidden sm:flex">
 //           <motion.div
 //             whileHover={{
@@ -235,14 +241,12 @@
 //           </motion.div>
 //         </div>
 
-//         {/* Central Title Section for larger screens */}
-//         <div className="hidden sm:flex h-[84px] w-[220px] px-4 sm:px-[60px] py-4 sm:py-[30px] bg-[#f0fafe] rounded-[20px]  justify-center items-center gap-2.5">
+//         <div className="hidden sm:flex h-[84px] w-[220px] px-4 sm:px-[60px] py-4 sm:py-[30px] bg-[#f0fafe] rounded-[20px] justify-center items-center gap-2.5">
 //           <div className="text-[#070707] text-base sm:text-xl font-bold font-karla leading-normal">
 //             {currentTitle}
 //           </div>
 //         </div>
 
-//         {/* Right Arrow Button */}
 //         <div className="hidden sm:flex">
 //           <motion.div
 //             whileHover={{
@@ -287,7 +291,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { motion } from "framer-motion";
 import axios from "axios";
-import { useRouter } from "next/navigation"; // Add useRouter
+import { useRouter } from "next/navigation";
 
 const CategoryCarousel = () => {
   const [products, setProducts] = useState([]);
@@ -296,7 +300,7 @@ const CategoryCarousel = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const sliderRef = useRef(null);
-  const router = useRouter(); // Initialize router
+  const router = useRouter();
 
   // Fetch categories from API
   useEffect(() => {
@@ -343,6 +347,20 @@ const CategoryCarousel = () => {
     beforeChange: (current, next) => setCurrentSlide(next),
     responsive: [
       {
+        breakpoint: 1536,
+        settings: {
+          slidesToShow: Math.min(4, products.length),
+          slidesToScroll: 1,
+        },
+      },
+      {
+        breakpoint: 1470,
+        settings: {
+          slidesToShow: Math.min(3.5, products.length),
+          slidesToScroll: 1,
+        },
+      },
+      {
         breakpoint: 1280,
         settings: {
           slidesToShow: Math.min(3, products.length),
@@ -382,12 +400,18 @@ const CategoryCarousel = () => {
         const slidesToShow =
           window.innerWidth < 480
             ? 1
-            : window.innerWidth < 600
-            ? 1
+            : window.innerWidth < 768
+            ? 2.4
             : window.innerWidth < 1024
-            ? 1
-            : 4;
-        setCenterIndex(Math.floor(slidesToShow / 4));
+            ? 3
+            : window.innerWidth < 1280
+            ? 3
+            : window.innerWidth < 1470
+            ? 3.5
+            : window.innerWidth < 1536
+            ? 4
+            : 4.36;
+        setCenterIndex(Math.floor(slidesToShow / 2));
       };
 
       handleResize();
@@ -433,16 +457,16 @@ const CategoryCarousel = () => {
   }
 
   return (
-    <div className="w-full mx-auto flex flex-col overflow-hidden px-[20px] md:px-0 ">
+    <div className="w-full mx-auto flex flex-col overflow-hidden px-[20px] md:px-0">
       <Slider ref={sliderRef} {...settings}>
         {products.map((item, index) => (
           <div className="relative" key={index}>
             <div
               className="cursor-pointer"
-              onClick={() => handleCategoryClick(item.title)} // Add click handler
+              onClick={() => handleCategoryClick(item.title)}
             >
               {index !== currentSlide && (
-                <div className="absolute top-2 left-10 md:left-[40px] h-[25px] px-2.5 py-[5px] bg-[#e4086f]/10 rounded-[10px] justify-center items-center gap-2.5 inline-flex">
+                <div className="absolute top-2 left-10 md:left-[40px] h-[25px] px-2.5 py-[5px] bg-[#e4086f]/10 rounded-[10px] justify-center items-center gap-2.5 inline-flex z-10">
                   <div className="text-black text-xs font-normal font-karla">
                     {item.title}
                   </div>

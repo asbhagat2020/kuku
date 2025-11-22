@@ -22,7 +22,7 @@ const Brands = () => {
         </h1>
       </div>
 
-      <div className="lg:w-[465px] h-[45px] pt-[24px] text-center text-white text-base font-normal font-karla leading-[17.60px]">
+      <div className="lg:w-[465px] h-[45px] pt-[24px] text-center text-white font-luckiest leading-[17.60px]">
         It is a long established fact that a reader will be distracted by the
         readable content of a page when looking at its layout.{" "}
       </div>

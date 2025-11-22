@@ -15,7 +15,7 @@ const Selling = () => {
                 </div>
                 <Link href="/selling-page">
                     <div className="h-[70px] px-5 lg:px-12 py-[15px] rounded-[22px] border-2 border-[#e4086f] justify-start items-center gap-[11px] flex cursor-pointer group hover:bg-[#e4086f] hover:border-white">
-                        <p className="text-[#e4086f] group-hover:text-white lg:text-xl font-bold font-karla text-center uppercase leading-snug">
+                        <p className="text-[#e4086f] group-hover:text-white lg:text-xl font-luckiest text-center uppercase leading-snug">
                             View all
                         </p>
                     </div>
