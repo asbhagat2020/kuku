@@ -15,6 +15,7 @@ const MarketPlace = dynamic(() => import('@/components/home/MarketPlace'));
 const Popup = dynamic(() => import('@/components/home/Popup'));
 const Selling = dynamic(() => import('@/components/home/Selling'));
 const StriteSection = dynamic(() => import('@/components/home/StriteSection'));
+import ProtectedRoute from "@/components/ProtectedRoute";
 
 import homeAnimation from "../public/lottieFiles/kukuhomenew.json";
 
@@ -91,7 +92,7 @@ const Page = () => {
   };
 
   return (
-    <>
+    <ProtectedRoute>
       {isLoading ? (
         <LoadingAnimation />
       ) : (
@@ -109,7 +110,7 @@ const Page = () => {
           <Footer />
         </>
       )}
-    </>
+    </ProtectedRoute>
   );
 };
 

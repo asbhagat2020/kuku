@@ -5,38 +5,42 @@
 // import axios from "axios";
 // import Cookies from "js-cookie";
 
+// // Helper function to safely parse cookie
+// const safeParseCookie = (cookieValue) => {
+//   if (!cookieValue || cookieValue === "undefined" || cookieValue === "null") {
+//     return null;
+//   }
+//   try {
+//     return JSON.parse(cookieValue);
+//   } catch (error) {
+//     console.error("Error parsing cookie:", error);
+//     return null;
+//   }
+// };
+
 // // Safely parse user cookie
 // const user =
-//   typeof window !== "undefined" && Cookies.get("user")
+//   typeof window !== "undefined"
 //     ? (() => {
-//         try {
-//           const userCookie = Cookies.get("user");
-//           return userCookie ? JSON.parse(userCookie) : { _id: "", username: "", name: "" };
-//         } catch (error) {
-//           console.error("Error parsing user cookie:", error);
-//           return { _id: "", username: "", name: "" };
-//         }
+//         const userCookie = Cookies.get("user");
+//         const parsedUser = safeParseCookie(userCookie);
+//         return parsedUser || { _id: "", username: "", name: "" };
 //       })()
 //     : { _id: "", username: "", name: "" };
 
 // // Safely parse auth cookie
 // const token =
-//   typeof window !== "undefined" && Cookies.get("auth")
+//   typeof window !== "undefined"
 //     ? (() => {
-//         try {
-//           const authCookie = Cookies.get("auth");
-//           return authCookie ? JSON.parse(authCookie) : null;
-//         } catch (error) {
-//           console.error("Error parsing auth cookie:", error);
-//           return null;
-//         }
+//         const authCookie = Cookies.get("auth");
+//         return safeParseCookie(authCookie);
 //       })()
 //     : null;
 
 // const initialState = {
 //   user: user,
 //   token: token,
-//   isAuthenticated: !!token, // Set isAuthenticated based on token
+//   isAuthenticated: !!token,
 //   loading: false,
 //   error: null,
 //   otpSend: false,
@@ -69,7 +73,8 @@
 //         status: error.response?.status,
 //         data: error.response?.data,
 //       });
-//       const errorMessage = error.response?.data?.message || "Failed to send OTP";
+//       const errorMessage =
+//         error.response?.data?.message || "Failed to send OTP";
 //       toast.error(errorMessage);
 //       return rejectWithValue(errorMessage);
 //     }
@@ -101,7 +106,8 @@
 //         status: error.response?.status,
 //         data: error.response?.data,
 //       });
-//       const errorMessage = error.response?.data?.message || "Google signup failed";
+//       const errorMessage =
+//         error.response?.data?.message || "Google signup failed";
 //       toast.error(errorMessage);
 //       return rejectWithValue(errorMessage);
 //     }
@@ -134,7 +140,36 @@
 //         status: error.response?.status,
 //         data: error.response?.data,
 //       });
-//       const errorMessage = error.response?.data?.message || "Google signin failed";
+//       const errorMessage =
+//         error.response?.data?.message || "Google signin failed";
+//       toast.error(errorMessage);
+//       return rejectWithValue(errorMessage);
+//     }
+//   }
+// );
+
+// // New unified Google auth thunk
+// export const googleAuth = createAsyncThunk(
+//   "auth/googleAuth",
+//   async ({ session }, { rejectWithValue }) => {
+//     try {
+//       const response = await axios.post(
+//         `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/login/google`,
+//         {
+//           email: session.user.email,
+//           name: session.user.name || session.user.email.split("@")[0],
+//         }
+//       );
+
+//       Cookies.set("auth", JSON.stringify(response.data.token));
+//       Cookies.set("user", JSON.stringify(response.data.user));
+
+//       return {
+//         ...response.data,
+//         redirectTo: response.data.redirectTo || "/",
+//       };
+//     } catch (error) {
+//       const errorMessage = error.response?.data?.message || "Google login failed";
 //       toast.error(errorMessage);
 //       return rejectWithValue(errorMessage);
 //     }
@@ -166,7 +201,8 @@
 //         status: error.response?.status,
 //         data: error.response?.data,
 //       });
-//       const errorMessage = error.response?.data?.message || "Failed to send OTP";
+//       const errorMessage =
+//         error.response?.data?.message || "Failed to send OTP";
 //       toast.error(errorMessage);
 //       return rejectWithValue(errorMessage);
 //     }
@@ -234,7 +270,8 @@
 //         status: error.response?.status,
 //         data: error.response?.data,
 //       });
-//       const errorMessage = error.response?.data?.message || "OTP verification failed";
+//       const errorMessage =
+//         error.response?.data?.message || "OTP verification failed";
 //       toast.error(errorMessage);
 //       return rejectWithValue(errorMessage);
 //     }
@@ -257,7 +294,7 @@
 // export const updateDetails = createAsyncThunk(
 //   "auth/updateDetails",
 //   async (
-//     { KukuUsername, fullName, Description, phone, location, isChecked, id },
+//     { KukuUsername, fullName, Description, phone, location, isChecked, id, isProfileComplete },
 //     { rejectWithValue }
 //   ) => {
 //     try {
@@ -279,9 +316,13 @@
 //         }
 //       );
 //       Cookies.set("auth", JSON.stringify(response.data.token));
-//       Cookies.set("user", JSON.stringify(response.data.user));
-//       toast.success(response.data.message || "Details updated successfully");
-//       return response.data.user;
+//       const updatedUser = {
+//         ...response.data.user,
+//         isProfileComplete: isProfileComplete ?? true,
+//       };
+//       Cookies.set("user", JSON.stringify(updatedUser));
+//       // toast.success(response.data.message || "Details updated successfully");
+//       return updatedUser;
 //     } catch (error) {
 //       console.error("updateDetails error:", {
 //         message: error.message,
@@ -423,6 +464,24 @@
 //         state.error = action.payload;
 //         state.loading = false;
 //       });
+
+//     builder
+//     .addCase(googleAuth.pending, (state) => {
+//       state.loading = true;
+//       state.error = null;
+//     })
+//     .addCase(googleAuth.fulfilled, (state, action) => {
+//       state.user = action.payload.user;
+//       state.token = action.payload.token;
+//       state.isAuthenticated = true;
+//       state.loading = false;
+//       state.error = null;
+//     })
+//     .addCase(googleAuth.rejected, (state, action) => {
+//       state.loading = false;
+//       state.error = action.payload;
+//       state.isAuthenticated = false;
+//     });
 //   },
 // });
 
@@ -430,12 +489,10 @@
 // export default authSlice.reducer;
 
 "use client";
-
 import { toast } from "react-hot-toast";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import Cookies from "js-cookie";
-
 // Helper function to safely parse cookie
 const safeParseCookie = (cookieValue) => {
   if (!cookieValue || cookieValue === "undefined" || cookieValue === "null") {
@@ -448,7 +505,6 @@ const safeParseCookie = (cookieValue) => {
     return null;
   }
 };
-
 // Safely parse user cookie
 const user =
   typeof window !== "undefined"
@@ -458,7 +514,6 @@ const user =
         return parsedUser || { _id: "", username: "", name: "" };
       })()
     : { _id: "", username: "", name: "" };
-
 // Safely parse auth cookie
 const token =
   typeof window !== "undefined"
@@ -467,7 +522,6 @@ const token =
         return safeParseCookie(authCookie);
       })()
     : null;
-
 const initialState = {
   user: user,
   token: token,
@@ -477,7 +531,6 @@ const initialState = {
   otpSend: false,
   signupSuccess: false,
 };
-
 // Register OTP
 export const registerOtp = createAsyncThunk(
   "auth/sendRegistrationOtp",
@@ -488,14 +541,11 @@ export const registerOtp = createAsyncThunk(
         toast.error("Server configuration error. Please contact support.");
         return rejectWithValue("Server configuration error");
       }
-
       console.log("Sending registration OTP request:", { emailOrPhone });
-
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/register/otp`,
         { emailOrPhone }
       );
-
       toast.success(response?.data?.message || "OTP sent successfully");
       return response.data;
     } catch (error) {
@@ -511,74 +561,58 @@ export const registerOtp = createAsyncThunk(
     }
   }
 );
-
-export const googleSignUp = createAsyncThunk(
-  "auth/googleSignUp",
-  async ({ session, status }, { rejectWithValue }) => {
-    try {
-      if (!process.env.NEXT_PUBLIC_API_BASE_URL) {
-        console.error("NEXT_PUBLIC_API_BASE_URL is not defined");
-        toast.error("Server configuration error. Please contact support.");
-        return rejectWithValue("Server configuration error");
-      }
-      console.log("Google Sign-Up request for:", session.user.email);
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/register/social`,
-        {
-          email: session.user.email,
-          name: session.user.name,
-        }
-      );
-      toast.success("Sign up successful");
-      return response.data;
-    } catch (error) {
-      console.error("googleSignUp error:", {
-        message: error.message,
-        status: error.response?.status,
-        data: error.response?.data,
-      });
-      const errorMessage =
-        error.response?.data?.message || "Google signup failed";
-      toast.error(errorMessage);
-      return rejectWithValue(errorMessage);
-    }
-  }
-);
-
-export const googleSignIn = createAsyncThunk(
-  "auth/googleSignIn",
+// Google Login Auth (for /login page)
+export const googleLoginAuth = createAsyncThunk(
+  "auth/googleLoginAuth",
   async ({ session }, { rejectWithValue }) => {
     try {
-      if (!process.env.NEXT_PUBLIC_API_BASE_URL) {
-        console.error("NEXT_PUBLIC_API_BASE_URL is not defined");
-        toast.error("Server configuration error. Please contact support.");
-        return rejectWithValue("Server configuration error");
-      }
-      console.log("Google Sign-In request for:", session?.user?.email);
       const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/login/social`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/login/google`,
         {
-          email: session?.user?.email,
+          email: session.user.email,
+          name: session.user.name || session.user.email.split("@")[0],
         }
       );
       Cookies.set("auth", JSON.stringify(response.data.token));
       Cookies.set("user", JSON.stringify(response.data.user));
-      toast.success("Sign in successful");
-      return response.data;
+      return {
+        ...response.data,
+        redirectTo: response.data.redirectTo || "/",
+      };
     } catch (error) {
-      console.error("googleSignIn error:", {
-        message: error.message,
-        status: error.response?.status,
-        data: error.response?.data,
-      });
       const errorMessage =
-        error.response?.data?.message || "Google signin failed";
+        error.response?.data?.message || "Google login failed";
       toast.error(errorMessage);
       return rejectWithValue(errorMessage);
     }
   }
 );
-
+// Google Register Auth (for /registration page)
+export const googleRegisterAuth = createAsyncThunk(
+  "auth/googleRegisterAuth",
+  async ({ session }, { rejectWithValue }) => {
+    try {
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/register/google`,
+        {
+          email: session.user.email,
+          name: session.user.name || session.user.email.split("@")[0],
+        }
+      );
+      Cookies.set("auth", JSON.stringify(response.data.token));
+      Cookies.set("user", JSON.stringify(response.data.user));
+      return {
+        ...response.data,
+        redirectTo: response.data.redirectTo || "/account",
+      };
+    } catch (error) {
+      const errorMessage =
+        error.response?.data?.message || "Google registration failed";
+      toast.error(errorMessage);
+      return rejectWithValue(errorMessage);
+    }
+  }
+);
 export const signinOtp = createAsyncThunk(
   "auth/sendSigninOtp",
   async ({ emailOrPhone }, { rejectWithValue }) => {
@@ -588,14 +622,11 @@ export const signinOtp = createAsyncThunk(
         toast.error("Server configuration error. Please contact support.");
         return rejectWithValue("Server configuration error");
       }
-
       console.log("Sending OTP request:", { emailOrPhone });
-
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/login/otp`,
         { emailOrPhone }
       );
-
       toast.success(response?.data?.message || "OTP sent successfully");
       return response.data;
     } catch (error) {
@@ -611,7 +642,6 @@ export const signinOtp = createAsyncThunk(
     }
   }
 );
-
 export const verifySigninOtp = createAsyncThunk(
   "auth/otpSignIn",
   async ({ emailOrPhone, otp }, { rejectWithValue }) => {
@@ -621,14 +651,11 @@ export const verifySigninOtp = createAsyncThunk(
         toast.error("Server configuration error. Please contact support.");
         return rejectWithValue("Server configuration error");
       }
-
       console.log("Verifying OTP for:", { emailOrPhone, otp });
-
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/otp/login/verify`,
         { emailOrPhone, otp: +otp }
       );
-
       Cookies.set("auth", JSON.stringify(response.data.token));
       Cookies.set("user", JSON.stringify(response.data.user));
       toast.success("Login successful");
@@ -645,6 +672,37 @@ export const verifySigninOtp = createAsyncThunk(
     }
   }
 );
+// export const otpSignup = createAsyncThunk(
+//   "auth/otpSignup",
+//   async ({ emailOrPhone, otp }, { rejectWithValue }) => {
+//     try {
+//       if (!process.env.NEXT_PUBLIC_API_BASE_URL) {
+//         console.error("NEXT_PUBLIC_API_BASE_URL is not defined");
+//         toast.error("Server configuration error. Please contact support.");
+//         return rejectWithValue("Server configuration error");
+//       }
+//       console.log("Verifying signup OTP for:", emailOrPhone);
+//       const response = await axios.post(
+//         `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/otp/register/verify`,
+//         { emailOrPhone, otp: +otp }
+//       );
+//       Cookies.set("auth", JSON.stringify(response.data.token));
+//       Cookies.set("user", JSON.stringify(response.data.user));
+//       toast.success(response.data.message || "Registration successful");
+//       return response.data;
+//     } catch (error) {
+//       console.error("otpSignup error:", {
+//         message: error.message,
+//         status: error.response?.status,
+//         data: error.response?.data,
+//       });
+//       const errorMessage =
+//         error.response?.data?.message || "OTP verification failed";
+//       toast.error(errorMessage);
+//       return rejectWithValue(errorMessage);
+//     }
+//   }
+// );
 
 export const otpSignup = createAsyncThunk(
   "auth/otpSignup",
@@ -655,15 +713,18 @@ export const otpSignup = createAsyncThunk(
         toast.error("Server configuration error. Please contact support.");
         return rejectWithValue("Server configuration error");
       }
-
       console.log("Verifying signup OTP for:", emailOrPhone);
-
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/otp/register/verify`,
         { emailOrPhone, otp: +otp }
       );
-
-      Cookies.set("auth", JSON.stringify(response.data.token));
+      
+      // ✅ FIXED: Safe token set (if exists)
+      if (response.data.token) {
+        Cookies.set("auth", JSON.stringify(response.data.token));
+      } else {
+        console.warn("No token in signup response – session may not persist");
+      }
       Cookies.set("user", JSON.stringify(response.data.user));
       toast.success(response.data.message || "Registration successful");
       return response.data;
@@ -681,6 +742,7 @@ export const otpSignup = createAsyncThunk(
   }
 );
 
+
 export const facebookSignIn = createAsyncThunk(
   "auth/facebookSignIn",
   async (_, { rejectWithValue }) => {
@@ -697,7 +759,16 @@ export const facebookSignIn = createAsyncThunk(
 export const updateDetails = createAsyncThunk(
   "auth/updateDetails",
   async (
-    { KukuUsername, fullName, Description, phone, location, isChecked, id },
+    {
+      KukuUsername,
+      fullName,
+      Description,
+      phone,
+      location,
+      isChecked,
+      id,
+      isProfileComplete,
+    },
     { rejectWithValue }
   ) => {
     try {
@@ -706,7 +777,30 @@ export const updateDetails = createAsyncThunk(
         toast.error("Server configuration error. Please contact support.");
         return rejectWithValue("Server configuration error");
       }
-      console.log("Updating details for user ID:", id);
+
+      // ✅ FIXED: Extract token from cookies with parse (matches otpSignup pattern)
+      const authCookie = Cookies.get("auth");
+      if (!authCookie) {
+        throw new Error("No auth token found in cookies");
+      }
+      let token;
+      try {
+        const parsedAuth = JSON.parse(authCookie);
+        token = parsedAuth.token || parsedAuth; // Handle if direct string or object
+      } catch (parseError) {
+        console.error("Auth cookie parse error:", parseError);
+        throw new Error("Invalid auth cookie format");
+      }
+      if (!token) {
+        throw new Error("No token in auth cookie");
+      }
+
+      console.log(
+        "Updating details for user ID:",
+        id,
+        "Token exists:",
+        !!token
+      );
       const response = await axios.patch(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/update/details/${id}`,
         {
@@ -716,19 +810,40 @@ export const updateDetails = createAsyncThunk(
           description: Description,
           location: location,
           anonymous: !isChecked,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Uses parsed token
+            "Content-Type": "application/json",
+          },
         }
       );
+
+      // ✅ Match otpSignup: Set with stringify (assume response.data.token is string)
       Cookies.set("auth", JSON.stringify(response.data.token));
-      Cookies.set("user", JSON.stringify(response.data.user));
-      toast.success(response.data.message || "Details updated successfully");
-      return response.data.user;
+
+      // Use backend's value directly
+      const updatedUser = response.data.user;
+      Cookies.set("user", JSON.stringify(updatedUser));
+
+      // toast.success(response.data.message || "Details updated successfully");
+      return updatedUser;
     } catch (error) {
-      console.error("updateDetails error:", {
-        message: error.message,
-        status: error.response?.status,
-        data: error.response?.data,
-      });
-      const errorMessage = error.response?.data?.message || "Update failed";
+      // Better logging
+      if (error.response) {
+        console.error("updateDetails Axios error:", {
+          message: error.message,
+          status: error.response.status,
+          data: error.response.data,
+        });
+      } else if (error.request) {
+        console.error("updateDetails Network error:", error.message);
+      } else {
+        console.error("updateDetails Custom error:", error.message);
+      }
+
+      const errorMessage =
+        error.response?.data?.message || error.message || "Update failed";
       const errorField = error.response?.data?.field;
       toast.error(errorMessage);
       return rejectWithValue({
@@ -791,36 +906,6 @@ const authSlice = createSlice({
         state.signupSuccess = false;
       });
     builder
-      .addCase(googleSignUp.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(googleSignUp.fulfilled, (state, action) => {
-        state.user = action.payload.user;
-        state.token = action.payload.token;
-        state.isAuthenticated = true;
-        state.loading = false;
-      })
-      .addCase(googleSignUp.rejected, (state, action) => {
-        state.error = action.payload;
-        state.loading = false;
-      });
-    builder
-      .addCase(googleSignIn.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(googleSignIn.fulfilled, (state, action) => {
-        state.user = action.payload.user;
-        state.token = action.payload.token;
-        state.isAuthenticated = true;
-        state.loading = false;
-      })
-      .addCase(googleSignIn.rejected, (state, action) => {
-        state.error = action.payload;
-        state.loading = false;
-      });
-    builder
       .addCase(verifySigninOtp.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -863,8 +948,41 @@ const authSlice = createSlice({
         state.error = action.payload;
         state.loading = false;
       });
+    builder
+      .addCase(googleLoginAuth.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(googleLoginAuth.fulfilled, (state, action) => {
+        state.user = action.payload.user;
+        state.token = action.payload.token;
+        state.isAuthenticated = true;
+        state.loading = false;
+        state.error = null;
+      })
+      .addCase(googleLoginAuth.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        state.isAuthenticated = false;
+      });
+    builder
+      .addCase(googleRegisterAuth.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(googleRegisterAuth.fulfilled, (state, action) => {
+        state.user = action.payload.user;
+        state.token = action.payload.token;
+        state.isAuthenticated = true;
+        state.loading = false;
+        state.error = null;
+      })
+      .addCase(googleRegisterAuth.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        state.isAuthenticated = false;
+      });
   },
 });
-
 export const { logout, clearOtp } = authSlice.actions;
 export default authSlice.reducer;

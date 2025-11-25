@@ -90,7 +90,7 @@ const Footer = () => {
           <FooterLink href="/how-it-works">How it works ?</FooterLink>
           <FooterLink href="/our-services-and-features">Our Services and features</FooterLink>
           <FooterLink href="/sustainability">Sustainability</FooterLink>
-          <FooterLink href="/how-we-calculate-aur-carbon-footprint">How we calculate our Carbon footprint</FooterLink>
+          <FooterLink href="/how-we-calculate-our-carbon-footprint">How we calculate our Carbon footprint</FooterLink>
         </FooterColumn>
         <FooterColumn title="Categories">
           <FooterLink href="/mega-filter?parentCategory=Men">Men</FooterLink>
