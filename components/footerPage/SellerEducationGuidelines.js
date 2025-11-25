@@ -196,7 +196,7 @@ export const SellerEducationGuidelines = () => {
             </li>
             <li className="flex items-center">
               <Phone className="w-5 h-5 mr-2" />
-              <span>Phone: +971 543781819</span>
+              <span>Phone: +971 567894123</span>
             </li>
           </ul>
         </div>

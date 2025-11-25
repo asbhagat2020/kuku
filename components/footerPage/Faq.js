@@ -19,7 +19,7 @@ export default function Faq() {
       color: "text-indigo-600",
       qa: [
         { q: "How do I purchase an item?", a: "Simply browse, add items to your cart, and checkout securely. KuKu will collect the item from the seller, verify its condition, and then deliver it to you." },
-        { q: "What if the item I receive doesn&apos;t match the description?", a: "You can raise a Return Request within 8 hours of delivery (12 hours for Ku-Kit items). Once verified, KuKu arranges return pickup and processes a refund." },
+        { q: "What if the item I receive doesn't match the description?", a: "You can raise a Return Request within 8 hours of delivery (12 hours for Ku-Kit items). Once verified, KuKu arranges return pickup and processes a refund." },
         { q: "Can I negotiate prices?", a: "Yes! All listings allow offers. You can “Make an Offer,” and the seller can accept, reject, or counter." },
         { q: "How long does delivery take?", a: "Once your order passes quality check, delivery usually takes 2–5 working days within the UAE." },
         { q: "Can I cancel my order?", a: "You may cancel before the seller ships or KuKu picks up the item. After pickup, cancellation is not possible as the item is already in process." }
@@ -30,9 +30,9 @@ export default function Faq() {
       title: "Selling on KuKu",
       color: "text-purple-600",
       qa: [
-        { q: "How do I sell my items?", a: "Choose between two options:<br/>· Standard Listing: You keep the item until it&apos;s sold. KuKu confirms pick up for QC after a buyer confirms purchase.<br/>· Ku-Kit: KuKu picks up your batch, stores it, lists each item for you, and delivers when sold." },
+        { q: "How do I sell my items?", a: "Choose between two options:<br/>· Standard Listing: You keep the item until it's sold. KuKu confirms pick up for QC after a buyer confirms purchase.<br/>· Ku-Kit: KuKu picks up your batch, stores it, lists each item for you, and delivers when sold." },
         { q: "What can I sell on KuKu?", a: "You can sell clothing, accessories, shoes, bags, and small home items that are clean and in good condition. Certain items (underwear, replicas, damaged goods) are not allowed." },
-        { q: "What are KuKu&apos;s selling fees or commissions?", a: "KuKu charges a small commission per successful sale, depending on item type and price range. Our commission covers logistics, QC, and platform operations." },
+        { q: "What are KuKu's selling fees or commissions?", a: "KuKu charges a small commission per successful sale, depending on item type and price range. Our commission covers logistics, QC, and platform operations." },
         { q: "When do I get paid?", a: "After your item is sold, passes QC, delivered to the buyer, and the return window closes — payments are processed within 7–14 working days." },
         { q: "What happens if my item fails QC?", a: "The item will be returned to you first and second time, then penalty will be applicable. Repeated offense will lead to suspension or permanent removal. You&apos;ll receive a message explaining why (e.g., stains, defects, or misdescription)." }
       ]
@@ -52,7 +52,7 @@ export default function Faq() {
       title: "Payments, Commissions & KuKu Wallet",
       color: "text-green-600",
       qa: [
-        { q: "What is the KuKu Wallet?", a: "It&apos;s your in-app wallet for earnings, refunds, and credits. You can use it to shop or request a payout to your bank account (for verified sellers)." },
+        { q: "What is the KuKu Wallet?", a: "It's your in-app wallet for earnings, refunds, and credits. You can use it to shop or request a payout to your bank account (for verified sellers)." },
         { q: "How do I withdraw money from KuKu Wallet?", a: "Go to “My Wallet” → “Withdraw Funds.” Enter your bank details. Withdrawals are processed within 7–10 working days once your balance meets the minimum threshold." },
         { q: "What happens if a buyer requests a refund?", a: "Refunds are deducted from your pending payout only if the claim is valid (QC-verified). KuKu ensures fair resolution for both sides." },
         { q: "Does KuKu charge any extra fees?", a: "No hidden fees. Commission and delivery charges are clearly shared." }
@@ -64,7 +64,7 @@ export default function Faq() {
       color: "text-teal-600",
       qa: [
         { q: "How do rentals work on KuKu?", a: "Renters can browse rentable items, pay a rental fee plus a refundable security deposit. KuKu handles pickup, delivery, and QC both before and after use." },
-        { q: "What happens if the rented item is damaged?", a: "The renter&apos;s deposit is used to cover repair or replacement based on KuKu&apos;s damage assessment policy." },
+        { q: "What happens if the rented item is damaged?", a: "The renter's deposit is used to cover repair or replacement based on KuKu's damage assessment policy." },
         { q: "Can I list my items for rent?", a: "Yes! You can mark your item as “Available for Rent” while listing. KuKu reviews each rental listing before approval." }
       ]
     },
@@ -74,8 +74,8 @@ export default function Faq() {
       color: "text-emerald-600",
       qa: [
         { q: "What is the Giveaway Service?", a: "You can donate clean, reusable textiles like clothes, curtains, and bedsheets. KuKu collects, inspects, and sorts them for charity, repurpose, or recycling." },
-        { q: "Do I get paid for Giveaway items?", a: "No, giveaways are solely KuKu&apos;s responsibility for repurposing or reselling or donation." },
-        { q: "What happens to items that can&apos;t be reused?", a: "They are responsibly recycled or upcycled into new materials through our sustainability partners." }
+        { q: "Do I get paid for Giveaway items?", a: "No, giveaways are solely KuKu's responsibility for repurposing or reselling or donation." },
+        { q: "What happens to items that can't be reused?", a: "They are responsibly recycled or upcycled into new materials through our sustainability partners." }
       ]
     },
     {
@@ -93,7 +93,7 @@ export default function Faq() {
       title: "Account & Support",
       color: "text-gray-700",
       qa: [
-        { q: "How do I verify my account?", a: "You&apos;ll be asked to confirm your email, mobile number, and in some cases, your Emirates ID for seller verification." },
+        { q: "How do I verify my account?", a: "You'll be asked to confirm your email, mobile number, and in some cases, your Emirates ID for seller verification." },
         { q: "I forgot my password — what do I do?", a: "Tap “Forgot Password?” on the login page and follow the email reset instructions." },
         { q: "How can I contact KuKu support?", a: "Through the Help tab in the app or email support@letskuku.com. Our team replies within 24–48 hours." }
       ]

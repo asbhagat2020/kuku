@@ -111,10 +111,25 @@ const Footer = () => {
           <FooterLink href="/all-policy">Policies</FooterLink>
           <FooterLink href="/seller-education-guidelines">Seller Education</FooterLink>
         </FooterColumn>
-        <FooterColumn title="Connect">
+        {/* <FooterColumn title="Connect">
           <FooterLink href="#">Contact Us</FooterLink>
           <FooterLink href="#">Social Media</FooterLink>
-        </FooterColumn>
+        </FooterColumn> */}
+
+        <FooterColumn title="Connect">
+  <FooterLink href="mailto:support@letskuku.com">
+    Contact Us
+  </FooterLink>
+
+  <FooterLink 
+    href="https://instagram.com/kukuapp" 
+    target="_blank" 
+    rel="noopener noreferrer"
+  >
+    Social Media
+  </FooterLink>
+</FooterColumn>
+
 
         <FooterColumn title="Sell with Us">
           <p
@@ -130,7 +145,7 @@ const Footer = () => {
         <div className="flex flex-col gap-4">
           <div className="flex items-center gap-4">
             <Image
-              src="/kuku_logo.svg"
+              src="/kuku_birds.webp"
               width={56}
               height={61}
               alt="KUKU logo"

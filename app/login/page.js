@@ -78,7 +78,7 @@ export default function Login() {
     const inputTypeValidation = validateInput(inputValue);
     if (inputTypeValidation === "invalid") {
       setError(
-        "Please enter a valid email or 9-digit UAE number starting with 5 (e.g., 543781819)"
+        "Please enter a valid email or 9-digit UAE number starting with 5 (e.g., 567894123)"
       );
       return;
     }
@@ -240,7 +240,7 @@ export default function Login() {
                   </span>
                   <input
                     type="text"
-                    placeholder="543781819"
+                    placeholder="567894123"
                     value={emailOrPhone}
                     onChange={handleInputChange}
                     className="flex-1 p-3 bg-transparent outline-none text-black text-sm font-normal font-karla leading-none"
@@ -251,7 +251,7 @@ export default function Login() {
                 <input
                   className="w-full p-3 border border-gray-300 bg-gray-100 rounded-lg text-start text-black text-sm font-normal font-karla"
                   type="text"
-                  placeholder="Enter your email or UAE phone number (e.g., test@example.com or 543781819)"
+                  placeholder="Enter your email or UAE phone number (e.g., test@example.com or 567894123)"
                   value={emailOrPhone}
                   onChange={handleInputChange}
                   required

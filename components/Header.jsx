@@ -454,7 +454,7 @@ const Header = () => {
             {/* Desktop Logo */}
             <Link href="/" className="flex gap-[1rem] items-center pl-0">
               <Image
-                src="/kuku_logo.svg"
+                src="/kuku_birds.webp"
                 width={56}
                 height={61}
                 alt=""

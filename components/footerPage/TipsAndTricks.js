@@ -7,7 +7,7 @@ export const TipsAndTricks = () => {
       icon: <User className="w-6 h-6" />,
       title: "1. Your Profile = Your Storefront",
       details: [
-        "You don&apos;t need to be a fashion influencer. Just be you, but a little KuKu.",
+        "You don't need to be a fashion influencer. Just be you, but a little KuKu.",
         "Upload a profile pic - your face, your fav shoe, your dog- just no grey icons.",
         "Write a quick, fun bio - “Serial declutterer. Occasional impulse shopper. Closet for rent.”",
         "Stay active - more listings = more eyeballs = more love."
@@ -20,7 +20,7 @@ export const TipsAndTricks = () => {
         "Nobody wants to buy a mystery blur. Make your pieces shine!",
         "Natural light is your BFF - it shows true color and fabric.",
         "Show all sides - front, back, close-up of tags, cute details, and even that tiny mark you promised to disclose.",
-        "Clean, tidy background - your duvet doesn&apos;t need a cameo.",
+        "Clean, tidy background - your duvet doesn't need a cameo.",
         "Bonus: A styled flat-lay or hanger shot adds pro-level vibes."
       ]
     },
@@ -41,17 +41,17 @@ export const TipsAndTricks = () => {
       details: [
         "The Bargain Button is ON – that means buyers can send offers anytime. Your job? Respond quickly!",
         "Fast replies = better chances of sealing the deal.",
-        "If someone likes your item, that&apos;s your cue to show them some price love.",
-        "Counter-offers are cool too -it&apos;s a friendly haggle, not a battle.",
-        "Bundle up similar items and offer a discount - it&apos;s like a thrift-store treasure chest."
+        "If someone likes your item, that's your cue to show them some price love.",
+        "Counter-offers are cool too -it's a friendly haggle, not a battle.",
+        "Bundle up similar items and offer a discount - it's like a thrift-store treasure chest."
       ]
     },
     {
       icon: <Heart className="w-6 h-6" />,
       title: "5. Use the Social Sauce",
       details: [
-        "You&apos;re not just a seller- you&apos;re part of the KuKu crew. So mingle a bit!",
-        "Like other listings - KuKu&apos;s algorithm might just return the favor.",
+        "You're not just a seller- you're part of the KuKu crew. So mingle a bit!",
+        "Like other listings - KuKu's algorithm might just return the favor.",
         "Follow sellers you vibe with - builds your own following too.",
         "Regular activity keeps your listings fresh in the feed."
       ]
@@ -62,7 +62,7 @@ export const TipsAndTricks = () => {
       details: [
         "New listings = new chances to sell. Post often!",
         "Mark sold items quickly – keep your profile sharp.",
-        "Update prices if an item&apos;s been sitting too long – it might just need a nudge."
+        "Update prices if an item's been sitting too long – it might just need a nudge."
       ]
     }
   ];

@@ -809,7 +809,7 @@ export const updateDetails = createAsyncThunk(
           phone: phone,
           description: Description,
           location: location,
-          anonymous: !isChecked,
+          anonymous: isChecked,
         },
         {
           headers: {

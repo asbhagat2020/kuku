@@ -112,7 +112,7 @@ const DownloadKuku = () => {
         <Image
           width={260}
           height={280}
-          src="/kuku_bird.png"
+          src="/kuku_birds.webp"
           className={`w-[120px] ${isMobileOrTablet ? "" : "lg:w-[256px]"}`}
           alt=""
         />{" "}

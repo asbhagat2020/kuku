@@ -1,15 +1,14 @@
-
-
-
-
-
-
 "use client";
 import { useState, useEffect, useRef } from "react";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
-import { googleRegisterAuth, otpSignup, registerOtp } from "@/store/auth/authSlice";
+import Link from "next/link";
+import {
+  googleRegisterAuth,
+  otpSignup,
+  registerOtp,
+} from "@/store/auth/authSlice";
 import { toast } from "react-hot-toast";
 export default function Home() {
   const [emailOrPhone, setEmailOrPhone] = useState("");
@@ -38,29 +37,29 @@ export default function Home() {
   };
   const handleInputChange = (e) => {
     let value = e.target.value;
-  
-    if (value.includes('@') || inputType === 'email') {
+
+    if (value.includes("@") || inputType === "email") {
       setEmailOrPhone(value);
-      setInputType('email');
+      setInputType("email");
       setError("");
       return;
     }
-  
+
     if (/[a-zA-Z]/.test(value)) {
       setEmailOrPhone(value);
-      setInputType('email');
+      setInputType("email");
       setError("");
       return;
     }
-  
-    const digitsOnly = value.replace(/\D/g, '');
+
+    const digitsOnly = value.replace(/\D/g, "");
     if (digitsOnly.length <= 9) {
       setEmailOrPhone(digitsOnly);
-      setInputType(digitsOnly ? 'phone' : '');
+      setInputType(digitsOnly ? "phone" : "");
       setError("");
     } else if (digitsOnly.length === 0) {
-      setEmailOrPhone('');
-      setInputType('');
+      setEmailOrPhone("");
+      setInputType("");
       setError("");
     }
   };
@@ -72,7 +71,9 @@ export default function Home() {
     }
     const inputTypeValidation = validateInput(inputValue);
     if (inputTypeValidation === "invalid") {
-      setError("Please enter a valid email or 9-digit UAE number starting with 5 (e.g., 543781819)");
+      setError(
+        "Please enter a valid email or 9-digit UAE number starting with 5 (e.g., 567894123)"
+      );
       return;
     }
     setError("");
@@ -127,36 +128,42 @@ export default function Home() {
     }
   };
   useEffect(() => {
-  const handleGoogleRegistration = async () => {
-    if (!session || hasSentRef.current || isProcessingRef.current || status === "loading") {
-      return;
-    }
-    hasSentRef.current = true;
-    isProcessingRef.current = true;
-    try {
-      const result = await dispatch(googleRegisterAuth({ session })).unwrap();
-    
-      // ✅ Backend decides where to go (always /account for registration context)
-      const redirectPath = result.redirectTo || "/account";
-    
-      if (!result.user.isProfileComplete) {
-        toast.success("Welcome! Please complete your profile");
-      } else {
-        toast.success("Welcome back! Please complete your profile to continue");
+    const handleGoogleRegistration = async () => {
+      if (
+        !session ||
+        hasSentRef.current ||
+        isProcessingRef.current ||
+        status === "loading"
+      ) {
+        return;
       }
-    
-      router.replace(redirectPath);
-    
-    } catch (error) {
-      console.error("❌ Google auth failed:", error);
-      setError("Google authentication failed");
-      hasSentRef.current = false;
-    } finally {
-      isProcessingRef.current = false;
-    }
-  };
-  handleGoogleRegistration();
-}, [session, status, dispatch, router]);
+      hasSentRef.current = true;
+      isProcessingRef.current = true;
+      try {
+        const result = await dispatch(googleRegisterAuth({ session })).unwrap();
+
+        // ✅ Backend decides where to go (always /account for registration context)
+        const redirectPath = result.redirectTo || "/account";
+
+        if (!result.user.isProfileComplete) {
+          toast.success("Welcome! Please complete your profile");
+        } else {
+          toast.success(
+            "Welcome back! Please complete your profile to continue"
+          );
+        }
+
+        router.replace(redirectPath);
+      } catch (error) {
+        console.error("❌ Google auth failed:", error);
+        setError("Google authentication failed");
+        hasSentRef.current = false;
+      } finally {
+        isProcessingRef.current = false;
+      }
+    };
+    handleGoogleRegistration();
+  }, [session, status, dispatch, router]);
   useEffect(() => {
     let interval = null;
     if (isOtpSent && timer > 0) {
@@ -168,12 +175,12 @@ export default function Home() {
     }
     return () => clearInterval(interval);
   }, [isOtpSent, timer]);
-const handleSignIn = () => {
-  signIn("google", {
-    redirect: false,
-    callbackUrl: "/registration"
-  });
-};
+  const handleSignIn = () => {
+    signIn("google", {
+      redirect: false,
+      callbackUrl: "/registration",
+    });
+  };
   const handleCheckboxChange = (e) => {
     setIsChecked(e.target.checked);
   };
@@ -190,19 +197,27 @@ const handleSignIn = () => {
         <div className="w-full md:w-1/2 flex flex-col justify-center items-center p-4 md:p-8">
           <div className="flex items-center gap-2 mb-8">
             <img src="/Group1.svg" alt="KUKU Logo" className="h-10 w-10" />
-            <div className="text-black text-2xl font-palanquin_dark font-bold">KUKU</div>
+            <div className="text-black text-2xl font-palanquin_dark font-bold">
+              KUKU
+            </div>
           </div>
-          <div className="text-black text-xl font-Karla font-bold mb-6">Create your account</div>
+          <div className="text-black text-xl font-Karla font-bold mb-6">
+            Create your account
+          </div>
           <form className="w-full max-w-md">
             <div className="mb-4">
-              <label className="text-black text-base font-Karla font-bold mb-2 block">Email or Phone Number</label>
-            
-              {inputType === 'phone' ? (
+              <label className="text-black text-base font-Karla font-bold mb-2 block">
+                Email or Phone Number
+              </label>
+
+              {inputType === "phone" ? (
                 <div className="flex items-center w-full border border-gray-300 bg-gray-100 rounded-lg">
-                  <span className="pl-3 text-gray-600 font-medium text-sm">+971</span>
+                  <span className="pl-3 text-gray-600 font-medium text-sm">
+                    +971
+                  </span>
                   <input
                     type="text"
-                    placeholder="543781819"
+                    placeholder="567894123"
                     value={emailOrPhone}
                     onChange={handleInputChange}
                     className="flex-1 p-3 bg-transparent outline-none text-black text-sm font-normal font-karla leading-none"
@@ -212,22 +227,26 @@ const handleSignIn = () => {
               ) : (
                 <input
                   type="text"
-                  placeholder="Enter your email or UAE phone number (e.g., test@example.com or 543781819)"
+                  placeholder="Enter your email or UAE phone number (e.g., test@example.com or 567894123)"
                   value={emailOrPhone}
                   onChange={handleInputChange}
                   className="w-full p-3 border border-gray-300 bg-gray-100 rounded-lg text-start text-black text-sm font-normal font-karla leading-none"
                   required
                 />
               )}
-            
+
               {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
-            
-              {inputType === 'phone' && (
-                <p className="text-gray-500 text-xs mt-1">UAE country code (+971) will be used</p>
+
+              {inputType === "phone" && (
+                <p className="text-gray-500 text-xs mt-1">
+                  UAE country code (+971) will be used
+                </p>
               )}
             </div>
             <div className="mb-2">
-              <label className="text-black text-base font-karla font-bold mb-2 block">OTP</label>
+              <label className="text-black text-base font-karla font-bold mb-2 block">
+                OTP
+              </label>
               <input
                 type="text"
                 placeholder="Enter the OTP received"
@@ -241,7 +260,9 @@ const handleSignIn = () => {
             {isOtpSent && (
               <div className="mt-2 text-[#e4086f] text-sm font-normal font-karla underline leading-none">
                 {timer > 0
-                  ? `Resend OTP in ${Math.floor(timer / 60)}:${timer % 60 < 10 ? "0" : ""}${timer % 60}`
+                  ? `Resend OTP in ${Math.floor(timer / 60)}:${
+                      timer % 60 < 10 ? "0" : ""
+                    }${timer % 60}`
                   : "You can resend the OTP now."}
               </div>
             )}
@@ -253,8 +274,29 @@ const handleSignIn = () => {
                   onChange={handleCheckboxChange}
                   className="mr-2"
                 />
-                <p className="text-black text-sm font-normal font-karla leading-none">
+                {/* <p className="text-black text-sm font-normal font-karla leading-none">
                   I agree with KUKU Terms of Service, Privacy Policy, and Default Notification Settings.
+                </p> */}
+                <p className="text-black text-sm font-normal font-karla leading-none">
+                  I agree with KUKU{" "}
+                  <Link href="/terms-and-conditions" className="text-pink-600 hover:underline">
+                    Terms of Service
+                  </Link>
+                  ,{" "}
+                  <Link
+                    href="/privacy-policy"
+                    className="text-pink-600 hover:underline"
+                  >
+                    Privacy Policy
+                  </Link>
+                  ,{" "}
+                  <Link
+                    href="/sign-up-policy"
+                    className="text-pink-600 hover:underline"
+                  >
+                    Sign-up Policy
+                  </Link>
+                  , and Default Notification Settings.
                 </p>
               </label>
             </div>
@@ -276,7 +318,9 @@ const handleSignIn = () => {
                 type="button"
                 onClick={handleOtpsend}
                 className={`w-full p-3 ${
-                  loading ? "bg-gray-300 cursor-not-allowed opacity-50" : "bg-yellow-400"
+                  loading
+                    ? "bg-gray-300 cursor-not-allowed opacity-50"
+                    : "bg-yellow-400"
                 } rounded-lg text-[#070707] text-xl font-normal font-karla leading-[23px]`}
                 disabled={loading}
               >
@@ -289,12 +333,21 @@ const handleSignIn = () => {
               onClick={handleSignIn}
               className="w-full flex items-center justify-center p-3 bg-gray-100 border border-gray-300 rounded-lg mb-4"
             >
-              <img src="/devicon_google.png" alt="Google" className="h-5 w-5 mr-3" />
-              <span className="text-gray-800 font-bold">Sign up with Google</span>
+              <img
+                src="/devicon_google.png"
+                alt="Google"
+                className="h-5 w-5 mr-3"
+              />
+              <span className="text-gray-800 font-bold">
+                Sign up with Google
+              </span>
             </button>
           </div>
           <p className="mt-6 text-center text-[#999999] text-base font-normal font-karla leading-[18.40px]">
-            Already have an account? <a href="/login" className="text-pink-600">Login</a>
+            Already have an account?{" "}
+            <a href="/login" className="text-pink-600">
+              Login
+            </a>
           </p>
         </div>
       </div>

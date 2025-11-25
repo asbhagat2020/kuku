@@ -248,7 +248,7 @@ export const TermsAndConditions = () => {
             </li>
             <li className="flex">
               <span className="mr-2">•</span>
-              <span><strong>Unsold items after 180 days</strong> may be returned to the seller or donated at KuKu&apos;s discretion.</span>
+              <span><strong>Unsold items after 90 days</strong> may be returned to the seller or donated at KuKu&apos;s discretion.</span>
             </li>
             <li className="flex">
               <span className="mr-2">•</span>
