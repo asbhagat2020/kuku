@@ -42,7 +42,7 @@ export const RentalPolicy = () => {
             </li>
             <li className="flex">
               <span className="mr-2">•</span>
-              <span><strong>Value:</strong> Retail or resale price must exceed <strong>AED 500</strong></span>
+              <span><strong>Value:</strong> Retail or resale price must exceed <strong>AED 500 to AED 1000</strong></span>
             </li>
           </ul>
 
@@ -55,7 +55,7 @@ export const RentalPolicy = () => {
                 <li>• Footwear</li>
                 <li>• Undergarments, lingerie, or swimwear</li>
                 <li>• Home textiles or décor</li>
-                <li>• Items valued below AED 500</li>
+                <li>• Items valued below AED 500 to AED 1000</li>
               </ul>
             </div>
           </div>
