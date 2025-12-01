@@ -1389,6 +1389,7 @@ const ProductCard = (productDetails) => {
           </div>
 
           <h1 className="text-3xl font-bold">{product?.name}</h1>
+          <p className="text-[16px] text-gray-600 space-x-4 font-medium">{product?.description}</p>
 
           <div className="text-2xl font-bold">AED {product?.price} </div>
           {/* <p className="text-sm text-gray-600">
@@ -1408,6 +1409,14 @@ const ProductCard = (productDetails) => {
               <span className="font-bold">
                 {product?.condition?.conditionName}
               </span>
+            </div>
+            <div>
+              <span className="font-bold">Color: </span>
+              <span className="font-bold">{product?.color?.colorName}</span>
+            </div>
+              <div>
+              <span className="font-bold">Brand: </span>
+              <span className="font-bold">{product?.brand?.brandName}</span>
             </div>
           </div>
 

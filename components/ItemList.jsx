@@ -1398,24 +1398,14 @@
 //       )}
 
 //       <RentalPolicyModal
-//         isOpen={isRentalPolicyOpen} 
-//         onClose={() => setIsRentalPolicyOpen(false)} 
+//         isOpen={isRentalPolicyOpen}
+//         onClose={() => setIsRentalPolicyOpen(false)}
 //       />
 //     </div>
 //   );
 // };
 
 // export default ItemList;
-
-
-
-
-
-
-
-
-
-
 
 "use client";
 
@@ -2893,6 +2883,7 @@ const ItemList = () => {
                   onKeyDown={(e) =>
                     ["e", "E", "+", "-"].includes(e.key) && e.preventDefault()
                   }
+                  onWheel={(e) => e.target.blur()}
                   disabled={isSubmitting}
                   className={`w-full max-w-[500px] px-4 py-3 text-base border rounded-lg transition-all
           ${
