@@ -33,7 +33,7 @@ export default function Account() {
       setFullName(name?.name || "");
       setId(name?._id || "");
       // If phone exists, strip +971 for display (local UAE number only)
-      setPhone(name?.phone ? name.phone.replace("+971", "") : "");
+      setPhone(name?.phone ? name.phone.replace("971", "") : "");
       setDescription(name?.description || "");
       setLocation(name?.location || "");
       setIsChecked(name?.anonymous || false); // Set checkbox based on anonymous field
@@ -84,7 +84,7 @@ export default function Account() {
       KukuUsername,
       fullName,
       Description,
-      phone: `+971${phone}`,  // Log prefixed for debug
+      phone: `971${phone}`,  // Log prefixed for debug
       location,
       isChecked,
       id,
@@ -95,7 +95,7 @@ export default function Account() {
         KukuUsername,
         fullName,
         Description,
-        phone: `+971${phone}`, // Add +971 for backend
+        phone: `971${phone}`, // Add 971 for backend
         location,
         isChecked,
         id,
