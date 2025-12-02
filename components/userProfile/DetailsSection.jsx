@@ -219,12 +219,7 @@
 //   );
 // };
 
-
-
-
-
 // important component
-
 
 // "use client";
 
@@ -427,9 +422,6 @@
 //   );
 // };
 
-
-
-
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
@@ -443,7 +435,11 @@ import { ReviewCards } from "./ReviewCards";
 import { StatsCards } from "./StatsCards";
 import { AddProductComponent } from "./AddProductComponent";
 
-export const DetailsSection = ({ data, initialMainTab = null, initialSubTab = null }) => {
+export const DetailsSection = ({
+  data,
+  initialMainTab = null,
+  initialSubTab = null,
+}) => {
   const [products, setProducts] = useState([]);
   const [userReviews, setUserReviews] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -455,23 +451,49 @@ export const DetailsSection = ({ data, initialMainTab = null, initialSubTab = nu
   // Mapping: slug → label
   const normalizeMainTab = (slug) => {
     if (!slug) return null;
-    const map = { selling: "Selling", sold: "Sold", reviews: "Reviews", stats: "Stats", "add-products": "Add Products" };
+    const map = {
+      selling: "Selling",
+      sold: "Sold",
+      reviews: "Reviews",
+      stats: "Stats",
+      "add-products": "Add Products",
+    };
     return map[slug.toLowerCase()] || null;
   };
 
   const normalizeSubTab = (slug) => {
     if (!slug) return "All";
-    const map = { all: "All", accepted: "Accepted", pending: "Pending", rejected: "Rejected", sold: "Sold", edit: "Edit" };
+    const map = {
+      all: "All",
+      accepted: "Accepted",
+      pending: "Pending",
+      rejected: "Rejected",
+      sold: "Sold",
+      edit: "Edit",
+    };
     return map[slug.toLowerCase()] || "All";
   };
 
   const getMainSlug = (label) => {
-    const map = { Selling: "selling", Sold: "sold", Reviews: "reviews", Stats: "stats", "Add Products": "add-products" };
+    const map = {
+      Selling: "selling",
+      Sold: "sold",
+      Reviews: "reviews",
+      Stats: "stats",
+      "Add Products": "add-products",
+    };
     return map[label] || label.toLowerCase().replace(/\s+/g, "-");
   };
 
   const getSubSlug = (filter) => {
-    const map = { All: "all", Accepted: "accepted", Pending: "pending", Rejected: "rejected", Sold: "sold", Edit: "edit" };
+    const map = {
+      All: "all",
+      Accepted: "accepted",
+      Pending: "pending",
+      Rejected: "rejected",
+      Sold: "sold",
+      Edit: "edit",
+    };
     return map[filter] || "all";
   };
 
@@ -519,42 +541,91 @@ export const DetailsSection = ({ data, initialMainTab = null, initialSubTab = nu
 
   const getReviewCount = () => {
     if (!userReviews || userReviews.length === 0) return 0;
-    return userReviews.reduce((total, product) => total + (product.reviews?.length || 0), 0);
+    return userReviews.reduce(
+      (total, product) => total + (product.reviews?.length || 0),
+      0
+    );
   };
 
   const reviewCount = getReviewCount();
-  const soldData = products.filter(p => p.approval?.status === "Sold");
+  const soldData = products.filter((p) => p.approval?.status === "Sold");
   const reviewData = data || {};
 
   const tabs = useMemo(() => {
     const base = [
-      { label: "Selling", component: SellingProducts, data: products, count: products.length || 0 },
-      { label: "Sold", component: SoldCards, data: soldData, count: soldData.length || 0 },
-      { label: "Reviews", component: ReviewCards, data: reviewData, count: reviewCount },
-      { label: "Stats", component: StatsCards, data: null, statsData: null, count: "" },
+      {
+        label: "Selling",
+        component: SellingProducts,
+        data: products,
+        count: products.length || 0,
+      },
+      {
+        label: "Sold",
+        component: SoldCards,
+        data: soldData,
+        count: soldData.length || 0,
+      },
+      {
+        label: "Reviews",
+        component: ReviewCards,
+        data: reviewData,
+        count: reviewCount,
+      },
+      {
+        label: "Stats",
+        component: StatsCards,
+        data: null,
+        statsData: null,
+        count: "",
+      },
     ];
     return isOwnProfile
-      ? [...base, { label: "Add Products", component: AddProductComponent, data: null, count: "" }]
+      ? [
+          ...base,
+          {
+            label: "Add Products",
+            component: AddProductComponent,
+            data: null,
+            count: "",
+          },
+        ]
       : base;
   }, [products, soldData, reviewCount, isOwnProfile, reviewData]);
 
   // Initial tab + sub-filter
-  const initialMainLabel = initialMainTab ? normalizeMainTab(initialMainTab) : null;
-  const initialSubFilter = initialSubTab ? normalizeSubTab(initialSubTab) : "All";
+  const initialMainLabel = initialMainTab
+    ? normalizeMainTab(initialMainTab)
+    : null;
+  const initialSubFilter = initialSubTab
+    ? normalizeSubTab(initialSubTab)
+    : "All";
 
   const defaultMainTab = initialMainLabel
-    ? tabs.find(t => t.label === initialMainLabel) || tabs[0]
+    ? tabs.find((t) => t.label === initialMainLabel) || tabs[0]
     : tabs[0];
 
-  const [selectedTab, setSelectedTab] = useState(defaultMainTab);
+  // const [selectedTab, setSelectedTab] = useState(defaultMainTab);
   const [activeSubFilter, setActiveSubFilter] = useState(initialSubFilter);
 
+  const [selectedTabLabel, setSelectedTabLabel] = useState(
+    initialMainLabel || tabs[0].label
+  );
+
+  const selectedTab = useMemo(() => {
+    return tabs.find((t) => t.label === selectedTabLabel) || tabs[0];
+  }, [tabs, selectedTabLabel]);
+
   // Handle main tab change
-  const handleMainTabChange = (tab) => {
-    setSelectedTab(tab);
-    const mainSlug = getMainSlug(tab.label);
-    const subSlug = tab.label === "Selling" ? getSubSlug(activeSubFilter) : "";
-    const path = subSlug ? `/user_profile/${data._id}/${mainSlug}/${subSlug}` : `/user_profile/${data._id}/${mainSlug}`;
+
+  const handleMainTabChange = (tabLabel) => {
+    setSelectedTabLabel(tabLabel);
+
+    const mainSlug = getMainSlug(tabLabel);
+    const subSlug = tabLabel === "Selling" ? getSubSlug(activeSubFilter) : "";
+    const path = subSlug
+      ? `/user_profile/${data._id}/${mainSlug}/${subSlug}`
+      : `/user_profile/${data._id}/${mainSlug}`;
+
     window.history.pushState({}, "", path);
   };
 
@@ -562,24 +633,42 @@ export const DetailsSection = ({ data, initialMainTab = null, initialSubTab = nu
   const handleSubFilterChange = (filter) => {
     setActiveSubFilter(filter);
     const subSlug = getSubSlug(filter);
-    window.history.pushState({}, "", `/user_profile/${data._id}/selling/${subSlug}`);
+    window.history.pushState(
+      {},
+      "",
+      `/user_profile/${data._id}/selling/${subSlug}`
+    );
   };
 
   // Back/Forward sync
   useEffect(() => {
+    // const handlePop = () => {
+    //   const path = window.location.pathname;
+    //   const parts = path.split("/").filter(Boolean);
+    //   if (parts.length >= 3) {
+    //     const main = normalizeMainTab(parts[3]);
+    //     const sub = parts[4] ? normalizeSubTab(parts[4]) : "All";
+    //     const tab = tabs.find(t => t.label === main);
+    //     if (tab) {
+    //       setSelectedTab(tab);
+    //       if (main === "Selling") setActiveSubFilter(sub);
+    //     }
+    //   }
+    // };
     const handlePop = () => {
       const path = window.location.pathname;
       const parts = path.split("/").filter(Boolean);
       if (parts.length >= 3) {
         const main = normalizeMainTab(parts[3]);
         const sub = parts[4] ? normalizeSubTab(parts[4]) : "All";
-        const tab = tabs.find(t => t.label === main);
-        if (tab) {
-          setSelectedTab(tab);
+
+        if (main) {
+          setSelectedTabLabel(main);
           if (main === "Selling") setActiveSubFilter(sub);
         }
       }
     };
+
     window.addEventListener("popstate", handlePop);
     return () => window.removeEventListener("popstate", handlePop);
   }, [tabs]);
@@ -592,11 +681,16 @@ export const DetailsSection = ({ data, initialMainTab = null, initialSubTab = nu
             <li
               key={item.label}
               className={`w-full p-3 text-center cursor-pointer relative text-[#383838] lg:text-2xl font-normal font-karla leading-[28.80px] gap-12 ${
-                selectedTab.label === item.label ? "border-b-[5px] border-[#fde504]" : ""
+                selectedTabLabel.label === item.label
+                  ? "border-b-[5px] border-[#fde504]"
+                  : ""
               }`}
-              onClick={() => handleMainTabChange(item)}
+              onClick={() => handleMainTabChange(item.label)}
             >
-              {item.label} {item.count !== "" && item.count !== undefined ? `(${item.count})` : ""}
+              {item.label}{" "}
+              {item.count !== "" && item.count !== undefined
+                ? `(${item.count})`
+                : ""}
             </li>
           ))}
         </ul>
@@ -604,17 +698,25 @@ export const DetailsSection = ({ data, initialMainTab = null, initialSubTab = nu
 
       <main className="w-full bg-white mt-[56px] overflow-hidden">
         {loading ? (
-          <div className="flex justify-center items-center h-64"><div className="text-lg text-gray-600">Loading...</div></div>
+          <div className="flex justify-center items-center h-64">
+            <div className="text-lg text-gray-600">Loading...</div>
+          </div>
         ) : selectedTab.label === "Selling" ? (
           <SellingProducts
-            data={selectedTab.data}
+            data={products}
             activeFilter={activeSubFilter}
             setActiveFilter={handleSubFilterChange}
           />
         ) : selectedTab.component ? (
-          <selectedTab.component data={selectedTab.data} statsData={selectedTab.statsData} userId={data?._id} />
+          <selectedTab.component
+           data={selectedTabLabel === "Sold" ? soldData : selectedTab.data}
+            statsData={selectedTab.statsData}
+            userId={data?._id}
+          />
         ) : (
-          <div className="text-center py-20 text-red-500">Component not found</div>
+          <div className="text-center py-20 text-red-500">
+            Component not found
+          </div>
         )}
       </main>
     </div>
